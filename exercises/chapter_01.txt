@@ -1,0 +1,111 @@
+The Designer's Guide to VHDL - Exercises
+========================================
+
+Chapter 1 - Fundamental Concepts
+********************************
+
+1. Briefly outline the purposes of the following VHDL modeling constructs:
+
+   ENTITY DECLARATION:
+
+     Defines an interface to a module, consisting of ports, their data transfer
+     direction and their types.
+
+   BEHAVIORAL ARCHITECTURE BODY:
+
+     A description of the internal implementation of a module. An abstract
+     description of an entity, consisting of only process statements, i.e. an
+     algorithm.
+
+   STRUCTURAL ARCHITECTURE BODY:
+
+     A description of the internal implementation of a module as an
+     interconnected composition of sub-modules.
+
+   PROCESS STATEMENT:
+
+     A collection of actions to be executed in sequence.
+
+   SIGNAL ASSIGNMENT STATEMENT:
+
+     An action unique to hardware modeling languages, that specifies a value to
+     be applied to a signal at a future time (not instantaneously, unlike
+     variable assignment statements).
+
+   PORT MAP:
+
+     Specifies the interconnection between signals and component instance ports
+     in a structural architecture.
+
+2.
+
+    apply_transform : process is
+    begin
+      d_out <= transform(d_in) after 200 ps;
+    --  debug_test <= transform(d_in);
+      wait on enable, d_in;
+    end process apply_transform;
+
+3. Valid VHDL basic identifiers:
+
+     last_item
+
+   Invalid identifiers:
+
+     prev item    -- contains a space
+     value-1      --contains an illegal character (-)
+     buffer       -- reserved word
+     element#5    -- illegal character (#)
+     _control     -- starts with an underscore
+     entry_       -- ends with an underscore
+     93_999       -- starts with a digit
+
+4. Decimal and hexadecimal literals:
+
+     1	       		16#1#
+     34			16#22#
+     256.0     		16#100.0#
+     0.5         	16#0.8#
+
+5. Non-decimal values as decimal:
+
+     8#14#     	      	12
+     2#1000_0100#	132
+     16#2C#		44
+     2.5E5		250000
+     2#1#E15		32768
+     2#0.101#		0.625
+
+6. What is the difference between the literals 16#23DF# and X"23DF"?
+
+     16#23DF# is an integer literal expressed in hexadecimal, whereas X"23DF" is
+     a string of four bytes.
+
+7. Octal and hexadecimal bit strings as binary bit-string literals:
+
+     O"747"  		B"111_100_111"
+     O"377"		B"011_111_111"
+     O"1_345"		B"001_011_100_101"
+
+     X"F2"		B"1111_0010"
+     X"0014"		B"0000_0000_0001_0100"
+     X"0000_0001"	B"0000_0000_0000_0000_0000_0000_0000_0001"
+
+8. Octal and hexadecimal bit strings as binary bit-string literals:
+
+     10U0"747"		B"0_111_100_111"
+     10U0"377"		B"0_011_111_111"
+     10U0"1_345"	B"1_011_100_101"
+     10S0"747"		B"1_111_100_111"
+     10S0"377"		B"0_011_111_111"
+     10S0"1_345"	B"1_011_100_101"
+     12UX"F2"		B"0000_1111_0010"
+     12SX"F2"		B"1111_1111_0010"
+     10UX"F2"	     -- illegal because leading bit is truncated
+     10SX"F2"		B"11_1111_0010"
+
+9. Decimal bit strings as binary bit-string literals:
+
+     D"24"     	        B"11000"
+     12D"24"		B"0000_0001_1000"
+     4D"24"	     -- illegal because leading bit is truncated
