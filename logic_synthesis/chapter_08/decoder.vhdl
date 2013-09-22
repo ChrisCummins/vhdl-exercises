@@ -39,3 +39,63 @@ begin
     end case;
   end process;
 end;
+
+
+
+--
+-- TEST BENCH
+--
+
+library ieee;
+use ieee.std_logic_1164.all, ieee.numeric_std.all;
+
+entity tb is
+begin
+end entity tb;
+
+architecture tests of tb is
+  signal value : unsigned (3 downto 0);
+  signal display : std_logic_vector (6 downto 0);
+  signal zero_blank, zero_blank_out : std_logic;
+begin
+  dut : entity work.display_decoder(behaviour)
+    port map (value, zero_blank, display, zero_blank_out);
+  stimulus : process is
+    begin
+      zero_blank <= '0';
+      value <= "0000"; wait for 20 ns;
+      value <= "0001"; wait for 20 ns;
+      value <= "0010"; wait for 20 ns;
+      value <= "0011"; wait for 20 ns;
+      value <= "0100"; wait for 20 ns;
+      value <= "0101"; wait for 20 ns;
+      value <= "0110"; wait for 20 ns;
+      value <= "0111"; wait for 20 ns;
+      value <= "1000"; wait for 20 ns;
+      value <= "1001"; wait for 20 ns;
+      value <= "1010"; wait for 20 ns;
+      value <= "1011"; wait for 20 ns;
+      value <= "1100"; wait for 20 ns;
+      value <= "1101"; wait for 20 ns;
+      value <= "1110"; wait for 20 ns;
+      value <= "1111"; wait for 20 ns;
+      zero_blank <= '1';
+      value <= "0000"; wait for 20 ns;
+      value <= "0001"; wait for 20 ns;
+      value <= "0010"; wait for 20 ns;
+      value <= "0011"; wait for 20 ns;
+      value <= "0100"; wait for 20 ns;
+      value <= "0101"; wait for 20 ns;
+      value <= "0110"; wait for 20 ns;
+      value <= "0111"; wait for 20 ns;
+      value <= "1000"; wait for 20 ns;
+      value <= "1001"; wait for 20 ns;
+      value <= "1010"; wait for 20 ns;
+      value <= "1011"; wait for 20 ns;
+      value <= "1100"; wait for 20 ns;
+      value <= "1101"; wait for 20 ns;
+      value <= "1110"; wait for 20 ns;
+      value <= "1111"; wait for 20 ns;
+      wait;
+    end process stimulus;
+end architecture tests;
