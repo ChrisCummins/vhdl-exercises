@@ -28,4 +28,24 @@ architecture tests of parity_tb is
 begin
   dut : entity work.parity(behaviour)
     port map (d0, d1, d2, d3, d4, d5, d6, d7, mode, result);
+  stimulus: process is
+    begin
+      d0 <= '1'; d1 <= '0'; d2 <= '0'; d3 <= '0';
+      d4 <= '0'; d5 <= '0'; d6 <= '0'; d7 <= '0';
+      mode <= '0'; wait for 20 ns; -- test #1
+      mode <= '1'; wait for 20 ns; -- test #2
+      d0 <= '1'; d1 <= '1'; d2 <= '0'; d3 <= '0';
+      d4 <= '0'; d5 <= '0'; d6 <= '0'; d7 <= '0';
+      mode <= '0'; wait for 20 ns; -- test #3
+      mode <= '1'; wait for 20 ns; -- test #4
+      d0 <= '1'; d1 <= '0'; d2 <= '1'; d3 <= '0';
+      d4 <= '1'; d5 <= '0'; d6 <= '1'; d7 <= '0';
+      mode <= '0'; wait for 20 ns; -- test #5
+      mode <= '1'; wait for 20 ns; -- test #6
+      d0 <= '1'; d1 <= '0'; d2 <= '1'; d3 <= '0';
+      d4 <= '1'; d5 <= '0'; d6 <= '1'; d7 <= '1';
+      mode <= '0'; wait for 20 ns; -- test #7
+      mode <= '1'; wait for 20 ns; -- test #8
+      wait;
+    end process stimulus;
 end architecture tests;
