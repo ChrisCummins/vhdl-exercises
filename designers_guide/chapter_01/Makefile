@@ -1,18 +1,14 @@
 SRC  := multiplexers.vhdl
-UNIT := multiplexer_tb
 
-VCD  := $(SRC:%.vhdl=%.vcd)
-
-.PHONY: all clean wave
+.PHONY: all clean
 
 all:
 	@echo "  GHDL   $(SRC)"
 	@ghdl -a $(SRC)
-	@ghdl -e $(UNIT)
-	@ghdl -r $(UNIT) --vcd=$(VCD)
+	@ghdl -e tb_2bit
+	@ghdl -r tb_2bit --vcd=tb_2bit.vcd
+	@ghdl -e tb_4bit
+	@ghdl -r tb_4bit --vcd=tb_4bit.vcd
 
 clean:
-	@rm -vf *.o work-obj93.cf $(VCD) $(UNIT)
-
-wave:
-	@gtkwave $(VCD)
+	@rm -vf *.o work-obj93.cf *.vcd tb_2bit tb_4bit

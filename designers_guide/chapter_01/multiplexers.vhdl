@@ -49,10 +49,10 @@ end architecture struct;
 --
 -- TEST BENCH
 --
-entity multiplexer_tb is
-end entity multiplexer_tb;
+entity tb_2bit is
+end entity tb_2bit;
 
-architecture test_multiplexer_2bit of multiplexer_tb is
+architecture tests of tb_2bit is
   signal a, b, sel, z : bit;
 begin
   dut : entity work.multiplexer_2bit(behaviour)
@@ -67,23 +67,26 @@ begin
     sel <= '1'; wait for 20 ns;
     wait;
   end process stimulus;
-end architecture test_multiplexer_2bit;
+end architecture tests;
 
---architecture test_multiplexer_4bit of multiplexer_tb is
---  signal a3, a2, a1, a0, b3, b2, b1, b0, s, z3, z2, z1, z0 : bit;
---begin
---  dut : entity work.multiplexer_4bit(struct)
---    port map (a3, a2, a1, a0, b3, b2, b1, b0, s, z3, z2, z1, z0);
---  stimulus: process is
---  begin
---    a3 <= '1'; a2 <= '0'; a1 <= '1'; a0 <= '0';
---    b3 <= '0'; b2 <= '1'; b1 <= '0'; b0 <= '1';
---    s <= '0'; wait for 20 ns;
---    s <= '1'; wait for 20 ns;
---    a3 <= '0'; a2 <= '1'; a1 <= '0'; a0 <= '1';
---    b3 <= '1'; b2 <= '0'; b1 <= '1'; b0 <= '0';
---    s <= '0'; wait for 20 ns;
---    s <= '1'; wait for 20 ns;
---    wait;
---  end process stimulus;
---end architecture test_multiplexer_4bit;
+entity tb_4bit is
+end entity tb_4bit;
+
+architecture tests of tb_4bit is
+  signal a3, a2, a1, a0, b3, b2, b1, b0, sel, z3, z2, z1, z0 : bit;
+begin
+  dut : entity work.multiplexer_4bit(struct)
+    port map (a3, a2, a1, a0, b3, b2, b1, b0, sel, z3, z2, z1, z0);
+  stimulus : process is
+  begin
+    a3 <= '1'; a2 <= '0'; a1 <= '1'; a0 <= '0';
+    b3 <= '0'; b2 <= '1'; b1 <= '0'; b0 <= '1';
+    sel <= '0'; wait for 20 ns;
+    sel <= '1'; wait for 20 ns;
+    a3 <= '0'; a2 <= '1'; a1 <= '0'; a0 <= '1';
+    b3 <= '1'; b2 <= '0'; b1 <= '1'; b0 <= '0';
+    sel <= '0'; wait for 20 ns;
+    sel <= '1'; wait for 20 ns;
+    wait;
+  end process stimulus;
+end architecture tests;
