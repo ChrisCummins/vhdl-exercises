@@ -3,7 +3,7 @@ UNIT := parity_tb
 
 VCD  := $(SRC:%.vhdl=%.vcd)
 
-.PHONY: all clean
+.PHONY: all clean wave
 
 all:
 	@echo "  GHDL   $(SRC)"
@@ -13,3 +13,6 @@ all:
 
 clean:
 	@rm -vf *.o work-obj93.cf
+
+wave:
+	@gtkwave $(VCD)
