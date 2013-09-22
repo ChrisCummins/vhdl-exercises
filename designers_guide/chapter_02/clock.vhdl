@@ -20,10 +20,10 @@ end architecture clock_arch;
 -- TEST BENCH
 --
 
-entity tb is
-end entity tb;
+entity clock_tb is
+end entity clock_tb;
 
-architecture tests of tb is
+architecture tests of clock_tb is
   signal clk : bit;
   signal q : integer;
 begin
