@@ -37,7 +37,7 @@ begin
   bit3 : entity work.multiplexer_2bit(behaviour)
     port map (a3, b3, sel, z3);
   bit2 : entity work.multiplexer_2bit(behaviour)
-    port map (a2, b2, sel, z1);
+    port map (a2, b2, sel, z2);
   bit1 : entity work.multiplexer_2bit(behaviour)
     port map (a1, b1, sel, z1);
   bit0 : entity work.multiplexer_2bit(behaviour)
