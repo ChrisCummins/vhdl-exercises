@@ -12,7 +12,7 @@ all:
 	@ghdl -r $(UNIT) --vcd=$(VCD)
 
 clean:
-	@rm -vf *.o work-obj93.cf
+	@rm -vf *.o work-obj93.cf $(VCD) $(UNIT)
 
 wave:
 	@gtkwave $(VCD)
