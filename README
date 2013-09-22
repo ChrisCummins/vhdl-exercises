@@ -1,1 +1,15 @@
 Some VHDL exercises and examples.
+
+To build all examples:
+
+  $ git clone https://github.com/ChrisCummins/vhdl-exercises.git
+
+  $ cd vhdl-exercises
+
+  $ make
+
+Required packages:
+
+  make
+  ghdl
+  gtkwave
