@@ -1,0 +1,85 @@
+5.3 The VHDL Hardware Description Language
+==========================================
+
+Language features:
+
+ * Designs may be decomposed hierarchically.
+
+ * Each design element has a well defined interface and a precise functional
+   specification.
+
+ * Functional specifications can use either a behavioural algorithm or a
+   hardware structure.
+
+ * Concurrency, timing, and clocking can all be modelled (can handle synchronous
+   and asynchronous sequential-circuit structures).
+
+ * Can simulate the logical operation and timing behaviour of a design.
+
+5.3.1 Program Structure
+-----------------------
+
+ * VHDL borrows ideas from Pascal and Ada.
+
+ * Key concept is defining the interface of a hardware module while hiding its
+   internal details (abstraction/encapsulation).
+
+	entity		simply a declaration of a module's inputs and outputs.
+
+	architecture	detailed description of the module's internal behaviour
+			or structure.
+
+ * Entity and architecture definitions are kept separate (sometimes in different
+   files).
+
+Entity declaration syntax:
+
+       entity [entity-name] is
+         port ([signal-names] : [mode] [signal-type];
+               [signal-names] : [mode] [signal-type]);
+       end [entity-name];
+
+
+  modes:
+     in		input to an entity.
+     out	output of an entity.
+     buffer	output of an entity, whose value can be read inside the
+      		entity's architecture.
+     inout	input or output of an entity.
+
+5.3.2 Types, Constants and Arrays
+---------------------------------
+
+Array declarations examples:
+
+      type monthly_count is array (1 to 12) of integer;
+      type byte is array (7 downto 0) of STD_LOGIC;
+
+      constant WORD_LEN: integer := 32;
+      type word is array (WORD_LEN-1 downto 0) of STD_LOGIC;
+
+      constant NUM_REGS: integer := 8;
+      type reg_file is array (1 to NUM_REGS) of word;
+
+      type statecount is array (traffic_light_state) of integer;
+
+5.3.3 Functions and Proceedures
+-------------------------------
+
+Function definition syntax:
+
+    function [function-name] (
+        [signal-names] : [signal-type];
+        [signal-names] : [signal-type];
+        [signal-names] : [signal-type];
+    ) return [return-type] is
+        [type declarations]
+	[constant declarations]
+	[variable declarations]
+	[function definitions]
+	[procedure definitions]
+    begin
+        [sequential statement]
+	...
+        [sequential statement]
+    end [function-name];
