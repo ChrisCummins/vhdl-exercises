@@ -1,0 +1,49 @@
+Chapter 2 - Scalar Data Types and Operations
+********************************************
+
+1. Constant declarations:
+
+        constant bits_per_word : inter := 32;
+	constant pi : real := 3.142;
+
+2. Variable declarations:
+
+        variable counter : integer := 0;
+	variable status : boolean;
+	variable tmp : std_ulogic;
+
+3. Variable assignments:
+
+        counter := counter + 1;
+	status := true;
+	tmp := 'W';
+
+5.
+    a) correct
+    b) a = '1' and b = '0' and state = idle
+    c) a = '0' and b = '1' and state = idle
+    d) correct
+
+6.
+    pulse_range:
+	'left			1ms
+	'right			100ms
+	'low			1ms
+	'high			100ms
+	'ascending		true
+
+    word_index:
+	'left			31
+	'right			0
+	'low			0
+	'high			31
+	'ascending		false
+
+7. type state is (off, standby, active1, active2);
+
+        state'pos(standby)	1
+        state'succ(active2)	undefined
+        state'leftof(off)	undefined
+        state'val(2)		active1
+        state'pred(active1)	standby
+        state'rightof(off)	standby
