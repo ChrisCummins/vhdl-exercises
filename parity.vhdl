@@ -13,6 +13,6 @@ end;
 architecture behaviour of parity is
   signal sum : bit;
 begin
-    sum <= d0 xor d1 xor d2 xor d3 xor d4 xor d5 xor d6 xor d7;
-    result <= sum when mode = '1' else not sum;
+  sum <= d0 xor d1 xor d2 xor d3 xor d4 xor d5 xor d6 xor d7;
+  result <= sum when mode = '1' else not sum;
 end;
