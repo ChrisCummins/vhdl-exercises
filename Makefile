@@ -1,8 +1,17 @@
+SUBDIRS = $(shell find . -type d | grep -v git | tail -n+2)
+
 all:
-	@for f in `ls *.vhdl`; do	\
-		echo "  VHDL    $$f";	\
-		ghdl -a $$f;		\
+	@for d in $(SUBDIRS); do \
+		test -f $$d/Makefile && { \
+			echo "Entering directory \`$$d'"; \
+			make -sC $$d; \
+		}; \
 	done
 
 clean:
-	rm *.o work-obj93.cf
+	@for d in $(SUBDIRS); do \
+		test -f $$d/Makefile && { \
+			echo "Entering directory \`$$d'"; \
+			make -sC $$d clean; \
+		}; \
+	done
