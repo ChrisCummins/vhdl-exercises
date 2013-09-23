@@ -1,0 +1,20 @@
+Chapter 3 - Sequential Statements
+*********************************
+
+1. odd := '1' when n mod 2 = 1 else '0';
+
+2. if (year mod 400 = 0) or (year mod 4 = 0) then
+     days_in_February := 29;
+   else
+     days_in_February := 28;
+   end if;
+
+3. with x select
+     x := '0' when '0' | 'L',
+          '1' when '1' | 'H',
+	  'X' when others;
+
+5. loop
+     wait until clk;
+     exit when d;
+   end loop;
