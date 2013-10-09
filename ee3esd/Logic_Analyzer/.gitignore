@@ -1,0 +1,4 @@
+/tmp/*
+/trace.dat
+/test_bench
+/test_bench.ghw
