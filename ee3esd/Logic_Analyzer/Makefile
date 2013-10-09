@@ -11,29 +11,7 @@ SOURCES = \
 	transmitter.vhd \
 	serial_port.vhd
 
-all help:
-	@echo ""
-	@echo "Simulation:"
-	@echo ""
-	@echo "make simulation     - simulate design"
-	@echo "make viewer         - start waveform viewer for simulation results"
-	@echo ""
-	@echo "Synthesis:"
-	@echo ""
-	@echo "make synthesis      - synthesize design"
-	@echo "make implementation - implement design"
-	@echo "make bitfile        - generate bitfile"
-	@echo ""
-	@echo "Upload:"
-	@echo ""
-	@echo "make upload         - upload design to FPGA"
-	@echo ""
-	@echo "Cleanup:"
-	@echo ""
-	@echo "make clean          - delete temporary files and cleanup directory"
-	@echo ""
-
-simulation sim:
+all simulation sim:
 	@for f in $(SOURCES); do \
 	    echo "ghdl -a $$f"; \
 	    ghdl -a $$f; \
@@ -144,3 +122,25 @@ clean:
 	      top_level_map.map top_level_map.xrpt par_usage_statistics.html top_level.ptwx top_level.pad top_level_pad.csv \
 	      top_level.unroutes top_level.xpi top_level_par.xrpt top_level.twx top_level.nlf design.bit
 	@rm -rfv _xmsgs reports tmp xlnx_auto_0_xdb
+
+help:
+	@echo ""
+	@echo "Simulation:"
+	@echo ""
+	@echo "make simulation     - simulate design"
+	@echo "make viewer         - start waveform viewer for simulation results"
+	@echo ""
+	@echo "Synthesis:"
+	@echo ""
+	@echo "make synthesis      - synthesize design"
+	@echo "make implementation - implement design"
+	@echo "make bitfile        - generate bitfile"
+	@echo ""
+	@echo "Upload:"
+	@echo ""
+	@echo "make upload         - upload design to FPGA"
+	@echo ""
+	@echo "Cleanup:"
+	@echo ""
+	@echo "make clean          - delete temporary files and cleanup directory"
+	@echo ""
