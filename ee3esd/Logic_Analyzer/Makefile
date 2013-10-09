@@ -17,6 +17,8 @@ SOURCES =				\
 	test_bench.vhd 			\
 	$(NULL)
 
+OBJECTS = $(SOURCES:.vhd=.o)
+
 TARGET = test_bench
 TARGET_GHW = $(TARGET).ghw
 
@@ -26,13 +28,13 @@ $(TARGET_GHW): $(TARGET)
 	@echo "   GHDL    $(TARGET) --wave=$(TARGET_GHW)"
 	$(QUIET)ghdl -r $(TARGET) --wave=$(TARGET_GHW)
 
-$(TARGET): $(SOURCES)
-	$(QUIET)for f in $(SOURCES); do \
-	    echo "   GHDL    $$f"; \
-	    ghdl -a $$f; \
-	done
+$(TARGET): $(OBJECTS)
 	@echo "   GHDL    $(TARGET)"
 	$(QUIET)ghdl -e $(TARGET)
+
+%.o: %.vhd
+	@echo "   GHDL    $<"
+	$(QUIET)ghdl -a $<
 
 .PHONY: viewer view
 

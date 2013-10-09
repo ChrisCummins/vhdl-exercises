@@ -9,19 +9,21 @@ SOURCES =				\
 	radio_clock_test_signal.vhd	\
 	$(NULL)
 
+OBJECTS = $(SOURCES:.vhd=.o)
+
 all simulation sim: $(TARGET).ghw
 
 $(TARGET).ghw: $(TARGET)
 	@echo "   GHDL    $(TARGET) --wave=$(TARGET).ghw"
 	$(QUIET)ghdl -r $(TARGET) --wave=$(TARGET).ghw
 
-$(TARGET): $(SOURCES)
-	$(QUIET)for f in $(SOURCES); do	\
-	    echo "   GHDL    $$f";	\
-	    ghdl -a $$f;		\
-	done
+$(TARGET): $(OBJECTS)
 	@echo "   GHDL    $(TARGET)"
 	$(QUIET)ghdl -e $(TARGET)
+
+%.o: %.vhd
+	@echo "   GHDL    $<"
+	$(QUIET)ghdl -a $<
 
 viewer view: $(TARGET).ghw
 	@echo "   GTKWAVE $(TARGET).ghw $(TARGET).sav"
