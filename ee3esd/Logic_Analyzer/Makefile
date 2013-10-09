@@ -20,13 +20,13 @@ SOURCES =				\
 OBJECTS = $(SOURCES:.vhd=.o)
 
 TARGET = test_bench
-TARGET_GHW = $(TARGET).ghw
+WAVE = $(TARGET).ghw
 
-all simulation sim: $(TARGET_GHW)
+all simulation sim: $(WAVE)
 
-$(TARGET_GHW): $(TARGET)
-	@echo "   GHDL    $(TARGET) --wave=$(TARGET_GHW)"
-	$(QUIET)ghdl -r $(TARGET) --wave=$(TARGET_GHW)
+$(WAVE): $(TARGET)
+	@echo "   GHDL    $(TARGET) --wave=$(WAVE)"
+	$(QUIET)ghdl -r $(TARGET) --wave=$(WAVE)
 
 $(TARGET): $(OBJECTS)
 	@echo "   GHDL    $(TARGET)"
@@ -38,9 +38,9 @@ $(TARGET): $(OBJECTS)
 
 .PHONY: viewer view
 
-viewer view: $(TARGET_GHW)
-	@echo "   GTKWAVE $(TARGET_GHW) test_bench.sav"
-	$(QUIET)gtkwave $(TARGET_GHW) test_bench.sav
+viewer view: $(WAVE)
+	@echo "   GTKWAVE $(WAVE) test_bench.sav"
+	$(QUIET)gtkwave $(WAVE) test_bench.sav
 
 synthesis syn:
 	@echo "Synthesis running..."
@@ -135,7 +135,7 @@ upload up:
 	djtgcfg prog -d Nexys3 -i 0 -f design.bit
 
 clean:
-	$(QUIET)rm -fv *~ *.o trace.dat $(TARGET) $(TARGET_GHW) work-obj93.cf top_level.ngc top_level.ngd top_level_map.ngm \
+	$(QUIET)rm -fv *~ *.o trace.dat $(TARGET) $(WAVE) work-obj93.cf top_level.ngc top_level.ngd top_level_map.ngm \
 	      top_level.pcf top_level_map.ncd top_level.ncd top_level_xsim.vhd top_level_tsim.vhd top_level_tsim.sdf \
 	      top_level_tsim.nlf top_level_xst.xrpt top_level_ngdbuild.xrpt top_level_usage.xml top_level_summary.xml \
 	      top_level_map.map top_level_map.xrpt par_usage_statistics.html top_level.ptwx top_level.pad top_level_pad.csv \
