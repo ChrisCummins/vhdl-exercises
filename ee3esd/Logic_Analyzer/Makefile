@@ -2,6 +2,10 @@
 # Makefile to simulate and synthesize VHDL designs
 #
 
+# Use V=1 to see full verbosity
+QUIET_  = @
+QUIET   = $(QUIET_$(V))
+
 SOURCES = \
 	std_logic_textio.vhd \
 	util.vhd \
@@ -13,15 +17,19 @@ SOURCES = \
 
 all simulation sim:
 	@for f in $(SOURCES); do \
-	    echo "ghdl -a $$f"; \
+	    echo "   GHDL    $$f"; \
 	    ghdl -a $$f; \
 	done
-	ghdl -a test_bench.vhd
-	ghdl -e test_bench
-	ghdl -r test_bench --wave=test_bench.ghw
+	@echo "   GHDL    test_bench.vhd"
+	$(QUIET)ghdl -a test_bench.vhd
+	@echo "   GHDL    test_bench"
+	$(QUIET)ghdl -e test_bench
+	@echo "   GHDL    test_bench --wave=test_bench.ghw"
+	$(QUIET)ghdl -r test_bench --wave=test_bench.ghw
 
 viewer view:
-	gtkwave test_bench.ghw test_bench.sav &
+	@echo "   GTKWAVE test_bench.ghw test_bench.sav"
+	$(QUIET)gtkwave test_bench.ghw test_bench.sav
 
 synthesis syn:
 	@echo "Synthesis running..."

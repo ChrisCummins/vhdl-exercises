@@ -3,7 +3,7 @@ SRC  := multiplexers.vhdl
 .PHONY: all clean
 
 all:
-	@echo "  GHDL   $(SRC)"
+	@echo "   GHDL    $(SRC)"
 	@ghdl -a $(SRC)
 	@ghdl -e tb_2bit
 	@ghdl -r tb_2bit --vcd=tb_2bit.vcd
