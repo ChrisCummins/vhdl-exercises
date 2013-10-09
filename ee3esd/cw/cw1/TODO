@@ -1,0 +1,57 @@
+PASS
+====
+
+At least 5 screenshots of waveforms showing buttons bouncing. It doesn't matter
+which button as long as you have 5 distinct events captured.
+
+Screenshots of your sampled DCF signals over at least one full minute showing
+the start of the minute and the start of the next minute. You need to zoom in
+sufficiently to be able to tell the duration of the pulses and be able to
+identify the information encoded on them. Make the screenshots overlap, e.g. the
+end of one screenshot should be the start of the next, so that when you put all
+screenshots next to each other you get the full minute with all details of the
+encoded information clearly visible.
+
+The decoded bits from second 0 to second 59 for the DCF signal and the decoded
+time and date information from the decoded bits including a description how you
+decoded them including the parity checks.
+
+AVERAGE
+=======
+
+Screenshots of your sampled MSF signals over at least one full minute showing
+the start of the minute and the start of the next minute. You need to zoom in
+sufficiently to be able to tell the duration of the pulses and be able to
+identify the information encoded on them. Make the screenshots overlap, e.g. the
+end of one screenshot should be the start of the next, so that when you put all
+screenshots next to each other you get the full minute with all details of the
+encoded information clearly visible.
+
+An annotated trace file of your DCF signals as described above, which
+corresponds to the DCF screenshots in your report.
+
+An annotated trace file of your MSF signals as described above, which
+corresponds to the MSF screenshots in your report.
+
+The decoded bits from second 0 to second 59 for the MSF signal the decoded time
+and date information from the decoded bits including a description how you
+decoded them including the parity checks.
+
+FIRST CLASS
+===========
+
+Give typical timescales for the buttons to settle as measured from your
+waveforms with GTKWave. Calculate the average time it takes for a button to
+settle with standard deviation plus minimum and maximum time. You need to
+analyse at least 100 events to get reasonable statistics.
+
+An annotated trace file showing the differences in arrival times of the DCF and
+MSF second markers from one second to the next and between MSF and DCF. An
+analysis of these to show the mean difference and standard deviation between
+consecutive seconds and the two radio clocks. An estimate of the frequency error
+of the local crystal oscillator on the development board including error margins
+based on your data.
+
+A theoretical estimate of the expected time difference between DCF and MSF radio
+clock signals and a comparison with your experimental results obtained plus
+explanation of any differences.
