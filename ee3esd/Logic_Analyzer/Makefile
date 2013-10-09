@@ -6,14 +6,16 @@
 QUIET_  = @
 QUIET   = $(QUIET_$(V))
 
-SOURCES = \
-	std_logic_textio.vhd \
-	util.vhd \
-	bcd_counter.vhd \
-	fifo.vhd \
-	trigger.vhd \
-	transmitter.vhd \
-	serial_port.vhd
+SOURCES =				\
+	std_logic_textio.vhd 		\
+	util.vhd 			\
+	bcd_counter.vhd 		\
+	fifo.vhd 			\
+	trigger.vhd 			\
+	transmitter.vhd 		\
+	serial_port.vhd 		\
+	test_bench.vhd 			\
+	$(NULL)
 
 TARGET = test_bench
 TARGET_GHW = $(TARGET).ghw
@@ -24,13 +26,11 @@ $(TARGET_GHW): $(TARGET)
 	@echo "   GHDL    $(TARGET) --wave=$(TARGET_GHW)"
 	$(QUIET)ghdl -r $(TARGET) --wave=$(TARGET_GHW)
 
-$(TARGET): $(SOURCES) test_bench.vhd
+$(TARGET): $(SOURCES)
 	$(QUIET)for f in $(SOURCES); do \
 	    echo "   GHDL    $$f"; \
 	    ghdl -a $$f; \
 	done
-	@echo "   GHDL    test_bench.vhd"
-	$(QUIET)ghdl -a test_bench.vhd
 	@echo "   GHDL    $(TARGET)"
 	$(QUIET)ghdl -e $(TARGET)
 
