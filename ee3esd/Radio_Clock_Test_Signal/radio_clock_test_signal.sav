@@ -1,0 +1,11 @@
+[timestart] 0
+[size] 1600 1107
+[pos] -1 -1
+*-53.078758 40000000000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+@28
+top.radio_clock_test_signal.msf
+@29
+top.radio_clock_test_signal.dcf
+[pattern_trace] 1
+[pattern_trace] 0
