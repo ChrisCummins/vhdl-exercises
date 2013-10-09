@@ -15,21 +15,30 @@ SOURCES = \
 	transmitter.vhd \
 	serial_port.vhd
 
-all simulation sim:
+TARGET = test_bench
+TARGET_GHW = $(TARGET).ghw
+
+all simulation sim: $(TARGET_GHW)
+
+$(TARGET_GHW): $(TARGET)
+	@echo "   GHDL    $(TARGET) --wave=$(TARGET_GHW)"
+	$(QUIET)ghdl -r $(TARGET) --wave=$(TARGET_GHW)
+
+$(TARGET): $(SOURCES) test_bench.vhd
 	$(QUIET)for f in $(SOURCES); do \
 	    echo "   GHDL    $$f"; \
 	    ghdl -a $$f; \
 	done
 	@echo "   GHDL    test_bench.vhd"
 	$(QUIET)ghdl -a test_bench.vhd
-	@echo "   GHDL    test_bench"
-	$(QUIET)ghdl -e test_bench
-	@echo "   GHDL    test_bench --wave=test_bench.ghw"
-	$(QUIET)ghdl -r test_bench --wave=test_bench.ghw
+	@echo "   GHDL    $(TARGET)"
+	$(QUIET)ghdl -e $(TARGET)
 
-viewer view:
-	@echo "   GTKWAVE test_bench.ghw test_bench.sav"
-	$(QUIET)gtkwave test_bench.ghw test_bench.sav
+.PHONY: viewer view
+
+viewer view: $(TARGET_GHW)
+	@echo "   GTKWAVE $(TARGET_GHW) test_bench.sav"
+	$(QUIET)gtkwave $(TARGET_GHW) test_bench.sav
 
 synthesis syn:
 	@echo "Synthesis running..."
@@ -124,7 +133,7 @@ upload up:
 	djtgcfg prog -d Nexys3 -i 0 -f design.bit
 
 clean:
-	$(QUIET)rm -fv *~ *.o trace.dat test_bench test_bench.ghw work-obj93.cf top_level.ngc top_level.ngd top_level_map.ngm \
+	$(QUIET)rm -fv *~ *.o trace.dat $(TARGET) $(TARGET_GHW) work-obj93.cf top_level.ngc top_level.ngd top_level_map.ngm \
 	      top_level.pcf top_level_map.ncd top_level.ncd top_level_xsim.vhd top_level_tsim.vhd top_level_tsim.sdf \
 	      top_level_tsim.nlf top_level_xst.xrpt top_level_ngdbuild.xrpt top_level_usage.xml top_level_summary.xml \
 	      top_level_map.map top_level_map.xrpt par_usage_statistics.html top_level.ptwx top_level.pad top_level_pad.csv \
