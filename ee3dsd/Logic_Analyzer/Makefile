@@ -36,11 +36,14 @@ $(TARGET): $(OBJECTS)
 	@echo "   GHDL    $<"
 	$(QUIET)ghdl -a $<
 
-.PHONY: viewer view
+.PHONY: viewer view sloccount sloc
 
 viewer view: $(WAVE)
 	@echo "   GTKWAVE $(WAVE) test_bench.sav"
 	$(QUIET)gtkwave $(WAVE) test_bench.sav
+
+sloccount sloc:
+	$(QUIET)find . -name '*.vhd' | xargs wc -l
 
 synthesis syn:
 	@echo "Synthesis running..."
@@ -143,6 +146,9 @@ clean:
 	$(QUIET)rm -rfv _xmsgs reports tmp xlnx_auto_0_xdb
 
 help:
+	@echo ""
+	@echo "make help           - display this help text"
+	@echo "make sloccount      - show line count of VHDL sources"
 	@echo ""
 	@echo "Simulation:"
 	@echo ""
