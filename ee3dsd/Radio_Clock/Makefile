@@ -45,7 +45,7 @@ synthesis syn:
 	@[ -d reports           ] || mkdir reports
 	@[ -d $(TMP_DIR)        ] || mkdir $(TMP_DIR)
 	@[ -d $(TMP_DIR)/_xmsgs ] || mkdir $(TMP_DIR)/_xmsgs
-	
+
 	@echo "work" > $(TMP_DIR)/top_level.lso
 
 	@( \
@@ -61,7 +61,7 @@ synthesis syn:
 	        [ -f $$f ] || echo "s/@@$${f%.vhd}@@/$${f%.vhd}_ipc/g"; \
 	    done; \
 	) > $(TMP_DIR)/sed.cmd
-	
+
 	@sed -f $(TMP_DIR)/sed.cmd < Templates/top_level.vhd > top_level.vhd
 
 	@( \
@@ -97,7 +97,7 @@ synthesis syn:
 
 implementation impl:
 	@echo "Implementation running..."
-	
+
 	@[ -d reports                    ] || mkdir reports
 	@[ -d $(TMP_DIR)                 ] || mkdir $(TMP_DIR)
 	@[ -d $(TMP_DIR)/xlnx_auto_0_xdb ] || mkdir $(TMP_DIR)/xlnx_auto_0_xdb
@@ -122,7 +122,7 @@ implementation impl:
 	@mv _xmsgs/* $(TMP_DIR)/_xmsgs
 	@rmdir _xmsgs
 	@mv par_usage_statistics.html top_level.ptwx top_level.pad top_level_pad.csv top_level.unroutes top_level.xpi top_level_par.xrpt $(TMP_DIR)
-	
+
 	@trce -intstyle silent -v 3 -s 3 -n 3 -fastpaths -xml top_level.twx top_level.ncd -o top_level.twr top_level.pcf -ucf top_level.ucf
 	@mv top_level.twr reports/trce.log
 	@mv _xmsgs/* $(TMP_DIR)/_xmsgs
@@ -157,7 +157,7 @@ upload up:
 	@echo "Uploading bitfile..."
 
 	djtgcfg prog -d Nexys3 -i 0 -f design.bit
-                                                                                                       
+
 clean:
 	@echo "Deleting temporary files and cleaning up directory..."
 	@rm -f *~ *.o trace.dat test_bench test_bench.ghw work-obj93.cf unisim-obj93.cf top_level.ngc top_level.ngd top_level_map.ngm \
