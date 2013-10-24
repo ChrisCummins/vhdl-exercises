@@ -24,6 +24,10 @@ TMP_DIR=/tmp/$(USER)
 
 all help:
 	@echo ""
+	@echo "Simulation:"
+	@echo ""
+	@echo "make simulation     - simulate design"
+	@echo ""
 	@echo "Synthesis:"
 	@echo ""
 	@echo "make synthesis      - synthesize design"
@@ -38,6 +42,14 @@ all help:
 	@echo ""
 	@echo "make clean          - delete temporary files and cleanup directory"
 	@echo ""
+
+simulation sim:
+	@for f in $(SOURCES); do \
+		if [ -f $$f ]; then \
+			echo "ghdl -a $$f"; \
+			ghdl -a $$f; \
+		fi; \
+	done
 
 synthesis syn:
 	@echo "Synthesis running..."
