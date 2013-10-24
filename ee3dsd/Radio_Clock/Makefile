@@ -155,10 +155,9 @@ upload up:
 	djtgcfg prog -d Nexys3 -i 0 -f design.bit
 
 clean:
-	@echo "Deleting temporary files and cleaning up directory..."
-	@rm -f *~ *.o trace.dat test_bench test_bench.ghw work-obj93.cf unisim-obj93.cf top_level.ngc top_level.ngd top_level_map.ngm \
+	@rm -vf *~ *.o trace.dat test_bench test_bench.ghw work-obj93.cf unisim-obj93.cf top_level.ngc top_level.ngd top_level_map.ngm \
 	      top_level.pcf top_level_map.ncd top_level.ncd top_level_xsim.vhd top_level_tsim.vhd top_level_tsim.sdf \
 	      top_level_tsim.nlf top_level_xst.xrpt top_level_ngdbuild.xrpt top_level_usage.xml top_level_summary.xml \
 	      top_level_map.map top_level_map.xrpt par_usage_statistics.html top_level.ptwx top_level.pad top_level_pad.csv \
 	      top_level.unroutes top_level.xpi top_level_par.xrpt top_level.twx top_level.nlf design.bit
-	@rm -rf _xmsgs reports $(TMP_DIR) xlnx_auto_0_xdb webtalk.log
+	@rm -rvf _xmsgs reports $(TMP_DIR) xlnx_auto_0_xdb webtalk.log
