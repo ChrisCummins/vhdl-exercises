@@ -3,6 +3,8 @@
 #
 
 SOURCES = \
+	std_logic_textio.vhd \
+	util.vhd \
 	ddrserdes.vhd \
 	dcf_bits.vhd \
 	dcf_decode.vhd \
@@ -16,9 +18,7 @@ SOURCES = \
 	serdes.vhd \
 	serial_port.vhd \
 	ssg.vhd \
-	std_logic_textio.vhd \
-	uptime_counter.vhd \
-	util.vhd
+	uptime_counter.vhd
 
 TMP_DIR=/tmp/$(USER)
 
