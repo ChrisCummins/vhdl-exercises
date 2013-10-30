@@ -29,6 +29,11 @@ all simulation sim:
 			ghdl -a $$f; \
 		fi; \
 	done
+	ghdl -e dcf_sync_tb
+	ghdl -r dcf_sync_tb --vcd=dcf_sync_tb.vcd
+
+view:
+	@gtkwave dcf_sync_tb.vcd
 
 synthesis syn:
 	@echo "Synthesis running..."
