@@ -20,6 +20,8 @@ SOURCES = \
 	ssg.vhd \
 	uptime_counter.vhd
 
+TESTBENCHES = dcf_sync_tb
+
 TMP_DIR=/tmp/$(USER)
 
 all simulation sim:
@@ -29,8 +31,12 @@ all simulation sim:
 			ghdl -a $$f; \
 		fi; \
 	done
-	ghdl -e dcf_sync_tb
-	ghdl -r dcf_sync_tb --vcd=dcf_sync_tb.vcd
+	@for t in $(TESTBENCHES); do \
+		echo "ghdl -e $$t"; \
+		ghdl -e $$t; \
+		echo "ghdl -r $$t --vcd=$$t.vcd"; \
+		ghdl -r $$t --vcd=$$t.vcd; \
+	done
 
 view:
 	@gtkwave dcf_sync_tb.vcd
