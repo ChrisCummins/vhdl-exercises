@@ -1,0 +1,92 @@
+Release 14.1 ngdbuild P.15xf (lin)
+Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved.
+
+Command Line: /usr/local/Xilinx/14.1/ISE_DS/ISE/bin/lin/unwrapped/ngdbuild
+-intstyle silent -quiet -dd /tmp/cummince -uc top_level.ucf -p xc6slx16-csg324-3
+top_level.ngc top_level.ngd
+
+Reading NGO file "/users/c/cummince/src/Radio_Clock_Template/top_level.ngc" ...
+Loading design module
+"/users/c/cummince/src/Radio_Clock_Template/pll_ipc.ngc"...
+Loading design module
+"/users/c/cummince/src/Radio_Clock_Template/ddrserdes_ipc.ngc"...
+Loading design module
+"/users/c/cummince/src/Radio_Clock_Template/serdes_ipc.ngc"...
+Loading design module
+"/users/c/cummince/src/Radio_Clock_Template/uptime_counter_ipc.ngc"...
+Loading design module
+"/users/c/cummince/src/Radio_Clock_Template/ssg_ipc.ngc"...
+Loading design module
+"/users/c/cummince/src/Radio_Clock_Template/serial_port_ipc.ngc"...
+Loading design module
+"/users/c/cummince/src/Radio_Clock_Template/edge_detector_ipc.ngc"...
+Loading design module
+"/users/c/cummince/src/Radio_Clock_Template/dcf_sync_ipc.ngc"...
+Loading design module
+"/users/c/cummince/src/Radio_Clock_Template/msf_sync_ipc.ngc"...
+Loading design module
+"/users/c/cummince/src/Radio_Clock_Template/dcf_bits_ipc.ngc"...
+Loading design module
+"/users/c/cummince/src/Radio_Clock_Template/msf_bits_ipc.ngc"...
+Loading design module
+"/users/c/cummince/src/Radio_Clock_Template/dcf_decode_ipc.ngc"...
+Loading design module
+"/users/c/cummince/src/Radio_Clock_Template/msf_decode_ipc.ngc"...
+Gathering constraint information from source properties...
+Done.
+
+Annotating constraints to design from ucf file "top_level.ucf" ...
+Resolving constraint associations...
+Checking Constraint Associations...
+INFO:ConstraintSystem:178 - TNM 'sys_clk_pin', used in period specification
+   'TS_sys_clk_pin', was traced into PLL_ADV instance PLL_ADV. The following new
+   TNM groups and period specifications were generated at the PLL_ADV output(s):
+    
+   CLKOUT1: <TIMESPEC TS_pll_unit_pll_clk_1_ = PERIOD "pll_unit_pll_clk_1_"
+   TS_sys_clk_pin * 2.5 HIGH 50%>
+
+INFO:ConstraintSystem:178 - TNM 'sys_clk_pin', used in period specification
+   'TS_sys_clk_pin', was traced into PLL_ADV instance PLL_ADV. The following new
+   TNM groups and period specifications were generated at the PLL_ADV output(s):
+    
+   CLKOUT0: <TIMESPEC TS_pll_unit_pll_clk_0_ = PERIOD "pll_unit_pll_clk_0_"
+   TS_sys_clk_pin * 10 HIGH 50%>
+
+INFO:ConstraintSystem:178 - TNM 'sys_clk_pin', used in period specification
+   'TS_sys_clk_pin', was traced into PLL_ADV instance PLL_ADV. The following new
+   TNM groups and period specifications were generated at the PLL_ADV output(s):
+    
+   CLKOUT2: <TIMESPEC TS_pll_unit_pll_clk_2_ = PERIOD "pll_unit_pll_clk_2_"
+   TS_sys_clk_pin * 1.25 HIGH 50%>
+
+Done...
+
+INFO:NgdBuild:1222 - Setting CLKIN1_PERIOD attribute associated with PLL
+   instance PLL_ADV to 10.000000 ns based on the period specification (<TIMESPEC
+   TS_sys_clk_pin = PERIOD sys_clk_pin 100000 kHz;> [top_level.ucf(8)]).
+Checking expanded design ...
+WARNING:NgdBuild:478 - clock net pll_unit/clk3 with clock driver
+   pll_unit/clk_syn.clock_buffers[3].bufg_unit drives no clock pins
+WARNING:NgdBuild:478 - clock net pll_unit/clk4 with clock driver
+   pll_unit/clk_syn.clock_buffers[4].bufg_unit drives no clock pins
+WARNING:NgdBuild:478 - clock net pll_unit/clk5 with clock driver
+   pll_unit/clk_syn.clock_buffers[5].bufg_unit drives no clock pins
+
+Partition Implementation Status
+-------------------------------
+
+  No Partitions were found in this design.
+
+-------------------------------
+
+NGDBUILD Design Results Summary:
+  Number of errors:     0
+  Number of warnings:   3
+
+Total memory usage is 116108 kilobytes
+
+Writing NGD file "top_level.ngd" ...
+Total REAL time to NGDBUILD completion:  5 sec
+Total CPU time to NGDBUILD completion:   4 sec
+
+Writing NGDBUILD log file "top_level.bld"...
