@@ -25,6 +25,10 @@ entity dcf_sync is
 end dcf_sync;
 
 architecture rtl of dcf_sync is
+  constant min_s_time : natural := clk_freq - clk_freq / 5;  -- Min time between second pulses
+  constant max_s_time : natural := clk_freq + clk_freq / 10; -- Max time between second pulses
+  constant reset_time : natural := clk_freq * 3;             -- Max time to wait before resetting
+
   signal so_var : std_logic := '0';         -- so port var
   signal mo_var : std_logic := '0';         -- mo port var
   signal di_var : byte := byte_null;        -- Last di sampled
@@ -42,7 +46,7 @@ begin
       pulse_counter <= pulse_counter + 1;   -- Bump the pulse counter
 
       -- Check for rising edge
-      if di > di_var and pulse_counter > clk_freq - clk_freq / 5 then
+      if di > di_var and pulse_counter > min_s_time then
         so_var <= '1';                      -- Clock rising edge means start of second
         pulse_counter <= 0;                 -- Reset clock counter
         if som = '1' then                   -- Check for start of minute flag
@@ -50,12 +54,12 @@ begin
           som <= '0';                       -- Reset start of minute flag
         end if;
       -- Check for missing second
-      elsif pulse_counter > clk_freq + clk_freq / 10  then
+      elsif pulse_counter > max_s_time then
         so_var <= '1';                      -- Add in missing second pulse
         som <= '1';                         -- Raise start of minute flag
         pulse_counter <= 0;                 -- Reset for new second
       -- False start reset
-      elsif pulse_counter > 3 * clk_freq then  -- If it's been too long then there's probably nothing coming
+      elsif pulse_counter > reset_time then
         pulse_counter <= 0;                 -- Reset our pulse clock and start again
       end if;
 
