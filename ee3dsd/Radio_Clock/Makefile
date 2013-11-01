@@ -39,7 +39,7 @@ all simulation sim:
 	done
 
 view:
-	@gtkwave dcf_sync_tb.vcd dcf_sync_tb.sav
+	@gtkwave dcf_sync_tb.vcd dcf_sync_tb.sav >/dev/null 2>&1 &
 
 uber: syn impl bit up
 
