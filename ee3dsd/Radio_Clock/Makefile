@@ -41,6 +41,8 @@ all simulation sim:
 view:
 	@gtkwave dcf_sync_tb.vcd dcf_sync_tb.sav
 
+uber: syn impl bit up
+
 synthesis syn:
 	@echo "Synthesis running..."
 	@[ -d reports           ] || mkdir reports
@@ -167,6 +169,7 @@ help:
 	@echo "Upload:"
 	@echo ""
 	@echo "make upload         - upload design to FPGA"
+	@echo "make uber           - synthesise then upload"
 	@echo ""
 	@echo "Cleanup:"
 	@echo ""
