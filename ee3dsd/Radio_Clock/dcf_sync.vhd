@@ -25,29 +25,51 @@ entity dcf_sync is
 end dcf_sync;
 
 architecture rtl of dcf_sync is
-  signal di_now : byte := byte_null;
-begin
+  constant clk_period: time := 1 / clk_freq * 1000000000 ns;  -- (1 / f)
+  constant sim : positive := 10;            -- Number of seconds in a minute
 
+  signal so_var : std_logic := '0';         -- so port var
+  signal mo_var : std_logic := '0';         -- mo port var
+  signal di_var : byte := byte_null;        -- Last di sampled
+
+  signal pulse_counter : natural := 0;      -- Clock counter for second
+  signal som : std_logic := '0';            -- Flag is raised on the 59th second of each minute
+begin
   process(clk, rst)
   begin
     if rst = '1' then
-      so <= '0';
-      mo <= '0';
+      so <= '0' after gate_delay;           -- Reset our outputs
+      mo <= '0' after gate_delay;
     elsif clk'event and clk = '1' then
-      if di > di_now then
-        so <= '1';
-        mo <= '0';
-      else
-        so <= '0';
-        mo <= '1';
+      so_var <= '0'; mo_var <= '0';         -- Reset our outputs
+      pulse_counter <= pulse_counter + 1;   -- Bump the pulse counter
+
+      -- Check for rising edge
+      if di > di_var and pulse_counter > clk_freq - clk_freq / 5 then
+        so_var <= '1';                      -- Clock rising edge means start of second
+        pulse_counter <= 0;                 -- Reset clock counter
+        if som = '1' then                   -- Check for start of minute flag
+          mo_var <= '1';                    -- Output a start of minute
+          som <= '0';                       -- Reset start of minute flag
+        end if;
+      -- Check for missing second
+      elsif pulse_counter > clk_freq + clk_freq / 10  then
+        so_var <= '1';                      -- Add in missing second pulse
+        som <= '1';                         -- Raise start of minute flag
+        pulse_counter <= 0;                 -- Reset for new second
+      -- False start reset
+      elsif pulse_counter > 3 * clk_freq then  -- If it's been too long then there's probably nothing coming
+        pulse_counter <= 0;                 -- Reset our pulse clock and start again
       end if;
 
-      di_now <= di;
+      di_var <= di;                         -- Save di for next time
+      so <= so_var after gate_delay;        -- Set the outputs
+      mo <= mo_var after gate_delay;
     end if;
   end process;
-
 end rtl;
 
+------ END OF DCF_SYNC LOGIC ------
 
 --
 -- DCF Sync test bench
@@ -76,13 +98,14 @@ begin
   dut: entity work.dcf_sync(rtl)
     port map (rst, clk, di, so, mo);
   process is
+    constant clk_freq : positive := 100;
+    constant clk_period : time := 10 ms;
+
     file     data:      text;
     variable data_line: line;
 
     variable clk_var:   std_logic;
     variable di_var:    byte;
-
-    variable clk_period: positive := 5000000;
   begin
 
     file_open(data, "../cw/cw2/tb-stimulus.txt", read_mode);
@@ -95,7 +118,7 @@ begin
       clk <= clk_var;
       di <= di_var;
 
-      wait for 5000000 ns; -- TODO: derive this from clk_freq
+      wait for clk_period / 2; -- TODO: derive this from clk_freq
     end loop;
 
     file_close(data);
