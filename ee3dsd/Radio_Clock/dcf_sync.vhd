@@ -25,9 +25,6 @@ entity dcf_sync is
 end dcf_sync;
 
 architecture rtl of dcf_sync is
-  constant clk_period: time := 1 / clk_freq * 1000000000 ns;  -- (1 / f)
-  constant sim : positive := 10;            -- Number of seconds in a minute
-
   signal so_var : std_logic := '0';         -- so port var
   signal mo_var : std_logic := '0';         -- mo port var
   signal di_var : byte := byte_null;        -- Last di sampled
@@ -98,7 +95,6 @@ begin
   dut: entity work.dcf_sync(rtl)
     port map (rst, clk, di, so, mo);
   process is
-    constant clk_freq : positive := 100;
     constant clk_period : time := 10 ms;
 
     file     data:      text;
