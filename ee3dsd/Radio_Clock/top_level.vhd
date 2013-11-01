@@ -654,7 +654,7 @@ begin
         fe         => gf_fe
     );
     
-    dcf_sync_unit: dcf_sync_ipc
+    dcf_sync_unit: entity WORK.dcf_sync
     generic map
     (
         clk_freq   => sys_clk_freq,
