@@ -39,7 +39,7 @@ all simulation sim:
 	done
 
 view:
-	@gtkwave dcf_sync_tb.vcd
+	@gtkwave dcf_sync_tb.vcd dcf_sync_tb.sav
 
 synthesis syn:
 	@echo "Synthesis running..."
