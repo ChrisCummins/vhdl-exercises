@@ -3,7 +3,6 @@
 from itertools import cycle
 
 clk_freq = 100 # Clock frequency (Hz)
-clk_period = 1000000000 / clk_freq * 2
 
 def hex2int(hex):
 	return int(hex, 16)
@@ -14,6 +13,7 @@ def hex2bin(hex):
 if __name__ == "__main__":
 	file = open("logs/dcf-signal.cap")
 	out = open("tb-stimulus.txt", "w")
+	clk_period = 1000000000 / clk_freq # Clock period (ns)
 
 	# Initialise starting state
 	line = file.readline()
@@ -37,7 +37,7 @@ if __name__ == "__main__":
 		while time_curr < time_next:
 			clk = clk_iter.next()
 			out.write(str(clk) + " " + str(di_curr) + "\n")
-			time_curr += clk_period
+			time_curr += clk_period / 2
 
 		di_curr = di_next
 		time_curr = time_next
