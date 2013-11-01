@@ -14,12 +14,12 @@ entity dcf_sync is
 
     port
     (
-        rst: in  std_logic := 'X';          -- reset
-        clk: in  std_logic := 'X';          -- clock
+        rst: in  std_logic := 'X';          -- Reset
+        clk: in  std_logic := 'X';          -- Clock
 
-        di:  in  byte      := byte_unknown; -- data in
-        so:  out std_logic := '0';          -- start of second
-        mo:  out std_logic := '0'           -- start of minute
+        di:  in  byte      := byte_unknown; -- Data in
+        so:  out std_logic := '0';          -- Start of second
+        mo:  out std_logic := '0'           -- Start of minute
     );
 
 end dcf_sync;
@@ -29,16 +29,16 @@ architecture rtl of dcf_sync is
   signal mo_var : std_logic := '0';         -- mo port var
   signal di_var : byte := byte_null;        -- Last di sampled
 
-  signal pulse_counter : natural := 0;      -- Clock counter for second
-  signal som : std_logic := '0';            -- Flag is raised on the 59th second of each minute
+  signal pulse_counter : natural := 0;      -- Counter used for measuring pulse lengths
+  signal som : std_logic := '0';            -- Flag that is raised on the 59th second of each minute
 begin
   process(clk, rst)
   begin
     if rst = '1' then
-      so <= '0' after gate_delay;           -- Reset our outputs
+      so <= '0' after gate_delay;           -- Reset the outputs
       mo <= '0' after gate_delay;
     elsif clk'event and clk = '1' then
-      so_var <= '0'; mo_var <= '0';         -- Reset our outputs
+      so_var <= '0'; mo_var <= '0';         -- Zero the outputs
       pulse_counter <= pulse_counter + 1;   -- Bump the pulse counter
 
       -- Check for rising edge
@@ -95,7 +95,7 @@ begin
   dut: entity work.dcf_sync(rtl)
     port map (rst, clk, di, so, mo);
   process is
-    constant clk_period : time := 10 ms;
+    constant clk_period : time := 10 ms; -- 100 Hz
 
     file     data:      text;
     variable data_line: line;
@@ -114,7 +114,7 @@ begin
       clk <= clk_var;
       di <= di_var;
 
-      wait for clk_period / 2; -- TODO: derive this from clk_freq
+      wait for clk_period / 2;
     end loop;
 
     file_close(data);
