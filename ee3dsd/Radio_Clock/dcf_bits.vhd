@@ -50,9 +50,11 @@ begin
   process(clk,rst)
   begin
 
-    if rst = '1' then
+    if rst = '1' then                       -- Reset everything
       sampling <= '0';
       s_count <= 0;
+      bo <= '0' after gate_delay;
+      tr <= '0' after gate_delay;
     elsif clk'event and clk = '1' then
       tr_var <= '0';                        -- Zero the trigger
 
