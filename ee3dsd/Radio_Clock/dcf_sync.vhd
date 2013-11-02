@@ -154,7 +154,6 @@ use WORK.std_logic_textio.all;
 use WORK.util.all;
 
 entity dcf_sync_tb is
-  generic (tick_time:  time := 8 ns);
 end dcf_sync_tb;
 
 architecture tests of dcf_sync_tb is
