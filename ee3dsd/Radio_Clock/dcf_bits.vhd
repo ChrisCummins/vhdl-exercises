@@ -34,7 +34,7 @@ architecture rtl of dcf_bits is
   signal   di_var:      byte      := byte_null;
 
   -- This keeps track of whether we're currently on a high or low pulse:
-  signal   pulse:       bit       := '0';
+  signal   pulse:       std_logic := '0';
 
   -- This keeps track of whether we're currently sampling a pulse:
   signal   sampling:    bit       := '0'; -- whether we're sampling a pulse or not
@@ -54,8 +54,7 @@ begin
       sampling <= '0';
       s_count <= 0;
     elsif clk'event and clk = '1' then
-      bo_var <= '0';                        -- Zero out outputs
-      tr_var <= '0';
+      tr_var <= '0';                        -- Zero the trigger
 
       if di > di_var then                   -- Check for rising or falling edges
         pulse <= '1';
@@ -78,9 +77,7 @@ begin
         sampling <= '0';
         s_count <= 0;
 
-        if pulse = '1' then
-          bo_var <= '1';
-        end if;
+        bo_var <= pulse;
 
         tr_var <= '1';
       end if;
