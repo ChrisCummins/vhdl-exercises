@@ -8,7 +8,7 @@ entity dcf_bits is
 
     generic
     (
-        clk_freq:   positive := 125000000; -- Hz
+        clk_freq:   positive := 100; -- Hz
         gate_delay: time     := 1 ns
     );
 
@@ -26,12 +26,71 @@ entity dcf_bits is
 end dcf_bits;
 
 architecture rtl of dcf_bits is
+  -- We use intermediate signals rather than writing directly to the ports:
+  signal   bo_var:      std_logic := '0';
+  signal   tr_var:      std_logic := '0';
 
-  -- Your declarations go here --
+  -- This contains the data input from the last clock cycle:
+  signal   di_var:      byte      := byte_null;
 
+  -- This keeps track of whether we're currently on a high or low pulse:
+  signal   pulse:       bit       := '0';
+
+  -- This keeps track of whether we're currently sampling a pulse:
+  signal   sampling:    bit       := '0'; -- whether we're sampling a pulse or not
+
+  -- The number of clock cycles after a second begins that we decide on the bit
+  -- value:
+  constant SAMPLE_TIME: natural   := clk_freq * 150 / 1000;
+
+  -- The number of clock cycles since the start of a second:
+  signal   s_count:     natural range 0 to SAMPLE_TIME + 1;
 begin
 
-  -- Your implementation goes here --
+  process(clk,rst)
+  begin
+
+    if rst = '1' then
+      sampling <= '0';
+      s_count <= 0;
+    elsif clk'event and clk = '1' then
+      bo_var <= '0';                        -- Zero out outputs
+      tr_var <= '0';
+
+      if di > di_var then                   -- Check for rising or falling edges
+        pulse <= '1';
+      elsif di < di_var then
+        pulse <= '0';
+      end if;
+
+      if si = '1' then                      -- Check for a second-in pulse
+        sampling <= '1';
+      end if;
+
+      if sampling = '1' then                -- Bump our clock counter
+        s_count <= s_count + 1;
+      end if;
+
+      -- if we're currently sampling a pulse and we've reached the sample time,
+      -- then make a decision on whether the bit is a high or low and trigger a
+      -- new bit out:
+      if sampling = '1' and s_count = SAMPLE_TIME then
+        sampling <= '0';
+        s_count <= 0;
+
+        if pulse = '1' then
+          bo_var <= '1';
+        end if;
+
+        tr_var <= '1';
+      end if;
+
+      di_var <= di;                         -- Store the current input
+      bo <= bo_var after gate_delay;        -- Set our outputs
+      tr <= tr_var after gate_delay;
+    end if;
+
+  end process;
 
 end rtl;
 
