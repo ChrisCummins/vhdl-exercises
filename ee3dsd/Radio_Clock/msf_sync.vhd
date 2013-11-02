@@ -41,11 +41,13 @@ architecture rtl of msf_sync is
   constant MIN_PULSE_TIME: natural   := clk_freq / 15;
 
   -- The clock cycles counter (s_count). We use this to record the number of
-  -- cycles since the last pulse. MIN_S_TIME and MAX_S_TIME defines the window
-  -- of acceptable time between each second pulse (~900ms - ~1100ms).
+  -- cycles since the last pulse. SOM_PULSE_TIME is the shortest acceptable
+  -- start-of-minute pulse (~400ms). MIN_S_TIME and MAX_S_TIME defines the
+  -- window of acceptable time between each second pulse (~900ms - ~1100ms).
   -- RESET_S_TIME is a hard limit on the amount of time to wait for a second
   -- pulse before figuring that something has gone wrong and resetting (~3000
   -- ms).
+  constant SOM_PULSE_TIME: natural   := clk_freq / 2 - clk_freq / 10;
   constant MIN_S_TIME:     natural   := clk_freq - clk_freq / 10;
   constant MAX_S_TIME:     natural   := clk_freq + clk_freq / 13;
   constant RESET_S_TIME:   natural   := clk_freq * 3;
@@ -89,7 +91,7 @@ begin
         if m_count < 60 then
           m_count <= m_count + 1;           -- Count another second
         elsif m_count = 60 then
-          m_count <= 0;                     -- Reset the minute counter
+          m_count <= 1;                     -- Reset the minute counter
           mo_var  <= '1';                   -- Output start of minute pulse
         elsif m_count = M_UNINIT then
           -- We've now in a partially-initialised state, i.e. we've found our
@@ -110,17 +112,10 @@ begin
         if m_count = M_PART_INIT and s_count < MIN_PULSE_TIME then
           s_count <= 0;
           m_count <= M_UNINIT;
+        -- Check for the start of minute 500ms second pulse:
+        elsif m_count = M_PART_INIT and s_count > SOM_PULSE_TIME then
+          m_count <= 1;
         end if;
-
-      -- Check for the missing 59th second pulse, either because we're expecting
-      -- it (we know it's the 59th second), or because we haven't received a
-      -- full minute yet and so we'll assume that any missing pulse is the 59th
-      -- second:
-      elsif (m_count = 59 and s_count = clk_freq)
-        or (m_count = M_PART_INIT and s_count > MAX_S_TIME) then
-        s_count <= 0;                       -- Reset clock counter
-        so_var  <= '1';                     -- Add in missing second pulse
-        m_count <= 60;
 
       -- This is our 'false start' check. If we reach this point, it's either
       -- because we initially latched onto a spike and aren't synchronised with
