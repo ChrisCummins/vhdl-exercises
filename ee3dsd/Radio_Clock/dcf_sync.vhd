@@ -49,7 +49,7 @@ begin
       mo_var  <= '0';
       s_count <= s_count + 1;               -- Bump the clock counter
 
-      -- Look for rising edges, either because we're expecting a second, or
+      -- Check for rising edge, either because we're expecting a second, or
       -- because we're in an uninitalised state and we're trying to latch on to
       -- the first received signal:
       if (di > di_var and s_count > MIN_S_TIME and s_count < MAX_S_TIME)
@@ -74,7 +74,7 @@ begin
       elsif di < di_var then
         pulse <= '0';                       -- Register end of pulse
 
-      -- Look for the missing 59th second pulse, either because we're expecting
+      -- Check for the missing 59th second pulse, either because we're expecting
       -- it (we know it's the 59th second), or because we haven't received a
       -- full minute yet and so we'll assume that any missing pulse is the 59th
       -- second:
