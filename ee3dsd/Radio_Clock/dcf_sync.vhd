@@ -67,12 +67,15 @@ begin
           m_count <= M_PART_INIT;
         end if;
 
-      -- We haven't received a full minute yet so we're going to assume that
-      -- the first missing pulse is the 59th second of a minute:
-      elsif m_count = M_PART_INIT and s_count > MAX_S_TIME then
-        m_count <= 60;
+      -- Look for the missing 59th second pulse, either because we're expecting
+      -- it (we know it's the 59th second), or because we haven't received a
+      -- full minute yet and so we'll assume that any missing pulse is the 59th
+      -- second:
+      elsif (m_count = 59 and s_count = clk_freq)
+        or (m_count = M_PART_INIT and s_count > MAX_S_TIME) then
+        s_count <= 0;                       -- Reset clock counter
         so_var <= '1';                      -- Add in missing second pulse
-        s_count <= 0;                       -- Reset for new second
+        m_count <= 60;
 
       -- This is our 'false start' check. If we reach this point, it's either
       -- because we initially latched onto a spike and aren't synchronised with
