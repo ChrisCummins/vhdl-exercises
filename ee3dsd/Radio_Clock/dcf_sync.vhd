@@ -25,20 +25,18 @@ entity dcf_sync is
 end dcf_sync;
 
 architecture rtl of dcf_sync is
-  constant MIN_S_TIME   : natural := clk_freq - clk_freq / 5;  -- Min time between second pulses
-  constant MAX_S_TIME   : natural := clk_freq + clk_freq / 10; -- Max time between second pulses
-  constant RESET_S_TIME : natural := clk_freq * 2;             -- Max time to wait before resetting
-
-  type m_counter is range 0 to 62;
-  constant M_UNINIT     : m_counter := 62;    -- m_count for uninitialised state
-  constant M_PART_INIT  : m_counter := 61;    -- m_count for partially initialised state
-
   signal so_var : std_logic := '0';         -- so port var
   signal mo_var : std_logic := '0';         -- mo port var
   signal di_var : byte := byte_null;        -- Last di sampled
 
-  signal s_count : natural := 0;            -- Clock pulses within second counter
-  signal m_count : m_counter := M_UNINIT;   -- Seconds within minute counter
+  constant MIN_S_TIME   : natural := clk_freq - clk_freq / 5;  -- Min time between second pulses
+  constant MAX_S_TIME   : natural := clk_freq + clk_freq / 10; -- Max time between second pulses
+  constant RESET_S_TIME : natural := clk_freq * 3;             -- Max time to wait before resetting
+  signal s_count : natural range 0 to RESET_S_TIME := 0; -- The counter
+
+  constant M_UNINIT     : natural := 62;    -- Value for uninitialised state
+  constant M_PART_INIT  : natural := 61;    -- Value for partially initialised state
+  signal m_count : natural range 0 to M_UNINIT := M_UNINIT; -- The counter
 begin
   process(clk, rst)
   begin
