@@ -47,7 +47,7 @@ architecture rtl of dcf_sync is
   -- pulse before figuring that something has gone wrong and resetting (~3000
   -- ms).
   constant MIN_S_TIME:     natural   := clk_freq - clk_freq / 10;
-  constant MAX_S_TIME:     natural   := clk_freq + clk_freq / 11;
+  constant MAX_S_TIME:     natural   := clk_freq + clk_freq / 13;
   constant RESET_S_TIME:   natural   := clk_freq * 3;
   signal s_count:          natural range 0 to RESET_S_TIME + 1;
 
