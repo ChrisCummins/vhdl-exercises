@@ -49,7 +49,7 @@ begin
 
       -- Look for rising edges, either because we're expecting a second, or
       -- because we're in an uninitalised state and we're trying to latch on to
-      -- the first received second:
+      -- the first received signal:
       if (di > di_var and s_count > MIN_S_TIME and s_count < MAX_S_TIME)
         or (di > di_var and m_count = M_UNINIT) then
         s_count <= 0;                       -- Reset clock counter
