@@ -26,8 +26,7 @@ entity dcf_bits is
 end dcf_bits;
 
 architecture rtl of dcf_bits is
-  -- We use intermediate signals rather than writing directly to the ports:
-  signal   bo_var:      std_logic := '0';
+  -- We use an intermediate signal rather than writing directly to the port:
   signal   tr_var:      std_logic := '0';
 
   -- This contains the data input from the last clock cycle:
@@ -79,14 +78,13 @@ begin
         sampling <= '0';
         s_count <= 0;
 
-        bo_var <= pulse;
+        bo <= pulse after gate_delay;
 
         tr_var <= '1';
       end if;
 
       di_var <= di;                         -- Store the current input
-      bo <= bo_var after gate_delay;        -- Set our outputs
-      tr <= tr_var after gate_delay;
+      tr <= tr_var after gate_delay;        -- Set our trigger output
     end if;
 
   end process;
