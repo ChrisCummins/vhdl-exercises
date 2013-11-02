@@ -89,7 +89,7 @@ begin
         if m_count < 60 then
           m_count <= m_count + 1;           -- Count another second
         elsif m_count = 60 then
-          m_count <= 0;                     -- Reset the minute counter
+          m_count <= 1;                     -- Reset the minute counter
           mo_var  <= '1';                   -- Output start of minute pulse
         elsif m_count = M_UNINIT then
           -- We've now in a partially-initialised state, i.e. we've found our
