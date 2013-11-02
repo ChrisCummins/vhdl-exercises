@@ -25,16 +25,20 @@ entity dcf_sync is
 end dcf_sync;
 
 architecture rtl of dcf_sync is
-  constant min_s_time : natural := clk_freq - clk_freq / 5;  -- Min time between second pulses
-  constant max_s_time : natural := clk_freq + clk_freq / 10; -- Max time between second pulses
-  constant reset_time : natural := clk_freq * 3;             -- Max time to wait before resetting
+  constant MIN_S_TIME   : natural := clk_freq - clk_freq / 5;  -- Min time between second pulses
+  constant MAX_S_TIME   : natural := clk_freq + clk_freq / 10; -- Max time between second pulses
+  constant RESET_S_TIME : natural := clk_freq * 2;             -- Max time to wait before resetting
+
+  type m_counter is range 0 to 62;
+  constant M_UNINIT     : m_counter := 62;    -- m_count for uninitialised state
+  constant M_PART_INIT  : m_counter := 61;    -- m_count for partially initialised state
 
   signal so_var : std_logic := '0';         -- so port var
   signal mo_var : std_logic := '0';         -- mo port var
   signal di_var : byte := byte_null;        -- Last di sampled
 
-  signal pulse_counter : natural := 0;      -- Counter used for measuring pulse lengths
-  signal som : std_logic := '0';            -- Flag that is raised on the 59th second of each minute
+  signal s_count : natural := 0;            -- Clock pulses within second counter
+  signal m_count : m_counter := M_UNINIT;   -- Seconds within minute counter
 begin
   process(clk, rst)
   begin
@@ -43,24 +47,33 @@ begin
       mo <= '0' after gate_delay;
     elsif clk'event and clk = '1' then
       so_var <= '0'; mo_var <= '0';         -- Zero the outputs
-      pulse_counter <= pulse_counter + 1;   -- Bump the pulse counter
+      s_count <= s_count + 1;               -- Bump the second counter
 
-      -- Check for rising edge
-      if di > di_var and pulse_counter > min_s_time then
-        so_var <= '1';                      -- Clock rising edge means start of second
-        pulse_counter <= 0;                 -- Reset clock counter
-        if som = '1' then                   -- Check for start of minute flag
-          mo_var <= '1';                    -- Output a start of minute
-          som <= '0';                       -- Reset start of minute flag
+      if di > di_var                        -- Check for rising edge
+        and s_count > MIN_S_TIME
+        and s_count < MAX_S_TIME then
+        s_count <= 0;                       -- Reset clock counter
+        so_var <= '1';                      -- Output second pulse
+
+        if m_count < 60 then
+          m_count <= m_count + 1;           -- Count another second
+        elsif m_count = 60 then
+          m_count <= 0;                     -- Reset the minute counter
+          mo_var <= '1';                    -- Output start of minute pulse
         end if;
-      -- Check for missing second
-      elsif pulse_counter > max_s_time then
+      elsif di > di_var and m_count = M_UNINIT then
+        s_count <= 0;                       -- Reset clock counter
+        so_var <= '1';                      -- Output second pulse
+        m_count <= M_PART_INIT;
+      -- Check for missing second (when we're expecting one)
+      elsif m_count = M_PART_INIT and s_count > MAX_S_TIME then
+        m_count <= 60;
         so_var <= '1';                      -- Add in missing second pulse
-        som <= '1';                         -- Raise start of minute flag
-        pulse_counter <= 0;                 -- Reset for new second
+        s_count <= 0;                       -- Reset for new second
       -- False start reset
-      elsif pulse_counter > reset_time then
-        pulse_counter <= 0;                 -- Reset our pulse clock and start again
+      elsif s_count > RESET_S_TIME then
+        s_count <= 0;                       -- Reset our counters
+        m_count <= M_UNINIT;
       end if;
 
       di_var <= di;                         -- Save di for next time
