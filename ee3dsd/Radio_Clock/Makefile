@@ -6,14 +6,14 @@ SOURCES = \
 	std_logic_textio.vhd \
 	util.vhd \
 	ddrserdes.vhd \
+	dcf_sync.vhd \
 	dcf_bits.vhd \
 	dcf_decode.vhd \
-	dcf_sync.vhd \
 	edge_detector.vhd \
 	fifo.vhd \
+	msf_sync.vhd \
 	msf_bits.vhd \
 	msf_decode.vhd \
-	msf_sync.vhd \
 	pll.vhd \
 	serdes.vhd \
 	serial_port.vhd \
