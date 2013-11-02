@@ -27,6 +27,7 @@ end dcf_sync;
 architecture rtl of dcf_sync is
   signal so_var         : std_logic := '0';                      -- so port var
   signal mo_var         : std_logic := '0';                      -- mo port var
+  signal pulse          : std_logic := 'X';                      -- Whether the input is currently high or low
   signal di_var         : byte      := byte_null;                -- Last di sampled
 
   constant MIN_S_TIME   : natural   := clk_freq - clk_freq / 5;  -- Min time between second pulses
@@ -53,6 +54,7 @@ begin
       -- the first received signal:
       if (di > di_var and s_count > MIN_S_TIME and s_count < MAX_S_TIME)
         or (di > di_var and m_count = M_UNINIT) then
+        pulse <= '1';                       -- Register pulse
         s_count <= 0;                       -- Reset clock counter
         so_var  <= '1';                     -- Output second pulse
 
@@ -67,6 +69,10 @@ begin
           -- yet so don't know when to expect the missing second.
           m_count <= M_PART_INIT;
         end if;
+
+      -- Check for falling edge
+      elsif di < di_var then
+        pulse <= '0';                       -- Register end of pulse
 
       -- Look for the missing 59th second pulse, either because we're expecting
       -- it (we know it's the 59th second), or because we haven't received a
