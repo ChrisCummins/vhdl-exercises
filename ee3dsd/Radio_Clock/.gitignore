@@ -1,3 +1,4 @@
+/dcf_bits_tb
 /dcf_sync_tb
 /msf_sync_tb
 *.vcd

@@ -21,7 +21,8 @@ SOURCES = \
 	uptime_counter.vhd
 
 TESTBENCHES = dcf_sync_tb \
-	msf_sync_tb
+	msf_sync_tb \
+	dcf_bits_tb
 
 TMP_DIR=/tmp/$(USER)
 
@@ -39,8 +40,10 @@ all simulation sim:
 		ghdl -r $$t --vcd=$$t.vcd; \
 	done
 
+TB := dcf_bits_tb
+
 view:
-	gtkwave msf_sync_tb.vcd msf_sync_tb.sav >/dev/null 2>&1
+	gtkwave $(TB).vcd $(TB).sav >/dev/null 2>&1
 
 uber: syn impl bit up
 
