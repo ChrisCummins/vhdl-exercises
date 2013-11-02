@@ -10,9 +10,9 @@ def hex2int(hex):
 def hex2bin(hex):
 	return "{0:b}".format(hex2int(hex)).zfill(8)
 
-if __name__ == "__main__":
-	file = open("logs/dcf-signal.cap")
-	out = open("tb-stimulus.txt", "w")
+def process_file(input, output):
+	file = open(input)
+	out = open(output, "w")
 	clk_period = 1000000000 / clk_freq # Clock period (ns)
 
 	# Initialise starting state
@@ -45,3 +45,7 @@ if __name__ == "__main__":
 		line = file.readline()
 
 	out.close()
+
+if __name__ == "__main__":
+	process_file("logs/dcf-signal.cap",
+				 "tb-stimulus.txt")
