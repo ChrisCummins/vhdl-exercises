@@ -48,4 +48,4 @@ def process_file(input, output):
 
 if __name__ == "__main__":
 	process_file("logs/dcf-signal.cap",
-				 "tb-stimulus.txt")
+				 "dcf_sync_tb-stimulus.txt")

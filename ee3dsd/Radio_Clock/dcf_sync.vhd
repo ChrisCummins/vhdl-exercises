@@ -177,7 +177,7 @@ begin
     variable di_var:     byte;
   begin
 
-    file_open(data, "../cw/cw2/tb-stimulus.txt", read_mode);
+    file_open(data, "../cw/cw2/dcf_sync_tb-stimulus.txt", read_mode);
 
     while not endfile(data) loop
       readline(data, data_line);
