@@ -32,7 +32,7 @@ architecture rtl of dcf_sync is
   constant MIN_S_TIME   : natural := clk_freq - clk_freq / 5;  -- Min time between second pulses
   constant MAX_S_TIME   : natural := clk_freq + clk_freq / 10; -- Max time between second pulses
   constant RESET_S_TIME : natural := clk_freq * 3;             -- Max time to wait before resetting
-  signal s_count : natural range 0 to RESET_S_TIME := 0; -- The counter
+  signal s_count : natural range 0 to RESET_S_TIME; -- The counter
 
   constant M_UNINIT     : natural := 62;    -- Value for uninitialised state
   constant M_PART_INIT  : natural := 61;    -- Value for partially initialised state
