@@ -30,6 +30,8 @@ architecture rtl of dcf_sync is
   signal pulse          : std_logic := 'X';                      -- Whether the input is currently high or low
   signal di_var         : byte      := byte_null;                -- Last di sampled
 
+  constant MIN_PULSE_TIME : natural := clk_freq / 15;            -- Min pulse time
+
   constant MIN_S_TIME   : natural   := clk_freq - clk_freq / 5;  -- Min time between second pulses
   constant MAX_S_TIME   : natural   := clk_freq + clk_freq / 10; -- Max time between second pulses
   constant RESET_S_TIME : natural   := clk_freq * 3;             -- Max time to wait before resetting
@@ -73,6 +75,16 @@ begin
       -- Check for falling edge
       elsif di < di_var then
         pulse <= '0';                       -- Register end of pulse
+        -- One further precaution: if we've only just latched on to the first
+        -- signal pulse, then make sure that the pulse lasts for at least
+        -- MIN_PULSE_TIME, as otherwise we could have just latched on to a
+        -- random thermal noise spike. By ensuring that the first signal we
+        -- latch on to is at least ~60ms, we minimise the chance that we're
+        -- just using noise as our second pulse:
+        if m_count = M_PART_INIT and s_count < MIN_PULSE_TIME then
+          s_count <= 0;
+          m_count <= M_UNINIT;
+        end if;
 
       -- Check for the missing 59th second pulse, either because we're expecting
       -- it (we know it's the 59th second), or because we haven't received a
