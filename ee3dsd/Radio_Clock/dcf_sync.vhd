@@ -69,7 +69,7 @@ begin
         so_var <= '1';                      -- Add in missing second pulse
         s_count <= 0;                       -- Reset for new second
       -- False start reset
-      elsif s_count > RESET_S_TIME then
+      elsif s_count = RESET_S_TIME - 1 then
         s_count <= 0;                       -- Reset our counters
         m_count <= M_UNINIT;
       end if;
