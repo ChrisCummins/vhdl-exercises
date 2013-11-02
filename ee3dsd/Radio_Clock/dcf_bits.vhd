@@ -36,7 +36,7 @@ architecture rtl of dcf_bits is
   signal   pulse:       std_logic := '0';
 
   -- This keeps track of whether we're currently sampling a pulse:
-  signal   sampling:    bit       := '0'; -- whether we're sampling a pulse or not
+  signal   sampling:    bit       := '0';
 
   -- The number of clock cycles after a second begins that we decide on the bit
   -- value:
