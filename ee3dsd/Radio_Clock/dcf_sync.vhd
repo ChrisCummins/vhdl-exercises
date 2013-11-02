@@ -32,7 +32,7 @@ architecture rtl of dcf_sync is
   constant MIN_S_TIME   : natural := clk_freq - clk_freq / 5;  -- Min time between second pulses
   constant MAX_S_TIME   : natural := clk_freq + clk_freq / 10; -- Max time between second pulses
   constant RESET_S_TIME : natural := clk_freq * 3;             -- Max time to wait before resetting
-  signal s_count : natural range 0 to RESET_S_TIME; -- The counter
+  signal s_count : natural range 0 to RESET_S_TIME + 1; -- The counter
 
   constant M_UNINIT     : natural := 62;    -- Value for uninitialised state
   constant M_PART_INIT  : natural := 61;    -- Value for partially initialised state
@@ -45,11 +45,13 @@ begin
       mo <= '0' after gate_delay;
     elsif clk'event and clk = '1' then
       so_var <= '0'; mo_var <= '0';         -- Zero the outputs
-      s_count <= s_count + 1;               -- Bump the second counter
+      s_count <= s_count + 1;               -- Bump the clock counter
 
-      if di > di_var                        -- Check for rising edge
-        and s_count > MIN_S_TIME
-        and s_count < MAX_S_TIME then
+      -- Look for rising edges, either because we're expecting a second, or
+      -- because we're in an uninitalised state and we're trying to latch on to
+      -- the first received second:
+      if (di > di_var and s_count > MIN_S_TIME and s_count < MAX_S_TIME)
+        or (di > di_var and m_count = M_UNINIT) then
         s_count <= 0;                       -- Reset clock counter
         so_var <= '1';                      -- Output second pulse
 
@@ -58,33 +60,41 @@ begin
         elsif m_count = 60 then
           m_count <= 0;                     -- Reset the minute counter
           mo_var <= '1';                    -- Output start of minute pulse
+        elsif m_count = M_UNINIT then
+          -- We've now in a partially-initialised state, i.e. we've found our
+          -- first second to latch onto but we haven't received a full minute
+          -- yet so don't know when to expect the missing second.
+          m_count <= M_PART_INIT;
         end if;
-      elsif di > di_var and m_count = M_UNINIT then
-        s_count <= 0;                       -- Reset clock counter
-        so_var <= '1';                      -- Output second pulse
-        m_count <= M_PART_INIT;
-      -- Check for missing second (when we're expecting one)
+
+      -- We haven't received a full minute yet so we're going to assume that
+      -- the first missing pulse is the 59th second of a minute:
       elsif m_count = M_PART_INIT and s_count > MAX_S_TIME then
         m_count <= 60;
         so_var <= '1';                      -- Add in missing second pulse
         s_count <= 0;                       -- Reset for new second
-      -- False start reset
-      elsif s_count = RESET_S_TIME - 1 then
-        s_count <= 0;                       -- Reset our counters
+
+      -- This is our 'false start' check. If we reach this point, it's either
+      -- because we initially latched onto a spike and aren't synchronised with
+      -- a second properly, or because the signal has dropped. In either case,
+      -- it's a bad sign, so just reset all counters to their starting values and
+      -- start again:
+      elsif s_count = RESET_S_TIME then
+        s_count <= 0;
         m_count <= M_UNINIT;
       end if;
 
       di_var <= di;                         -- Save di for next time
-      so <= so_var after gate_delay;        -- Set the outputs
+      so <= so_var after gate_delay;        -- Set our outputs
       mo <= mo_var after gate_delay;
     end if;
   end process;
 end rtl;
 
------- END OF DCF_SYNC LOGIC ------
+------ END OF DCF_SYNC ------
 
 --
--- DCF Sync test bench
+-- Test bench
 --
 library IEEE;
 
