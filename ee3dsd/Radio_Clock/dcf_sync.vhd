@@ -25,27 +25,51 @@ entity dcf_sync is
 end dcf_sync;
 
 architecture rtl of dcf_sync is
-  signal so_var:           std_logic := '0';                      -- so port var
-  signal mo_var:           std_logic := '0';                      -- mo port var
-  signal pulse:            std_logic := 'X';                      -- Whether the input is currently high or low
-  signal di_var:           byte      := byte_null;                -- Last di sampled
+  -- We use intermediate signals rather than writing directly to the ports:
+  signal so_var:           std_logic := '0';
+  signal mo_var:           std_logic := '0';
 
-  constant MIN_PULSE_TIME: natural   := clk_freq / 15;            -- Min pulse time
+  -- This keeps track of whether we're currently on a high or low pulse:
+  signal pulse:            std_logic := 'X';
 
-  constant MIN_S_TIME:     natural   := clk_freq - clk_freq / 5;  -- Min time between second pulses
-  constant MAX_S_TIME:     natural   := clk_freq + clk_freq / 10; -- Max time between second pulses
-  constant RESET_S_TIME:   natural   := clk_freq * 3;             -- Max time to wait before resetting
+  -- This contains the data input from the last clock cycle:
+  signal di_var:           byte      := byte_null;
+
+  -- This is the minimum acceptable pulse length. The DCF signal uses 100 or
+  -- 200ms pulses, so let's set this to a value slightly below the shortest
+  -- (~60ms) so as to allow for some margin of error:
+  constant MIN_PULSE_TIME: natural   := clk_freq / 15;
+
+  -- The clock cycles counter (s_count). We use this to record the number of
+  -- cycles since the last pulse. MIN_S_TIME and MAX_S_TIME defines the window
+  -- of acceptable time between each second pulse (~900ms - ~1100ms).
+  -- RESET_S_TIME is a hard limit on the amount of time to wait for a second
+  -- pulse before figuring that something has gone wrong and resetting (~3000
+  -- ms).
+  constant MIN_S_TIME:     natural   := clk_freq - clk_freq / 10;
+  constant MAX_S_TIME:     natural   := clk_freq + clk_freq / 11;
+  constant RESET_S_TIME:   natural   := clk_freq * 3;
   signal s_count:          natural range 0 to RESET_S_TIME + 1;
 
-  constant M_UNINIT:       natural   := 62;                       -- Value for uninitialised state
-  constant M_PART_INIT:    natural   := 61;                       -- Value for partially initialised state
+  -- The seconds counter (m_count). This keeps track of what second we are on
+  -- within a minute. When we first start, we are in an uninitialised state
+  -- (M_UNINIT). After receiving our first clock pulse, we move into a
+  -- partially-initialised state (M_PART_INIT), which means that we still don't
+  -- know exactly where in the minute we are yet (we haven't received a missing
+  -- 59th second). After that, the counter will be incremented each second in
+  -- order to predict when to output the missing second pulse and start of
+  -- minute pulse.
+  constant M_UNINIT:       natural   := 62;
+  constant M_PART_INIT:    natural   := 61;
   signal m_count:          natural range 0 to M_UNINIT := M_UNINIT;
 begin
   process(clk, rst)
   begin
+    -- Reset signal, so zero everything and reset internal state:
     if rst = '1' then
       so <= '0' after gate_delay;           -- Reset the outputs
       mo <= '0' after gate_delay;
+    -- Clock pulse:
     elsif clk'event and clk = '1' then
       so_var  <= '0';                       -- Zero the outputs
       mo_var  <= '0';
