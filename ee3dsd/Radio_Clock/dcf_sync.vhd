@@ -154,6 +154,7 @@ use WORK.std_logic_textio.all;
 use WORK.util.all;
 
 entity dcf_sync_tb is
+    generic (clk_freq: positive := 100); -- 100 Hz
 end dcf_sync_tb;
 
 architecture tests of dcf_sync_tb is
@@ -167,7 +168,7 @@ begin
   dut: entity work.dcf_sync(rtl)
     port map (rst, clk, di, so, mo);
   process is
-    constant clk_period: time := 10 ms; -- 100 Hz
+    constant clk_period: time := 1000 ms / clk_freq;
 
     file     data:       text;
     variable data_line:  line;
