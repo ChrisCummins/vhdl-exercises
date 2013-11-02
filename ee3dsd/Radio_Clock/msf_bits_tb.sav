@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.34 (w)1999-2012 BSI
-[*] Sat Nov  2 19:57:01 2013
+[*] Sat Nov  2 20:07:30 2013
 [*]
 [dumpfile] "/home/chris/src/vhdl-exercises/ee3dsd/Radio_Clock/msf_bits_tb.vcd"
-[dumpfile_mtime] "Sat Nov  2 19:56:08 2013"
-[dumpfile_size] 1161518
+[dumpfile_mtime] "Sat Nov  2 20:02:36 2013"
+[dumpfile_size] 1221522
 [savefile] "/home/chris/src/vhdl-exercises/ee3dsd/Radio_Clock/msf_bits_tb.sav"
 [timestart] 0
-[size] 1920 1056
-[pos] -919 -1
-*-54.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[size] 1920 1027
+[pos] -1 -1
+*-54.000000 43590000000000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [sst_width] 223
 [signals_width] 86
 [sst_expanded] 1
