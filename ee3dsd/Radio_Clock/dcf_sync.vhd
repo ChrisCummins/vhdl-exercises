@@ -125,8 +125,8 @@ begin
       -- This is our 'false start' check. If we reach this point, it's either
       -- because we initially latched onto a spike and aren't synchronised with
       -- a second properly, or because the signal has dropped. In either case,
-      -- it's a bad sign, so just reset all counters to their starting values and
-      -- start again:
+      -- it's a bad sign, so just reset all counters to their starting values
+      -- and start again:
       elsif s_count = RESET_S_TIME then
         s_count <= 0;
         m_count <= M_UNINIT;
