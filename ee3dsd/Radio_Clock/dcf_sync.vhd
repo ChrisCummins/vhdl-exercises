@@ -69,10 +69,12 @@ begin
   begin
     -- Reset signal, so zero everything and reset internal state:
     if rst = '1' then
-      s_count <= 0;
-      m_count <= M_UNINIT;
-      so <= '0' after gate_delay;
-      mo <= '0' after gate_delay;
+
+      s_count   <= 0        after gate_delay;
+      m_count   <= M_UNINIT after gate_delay;
+      so        <= '0'      after gate_delay;
+      mo        <= '0'      after gate_delay;
+
     -- Clock pulse:
     elsif clk'event and clk = '1' then
       so_var  <= '0';                       -- Zero the outputs
