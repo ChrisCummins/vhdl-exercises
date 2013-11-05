@@ -1,5 +1,4 @@
 library IEEE;
-
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use WORK.util.all;
@@ -25,6 +24,7 @@ entity dcf_sync is
 end dcf_sync;
 
 architecture rtl of dcf_sync is
+
   -- We use intermediate signals rather than writing directly to the ports:
   signal so_var:           std_logic := '0';
   signal mo_var:           std_logic := '0';
@@ -62,7 +62,9 @@ architecture rtl of dcf_sync is
   constant M_UNINIT:       natural   := 62;
   constant M_PART_INIT:    natural   := 61;
   signal m_count:          natural range 0 to M_UNINIT := M_UNINIT;
+
 begin
+
   process(clk, rst)
   begin
     -- Reset signal, so zero everything and reset internal state:
@@ -136,7 +138,9 @@ begin
       so     <= so_var after gate_delay;    -- Set our outputs
       mo     <= mo_var after gate_delay;
     end if;
+
   end process;
+
 end rtl;
 
 ------ END OF DCF_SYNC ------
