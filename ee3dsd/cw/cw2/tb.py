@@ -7,6 +7,7 @@
 #   msf VHDL components!
 
 from itertools import cycle
+from random import randint
 
 clk_freq = 100 # Clock frequency (Hz)
 
@@ -52,8 +53,29 @@ def process_file(input, output):
 
 	out.close()
 
+def generate_ddr_stimuli(output):
+	out = open(output, "w")
+
+	clk_iter = cycle(range(2))
+	clk2_iter = cycle(range(2))
+	clk = 0
+
+	for i in range(0, 1000):
+		clk2 = clk2_iter.next()
+
+		if clk2 % 2 == 0:
+			clk = clk_iter.next()
+
+			di = randint(0, 1)
+
+		out.write(str(clk) + " " + str(clk2) + " " + str(di) + "\n")
+
+	out.close()
+
+
 if __name__ == "__main__":
 	process_file("logs/dcf-signal.cap",
 				 "dcf_sync_tb-stimulus.txt")
 	process_file("logs/msf-signal.cap",
 				 "msf_sync_tb-stimulus.txt")
+	generate_ddr_stimuli("ddrserdes_tb-stimulus.txt")
