@@ -41,13 +41,13 @@ architecture rtl of msf_sync is
   constant min_pulse_cnt: natural   := clk_freq / 15;
 
   -- The clock cycles counter (cnt). We use this to record the number of
-  -- cycles since the last pulse. SOM_PULSE_TIME is the shortest acceptable
+  -- cycles since the last pulse. som_pulse_cnt is the shortest acceptable
   -- start-of-minute pulse (~400ms). min_sec and max_sec defines the
   -- window of acceptable time between each second pulse (~900ms - ~1100ms).
   -- RESET_S_TIME is a hard limit on the amount of time to wait for a second
   -- pulse before figuring that something has gone wrong and resetting (~3000
   -- ms).
-  constant SOM_PULSE_TIME: natural   := clk_freq / 2 - clk_freq / 10;
+  constant som_pulse_cnt: natural   := clk_freq / 2 - clk_freq / 10;
   constant min_sec:     natural   := clk_freq - clk_freq / 10;
   constant max_sec:     natural   := clk_freq + clk_freq / 13;
   constant RESET_S_TIME:   natural   := clk_freq * 3;
@@ -113,7 +113,7 @@ begin
           cnt <= 0;
           sec <= sec_uninit;
         -- Check for the start of minute 500ms second pulse:
-        elsif sec = sec_part_init and cnt > SOM_PULSE_TIME then
+        elsif sec = sec_part_init and cnt > som_pulse_cnt then
           sec <= 1;
         end if;
 
