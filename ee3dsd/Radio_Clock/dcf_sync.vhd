@@ -25,10 +25,6 @@ end dcf_sync;
 
 architecture rtl of dcf_sync is
 
-  -- We use intermediate signals rather than writing directly to the ports:
-  signal so_var:           std_logic := '0';
-  signal mo_var:           std_logic := '0';
-
   -- This keeps track of whether we're currently on a high or low pulse:
   signal pulse:            std_logic := 'X';
 
@@ -77,8 +73,8 @@ begin
 
     -- Clock pulse:
     elsif clk'event and clk = '1' then
-      so_var  <= '0' after gate_delay;                       -- Zero the outputs
-      mo_var  <= '0' after gate_delay;
+      so  <= '0' after gate_delay;                       -- Zero the outputs
+      mo  <= '0' after gate_delay;
       cnt <= cnt + 1 after gate_delay;               -- Bump the clock counter
 
       -- Check for rising edge, either because we're expecting a second, or
@@ -88,13 +84,13 @@ begin
         or (di > di_var and sec = sec_uninit) then
         pulse <= '1' after gate_delay;                       -- Register pulse
         cnt <= 0 after gate_delay;                       -- Reset clock counter
-        so_var  <= '1' after gate_delay;                     -- Output second pulse
+        so  <= '1' after gate_delay;                     -- Output second pulse
 
         if sec < 60 then
           sec <= sec + 1 after gate_delay;           -- Count another second
         elsif sec = 60 then
           sec <= 1 after gate_delay;                     -- Reset the minute counter
-          mo_var  <= '1';                   -- Output start of minute pulse
+          mo  <= '1';                   -- Output start of minute pulse
         elsif sec = sec_uninit then
           -- We've now in a partially-initialised state, i.e. we've found our
           -- first second to latch onto but we haven't received a full minute
@@ -123,7 +119,7 @@ begin
       elsif (sec = 59 and cnt = clk_freq)
         or (sec = sec_part_init and cnt > max_sec) then
         cnt <= 0 after gate_delay;                       -- Reset clock counter
-        so_var  <= '1' after gate_delay;                     -- Add in missing second pulse
+        so  <= '1' after gate_delay;                     -- Add in missing second pulse
         sec <= 60 after gate_delay;
 
       -- This is our 'false start' check. If we reach this point, it's either
@@ -136,9 +132,7 @@ begin
         sec <= sec_uninit after gate_delay;
       end if;
 
-      di_var <= di after gate_delay;                         -- Save di for next time
-      so     <= so_var after gate_delay;    -- Set our outputs
-      mo     <= mo_var after gate_delay;
+      di_var <= di after gate_delay;                     -- Save di for next time
     end if;
 
   end process;
