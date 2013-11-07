@@ -83,9 +83,9 @@ begin
       if (di > di_var and cnt > min_sec and cnt < max_sec)
         or (di > di_var and sec = sec_uninit) then
 
-        pulse    <= '1'          after gate_delay; -- Register pulse
         cnt      <= 0            after gate_delay; -- Reset clock counter
         so       <= '1'          after gate_delay; -- Output second pulse
+        pulse    <= '1'          after gate_delay; -- Register pulse
 
         if sec < 60 then
 
