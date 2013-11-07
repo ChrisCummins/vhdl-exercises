@@ -23,7 +23,8 @@ SOURCES = \
 TESTBENCHES = dcf_sync_tb \
 	msf_sync_tb \
 	dcf_bits_tb \
-	msf_bits_tb
+	msf_bits_tb \
+	ddrserdes_tb
 
 TMP_DIR=/tmp/$(USER)
 
