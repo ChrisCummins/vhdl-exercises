@@ -568,7 +568,7 @@ begin
     
     slow_io_units: for i in 2 to 15 generate
     
-        ddrserdes_unit: ddrserdes_ipc
+        ddrserdes_unit: entity WORK.ddrserdes
         generic map
         (
             gate_delay => gate_delay,
@@ -704,7 +704,7 @@ begin
         
     end process;
         
-    msf_sync_unit: msf_sync_ipc
+    msf_sync_unit: entity WORK.msf_sync
     generic map
     (
         clk_freq   => sys_clk_freq,
@@ -754,7 +754,7 @@ begin
         
     end process;
         
-    dcf_bits_unit: dcf_bits_ipc
+    dcf_bits_unit: entity WORK.dcf_bits
     generic map
     (
         clk_freq   => sys_clk_freq,
@@ -793,7 +793,7 @@ begin
         
     end process;
         
-    msf_bits_unit: msf_bits_ipc
+    msf_bits_unit: entity WORK.msf_bits
     generic map
     (
         clk_freq   => sys_clk_freq,
