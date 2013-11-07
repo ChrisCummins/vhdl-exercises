@@ -38,7 +38,7 @@ architecture rtl of msf_sync is
   -- This is the minimum acceptable pulse length. The MSF signal uses 100 -
   -- 500ms pulses, so let's set this to a value slightly below the shortest
   -- (~60ms) so as to allow for some margin of error:
-  constant MIN_PULSE_TIME: natural   := clk_freq / 15;
+  constant min_pulse_cnt: natural   := clk_freq / 15;
 
   -- The clock cycles counter (cnt). We use this to record the number of
   -- cycles since the last pulse. SOM_PULSE_TIME is the shortest acceptable
@@ -105,11 +105,11 @@ begin
         pulse <= '0';                       -- Register end of pulse
         -- One further precaution: if we've only just latched on to the first
         -- signal pulse, then make sure that the pulse lasts for at least
-        -- MIN_PULSE_TIME, as otherwise we could have just latched on to a
+        -- min_pulse_cnt, as otherwise we could have just latched on to a
         -- random thermal noise spike. By ensuring that the first signal we
         -- latch on to is at least ~60ms, we minimise the chance that we're
         -- just using noise as our second pulse:
-        if m_count = M_PART_INIT and cnt < MIN_PULSE_TIME then
+        if m_count = M_PART_INIT and cnt < min_pulse_cnt then
           cnt <= 0;
           m_count <= M_UNINIT;
         -- Check for the start of minute 500ms second pulse:
