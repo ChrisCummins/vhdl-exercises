@@ -43,13 +43,13 @@ architecture rtl of dcf_sync is
   -- The clock cycles counter (cnt). We use this to record the number of
   -- cycles since the last pulse. min_sec and max_sec defines the window
   -- of acceptable time between each second pulse (~900ms - ~1100ms).
-  -- RESET_S_TIME is a hard limit on the amount of time to wait for a second
+  -- max_cnt is a hard limit on the amount of time to wait for a second
   -- pulse before figuring that something has gone wrong and resetting (~3000
   -- ms).
   constant min_sec:     natural   := clk_freq - clk_freq / 10;
   constant max_sec:     natural   := clk_freq + clk_freq / 13;
-  constant RESET_S_TIME:   natural   := clk_freq * 3;
-  signal cnt:          natural range 0 to RESET_S_TIME + 1;
+  constant max_cnt:   natural   := clk_freq * 3;
+  signal cnt:          natural range 0 to max_cnt + 1;
 
   -- The seconds counter (sec). This keeps track of what second we are on
   -- within a minute. When we first start, we are in an uninitialised state
@@ -131,7 +131,7 @@ begin
       -- a second properly, or because the signal has dropped. In either case,
       -- it's a bad sign, so just reset all counters to their starting values
       -- and start again:
-      elsif cnt = RESET_S_TIME then
+      elsif cnt = max_cnt then
         cnt <= 0;
         sec <= sec_uninit;
       end if;
