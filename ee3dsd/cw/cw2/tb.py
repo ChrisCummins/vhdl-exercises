@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+#
+# Generate testbench stimuli for coursework 2.
+#
+# WARNING:
+#   Make sure that the clk_freq set here matches the clk_freq of your dcf and
+#   msf VHDL components!
 
 from itertools import cycle
 
