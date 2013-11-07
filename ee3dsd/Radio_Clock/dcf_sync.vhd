@@ -53,15 +53,15 @@ architecture rtl of dcf_sync is
 
   -- The seconds counter (sec). This keeps track of what second we are on
   -- within a minute. When we first start, we are in an uninitialised state
-  -- (M_UNINIT). After receiving our first clock pulse, we move into a
+  -- (sec_uninit). After receiving our first clock pulse, we move into a
   -- partially-initialised state (M_PART_INIT), which means that we still don't
   -- know exactly where in the minute we are yet (we haven't received a missing
   -- 59th second). After that, the counter will be incremented each second in
   -- order to predict when to output the missing second pulse and start of
   -- minute pulse.
-  constant M_UNINIT:       natural   := 62;
+  constant sec_uninit:       natural   := 62;
   constant M_PART_INIT:    natural   := 61;
-  signal sec:          natural range 0 to M_UNINIT := M_UNINIT;
+  signal sec:          natural range 0 to sec_uninit := sec_uninit;
 
 begin
 
@@ -71,7 +71,7 @@ begin
     if rst = '1' then
 
       cnt   <= 0        after gate_delay;
-      sec   <= M_UNINIT after gate_delay;
+      sec   <= sec_uninit after gate_delay;
       so        <= '0'      after gate_delay;
       mo        <= '0'      after gate_delay;
 
@@ -85,7 +85,7 @@ begin
       -- because we're in an uninitalised state and we're trying to latch on to
       -- the first received signal:
       if (di > di_var and cnt > MIN_S_TIME and cnt < MAX_S_TIME)
-        or (di > di_var and sec = M_UNINIT) then
+        or (di > di_var and sec = sec_uninit) then
         pulse <= '1';                       -- Register pulse
         cnt <= 0;                       -- Reset clock counter
         so_var  <= '1';                     -- Output second pulse
@@ -95,7 +95,7 @@ begin
         elsif sec = 60 then
           sec <= 1;                     -- Reset the minute counter
           mo_var  <= '1';                   -- Output start of minute pulse
-        elsif sec = M_UNINIT then
+        elsif sec = sec_uninit then
           -- We've now in a partially-initialised state, i.e. we've found our
           -- first second to latch onto but we haven't received a full minute
           -- yet so don't know when to expect the missing second.
@@ -113,7 +113,7 @@ begin
         -- just using noise as our second pulse:
         if sec = M_PART_INIT and cnt < min_pulse_cnt then
           cnt <= 0;
-          sec <= M_UNINIT;
+          sec <= sec_uninit;
         end if;
 
         if i < 10 then
@@ -139,7 +139,7 @@ begin
       -- and start again:
       elsif cnt = RESET_S_TIME then
         cnt <= 0;
-        sec <= M_UNINIT;
+        sec <= sec_uninit;
       end if;
 
       di_var <= di;                         -- Save di for next time
