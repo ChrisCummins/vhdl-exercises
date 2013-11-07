@@ -8,7 +8,7 @@ entity msf_sync is
 
     generic
     (
-        clk_freq:   positive := 100; -- Hz
+        clk_freq:   positive := 125000000; -- Hz
         gate_delay: time     := 1 ns
     );
 
