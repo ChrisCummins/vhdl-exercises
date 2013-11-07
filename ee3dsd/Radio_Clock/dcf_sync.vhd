@@ -41,13 +41,13 @@ architecture rtl of dcf_sync is
   constant min_pulse_cnt: natural   := clk_freq / 15;
 
   -- The clock cycles counter (cnt). We use this to record the number of
-  -- cycles since the last pulse. min_sec and MAX_S_TIME defines the window
+  -- cycles since the last pulse. min_sec and max_sec defines the window
   -- of acceptable time between each second pulse (~900ms - ~1100ms).
   -- RESET_S_TIME is a hard limit on the amount of time to wait for a second
   -- pulse before figuring that something has gone wrong and resetting (~3000
   -- ms).
   constant min_sec:     natural   := clk_freq - clk_freq / 10;
-  constant MAX_S_TIME:     natural   := clk_freq + clk_freq / 13;
+  constant max_sec:     natural   := clk_freq + clk_freq / 13;
   constant RESET_S_TIME:   natural   := clk_freq * 3;
   signal cnt:          natural range 0 to RESET_S_TIME + 1;
 
@@ -84,7 +84,7 @@ begin
       -- Check for rising edge, either because we're expecting a second, or
       -- because we're in an uninitalised state and we're trying to latch on to
       -- the first received signal:
-      if (di > di_var and cnt > min_sec and cnt < MAX_S_TIME)
+      if (di > di_var and cnt > min_sec and cnt < max_sec)
         or (di > di_var and sec = sec_uninit) then
         pulse <= '1';                       -- Register pulse
         cnt <= 0;                       -- Reset clock counter
@@ -127,7 +127,7 @@ begin
       -- full minute yet and so we'll assume that any missing pulse is the 59th
       -- second:
       elsif (sec = 59 and cnt = clk_freq)
-        or (sec = sec_part_init and cnt > MAX_S_TIME) then
+        or (sec = sec_part_init and cnt > max_sec) then
         cnt <= 0;                       -- Reset clock counter
         so_var  <= '1';                     -- Add in missing second pulse
         sec <= 60;
