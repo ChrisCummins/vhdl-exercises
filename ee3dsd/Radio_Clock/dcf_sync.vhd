@@ -63,7 +63,7 @@ begin
 
   process(clk, rst)
   begin
-    -- Reset signal, so zero everything and reset internal state:
+
     if rst = '1' then
 
       cnt        <= 0            after gate_delay;
@@ -71,8 +71,8 @@ begin
       so         <= '0'          after gate_delay;
       mo         <= '0'          after gate_delay;
 
-    -- Clock pulse:
     elsif clk'event and clk = '1' then
+
       so         <= '0'          after gate_delay; -- Zero the outputs
       mo         <= '0'          after gate_delay;
       cnt        <= cnt + 1      after gate_delay; -- Bump the clock counter
@@ -82,25 +82,34 @@ begin
       -- the first received signal:
       if (di > di_var and cnt > min_sec and cnt < max_sec)
         or (di > di_var and sec = sec_uninit) then
+
         pulse    <= '1'          after gate_delay; -- Register pulse
         cnt      <= 0            after gate_delay; -- Reset clock counter
         so       <= '1'          after gate_delay; -- Output second pulse
 
         if sec < 60 then
+
           sec    <= sec + 1      after gate_delay; -- Count another second
+
         elsif sec = 60 then
+
           sec    <= 1            after gate_delay; -- Reset the minute counter
           mo     <= '1'          after gate_delay; -- Output start of minute
+
         elsif sec = sec_uninit then
+
           -- We've now in a partially-initialised state, i.e. we've found our
           -- first second to latch onto but we haven't received a full minute
           -- yet so don't know when to expect the missing second.
           sec    <= sec_part_init after gate_delay;
+
         end if;
 
       -- Check for falling edge
       elsif di < di_var then
+
         pulse    <= '0'          after gate_delay; -- Register end of pulse
+
         -- One further precaution: if we've only just latched on to the first
         -- signal pulse, then make sure that the pulse lasts for at least
         -- min_pulse_cnt, as otherwise we could have just latched on to a
@@ -108,8 +117,10 @@ begin
         -- latch on to is at least ~60ms, we minimise the chance that we're
         -- just using noise as our second pulse:
         if sec = sec_part_init and cnt < min_pulse_cnt then
+
           cnt    <= 0            after gate_delay;
           sec    <= sec_uninit   after gate_delay;
+
         end if;
 
       -- Check for the missing 59th second pulse, either because we're expecting
@@ -118,6 +129,7 @@ begin
       -- second:
       elsif (sec = 59 and cnt = clk_freq)
         or (sec = sec_part_init and cnt > max_sec) then
+
         cnt      <= 0            after gate_delay; -- Reset clock counter
         sec      <= 60           after gate_delay;
         so       <= '1'          after gate_delay; -- Add in missing second pulse
@@ -128,11 +140,14 @@ begin
       -- it's a bad sign, so just reset all counters to their starting values
       -- and start again:
       elsif cnt = max_cnt then
+
         cnt      <= 0            after gate_delay;
         sec      <= sec_uninit   after gate_delay;
+
       end if;
 
       di_var     <= di           after gate_delay; -- Save di for next time
+
     end if;
 
   end process;

@@ -29,9 +29,9 @@ architecture rtl of msf_sync is
   -- This contains the data input from the last clock cycle:
   signal di_var:           byte      := byte_null;
 
-  -- This is the minimum acceptable pulse length. The MSF signal uses 100 -
-  -- 500ms pulses, so let's set this to a value slightly below the shortest
-  -- (~60ms) so as to allow for some margin of error:
+  -- This is the minimum acceptable pulse length. The MSF signal uses
+  -- 100 - 500ms pulses, so let's set this to a value slightly below the
+  -- shortest (~60ms) so as to allow for some margin of error:
   constant min_pulse_cnt: natural    := clk_freq / 15;
 
   -- The clock cycles counter (cnt). We use this to record the number of
@@ -59,6 +59,7 @@ architecture rtl of msf_sync is
   constant sec_part_init: natural    := 61;
   signal sec:             natural range 0 to sec_uninit := sec_uninit;
 begin
+
   process(clk, rst)
   begin
 
@@ -70,6 +71,7 @@ begin
       mo         <= '0'           after gate_delay;
 
     elsif clk'event and clk = '1' then
+
       so         <= '0'           after gate_delay; -- Zero the outputs
       mo         <= '0'           after gate_delay;
       cnt        <= cnt + 1       after gate_delay; -- Bump the clock counter
@@ -79,6 +81,7 @@ begin
       -- the first received signal:
       if (di > di_var and cnt > min_sec and cnt < max_sec)
         or (di > di_var and sec = sec_uninit) then
+
         cnt      <= 0             after gate_delay; -- Reset clock counter
         so       <= '1'           after gate_delay; -- Output second pulse
 
