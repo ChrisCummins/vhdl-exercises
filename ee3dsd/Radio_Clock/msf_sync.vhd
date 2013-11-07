@@ -26,8 +26,7 @@ end msf_sync;
 
 architecture rtl of msf_sync is
 
-  -- This contains the data input from the last clock cycle:
-  signal di_var:           byte      := byte_null;
+  signal di_sampled:       byte      := byte_null; -- Last data in
 
   -- This is the minimum acceptable pulse length. The MSF signal uses
   -- 100 - 500ms pulses, so let's set this to a value slightly below the
@@ -79,8 +78,8 @@ begin
       -- Check for rising edge, either because we're expecting a second, or
       -- because we're in an uninitalised state and we're trying to latch on to
       -- the first received signal:
-      if (di > di_var and cnt > min_sec and cnt < max_sec)
-        or (di > di_var and sec = sec_uninit) then
+      if (di > di_sampled and cnt > min_sec and cnt < max_sec)
+        or (di > di_sampled and sec = sec_uninit) then
 
         cnt      <= 0             after gate_delay; -- Reset clock counter
         so       <= '1'           after gate_delay; -- Output second pulse
@@ -104,7 +103,7 @@ begin
         end if;
 
       -- Check for falling edge
-      elsif di < di_var then
+      elsif di < di_sampled then
 
         -- One further precaution: if we've only just latched on to the first
         -- signal pulse, then make sure that the pulse lasts for at least
@@ -136,7 +135,7 @@ begin
 
       end if;
 
-      di_var     <= di            after gate_delay; -- Save di for next time
+      di_sampled <= di            after gate_delay; -- Save di for next time
 
     end if;
 
