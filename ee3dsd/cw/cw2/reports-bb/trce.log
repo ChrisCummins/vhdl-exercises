@@ -1,0 +1,944 @@
+--------------------------------------------------------------------------------
+Release 14.1 Trace  (lin)
+Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved.
+
+/usr/local/Xilinx/14.1/ISE_DS/ISE/bin/lin/unwrapped/trce -intstyle silent -v 3
+-s 3 -n 3 -fastpaths -xml top_level.twx top_level.ncd -o top_level.twr
+top_level.pcf -ucf top_level.ucf
+
+Design file:              top_level.ncd
+Physical constraint file: top_level.pcf
+Device,package,speed:     xc6slx16,csg324,C,-3 (PRODUCTION 1.21 2012-04-23)
+Report level:             verbose report
+
+Environment Variable      Effect 
+--------------------      ------ 
+NONE                      No environment variables were set
+--------------------------------------------------------------------------------
+
+INFO:Timing:3386 - Intersecting Constraints found and resolved.  For more 
+   information, see the TSI report.  Please consult the Xilinx Command Line 
+   Tools User Guide for information on generating a TSI report.
+INFO:Timing:3412 - To improve timing, see the Timing Closure User Guide (UG612).
+INFO:Timing:2752 - To get complete path coverage, use the unconstrained paths 
+   option. All paths that are not constrained will be reported in the 
+   unconstrained paths section(s) of the report.
+INFO:Timing:3339 - The clock-to-out numbers in this timing report are based on 
+   a 50 Ohm transmission line loading model.  For the details of this model, 
+   and for more information on accounting for different loading conditions, 
+   please see the device datasheet.
+
+================================================================================
+Timing constraint: TS_sys_clk_pin = PERIOD TIMEGRP "sys_clk_pin" 100 MHz HIGH 
+50%;
+For more information, see Period Analysis in the Timing Closure User Guide (UG612).
+
+ 0 paths analyzed, 0 endpoints analyzed, 0 failing endpoints
+ 0 timing errors detected. (0 component switching limit errors)
+ Minimum period is   3.334ns.
+--------------------------------------------------------------------------------
+
+Component Switching Limit Checks: TS_sys_clk_pin = PERIOD TIMEGRP "sys_clk_pin" 100 MHz HIGH 50%;
+--------------------------------------------------------------------------------
+Slack: 0.075ns (period - min period limit)
+  Period: 1.000ns
+  Min period limit: 0.925ns (1081.081MHz) (Tpllper_CLKOUT(Foutmax))
+  Physical resource: pll_unit/clk_syn.pll_unit/PLL_ADV/CLKOUT0
+  Logical resource: pll_unit/clk_syn.pll_unit/PLL_ADV/CLKOUT0
+  Location pin: PLL_ADV_X0Y0.CLKOUT0
+  Clock network: pll_unit/pll_clk<0>
+--------------------------------------------------------------------------------
+Slack: 3.075ns (period - min period limit)
+  Period: 4.000ns
+  Min period limit: 0.925ns (1081.081MHz) (Tpllper_CLKOUT(Foutmax))
+  Physical resource: pll_unit/clk_syn.pll_unit/PLL_ADV/CLKOUT1
+  Logical resource: pll_unit/clk_syn.pll_unit/PLL_ADV/CLKOUT1
+  Location pin: PLL_ADV_X0Y0.CLKOUT1
+  Clock network: pll_unit/pll_clk<1>
+--------------------------------------------------------------------------------
+Slack: 6.666ns (period - (min low pulse limit / (low pulse / period)))
+  Period: 10.000ns
+  Low pulse: 5.000ns
+  Low pulse limit: 1.667ns (Tdcmpw_CLKIN_100_150)
+  Physical resource: pll_unit/clk_syn.pll_unit/PLL_ADV/CLKIN1
+  Logical resource: pll_unit/clk_syn.pll_unit/PLL_ADV/CLKIN1
+  Location pin: PLL_ADV_X0Y0.CLKIN2
+  Clock network: pll_unit/clk_syn.pll_unit/PLL_ADV_ML_NEW_DIVCLK
+--------------------------------------------------------------------------------
+
+================================================================================
+Timing constraint: TS_sys_clk_1000_MHz = PERIOD TIMEGRP "sys_clk_1000_MHz" 1000 
+MHz HIGH 50%;
+For more information, see Period Analysis in the Timing Closure User Guide (UG612).
+
+ 0 paths analyzed, 0 endpoints analyzed, 0 failing endpoints
+ 0 timing errors detected. (0 component switching limit errors)
+--------------------------------------------------------------------------------
+
+================================================================================
+Timing constraint: TS_sys_clk_250_MHz = PERIOD TIMEGRP "sys_clk_250_MHz" 250 
+MHz HIGH 50%;
+For more information, see Period Analysis in the Timing Closure User Guide (UG612).
+
+ 0 paths analyzed, 0 endpoints analyzed, 0 failing endpoints
+ 0 timing errors detected. (0 component switching limit errors)
+ Minimum period is   1.000ns.
+--------------------------------------------------------------------------------
+
+Component Switching Limit Checks: TS_sys_clk_250_MHz = PERIOD TIMEGRP "sys_clk_250_MHz" 250 MHz HIGH 50%;
+--------------------------------------------------------------------------------
+Slack: 3.000ns (period - min period limit)
+  Period: 4.000ns
+  Min period limit: 1.000ns (1000.000MHz) (Tcp)
+  Physical resource: slow_io_units[12].ddrserdes_unit/data_pipe<0>/CLK
+  Logical resource: slow_io_units[11].ddrserdes_unit/Mshreg_data_pipe_0/CLK
+  Location pin: SLICE_X2Y4.CLK
+  Clock network: clk_250_MHz
+--------------------------------------------------------------------------------
+Slack: 3.000ns (period - min period limit)
+  Period: 4.000ns
+  Min period limit: 1.000ns (1000.000MHz) (Tcp)
+  Physical resource: slow_io_units[12].ddrserdes_unit/data_pipe<0>/CLK
+  Logical resource: slow_io_units[15].ddrserdes_unit/Mshreg_data_pipe_0/CLK
+  Location pin: SLICE_X2Y4.CLK
+  Clock network: clk_250_MHz
+--------------------------------------------------------------------------------
+Slack: 3.000ns (period - min period limit)
+  Period: 4.000ns
+  Min period limit: 1.000ns (1000.000MHz) (Tcp)
+  Physical resource: slow_io_units[12].ddrserdes_unit/data_pipe<0>/CLK
+  Logical resource: slow_io_units[10].ddrserdes_unit/Mshreg_data_pipe_0/CLK
+  Location pin: SLICE_X2Y4.CLK
+  Clock network: clk_250_MHz
+--------------------------------------------------------------------------------
+
+================================================================================
+Timing constraint: TS_sys_clk_125_MHz = PERIOD TIMEGRP "sys_clk_125_MHz" 125 
+MHz HIGH 50%;
+For more information, see Period Analysis in the Timing Closure User Guide (UG612).
+
+ 0 paths analyzed, 0 endpoints analyzed, 0 failing endpoints
+ 0 timing errors detected. (0 component switching limit errors)
+ Minimum period is   3.124ns.
+--------------------------------------------------------------------------------
+
+Component Switching Limit Checks: TS_sys_clk_125_MHz = PERIOD TIMEGRP "sys_clk_125_MHz" 125 MHz HIGH 50%;
+--------------------------------------------------------------------------------
+Slack: 4.876ns (period - min period limit)
+  Period: 8.000ns
+  Min period limit: 3.124ns (320.102MHz) (Trper_CLKA(Fmax))
+  Physical resource: global_fifo_unit/Mram_data1/CLKA
+  Logical resource: global_fifo_unit/Mram_data1/CLKA
+  Location pin: RAMB16_X1Y12.CLKA
+  Clock network: clk_125_MHz
+--------------------------------------------------------------------------------
+Slack: 4.876ns (period - min period limit)
+  Period: 8.000ns
+  Min period limit: 3.124ns (320.102MHz) (Trper_CLKB(Fmax))
+  Physical resource: global_fifo_unit/Mram_data1/CLKB
+  Logical resource: global_fifo_unit/Mram_data1/CLKB
+  Location pin: RAMB16_X1Y12.CLKB
+  Clock network: clk_125_MHz
+--------------------------------------------------------------------------------
+Slack: 4.876ns (period - min period limit)
+  Period: 8.000ns
+  Min period limit: 3.124ns (320.102MHz) (Trper_CLKA(Fmax))
+  Physical resource: global_fifo_unit/Mram_data2/CLKA
+  Logical resource: global_fifo_unit/Mram_data2/CLKA
+  Location pin: RAMB16_X1Y18.CLKA
+  Clock network: clk_125_MHz
+--------------------------------------------------------------------------------
+
+================================================================================
+Timing constraint: TS_pll_unit_pll_clk_1_ = PERIOD TIMEGRP 
+"pll_unit_pll_clk_1_" TS_sys_clk_pin *         2.5 HIGH 50%;
+For more information, see Period Analysis in the Timing Closure User Guide (UG612).
+
+ 528 paths analyzed, 528 endpoints analyzed, 16 failing endpoints
+ 16 timing errors detected. (16 setup errors, 0 hold errors, 0 component switching limit errors)
+ Minimum period is  13.688ns.
+--------------------------------------------------------------------------------
+
+Paths for end point fast_io_units[0].serdes_unit/data_int_1 (SLICE_X1Y25.B6), 1 path
+--------------------------------------------------------------------------------
+Slack (setup path):     -2.422ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               fast_io_units[0].serdes_unit/serdes_syn.serdes_unit (FF)
+  Destination:          fast_io_units[0].serdes_unit/data_int_1 (FF)
+  Requirement:          1.000ns
+  Data Path Delay:      2.085ns (Levels of Logic = 1)(Component delays alone exceeds constraint)
+  Clock Path Skew:      -1.135ns (1.437 - 2.572)
+  Source Clock:         clk_1000_MHz rising at 3.000ns
+  Destination Clock:    clk_250_MHz rising at 4.000ns
+  Clock Uncertainty:    0.202ns
+
+  Clock Uncertainty:          0.202ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.148ns
+    Phase Error (PE):           0.120ns
+
+  Maximum Data Path at Slow Process Corner: fast_io_units[0].serdes_unit/serdes_syn.serdes_unit to fast_io_units[0].serdes_unit/data_int_1
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    ILOGIC_X0Y24.Q2      Tiscko_Q              1.297   fast_io_units[0].serdes_unit/serdes_syn.serdes_unit
+                                                       fast_io_units[0].serdes_unit/serdes_syn.serdes_unit
+    SLICE_X1Y25.B6       net (fanout=2)        0.466   fast_io_units[0].serdes_unit/data_des<1>
+    SLICE_X1Y25.CLK      Tas                   0.322   fast_io_units[0].serdes_unit/data_int<1>
+                                                       fast_io_units[0].serdes_unit/Mmux_data_des[3]_data_int[7]_mux_1_OUT21
+                                                       fast_io_units[0].serdes_unit/data_int_1
+    -------------------------------------------------  ---------------------------
+    Total                                      2.085ns (1.619ns logic, 0.466ns route)
+                                                       (77.6% logic, 22.4% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point fast_io_units[1].serdes_unit/data_int_1 (SLICE_X1Y33.B6), 1 path
+--------------------------------------------------------------------------------
+Slack (setup path):     -2.414ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               fast_io_units[1].serdes_unit/serdes_syn.serdes_unit (FF)
+  Destination:          fast_io_units[1].serdes_unit/data_int_1 (FF)
+  Requirement:          1.000ns
+  Data Path Delay:      2.085ns (Levels of Logic = 1)(Component delays alone exceeds constraint)
+  Clock Path Skew:      -1.127ns (1.445 - 2.572)
+  Source Clock:         clk_1000_MHz rising at 3.000ns
+  Destination Clock:    clk_250_MHz rising at 4.000ns
+  Clock Uncertainty:    0.202ns
+
+  Clock Uncertainty:          0.202ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.148ns
+    Phase Error (PE):           0.120ns
+
+  Maximum Data Path at Slow Process Corner: fast_io_units[1].serdes_unit/serdes_syn.serdes_unit to fast_io_units[1].serdes_unit/data_int_1
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    ILOGIC_X0Y32.Q2      Tiscko_Q              1.297   fast_io_units[1].serdes_unit/serdes_syn.serdes_unit
+                                                       fast_io_units[1].serdes_unit/serdes_syn.serdes_unit
+    SLICE_X1Y33.B6       net (fanout=2)        0.466   fast_io_units[1].serdes_unit/data_des<1>
+    SLICE_X1Y33.CLK      Tas                   0.322   fast_io_units[1].serdes_unit/data_int<1>
+                                                       fast_io_units[1].serdes_unit/Mmux_data_des[3]_data_int[7]_mux_1_OUT21
+                                                       fast_io_units[1].serdes_unit/data_int_1
+    -------------------------------------------------  ---------------------------
+    Total                                      2.085ns (1.619ns logic, 0.466ns route)
+                                                       (77.6% logic, 22.4% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point fast_io_units[0].serdes_unit/data_int_7 (SLICE_X0Y26.D5), 1 path
+--------------------------------------------------------------------------------
+Slack (setup path):     -2.365ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               fast_io_units[0].serdes_unit/serdes_syn.serdes_unit (FF)
+  Destination:          fast_io_units[0].serdes_unit/data_int_7 (FF)
+  Requirement:          1.000ns
+  Data Path Delay:      2.030ns (Levels of Logic = 1)(Component delays alone exceeds constraint)
+  Clock Path Skew:      -1.133ns (1.439 - 2.572)
+  Source Clock:         clk_1000_MHz rising at 3.000ns
+  Destination Clock:    clk_250_MHz rising at 4.000ns
+  Clock Uncertainty:    0.202ns
+
+  Clock Uncertainty:          0.202ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.148ns
+    Phase Error (PE):           0.120ns
+
+  Maximum Data Path at Slow Process Corner: fast_io_units[0].serdes_unit/serdes_syn.serdes_unit to fast_io_units[0].serdes_unit/data_int_7
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    ILOGIC_X0Y24.Q4      Tiscko_Q              1.297   fast_io_units[0].serdes_unit/serdes_syn.serdes_unit
+                                                       fast_io_units[0].serdes_unit/serdes_syn.serdes_unit
+    SLICE_X0Y26.D5       net (fanout=2)        0.392   fast_io_units[0].serdes_unit/data_des<3>
+    SLICE_X0Y26.CLK      Tas                   0.341   fast_io_units[0].serdes_unit/data_int<7>
+                                                       fast_io_units[0].serdes_unit/Mmux_data_des[3]_data_int[7]_mux_1_OUT81
+                                                       fast_io_units[0].serdes_unit/data_int_7
+    -------------------------------------------------  ---------------------------
+    Total                                      2.030ns (1.638ns logic, 0.392ns route)
+                                                       (80.7% logic, 19.3% route)
+
+--------------------------------------------------------------------------------
+
+Hold Paths: TS_pll_unit_pll_clk_1_ = PERIOD TIMEGRP "pll_unit_pll_clk_1_" TS_sys_clk_pin *
+        2.5 HIGH 50%;
+--------------------------------------------------------------------------------
+
+Paths for end point slow_io_units[3].ddrserdes_unit/data_int_3 (SLICE_X0Y22.D6), 1 path
+--------------------------------------------------------------------------------
+Slack (hold path):      0.112ns (requirement - (clock path skew + uncertainty - data path))
+  Source:               slow_io_units[3].ddrserdes_unit/strobe_int (FF)
+  Destination:          slow_io_units[3].ddrserdes_unit/data_int_3 (FF)
+  Requirement:          0.000ns
+  Data Path Delay:      0.530ns (Levels of Logic = 1)
+  Clock Path Skew:      0.206ns (0.842 - 0.636)
+  Source Clock:         clk_125_MHz rising at 0.000ns
+  Destination Clock:    clk_250_MHz rising at 0.000ns
+  Clock Uncertainty:    0.212ns
+
+  Clock Uncertainty:          0.212ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.120ns
+
+  Minimum Data Path at Fast Process Corner: slow_io_units[3].ddrserdes_unit/strobe_int to slow_io_units[3].ddrserdes_unit/data_int_3
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X1Y21.AQ       Tcko                  0.198   slow_io_units[3].ddrserdes_unit/strobe_int
+                                                       slow_io_units[3].ddrserdes_unit/strobe_int
+    SLICE_X0Y22.D6       net (fanout=9)        0.142   slow_io_units[3].ddrserdes_unit/strobe_int
+    SLICE_X0Y22.CLK      Tah         (-Th)    -0.190   slow_io_units[3].ddrserdes_unit/data_int<3>
+                                                       slow_io_units[3].ddrserdes_unit/Mmux_data_pipe[0]_data_int[7]_mux_1_OUT41
+                                                       slow_io_units[3].ddrserdes_unit/data_int_3
+    -------------------------------------------------  ---------------------------
+    Total                                      0.530ns (0.388ns logic, 0.142ns route)
+                                                       (73.2% logic, 26.8% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point slow_io_units[3].ddrserdes_unit/strobe_chg (SLICE_X0Y22.A4), 1 path
+--------------------------------------------------------------------------------
+Slack (hold path):      0.124ns (requirement - (clock path skew + uncertainty - data path))
+  Source:               slow_io_units[3].ddrserdes_unit/strobe_int (FF)
+  Destination:          slow_io_units[3].ddrserdes_unit/strobe_chg (FF)
+  Requirement:          0.000ns
+  Data Path Delay:      0.542ns (Levels of Logic = 1)
+  Clock Path Skew:      0.206ns (0.842 - 0.636)
+  Source Clock:         clk_125_MHz rising at 0.000ns
+  Destination Clock:    clk_250_MHz rising at 0.000ns
+  Clock Uncertainty:    0.212ns
+
+  Clock Uncertainty:          0.212ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.120ns
+
+  Minimum Data Path at Fast Process Corner: slow_io_units[3].ddrserdes_unit/strobe_int to slow_io_units[3].ddrserdes_unit/strobe_chg
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X1Y21.AQ       Tcko                  0.198   slow_io_units[3].ddrserdes_unit/strobe_int
+                                                       slow_io_units[3].ddrserdes_unit/strobe_int
+    SLICE_X0Y22.A4       net (fanout=9)        0.223   slow_io_units[3].ddrserdes_unit/strobe_int
+    SLICE_X0Y22.CLK      Tah         (-Th)    -0.121   slow_io_units[3].ddrserdes_unit/data_int<3>
+                                                       slow_io_units[3].ddrserdes_unit/strobe_int_rt
+                                                       slow_io_units[3].ddrserdes_unit/strobe_chg
+    -------------------------------------------------  ---------------------------
+    Total                                      0.542ns (0.319ns logic, 0.223ns route)
+                                                       (58.9% logic, 41.1% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point slow_io_units[14].ddrserdes_unit/data_int_1 (SLICE_X12Y0.B6), 1 path
+--------------------------------------------------------------------------------
+Slack (hold path):      0.127ns (requirement - (clock path skew + uncertainty - data path))
+  Source:               slow_io_units[14].ddrserdes_unit/strobe_int (FF)
+  Destination:          slow_io_units[14].ddrserdes_unit/data_int_1 (FF)
+  Requirement:          0.000ns
+  Data Path Delay:      0.548ns (Levels of Logic = 1)
+  Clock Path Skew:      0.209ns (0.815 - 0.606)
+  Source Clock:         clk_125_MHz rising at 0.000ns
+  Destination Clock:    clk_250_MHz rising at 0.000ns
+  Clock Uncertainty:    0.212ns
+
+  Clock Uncertainty:          0.212ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.120ns
+
+  Minimum Data Path at Fast Process Corner: slow_io_units[14].ddrserdes_unit/strobe_int to slow_io_units[14].ddrserdes_unit/data_int_1
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X13Y2.AQ       Tcko                  0.198   slow_io_units[14].ddrserdes_unit/strobe_int
+                                                       slow_io_units[14].ddrserdes_unit/strobe_int
+    SLICE_X12Y0.B6       net (fanout=9)        0.160   slow_io_units[14].ddrserdes_unit/strobe_int
+    SLICE_X12Y0.CLK      Tah         (-Th)    -0.190   slow_io_units[14].ddrserdes_unit/data_int<3>
+                                                       slow_io_units[14].ddrserdes_unit/Mmux_data_pipe[0]_data_int[7]_mux_1_OUT21
+                                                       slow_io_units[14].ddrserdes_unit/data_int_1
+    -------------------------------------------------  ---------------------------
+    Total                                      0.548ns (0.388ns logic, 0.160ns route)
+                                                       (70.8% logic, 29.2% route)
+
+--------------------------------------------------------------------------------
+
+Component Switching Limit Checks: TS_pll_unit_pll_clk_1_ = PERIOD TIMEGRP "pll_unit_pll_clk_1_" TS_sys_clk_pin *
+        2.5 HIGH 50%;
+--------------------------------------------------------------------------------
+Slack: 2.270ns (period - min period limit)
+  Period: 4.000ns
+  Min period limit: 1.730ns (578.035MHz) (Tbcper_I)
+  Physical resource: pll_unit/clk_syn.clock_buffers[1].bufg_unit/I0
+  Logical resource: pll_unit/clk_syn.clock_buffers[1].bufg_unit/I0
+  Location pin: BUFGMUX_X3Y13.I0
+  Clock network: pll_unit/pll_clk<1>
+--------------------------------------------------------------------------------
+Slack: 3.000ns (period - min period limit)
+  Period: 4.000ns
+  Min period limit: 1.000ns (1000.000MHz) (Tcp)
+  Physical resource: slow_io_units[12].ddrserdes_unit/data_pipe<0>/CLK
+  Logical resource: slow_io_units[11].ddrserdes_unit/Mshreg_data_pipe_0/CLK
+  Location pin: SLICE_X2Y4.CLK
+  Clock network: clk_250_MHz
+--------------------------------------------------------------------------------
+Slack: 3.000ns (period - min period limit)
+  Period: 4.000ns
+  Min period limit: 1.000ns (1000.000MHz) (Tcp)
+  Physical resource: slow_io_units[12].ddrserdes_unit/data_pipe<0>/CLK
+  Logical resource: slow_io_units[15].ddrserdes_unit/Mshreg_data_pipe_0/CLK
+  Location pin: SLICE_X2Y4.CLK
+  Clock network: clk_250_MHz
+--------------------------------------------------------------------------------
+
+================================================================================
+Timing constraint: TS_pll_unit_pll_clk_0_ = PERIOD TIMEGRP 
+"pll_unit_pll_clk_0_" TS_sys_clk_pin *         10 HIGH 50%;
+For more information, see Period Analysis in the Timing Closure User Guide (UG612).
+
+ 0 paths analyzed, 0 endpoints analyzed, 0 failing endpoints
+ 0 timing errors detected. (0 component switching limit errors)
+--------------------------------------------------------------------------------
+
+================================================================================
+Timing constraint: TS_pll_unit_pll_clk_2_ = PERIOD TIMEGRP 
+"pll_unit_pll_clk_2_" TS_sys_clk_pin *         1.25 HIGH 50%;
+For more information, see Period Analysis in the Timing Closure User Guide (UG612).
+
+ 123740 paths analyzed, 25497 endpoints analyzed, 0 failing endpoints
+ 0 timing errors detected. (0 setup errors, 0 hold errors, 0 component switching limit errors)
+ Minimum period is   7.921ns.
+--------------------------------------------------------------------------------
+
+Paths for end point edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA (SLICE_X6Y39.WE), 13 paths
+--------------------------------------------------------------------------------
+Slack (setup path):     0.079ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3 (FF)
+  Destination:          edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA (RAM)
+  Requirement:          8.000ns
+  Data Path Delay:      7.830ns (Levels of Logic = 3)
+  Clock Path Skew:      0.001ns (0.445 - 0.444)
+  Source Clock:         clk_125_MHz rising at 0.000ns
+  Destination Clock:    clk_125_MHz rising at 8.000ns
+  Clock Uncertainty:    0.092ns
+
+  Clock Uncertainty:          0.092ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3 to edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X20Y10.CMUX    Tshcko                0.455   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<2>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3
+    SLICE_X20Y12.D1      net (fanout=17)       1.204   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<3>
+    SLICE_X20Y12.D       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/rpos<3>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/fe_int411
+    SLICE_X20Y11.A5      net (fanout=3)        0.611   edge_detect_and_fifo_units[7].event_fifo_unit/fe_int41
+    SLICE_X20Y11.A       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4
+    SLICE_X20Y11.C2      net (fanout=1)        0.742   edge_detect_and_fifo_units[7].event_fifo_unit/ff_int
+    SLICE_X20Y11.C       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o1
+    SLICE_X6Y39.WE       net (fanout=15)       3.899   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+    SLICE_X6Y39.CLK      Tws                   0.304   edge_detect_and_fifo_units[7].event_fifo_unit/do_int<53>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA
+    -------------------------------------------------  ---------------------------
+    Total                                      7.830ns (1.374ns logic, 6.456ns route)
+                                                       (17.5% logic, 82.5% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     0.347ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3 (FF)
+  Destination:          edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA (RAM)
+  Requirement:          8.000ns
+  Data Path Delay:      7.562ns (Levels of Logic = 3)
+  Clock Path Skew:      0.001ns (0.445 - 0.444)
+  Source Clock:         clk_125_MHz rising at 0.000ns
+  Destination Clock:    clk_125_MHz rising at 8.000ns
+  Clock Uncertainty:    0.092ns
+
+  Clock Uncertainty:          0.092ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3 to edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X20Y10.CMUX    Tshcko                0.455   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<2>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3
+    SLICE_X20Y10.D6      net (fanout=17)       0.935   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<3>
+    SLICE_X20Y10.D       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<2>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4_SW0
+    SLICE_X20Y11.A1      net (fanout=1)        0.612   N212
+    SLICE_X20Y11.A       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4
+    SLICE_X20Y11.C2      net (fanout=1)        0.742   edge_detect_and_fifo_units[7].event_fifo_unit/ff_int
+    SLICE_X20Y11.C       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o1
+    SLICE_X6Y39.WE       net (fanout=15)       3.899   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+    SLICE_X6Y39.CLK      Tws                   0.304   edge_detect_and_fifo_units[7].event_fifo_unit/do_int<53>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA
+    -------------------------------------------------  ---------------------------
+    Total                                      7.562ns (1.374ns logic, 6.188ns route)
+                                                       (18.2% logic, 81.8% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     0.564ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               edge_detect_and_fifo_units[7].event_fifo_unit/rpos_2 (FF)
+  Destination:          edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA (RAM)
+  Requirement:          8.000ns
+  Data Path Delay:      7.340ns (Levels of Logic = 3)
+  Clock Path Skew:      -0.004ns (0.445 - 0.449)
+  Source Clock:         clk_125_MHz rising at 0.000ns
+  Destination Clock:    clk_125_MHz rising at 8.000ns
+  Clock Uncertainty:    0.092ns
+
+  Clock Uncertainty:          0.092ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: edge_detect_and_fifo_units[7].event_fifo_unit/rpos_2 to edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X20Y12.BMUX    Tshcko                0.455   edge_detect_and_fifo_units[7].event_fifo_unit/rpos<3>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/rpos_2
+    SLICE_X20Y10.D3      net (fanout=44)       0.713   edge_detect_and_fifo_units[7].event_fifo_unit/rpos<2>
+    SLICE_X20Y10.D       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<2>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4_SW0
+    SLICE_X20Y11.A1      net (fanout=1)        0.612   N212
+    SLICE_X20Y11.A       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4
+    SLICE_X20Y11.C2      net (fanout=1)        0.742   edge_detect_and_fifo_units[7].event_fifo_unit/ff_int
+    SLICE_X20Y11.C       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o1
+    SLICE_X6Y39.WE       net (fanout=15)       3.899   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+    SLICE_X6Y39.CLK      Tws                   0.304   edge_detect_and_fifo_units[7].event_fifo_unit/do_int<53>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA
+    -------------------------------------------------  ---------------------------
+    Total                                      7.340ns (1.374ns logic, 5.966ns route)
+                                                       (18.7% logic, 81.3% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA_D1 (SLICE_X6Y39.WE), 13 paths
+--------------------------------------------------------------------------------
+Slack (setup path):     0.079ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3 (FF)
+  Destination:          edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA_D1 (RAM)
+  Requirement:          8.000ns
+  Data Path Delay:      7.830ns (Levels of Logic = 3)
+  Clock Path Skew:      0.001ns (0.445 - 0.444)
+  Source Clock:         clk_125_MHz rising at 0.000ns
+  Destination Clock:    clk_125_MHz rising at 8.000ns
+  Clock Uncertainty:    0.092ns
+
+  Clock Uncertainty:          0.092ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3 to edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA_D1
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X20Y10.CMUX    Tshcko                0.455   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<2>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3
+    SLICE_X20Y12.D1      net (fanout=17)       1.204   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<3>
+    SLICE_X20Y12.D       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/rpos<3>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/fe_int411
+    SLICE_X20Y11.A5      net (fanout=3)        0.611   edge_detect_and_fifo_units[7].event_fifo_unit/fe_int41
+    SLICE_X20Y11.A       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4
+    SLICE_X20Y11.C2      net (fanout=1)        0.742   edge_detect_and_fifo_units[7].event_fifo_unit/ff_int
+    SLICE_X20Y11.C       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o1
+    SLICE_X6Y39.WE       net (fanout=15)       3.899   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+    SLICE_X6Y39.CLK      Tws                   0.304   edge_detect_and_fifo_units[7].event_fifo_unit/do_int<53>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA_D1
+    -------------------------------------------------  ---------------------------
+    Total                                      7.830ns (1.374ns logic, 6.456ns route)
+                                                       (17.5% logic, 82.5% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     0.347ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3 (FF)
+  Destination:          edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA_D1 (RAM)
+  Requirement:          8.000ns
+  Data Path Delay:      7.562ns (Levels of Logic = 3)
+  Clock Path Skew:      0.001ns (0.445 - 0.444)
+  Source Clock:         clk_125_MHz rising at 0.000ns
+  Destination Clock:    clk_125_MHz rising at 8.000ns
+  Clock Uncertainty:    0.092ns
+
+  Clock Uncertainty:          0.092ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3 to edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA_D1
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X20Y10.CMUX    Tshcko                0.455   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<2>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3
+    SLICE_X20Y10.D6      net (fanout=17)       0.935   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<3>
+    SLICE_X20Y10.D       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<2>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4_SW0
+    SLICE_X20Y11.A1      net (fanout=1)        0.612   N212
+    SLICE_X20Y11.A       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4
+    SLICE_X20Y11.C2      net (fanout=1)        0.742   edge_detect_and_fifo_units[7].event_fifo_unit/ff_int
+    SLICE_X20Y11.C       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o1
+    SLICE_X6Y39.WE       net (fanout=15)       3.899   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+    SLICE_X6Y39.CLK      Tws                   0.304   edge_detect_and_fifo_units[7].event_fifo_unit/do_int<53>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA_D1
+    -------------------------------------------------  ---------------------------
+    Total                                      7.562ns (1.374ns logic, 6.188ns route)
+                                                       (18.2% logic, 81.8% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     0.564ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               edge_detect_and_fifo_units[7].event_fifo_unit/rpos_2 (FF)
+  Destination:          edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA_D1 (RAM)
+  Requirement:          8.000ns
+  Data Path Delay:      7.340ns (Levels of Logic = 3)
+  Clock Path Skew:      -0.004ns (0.445 - 0.449)
+  Source Clock:         clk_125_MHz rising at 0.000ns
+  Destination Clock:    clk_125_MHz rising at 8.000ns
+  Clock Uncertainty:    0.092ns
+
+  Clock Uncertainty:          0.092ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: edge_detect_and_fifo_units[7].event_fifo_unit/rpos_2 to edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA_D1
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X20Y12.BMUX    Tshcko                0.455   edge_detect_and_fifo_units[7].event_fifo_unit/rpos<3>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/rpos_2
+    SLICE_X20Y10.D3      net (fanout=44)       0.713   edge_detect_and_fifo_units[7].event_fifo_unit/rpos<2>
+    SLICE_X20Y10.D       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<2>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4_SW0
+    SLICE_X20Y11.A1      net (fanout=1)        0.612   N212
+    SLICE_X20Y11.A       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4
+    SLICE_X20Y11.C2      net (fanout=1)        0.742   edge_detect_and_fifo_units[7].event_fifo_unit/ff_int
+    SLICE_X20Y11.C       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o1
+    SLICE_X6Y39.WE       net (fanout=15)       3.899   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+    SLICE_X6Y39.CLK      Tws                   0.304   edge_detect_and_fifo_units[7].event_fifo_unit/do_int<53>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMA_D1
+    -------------------------------------------------  ---------------------------
+    Total                                      7.340ns (1.374ns logic, 5.966ns route)
+                                                       (18.7% logic, 81.3% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMB (SLICE_X6Y39.WE), 13 paths
+--------------------------------------------------------------------------------
+Slack (setup path):     0.079ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3 (FF)
+  Destination:          edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMB (RAM)
+  Requirement:          8.000ns
+  Data Path Delay:      7.830ns (Levels of Logic = 3)
+  Clock Path Skew:      0.001ns (0.445 - 0.444)
+  Source Clock:         clk_125_MHz rising at 0.000ns
+  Destination Clock:    clk_125_MHz rising at 8.000ns
+  Clock Uncertainty:    0.092ns
+
+  Clock Uncertainty:          0.092ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3 to edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMB
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X20Y10.CMUX    Tshcko                0.455   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<2>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3
+    SLICE_X20Y12.D1      net (fanout=17)       1.204   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<3>
+    SLICE_X20Y12.D       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/rpos<3>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/fe_int411
+    SLICE_X20Y11.A5      net (fanout=3)        0.611   edge_detect_and_fifo_units[7].event_fifo_unit/fe_int41
+    SLICE_X20Y11.A       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4
+    SLICE_X20Y11.C2      net (fanout=1)        0.742   edge_detect_and_fifo_units[7].event_fifo_unit/ff_int
+    SLICE_X20Y11.C       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o1
+    SLICE_X6Y39.WE       net (fanout=15)       3.899   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+    SLICE_X6Y39.CLK      Tws                   0.304   edge_detect_and_fifo_units[7].event_fifo_unit/do_int<53>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMB
+    -------------------------------------------------  ---------------------------
+    Total                                      7.830ns (1.374ns logic, 6.456ns route)
+                                                       (17.5% logic, 82.5% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     0.347ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3 (FF)
+  Destination:          edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMB (RAM)
+  Requirement:          8.000ns
+  Data Path Delay:      7.562ns (Levels of Logic = 3)
+  Clock Path Skew:      0.001ns (0.445 - 0.444)
+  Source Clock:         clk_125_MHz rising at 0.000ns
+  Destination Clock:    clk_125_MHz rising at 8.000ns
+  Clock Uncertainty:    0.092ns
+
+  Clock Uncertainty:          0.092ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3 to edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMB
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X20Y10.CMUX    Tshcko                0.455   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<2>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wpos_3
+    SLICE_X20Y10.D6      net (fanout=17)       0.935   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<3>
+    SLICE_X20Y10.D       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<2>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4_SW0
+    SLICE_X20Y11.A1      net (fanout=1)        0.612   N212
+    SLICE_X20Y11.A       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4
+    SLICE_X20Y11.C2      net (fanout=1)        0.742   edge_detect_and_fifo_units[7].event_fifo_unit/ff_int
+    SLICE_X20Y11.C       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o1
+    SLICE_X6Y39.WE       net (fanout=15)       3.899   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+    SLICE_X6Y39.CLK      Tws                   0.304   edge_detect_and_fifo_units[7].event_fifo_unit/do_int<53>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMB
+    -------------------------------------------------  ---------------------------
+    Total                                      7.562ns (1.374ns logic, 6.188ns route)
+                                                       (18.2% logic, 81.8% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     0.564ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               edge_detect_and_fifo_units[7].event_fifo_unit/rpos_2 (FF)
+  Destination:          edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMB (RAM)
+  Requirement:          8.000ns
+  Data Path Delay:      7.340ns (Levels of Logic = 3)
+  Clock Path Skew:      -0.004ns (0.445 - 0.449)
+  Source Clock:         clk_125_MHz rising at 0.000ns
+  Destination Clock:    clk_125_MHz rising at 8.000ns
+  Clock Uncertainty:    0.092ns
+
+  Clock Uncertainty:          0.092ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.000ns
+
+  Maximum Data Path at Slow Process Corner: edge_detect_and_fifo_units[7].event_fifo_unit/rpos_2 to edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMB
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X20Y12.BMUX    Tshcko                0.455   edge_detect_and_fifo_units[7].event_fifo_unit/rpos<3>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/rpos_2
+    SLICE_X20Y10.D3      net (fanout=44)       0.713   edge_detect_and_fifo_units[7].event_fifo_unit/rpos<2>
+    SLICE_X20Y10.D       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wpos<2>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4_SW0
+    SLICE_X20Y11.A1      net (fanout=1)        0.612   N212
+    SLICE_X20Y11.A       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/ff_int4
+    SLICE_X20Y11.C2      net (fanout=1)        0.742   edge_detect_and_fifo_units[7].event_fifo_unit/ff_int
+    SLICE_X20Y11.C       Tilo                  0.205   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o1
+    SLICE_X6Y39.WE       net (fanout=15)       3.899   edge_detect_and_fifo_units[7].event_fifo_unit/wr_ff_int_AND_3_o
+    SLICE_X6Y39.CLK      Tws                   0.304   edge_detect_and_fifo_units[7].event_fifo_unit/do_int<53>
+                                                       edge_detect_and_fifo_units[7].event_fifo_unit/Mram_data9_RAMB
+    -------------------------------------------------  ---------------------------
+    Total                                      7.340ns (1.374ns logic, 5.966ns route)
+                                                       (18.7% logic, 81.3% route)
+
+--------------------------------------------------------------------------------
+
+Hold Paths: TS_pll_unit_pll_clk_2_ = PERIOD TIMEGRP "pll_unit_pll_clk_2_" TS_sys_clk_pin *
+        1.25 HIGH 50%;
+--------------------------------------------------------------------------------
+
+Paths for end point slow_io_units[8].ddrserdes_unit/data_out_4 (SLICE_X14Y28.AX), 1 path
+--------------------------------------------------------------------------------
+Slack (hold path):      0.000ns (requirement - (clock path skew + uncertainty - data path))
+  Source:               slow_io_units[8].ddrserdes_unit/data_int_4 (FF)
+  Destination:          slow_io_units[8].ddrserdes_unit/data_out_4 (FF)
+  Requirement:          0.000ns
+  Data Path Delay:      0.422ns (Levels of Logic = 0)
+  Clock Path Skew:      0.210ns (0.808 - 0.598)
+  Source Clock:         clk_250_MHz rising at 8.000ns
+  Destination Clock:    clk_125_MHz rising at 8.000ns
+  Clock Uncertainty:    0.212ns
+
+  Clock Uncertainty:          0.212ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.120ns
+
+  Minimum Data Path at Fast Process Corner: slow_io_units[8].ddrserdes_unit/data_int_4 to slow_io_units[8].ddrserdes_unit/data_out_4
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X15Y28.AQ      Tcko                  0.198   slow_io_units[8].ddrserdes_unit/data_int<7>
+                                                       slow_io_units[8].ddrserdes_unit/data_int_4
+    SLICE_X14Y28.AX      net (fanout=2)        0.183   slow_io_units[8].ddrserdes_unit/data_int<4>
+    SLICE_X14Y28.CLK     Tckdi       (-Th)    -0.041   sd_do<8><7>
+                                                       slow_io_units[8].ddrserdes_unit/data_out_4
+    -------------------------------------------------  ---------------------------
+    Total                                      0.422ns (0.239ns logic, 0.183ns route)
+                                                       (56.6% logic, 43.4% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point slow_io_units[13].ddrserdes_unit/data_out_0 (SLICE_X3Y3.AX), 1 path
+--------------------------------------------------------------------------------
+Slack (hold path):      0.006ns (requirement - (clock path skew + uncertainty - data path))
+  Source:               slow_io_units[13].ddrserdes_unit/data_int_0 (FF)
+  Destination:          slow_io_units[13].ddrserdes_unit/data_out_0 (FF)
+  Requirement:          0.000ns
+  Data Path Delay:      0.428ns (Levels of Logic = 0)
+  Clock Path Skew:      0.210ns (0.848 - 0.638)
+  Source Clock:         clk_250_MHz rising at 8.000ns
+  Destination Clock:    clk_125_MHz rising at 8.000ns
+  Clock Uncertainty:    0.212ns
+
+  Clock Uncertainty:          0.212ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.120ns
+
+  Minimum Data Path at Fast Process Corner: slow_io_units[13].ddrserdes_unit/data_int_0 to slow_io_units[13].ddrserdes_unit/data_out_0
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X2Y3.AQ        Tcko                  0.234   slow_io_units[13].ddrserdes_unit/data_int<3>
+                                                       slow_io_units[13].ddrserdes_unit/data_int_0
+    SLICE_X3Y3.AX        net (fanout=2)        0.135   slow_io_units[13].ddrserdes_unit/data_int<0>
+    SLICE_X3Y3.CLK       Tckdi       (-Th)    -0.059   sd_do<13><3>
+                                                       slow_io_units[13].ddrserdes_unit/data_out_0
+    -------------------------------------------------  ---------------------------
+    Total                                      0.428ns (0.293ns logic, 0.135ns route)
+                                                       (68.5% logic, 31.5% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point slow_io_units[13].ddrserdes_unit/data_out_2 (SLICE_X3Y3.CX), 1 path
+--------------------------------------------------------------------------------
+Slack (hold path):      0.015ns (requirement - (clock path skew + uncertainty - data path))
+  Source:               slow_io_units[13].ddrserdes_unit/data_int_2 (FF)
+  Destination:          slow_io_units[13].ddrserdes_unit/data_out_2 (FF)
+  Requirement:          0.000ns
+  Data Path Delay:      0.437ns (Levels of Logic = 0)
+  Clock Path Skew:      0.210ns (0.848 - 0.638)
+  Source Clock:         clk_250_MHz rising at 8.000ns
+  Destination Clock:    clk_125_MHz rising at 8.000ns
+  Clock Uncertainty:    0.212ns
+
+  Clock Uncertainty:          0.212ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter (TSJ):  0.070ns
+    Discrete Jitter (DJ):       0.169ns
+    Phase Error (PE):           0.120ns
+
+  Minimum Data Path at Fast Process Corner: slow_io_units[13].ddrserdes_unit/data_int_2 to slow_io_units[13].ddrserdes_unit/data_out_2
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X2Y3.CQ        Tcko                  0.234   slow_io_units[13].ddrserdes_unit/data_int<3>
+                                                       slow_io_units[13].ddrserdes_unit/data_int_2
+    SLICE_X3Y3.CX        net (fanout=2)        0.144   slow_io_units[13].ddrserdes_unit/data_int<2>
+    SLICE_X3Y3.CLK       Tckdi       (-Th)    -0.059   sd_do<13><3>
+                                                       slow_io_units[13].ddrserdes_unit/data_out_2
+    -------------------------------------------------  ---------------------------
+    Total                                      0.437ns (0.293ns logic, 0.144ns route)
+                                                       (67.0% logic, 33.0% route)
+
+--------------------------------------------------------------------------------
+
+Component Switching Limit Checks: TS_pll_unit_pll_clk_2_ = PERIOD TIMEGRP "pll_unit_pll_clk_2_" TS_sys_clk_pin *
+        1.25 HIGH 50%;
+--------------------------------------------------------------------------------
+Slack: 4.876ns (period - min period limit)
+  Period: 8.000ns
+  Min period limit: 3.124ns (320.102MHz) (Trper_CLKA(Fmax))
+  Physical resource: global_fifo_unit/Mram_data1/CLKA
+  Logical resource: global_fifo_unit/Mram_data1/CLKA
+  Location pin: RAMB16_X1Y12.CLKA
+  Clock network: clk_125_MHz
+--------------------------------------------------------------------------------
+Slack: 4.876ns (period - min period limit)
+  Period: 8.000ns
+  Min period limit: 3.124ns (320.102MHz) (Trper_CLKB(Fmax))
+  Physical resource: global_fifo_unit/Mram_data1/CLKB
+  Logical resource: global_fifo_unit/Mram_data1/CLKB
+  Location pin: RAMB16_X1Y12.CLKB
+  Clock network: clk_125_MHz
+--------------------------------------------------------------------------------
+Slack: 4.876ns (period - min period limit)
+  Period: 8.000ns
+  Min period limit: 3.124ns (320.102MHz) (Trper_CLKA(Fmax))
+  Physical resource: global_fifo_unit/Mram_data2/CLKA
+  Logical resource: global_fifo_unit/Mram_data2/CLKA
+  Location pin: RAMB16_X1Y18.CLKA
+  Clock network: clk_125_MHz
+--------------------------------------------------------------------------------
+
+
+Derived Constraint Report
+Derived Constraints for TS_sys_clk_pin
++-------------------------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
+|                               |   Period    |       Actual Period       |      Timing Errors        |      Paths Analyzed       |
+|           Constraint          | Requirement |-------------+-------------|-------------+-------------|-------------+-------------|
+|                               |             |   Direct    | Derivative  |   Direct    | Derivative  |   Direct    | Derivative  |
++-------------------------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
+|TS_sys_clk_pin                 |     10.000ns|      3.334ns|     34.220ns|            0|           16|            0|       124268|
+| TS_pll_unit_pll_clk_1_        |      4.000ns|     13.688ns|          N/A|           16|            0|          528|            0|
+| TS_pll_unit_pll_clk_0_        |      1.000ns|          N/A|          N/A|            0|            0|            0|            0|
+| TS_pll_unit_pll_clk_2_        |      8.000ns|      7.921ns|          N/A|            0|            0|       123740|            0|
++-------------------------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
+
+1 constraint not met.
+
+
+Data Sheet report:
+-----------------
+All values displayed in nanoseconds (ns)
+
+Clock to Setup on destination clock clkin
+---------------+---------+---------+---------+---------+
+               | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+---------------+---------+---------+---------+---------+
+clkin          |    7.921|         |         |         |
+---------------+---------+---------+---------+---------+
+
+
+Timing summary:
+---------------
+
+Timing errors: 16  Score: 37187  (Setup/Max: 37187, Hold: 0)
+
+Constraints cover 124268 paths, 0 nets, and 21594 connections
+
+Design statistics:
+   Minimum period:  13.688ns{1}   (Maximum frequency:  73.057MHz)
+
+
+------------------------------------Footnotes-----------------------------------
+1)  The minimum period statistic assumes all single cycle delays.
+
+Analysis completed Thu Oct 24 15:57:11 2013 
+--------------------------------------------------------------------------------
+
+Trace Settings:
+-------------------------
+Trace Settings 
+
+Peak Memory Usage: 199 MB
+
+
+

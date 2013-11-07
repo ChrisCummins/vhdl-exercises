@@ -5,14 +5,14 @@ Parameter TMPDIR set to /tmp/cummince
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.04 secs
+Total CPU time to Xst completion: 0.05 secs
  
 --> 
 Parameter xsthdpdir set to /tmp/cummince
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.04 secs
+Total CPU time to Xst completion: 0.05 secs
  
 --> 
 WARNING:Xst:1583 - You are using an internal switch '-infer_ramb8'.
@@ -66,41 +66,16 @@ infer_ramb8                        : No
 =========================================================================
 *                          HDL Parsing                                  *
 =========================================================================
-Parsing VHDL file "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/std_logic_textio.vhd" into library work
+Parsing VHDL file "/users/c/cummince/src/Radio_Clock_Template/std_logic_textio.vhd" into library work
 Parsing package <STD_LOGIC_TEXTIO>.
 Parsing package body <STD_LOGIC_TEXTIO>.
-Parsing VHDL file "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/util.vhd" into library work
+Parsing VHDL file "/users/c/cummince/src/Radio_Clock_Template/util.vhd" into library work
 Parsing package <util>.
 Parsing package body <util>.
-Parsing VHDL file "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/ddrserdes.vhd" into library work
-Parsing entity <ddrserdes>.
-Parsing architecture <behav> of entity <ddrserdes>.
-Parsing entity <ddrserdes_tb>.
-Parsing architecture <tests> of entity <ddrserdes_tb>.
-Parsing VHDL file "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/dcf_sync.vhd" into library work
-Parsing entity <dcf_sync>.
-Parsing architecture <rtl> of entity <dcf_sync>.
-Parsing entity <dcf_sync_tb>.
-Parsing architecture <tests> of entity <dcf_sync_tb>.
-Parsing VHDL file "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/dcf_bits.vhd" into library work
-Parsing entity <dcf_bits>.
-Parsing architecture <rtl> of entity <dcf_bits>.
-Parsing entity <dcf_bits_tb>.
-Parsing architecture <tests> of entity <dcf_bits_tb>.
-Parsing VHDL file "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/fifo.vhd" into library work
+Parsing VHDL file "/users/c/cummince/src/Radio_Clock_Template/fifo.vhd" into library work
 Parsing entity <fifo>.
 Parsing architecture <rtl> of entity <fifo>.
-Parsing VHDL file "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/msf_sync.vhd" into library work
-Parsing entity <msf_sync>.
-Parsing architecture <rtl> of entity <msf_sync>.
-Parsing entity <msf_sync_tb>.
-Parsing architecture <tests> of entity <msf_sync_tb>.
-Parsing VHDL file "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/msf_bits.vhd" into library work
-Parsing entity <msf_bits>.
-Parsing architecture <rtl> of entity <msf_bits>.
-Parsing entity <msf_bits_tb>.
-Parsing architecture <tests> of entity <msf_bits_tb>.
-Parsing VHDL file "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" into library work
+Parsing VHDL file "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" into library work
 Parsing entity <top_level>.
 Parsing architecture <behav> of entity <top_level>.
 
@@ -109,38 +84,32 @@ Parsing architecture <behav> of entity <top_level>.
 =========================================================================
 
 Elaborating entity <top_level> (architecture <behav>) with generics from library <work>.
-WARNING:HDLCompiler:89 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" Line 221: <pll_ipc> remains a black-box since it has no binding entity.
-WARNING:HDLCompiler:89 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" Line 314: <uptime_counter_ipc> remains a black-box since it has no binding entity.
-WARNING:HDLCompiler:89 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" Line 295: <ssg_ipc> remains a black-box since it has no binding entity.
+WARNING:HDLCompiler:89 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" Line 221: <pll_ipc> remains a black-box since it has no binding entity.
+WARNING:HDLCompiler:89 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" Line 314: <uptime_counter_ipc> remains a black-box since it has no binding entity.
+WARNING:HDLCompiler:89 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" Line 295: <ssg_ipc> remains a black-box since it has no binding entity.
 
 Elaborating entity <fifo> (architecture <rtl>) with generics from library <work>.
-WARNING:HDLCompiler:89 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" Line 273: <serial_port_ipc> remains a black-box since it has no binding entity.
-WARNING:HDLCompiler:89 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" Line 254: <serdes_ipc> remains a black-box since it has no binding entity.
-
-Elaborating entity <ddrserdes> (architecture <behav>) with generics from library <work>.
-WARNING:HDLCompiler:89 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" Line 132: <edge_detector_ipc> remains a black-box since it has no binding entity.
-
-Elaborating entity <fifo> (architecture <rtl>) with generics from library <work>.
+WARNING:HDLCompiler:89 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" Line 273: <serial_port_ipc> remains a black-box since it has no binding entity.
+WARNING:HDLCompiler:89 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" Line 254: <serdes_ipc> remains a black-box since it has no binding entity.
+WARNING:HDLCompiler:89 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" Line 114: <ddrserdes_ipc> remains a black-box since it has no binding entity.
+WARNING:HDLCompiler:89 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" Line 132: <edge_detector_ipc> remains a black-box since it has no binding entity.
 
 Elaborating entity <fifo> (architecture <rtl>) with generics from library <work>.
 
-Elaborating entity <dcf_sync> (architecture <rtl>) with generics from library <work>.
-WARNING:HDLCompiler:1127 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/dcf_sync.vhd" Line 64: Assignment to pulse ignored, since the identifier is never used
-
-Elaborating entity <msf_sync> (architecture <rtl>) with generics from library <work>.
-
-Elaborating entity <dcf_bits> (architecture <rtl>) with generics from library <work>.
-
-Elaborating entity <msf_bits> (architecture <rtl>) with generics from library <work>.
-WARNING:HDLCompiler:89 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" Line 67: <dcf_decode_ipc> remains a black-box since it has no binding entity.
-WARNING:HDLCompiler:89 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" Line 173: <msf_decode_ipc> remains a black-box since it has no binding entity.
+Elaborating entity <fifo> (architecture <rtl>) with generics from library <work>.
+WARNING:HDLCompiler:89 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" Line 94: <dcf_sync_ipc> remains a black-box since it has no binding entity.
+WARNING:HDLCompiler:89 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" Line 201: <msf_sync_ipc> remains a black-box since it has no binding entity.
+WARNING:HDLCompiler:89 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" Line 46: <dcf_bits_ipc> remains a black-box since it has no binding entity.
+WARNING:HDLCompiler:89 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" Line 151: <msf_bits_ipc> remains a black-box since it has no binding entity.
+WARNING:HDLCompiler:89 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" Line 67: <dcf_decode_ipc> remains a black-box since it has no binding entity.
+WARNING:HDLCompiler:89 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" Line 173: <msf_decode_ipc> remains a black-box since it has no binding entity.
 
 =========================================================================
 *                           HDL Synthesis                               *
 =========================================================================
 
 Synthesizing Unit <top_level>.
-    Related source file is "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd".
+    Related source file is "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd".
         osc_clk_freq = 100000000
         sys_clk_freq = 125000000
         baud_rate = 57600
@@ -148,26 +117,26 @@ Synthesizing Unit <top_level>.
         io_ports = 16
         ed_width = 16
         ts_offset = 24
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 455: Output port <clk3> of the instance <pll_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 455: Output port <clk4> of the instance <pll_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 455: Output port <clk5> of the instance <pll_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[0].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[1].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[2].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[3].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[4].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[5].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[6].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[7].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[8].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[9].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[10].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[11].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[12].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[13].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[14].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[15].event_fifo_unit> is unconnected or connected to loadless signal.
-INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_level.vhd" line 638: Output port <ff> of the instance <global_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 455: Output port <clk3> of the instance <pll_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 455: Output port <clk4> of the instance <pll_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 455: Output port <clk5> of the instance <pll_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[0].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[1].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[2].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[3].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[4].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[5].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[6].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[7].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[8].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[9].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[10].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[11].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[12].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[13].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[14].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 603: Output port <ff> of the instance <edge_detect_and_fifo_units[15].event_fifo_unit> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/users/c/cummince/src/Radio_Clock_Template/top_level.vhd" line 638: Output port <ff> of the instance <global_fifo_unit> is unconnected or connected to loadless signal.
     Found 64-bit register for signal <dcf_buf_so_ts>.
     Found 1-bit register for signal <dcf_buf_mo>.
     Found 64-bit register for signal <dcf_buf_mo_ts>.
@@ -522,6 +491,7 @@ INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_lev
     Found 16x8-bit Read Only RAM for signal <_n3806>
     Found 16x8-bit Read Only RAM for signal <_n3840>
     Found 16x8-bit Read Only RAM for signal <_n3874>
+    Found 16x8-bit Read Only RAM for signal <_n3908>
     Found 16x8-bit Read Only RAM for signal <_n3942>
     Found 1-bit 16-to-1 multiplexer for signal <ex_ptr[0][3]_ef_fe[15]_Mux_236_o> created at line 949.
     Found 8-bit 16-to-1 multiplexer for signal <ex_ptr[2][3]_ef_do[15][9][7]_wide_mux_239_OUT> created at line 959.
@@ -535,14 +505,14 @@ INFO:Xst:3210 - "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/top_lev
     Found 8-bit 16-to-1 multiplexer for signal <ex_ptr[2][3]_ef_do[15][1][7]_wide_mux_247_OUT> created at line 959.
     Found 8-bit 16-to-1 multiplexer for signal <ex_ptr[2][3]_ef_do[15][0][7]_wide_mux_248_OUT> created at line 959.
     Summary:
-	inferred 188 RAM(s).
+	inferred 189 RAM(s).
 	inferred   2 Adder/Subtractor(s).
 	inferred 1251 D-type flip-flop(s).
-	inferred 410 Multiplexer(s).
+	inferred 407 Multiplexer(s).
 Unit <top_level> synthesized.
 
 Synthesizing Unit <fifo_1>.
-    Related source file is "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/fifo.vhd".
+    Related source file is "/users/c/cummince/src/Radio_Clock_Template/fifo.vhd".
         data_width = 1
         fifo_depth = 1024
     Found 1024x8-bit dual-port RAM <Mram_data> for signal <data>.
@@ -561,25 +531,16 @@ Synthesizing Unit <fifo_1>.
 	inferred   1 Multiplexer(s).
 Unit <fifo_1> synthesized.
 
-Synthesizing Unit <ddrserdes>.
-    Related source file is "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/ddrserdes.vhd".
-        ibuf_len = 4
-    Found 3-bit register for signal <ibuf<2:0>>.
-    Found 8-bit register for signal <data_out>.
-    Summary:
-	inferred  11 D-type flip-flop(s).
-Unit <ddrserdes> synthesized.
-
 Synthesizing Unit <fifo_2>.
-    Related source file is "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/fifo.vhd".
+    Related source file is "/users/c/cummince/src/Radio_Clock_Template/fifo.vhd".
         data_width = 10
         fifo_depth = 16
     Found 16x80-bit dual-port RAM <Mram_data> for signal <data>.
     Found 4-bit register for signal <wpos>.
     Found 80-bit register for signal <do_int>.
     Found 4-bit register for signal <rpos>.
-    Found 4-bit adder for signal <wpos[3]_GND_14_o_add_23_OUT> created at line 1241.
-    Found 4-bit adder for signal <rpos[3]_GND_14_o_add_26_OUT> created at line 1241.
+    Found 4-bit adder for signal <wpos[3]_GND_13_o_add_23_OUT> created at line 1241.
+    Found 4-bit adder for signal <rpos[3]_GND_13_o_add_26_OUT> created at line 1241.
     Found 4-bit comparator equal for signal <ff_int> created at line 139
     Found 4-bit comparator equal for signal <fe_int> created at line 154
     Summary:
@@ -591,15 +552,15 @@ Synthesizing Unit <fifo_2>.
 Unit <fifo_2> synthesized.
 
 Synthesizing Unit <fifo_3>.
-    Related source file is "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/fifo.vhd".
+    Related source file is "/users/c/cummince/src/Radio_Clock_Template/fifo.vhd".
         data_width = 10
         fifo_depth = 64
     Found 64x80-bit dual-port RAM <Mram_data> for signal <data>.
     Found 6-bit register for signal <wpos>.
     Found 80-bit register for signal <do_int>.
     Found 6-bit register for signal <rpos>.
-    Found 6-bit adder for signal <wpos[5]_GND_46_o_add_23_OUT> created at line 1241.
-    Found 6-bit adder for signal <rpos[5]_GND_46_o_add_26_OUT> created at line 1241.
+    Found 6-bit adder for signal <wpos[5]_GND_45_o_add_23_OUT> created at line 1241.
+    Found 6-bit adder for signal <rpos[5]_GND_45_o_add_26_OUT> created at line 1241.
     Found 6-bit comparator equal for signal <ff_int> created at line 139
     Found 6-bit comparator equal for signal <fe_int> created at line 154
     Summary:
@@ -610,141 +571,44 @@ Synthesizing Unit <fifo_3>.
 	inferred   1 Multiplexer(s).
 Unit <fifo_3> synthesized.
 
-Synthesizing Unit <dcf_sync>.
-    Related source file is "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/dcf_sync.vhd".
-        clk_freq = 125000000
-    Found 1-bit register for signal <so>.
-    Found 1-bit register for signal <mo>.
-    Found 8-bit register for signal <di_var>.
-    Found 29-bit register for signal <cnt>.
-    Found 6-bit register for signal <sec>.
-    Found 29-bit adder for signal <cnt[28]_GND_48_o_add_0_OUT> created at line 80.
-    Found 6-bit adder for signal <sec[5]_GND_48_o_add_7_OUT> created at line 94.
-    Found 8-bit comparator greater for signal <di_var[7]_di[7]_LessThan_2_o> created at line 85
-    Found 29-bit comparator greater for signal <GND_48_o_cnt[28]_LessThan_3_o> created at line 85
-    Found 29-bit comparator greater for signal <cnt[28]_GND_48_o_LessThan_4_o> created at line 85
-    Found 6-bit comparator greater for signal <sec[5]_PWR_12_o_LessThan_7_o> created at line 92
-    Found 8-bit comparator greater for signal <di[7]_di_var[7]_LessThan_14_o> created at line 111
-    Found 29-bit comparator greater for signal <cnt[28]_GND_48_o_LessThan_16_o> created at line 121
-    Found 29-bit comparator greater for signal <GND_48_o_cnt[28]_LessThan_22_o> created at line 133
-    Summary:
-	inferred   2 Adder/Subtractor(s).
-	inferred  45 D-type flip-flop(s).
-	inferred   7 Comparator(s).
-	inferred   4 Multiplexer(s).
-Unit <dcf_sync> synthesized.
-
-Synthesizing Unit <msf_sync>.
-    Related source file is "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/msf_sync.vhd".
-        clk_freq = 125000000
-    Found 1-bit register for signal <so>.
-    Found 1-bit register for signal <mo>.
-    Found 8-bit register for signal <di_var>.
-    Found 29-bit register for signal <cnt>.
-    Found 6-bit register for signal <sec>.
-    Found 29-bit adder for signal <cnt[28]_GND_51_o_add_0_OUT> created at line 76.
-    Found 6-bit adder for signal <sec[5]_GND_51_o_add_7_OUT> created at line 89.
-    Found 8-bit comparator greater for signal <di_var[7]_di[7]_LessThan_2_o> created at line 81
-    Found 29-bit comparator greater for signal <GND_51_o_cnt[28]_LessThan_3_o> created at line 81
-    Found 29-bit comparator greater for signal <cnt[28]_GND_51_o_LessThan_4_o> created at line 81
-    Found 6-bit comparator greater for signal <sec[5]_PWR_13_o_LessThan_7_o> created at line 87
-    Found 8-bit comparator greater for signal <di[7]_di_var[7]_LessThan_14_o> created at line 106
-    Found 29-bit comparator greater for signal <cnt[28]_GND_51_o_LessThan_16_o> created at line 114
-    Found 29-bit comparator greater for signal <GND_51_o_cnt[28]_LessThan_18_o> created at line 120
-    Summary:
-	inferred   2 Adder/Subtractor(s).
-	inferred  45 D-type flip-flop(s).
-	inferred   7 Comparator(s).
-	inferred   2 Multiplexer(s).
-Unit <msf_sync> synthesized.
-
-Synthesizing Unit <dcf_bits>.
-    Related source file is "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/dcf_bits.vhd".
-        clk_freq = 125000000
-    Found 25-bit register for signal <s_count>.
-    Found 1-bit register for signal <bo>.
-    Found 1-bit register for signal <tr>.
-    Found 1-bit register for signal <tr_var>.
-    Found 1-bit register for signal <pulse>.
-    Found 8-bit register for signal <di_var>.
-    Found 1-bit register for signal <sampling>.
-    Found 25-bit adder for signal <s_count[24]_GND_54_o_add_2_OUT> created at line 71.
-    Found 8-bit comparator greater for signal <di_var[7]_di[7]_LessThan_1_o> created at line 60
-    Found 8-bit comparator greater for signal <di[7]_di_var[7]_LessThan_2_o> created at line 62
-    Summary:
-	inferred   1 Adder/Subtractor(s).
-	inferred  38 D-type flip-flop(s).
-	inferred   2 Comparator(s).
-Unit <dcf_bits> synthesized.
-
-Synthesizing Unit <msf_bits>.
-    Related source file is "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/msf_bits.vhd".
-        clk_freq = 125000000
-    Found 25-bit register for signal <s_count>.
-    Found 1-bit register for signal <bao>.
-    Found 1-bit register for signal <bbo>.
-    Found 1-bit register for signal <tr>.
-    Found 1-bit register for signal <tr_var>.
-    Found 1-bit register for signal <pulse>.
-    Found 1-bit register for signal <bao_var>.
-    Found 8-bit register for signal <di_var>.
-    Found 1-bit register for signal <sampling>.
-    Found 25-bit adder for signal <s_count[24]_GND_56_o_add_2_OUT> created at line 78.
-    Found 8-bit comparator greater for signal <di_var[7]_di[7]_LessThan_1_o> created at line 67
-    Found 8-bit comparator greater for signal <di[7]_di_var[7]_LessThan_2_o> created at line 69
-    Summary:
-	inferred   1 Adder/Subtractor(s).
-	inferred  40 D-type flip-flop(s).
-	inferred   2 Comparator(s).
-Unit <msf_bits> synthesized.
-
 =========================================================================
 HDL Synthesis Report
 
 Macro Statistics
-# RAMs                                                 : 206
+# RAMs                                                 : 207
  1024x8-bit dual-port RAM                              : 1
- 16x8-bit single-port Read Only RAM                    : 188
+ 16x8-bit single-port Read Only RAM                    : 189
  16x80-bit dual-port RAM                               : 16
  64x80-bit dual-port RAM                               : 1
-# Adders/Subtractors                                   : 44
+# Adders/Subtractors                                   : 38
  10-bit adder                                          : 2
- 25-bit adder                                          : 2
- 29-bit adder                                          : 2
  4-bit adder                                           : 33
- 6-bit adder                                           : 4
+ 6-bit adder                                           : 2
  7-bit adder                                           : 1
-# Registers                                            : 246
- 1-bit register                                        : 40
+# Registers                                            : 192
+ 1-bit register                                        : 24
  10-bit register                                       : 2
  16-bit register                                       : 1
  2-bit register                                        : 2
- 25-bit register                                       : 2
- 29-bit register                                       : 2
- 3-bit register                                        : 14
  4-bit register                                        : 64
- 6-bit register                                        : 4
+ 6-bit register                                        : 2
  64-bit register                                       : 8
  7-bit register                                        : 1
- 8-bit register                                        : 89
+ 8-bit register                                        : 71
  80-bit register                                       : 17
-# Comparators                                          : 54
+# Comparators                                          : 36
  10-bit comparator equal                               : 2
- 29-bit comparator greater                             : 8
  4-bit comparator equal                                : 32
  6-bit comparator equal                                : 2
- 6-bit comparator greater                              : 2
- 8-bit comparator greater                              : 8
-# Multiplexers                                         : 450
+# Multiplexers                                         : 441
  1-bit 16-to-1 multiplexer                             : 1
  1-bit 2-to-1 multiplexer                              : 32
  10-bit 2-to-1 multiplexer                             : 1
- 29-bit 2-to-1 multiplexer                             : 2
  4-bit 2-to-1 multiplexer                              : 16
- 6-bit 2-to-1 multiplexer                              : 5
+ 6-bit 2-to-1 multiplexer                              : 1
  7-bit 2-to-1 multiplexer                              : 14
  8-bit 16-to-1 multiplexer                             : 10
- 8-bit 2-to-1 multiplexer                              : 369
+ 8-bit 2-to-1 multiplexer                              : 366
 
 =========================================================================
 
@@ -753,8 +617,22 @@ Macro Statistics
 =========================================================================
 
 Loading core <pll_ipc> for timing and area information for instance <pll_unit>.
+Loading core <ddrserdes_ipc> for timing and area information for instance <slow_io_units[7].ddrserdes_unit>.
+Loading core <ddrserdes_ipc> for timing and area information for instance <slow_io_units[6].ddrserdes_unit>.
+Loading core <ddrserdes_ipc> for timing and area information for instance <slow_io_units[5].ddrserdes_unit>.
+Loading core <ddrserdes_ipc> for timing and area information for instance <slow_io_units[4].ddrserdes_unit>.
+Loading core <ddrserdes_ipc> for timing and area information for instance <slow_io_units[3].ddrserdes_unit>.
+Loading core <ddrserdes_ipc> for timing and area information for instance <slow_io_units[2].ddrserdes_unit>.
 Loading core <serdes_ipc> for timing and area information for instance <fast_io_units[0].serdes_unit>.
 Loading core <serdes_ipc> for timing and area information for instance <fast_io_units[1].serdes_unit>.
+Loading core <ddrserdes_ipc> for timing and area information for instance <slow_io_units[8].ddrserdes_unit>.
+Loading core <ddrserdes_ipc> for timing and area information for instance <slow_io_units[9].ddrserdes_unit>.
+Loading core <ddrserdes_ipc> for timing and area information for instance <slow_io_units[10].ddrserdes_unit>.
+Loading core <ddrserdes_ipc> for timing and area information for instance <slow_io_units[11].ddrserdes_unit>.
+Loading core <ddrserdes_ipc> for timing and area information for instance <slow_io_units[12].ddrserdes_unit>.
+Loading core <ddrserdes_ipc> for timing and area information for instance <slow_io_units[13].ddrserdes_unit>.
+Loading core <ddrserdes_ipc> for timing and area information for instance <slow_io_units[14].ddrserdes_unit>.
+Loading core <ddrserdes_ipc> for timing and area information for instance <slow_io_units[15].ddrserdes_unit>.
 Loading core <uptime_counter_ipc> for timing and area information for instance <uptime_unit>.
 Loading core <ssg_ipc> for timing and area information for instance <ssg_unit>.
 Loading core <serial_port_ipc> for timing and area information for instance <serial_port_unit>.
@@ -774,13 +652,13 @@ Loading core <edge_detector_ipc> for timing and area information for instance <e
 Loading core <edge_detector_ipc> for timing and area information for instance <edge_detect_and_fifo_units[13].edge_detect_unit>.
 Loading core <edge_detector_ipc> for timing and area information for instance <edge_detect_and_fifo_units[14].edge_detect_unit>.
 Loading core <edge_detector_ipc> for timing and area information for instance <edge_detect_and_fifo_units[15].edge_detect_unit>.
+Loading core <dcf_sync_ipc> for timing and area information for instance <dcf_sync_unit>.
+Loading core <msf_sync_ipc> for timing and area information for instance <msf_sync_unit>.
+Loading core <dcf_bits_ipc> for timing and area information for instance <dcf_bits_unit>.
+Loading core <msf_bits_ipc> for timing and area information for instance <msf_bits_unit>.
 Loading core <dcf_decode_ipc> for timing and area information for instance <dcf_decode_unit>.
 Loading core <msf_decode_ipc> for timing and area information for instance <msf_decode_unit>.
 INFO:Xst:1901 - Instance clk_syn.pll_unit in unit clk_syn.pll_unit of type PLL_BASE has been replaced by PLL_ADV
-
-Synthesizing (advanced) Unit <dcf_bits>.
-The following registers are absorbed into counter <s_count>: 1 register on signal <s_count>.
-Unit <dcf_bits> synthesized (advanced).
 
 Synthesizing (advanced) Unit <fifo_1>.
 The following registers are absorbed into counter <wpos>: 1 register on signal <wpos>.
@@ -837,14 +715,6 @@ INFO:Xst:3226 - The RAM <Mram_data> will be implemented as a BLOCK RAM, absorbin
     -----------------------------------------------------------------------
 Unit <fifo_3> synthesized (advanced).
 
-Synthesizing (advanced) Unit <msf_bits>.
-The following registers are absorbed into counter <s_count>: 1 register on signal <s_count>.
-Unit <msf_bits> synthesized (advanced).
-
-Synthesizing (advanced) Unit <msf_sync>.
-The following registers are absorbed into counter <cnt>: 1 register on signal <cnt>.
-Unit <msf_sync> synthesized (advanced).
-
 Synthesizing (advanced) Unit <top_level>.
 The following registers are absorbed into counter <ex_ptr_0>: 1 register on signal <ex_ptr_0>.
 INFO:Xst:3231 - The small RAM <Mram__n3600> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
@@ -880,7 +750,7 @@ INFO:Xst:3231 - The small RAM <Mram__n3668> will be implemented on LUTs in order
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram__n3702> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram__n3770> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
@@ -891,7 +761,7 @@ INFO:Xst:3231 - The small RAM <Mram__n3702> will be implemented on LUTs in order
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram__n3770> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram__n3702> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
@@ -924,6 +794,28 @@ INFO:Xst:3231 - The small RAM <Mram__n3840> will be implemented on LUTs in order
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
+INFO:Xst:3231 - The small RAM <Mram__n3874> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 16-word x 8-bit                     |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <gf_do<9><3:0>> |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
+INFO:Xst:3231 - The small RAM <Mram__n3908> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 16-word x 8-bit                     |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <gf_do<9><3:0>> |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
 INFO:Xst:3231 - The small RAM <Mram__n3942> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
@@ -935,14 +827,14 @@ INFO:Xst:3231 - The small RAM <Mram__n3942> will be implemented on LUTs in order
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram__n3874> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_gf_do[8][7]_GND_7_o_wide_mux_304_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <gf_do<9><3:0>> |          |
+    |     addrA          | connected to signal <gf_do<8><7:4>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -968,14 +860,14 @@ INFO:Xst:3231 - The small RAM <Mram_gf_do[8][3]_GND_7_o_wide_mux_305_OUT> will b
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_gf_do[8][7]_GND_7_o_wide_mux_304_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_gf_do[7][3]_GND_7_o_wide_mux_287_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <gf_do<8><7:4>> |          |
+    |     addrA          | connected to signal <gf_do<7><3:0>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1001,14 +893,14 @@ INFO:Xst:3231 - The small RAM <Mram_gf_do[6][7]_GND_7_o_wide_mux_288_OUT> will b
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_gf_do[7][3]_GND_7_o_wide_mux_287_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_gf_do[5][7]_GND_7_o_wide_mux_290_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <gf_do<7><3:0>> |          |
+    |     addrA          | connected to signal <gf_do<5><7:4>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1034,14 +926,14 @@ INFO:Xst:3231 - The small RAM <Mram_gf_do[5][3]_GND_7_o_wide_mux_291_OUT> will b
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_gf_do[5][7]_GND_7_o_wide_mux_290_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_gf_do[4][3]_GND_7_o_wide_mux_293_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <gf_do<5><7:4>> |          |
+    |     addrA          | connected to signal <gf_do<4><3:0>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1067,14 +959,14 @@ INFO:Xst:3231 - The small RAM <Mram_gf_do[3][7]_GND_7_o_wide_mux_294_OUT> will b
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_gf_do[4][3]_GND_7_o_wide_mux_293_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_gf_do[2][7]_GND_7_o_wide_mux_296_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <gf_do<4><3:0>> |          |
+    |     addrA          | connected to signal <gf_do<2><7:4>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1100,14 +992,14 @@ INFO:Xst:3231 - The small RAM <Mram_gf_do[2][3]_GND_7_o_wide_mux_297_OUT> will b
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_gf_do[2][7]_GND_7_o_wide_mux_296_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_gf_do[1][3]_GND_7_o_wide_mux_299_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <gf_do<2><7:4>> |          |
+    |     addrA          | connected to signal <gf_do<1><3:0>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1133,17 +1025,6 @@ INFO:Xst:3231 - The small RAM <Mram_gf_do[0][7]_GND_7_o_wide_mux_300_OUT> will b
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_gf_do[1][3]_GND_7_o_wide_mux_299_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
-    -----------------------------------------------------------------------
-    | ram_type           | Distributed                         |          |
-    -----------------------------------------------------------------------
-    | Port A                                                              |
-    |     aspect ratio   | 16-word x 8-bit                     |          |
-    |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <gf_do<1><3:0>> |          |
-    |     diA            | connected to signal <GND>           |          |
-    |     doA            | connected to internal node          |          |
-    -----------------------------------------------------------------------
 INFO:Xst:3231 - The small RAM <Mram_gf_do[0][3]_GND_7_o_wide_mux_301_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
@@ -1152,17 +1033,6 @@ INFO:Xst:3231 - The small RAM <Mram_gf_do[0][3]_GND_7_o_wide_mux_301_OUT> will b
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
     |     addrA          | connected to signal <gf_do<0><3:0>> |          |
-    |     diA            | connected to signal <GND>           |          |
-    |     doA            | connected to internal node          |          |
-    -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_year[3][3]_GND_7_o_wide_mux_495_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
-    -----------------------------------------------------------------------
-    | ram_type           | Distributed                         |          |
-    -----------------------------------------------------------------------
-    | Port A                                                              |
-    |     aspect ratio   | 16-word x 8-bit                     |          |
-    |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_year<3>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1177,14 +1047,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_year[2][3]_GND_7_o_wide_mux_496_OUT>
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_year[0][3]_GND_7_o_wide_mux_498_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_year[3][3]_GND_7_o_wide_mux_495_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_year<0>> |          |
+    |     addrA          | connected to signal <dcf_buf_year<3>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1210,14 +1080,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_month[1][3]_GND_7_o_wide_mux_493_OUT
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_day[1][3]_GND_7_o_wide_mux_491_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_year[0][3]_GND_7_o_wide_mux_498_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_day<1>> |          |
+    |     addrA          | connected to signal <dcf_buf_year<0>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1243,14 +1113,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_day[0][3]_GND_7_o_wide_mux_492_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_hour[0][3]_GND_7_o_wide_mux_500_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_day[1][3]_GND_7_o_wide_mux_491_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_hour<0>> |          |
+    |     addrA          | connected to signal <dcf_buf_day<1>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1276,14 +1146,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_minute[1][3]_GND_7_o_wide_mux_501_OU
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_second[1][3]_GND_7_o_wide_mux_503_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_hour[0][3]_GND_7_o_wide_mux_500_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_second<1>> |          |
+    |     addrA          | connected to signal <dcf_buf_hour<0>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1309,14 +1179,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_second[0][3]_GND_7_o_wide_mux_504_OU
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_dt_ts[59]_GND_7_o_wide_mux_476_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_second[1][3]_GND_7_o_wide_mux_503_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_dt_ts<59:56>> |          |
+    |     addrA          | connected to signal <dcf_buf_second<1>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1339,6 +1209,17 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_dt_ts[55]_GND_7_o_wide_mux_477_OUT> 
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
     |     addrA          | connected to signal <dcf_buf_dt_ts<55:52>> |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_dt_ts[59]_GND_7_o_wide_mux_476_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 16-word x 8-bit                     |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <dcf_buf_dt_ts<59:56>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1386,17 +1267,6 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_dt_ts[39]_GND_7_o_wide_mux_481_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_dt_ts[31]_GND_7_o_wide_mux_483_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
-    -----------------------------------------------------------------------
-    | ram_type           | Distributed                         |          |
-    -----------------------------------------------------------------------
-    | Port A                                                              |
-    |     aspect ratio   | 16-word x 8-bit                     |          |
-    |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_dt_ts<31:28>> |          |
-    |     diA            | connected to signal <GND>           |          |
-    |     doA            | connected to internal node          |          |
-    -----------------------------------------------------------------------
 INFO:Xst:3231 - The small RAM <Mram_dcf_buf_dt_ts[35]_GND_7_o_wide_mux_482_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
@@ -1419,14 +1289,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_dt_ts[27]_GND_7_o_wide_mux_484_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_dt_ts[19]_GND_7_o_wide_mux_486_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_dt_ts[31]_GND_7_o_wide_mux_483_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_dt_ts<19:16>> |          |
+    |     addrA          | connected to signal <dcf_buf_dt_ts<31:28>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1452,14 +1322,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_dt_ts[15]_GND_7_o_wide_mux_487_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_dt_ts[7]_GND_7_o_wide_mux_489_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_dt_ts[19]_GND_7_o_wide_mux_486_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_dt_ts<7:4>> |          |
+    |     addrA          | connected to signal <dcf_buf_dt_ts<19:16>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1485,14 +1355,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_dt_ts[3]_GND_7_o_wide_mux_490_OUT> w
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_year[2][3]_GND_7_o_wide_mux_465_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_dt_ts[7]_GND_7_o_wide_mux_489_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_year<2>> |          |
+    |     addrA          | connected to signal <dcf_buf_dt_ts<7:4>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1518,14 +1388,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_year[1][3]_GND_7_o_wide_mux_466_OUT>
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_month[1][3]_GND_7_o_wide_mux_462_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_year[2][3]_GND_7_o_wide_mux_465_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_month<1>> |          |
+    |     addrA          | connected to signal <msf_buf_year<2>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1551,14 +1421,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_month[0][3]_GND_7_o_wide_mux_463_OUT
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_day[0][3]_GND_7_o_wide_mux_461_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_month[1][3]_GND_7_o_wide_mux_462_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_day<0>> |          |
+    |     addrA          | connected to signal <msf_buf_month<1>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1584,14 +1454,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_hour[1][3]_GND_7_o_wide_mux_468_OUT>
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_minute[1][3]_GND_7_o_wide_mux_470_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_day[0][3]_GND_7_o_wide_mux_461_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_minute<1>> |          |
+    |     addrA          | connected to signal <msf_buf_day<0>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1614,6 +1484,17 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_minute[0][3]_GND_7_o_wide_mux_471_OU
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
     |     addrA          | connected to signal <msf_buf_minute<0>> |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_minute[1][3]_GND_7_o_wide_mux_470_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 16-word x 8-bit                     |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <msf_buf_minute<1>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1661,17 +1542,6 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[59]_GND_7_o_wide_mux_445_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[51]_GND_7_o_wide_mux_447_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
-    -----------------------------------------------------------------------
-    | ram_type           | Distributed                         |          |
-    -----------------------------------------------------------------------
-    | Port A                                                              |
-    |     aspect ratio   | 16-word x 8-bit                     |          |
-    |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_dt_ts<51:48>> |          |
-    |     diA            | connected to signal <GND>           |          |
-    |     doA            | connected to internal node          |          |
-    -----------------------------------------------------------------------
 INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[55]_GND_7_o_wide_mux_446_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
@@ -1694,14 +1564,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[47]_GND_7_o_wide_mux_448_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[39]_GND_7_o_wide_mux_450_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[51]_GND_7_o_wide_mux_447_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_dt_ts<39:36>> |          |
+    |     addrA          | connected to signal <msf_buf_dt_ts<51:48>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1727,14 +1597,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[35]_GND_7_o_wide_mux_451_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[27]_GND_7_o_wide_mux_453_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[39]_GND_7_o_wide_mux_450_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_dt_ts<27:24>> |          |
+    |     addrA          | connected to signal <msf_buf_dt_ts<39:36>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1760,14 +1630,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[23]_GND_7_o_wide_mux_454_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[15]_GND_7_o_wide_mux_456_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[27]_GND_7_o_wide_mux_453_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_dt_ts<15:12>> |          |
+    |     addrA          | connected to signal <msf_buf_dt_ts<27:24>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1793,14 +1663,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[11]_GND_7_o_wide_mux_457_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[3]_GND_7_o_wide_mux_459_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[15]_GND_7_o_wide_mux_456_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_dt_ts<3:0>> |          |
+    |     addrA          | connected to signal <msf_buf_dt_ts<15:12>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1815,6 +1685,17 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[7]_GND_7_o_wide_mux_458_OUT> w
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_dt_ts[3]_GND_7_o_wide_mux_459_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 16-word x 8-bit                     |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <msf_buf_dt_ts<3:0>> |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
 INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[63]_GND_7_o_wide_mux_426_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
@@ -1823,17 +1704,6 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[63]_GND_7_o_wide_mux_426_OUT> 
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
     |     addrA          | connected to signal <dcf_buf_bo_ts<63:60>> |          |
-    |     diA            | connected to signal <GND>           |          |
-    |     doA            | connected to internal node          |          |
-    -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[59]_GND_7_o_wide_mux_427_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
-    -----------------------------------------------------------------------
-    | ram_type           | Distributed                         |          |
-    -----------------------------------------------------------------------
-    | Port A                                                              |
-    |     aspect ratio   | 16-word x 8-bit                     |          |
-    |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_bo_ts<59:56>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1848,14 +1718,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[55]_GND_7_o_wide_mux_428_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[47]_GND_7_o_wide_mux_430_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[59]_GND_7_o_wide_mux_427_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_bo_ts<47:44>> |          |
+    |     addrA          | connected to signal <dcf_buf_bo_ts<59:56>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1881,14 +1751,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[43]_GND_7_o_wide_mux_431_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[35]_GND_7_o_wide_mux_433_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[47]_GND_7_o_wide_mux_430_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_bo_ts<35:32>> |          |
+    |     addrA          | connected to signal <dcf_buf_bo_ts<47:44>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1914,14 +1784,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[31]_GND_7_o_wide_mux_434_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[23]_GND_7_o_wide_mux_436_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[35]_GND_7_o_wide_mux_433_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_bo_ts<23:20>> |          |
+    |     addrA          | connected to signal <dcf_buf_bo_ts<35:32>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1947,14 +1817,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[19]_GND_7_o_wide_mux_437_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[11]_GND_7_o_wide_mux_439_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[23]_GND_7_o_wide_mux_436_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_bo_ts<11:8>> |          |
+    |     addrA          | connected to signal <dcf_buf_bo_ts<23:20>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -1980,14 +1850,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[7]_GND_7_o_wide_mux_440_OUT> w
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[63]_GND_7_o_wide_mux_407_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_bo_ts[11]_GND_7_o_wide_mux_439_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_bo_ts<63:60>> |          |
+    |     addrA          | connected to signal <dcf_buf_bo_ts<11:8>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2013,14 +1883,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[59]_GND_7_o_wide_mux_408_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[51]_GND_7_o_wide_mux_410_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[63]_GND_7_o_wide_mux_407_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_bo_ts<51:48>> |          |
+    |     addrA          | connected to signal <msf_buf_bo_ts<63:60>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2046,14 +1916,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[47]_GND_7_o_wide_mux_411_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[39]_GND_7_o_wide_mux_413_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[51]_GND_7_o_wide_mux_410_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_bo_ts<39:36>> |          |
+    |     addrA          | connected to signal <msf_buf_bo_ts<51:48>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2076,6 +1946,17 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[35]_GND_7_o_wide_mux_414_OUT> 
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
     |     addrA          | connected to signal <msf_buf_bo_ts<35:32>> |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[39]_GND_7_o_wide_mux_413_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 16-word x 8-bit                     |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <msf_buf_bo_ts<39:36>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2123,17 +2004,6 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[19]_GND_7_o_wide_mux_418_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[11]_GND_7_o_wide_mux_420_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
-    -----------------------------------------------------------------------
-    | ram_type           | Distributed                         |          |
-    -----------------------------------------------------------------------
-    | Port A                                                              |
-    |     aspect ratio   | 16-word x 8-bit                     |          |
-    |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_bo_ts<11:8>> |          |
-    |     diA            | connected to signal <GND>           |          |
-    |     doA            | connected to internal node          |          |
-    -----------------------------------------------------------------------
 INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[15]_GND_7_o_wide_mux_419_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
@@ -2156,6 +2026,17 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[7]_GND_7_o_wide_mux_421_OUT> w
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[11]_GND_7_o_wide_mux_420_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 16-word x 8-bit                     |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <msf_buf_bo_ts<11:8>> |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
 INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[3]_GND_7_o_wide_mux_422_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
@@ -2164,6 +2045,17 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_bo_ts[3]_GND_7_o_wide_mux_422_OUT> w
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
     |     addrA          | connected to signal <msf_buf_bo_ts<3:0>> |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[59]_GND_7_o_wide_mux_357_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 16-word x 8-bit                     |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <dcf_buf_so_ts<59:56>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2189,14 +2081,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[55]_GND_7_o_wide_mux_358_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[59]_GND_7_o_wide_mux_357_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[47]_GND_7_o_wide_mux_360_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_so_ts<59:56>> |          |
+    |     addrA          | connected to signal <dcf_buf_so_ts<47:44>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2222,14 +2114,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[43]_GND_7_o_wide_mux_361_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[47]_GND_7_o_wide_mux_360_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[35]_GND_7_o_wide_mux_363_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_so_ts<47:44>> |          |
+    |     addrA          | connected to signal <dcf_buf_so_ts<35:32>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2255,14 +2147,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[31]_GND_7_o_wide_mux_364_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[35]_GND_7_o_wide_mux_363_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[23]_GND_7_o_wide_mux_366_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_so_ts<35:32>> |          |
+    |     addrA          | connected to signal <dcf_buf_so_ts<23:20>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2288,14 +2180,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[19]_GND_7_o_wide_mux_367_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[23]_GND_7_o_wide_mux_366_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[11]_GND_7_o_wide_mux_369_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_so_ts<23:20>> |          |
+    |     addrA          | connected to signal <dcf_buf_so_ts<11:8>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2307,17 +2199,6 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[15]_GND_7_o_wide_mux_368_OUT> 
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
     |     addrA          | connected to signal <dcf_buf_so_ts<15:12>> |          |
-    |     diA            | connected to signal <GND>           |          |
-    |     doA            | connected to internal node          |          |
-    -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_so_ts[11]_GND_7_o_wide_mux_369_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
-    -----------------------------------------------------------------------
-    | ram_type           | Distributed                         |          |
-    -----------------------------------------------------------------------
-    | Port A                                                              |
-    |     aspect ratio   | 16-word x 8-bit                     |          |
-    |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_so_ts<11:8>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2354,6 +2235,17 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[63]_GND_7_o_wide_mux_390_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[59]_GND_7_o_wide_mux_391_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 16-word x 8-bit                     |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <dcf_buf_mo_ts<59:56>> |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
 INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[55]_GND_7_o_wide_mux_392_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
@@ -2365,14 +2257,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[55]_GND_7_o_wide_mux_392_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[59]_GND_7_o_wide_mux_391_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[47]_GND_7_o_wide_mux_394_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_mo_ts<59:56>> |          |
+    |     addrA          | connected to signal <dcf_buf_mo_ts<47:44>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2398,14 +2290,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[43]_GND_7_o_wide_mux_395_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[47]_GND_7_o_wide_mux_394_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[35]_GND_7_o_wide_mux_397_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_mo_ts<47:44>> |          |
+    |     addrA          | connected to signal <dcf_buf_mo_ts<35:32>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2431,14 +2323,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[31]_GND_7_o_wide_mux_398_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[35]_GND_7_o_wide_mux_397_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[23]_GND_7_o_wide_mux_400_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_mo_ts<35:32>> |          |
+    |     addrA          | connected to signal <dcf_buf_mo_ts<23:20>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2464,14 +2356,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[19]_GND_7_o_wide_mux_401_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[23]_GND_7_o_wide_mux_400_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[11]_GND_7_o_wide_mux_403_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_mo_ts<23:20>> |          |
+    |     addrA          | connected to signal <dcf_buf_mo_ts<11:8>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2497,14 +2389,14 @@ INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[7]_GND_7_o_wide_mux_404_OUT> w
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_dcf_buf_mo_ts[11]_GND_7_o_wide_mux_403_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[63]_GND_7_o_wide_mux_339_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <dcf_buf_mo_ts<11:8>> |          |
+    |     addrA          | connected to signal <msf_buf_so_ts<63:60>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2530,14 +2422,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[59]_GND_7_o_wide_mux_340_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[63]_GND_7_o_wide_mux_339_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[51]_GND_7_o_wide_mux_342_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_so_ts<63:60>> |          |
+    |     addrA          | connected to signal <msf_buf_so_ts<51:48>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2563,14 +2455,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[47]_GND_7_o_wide_mux_343_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[51]_GND_7_o_wide_mux_342_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[39]_GND_7_o_wide_mux_345_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_so_ts<51:48>> |          |
+    |     addrA          | connected to signal <msf_buf_so_ts<39:36>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2582,17 +2474,6 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[43]_GND_7_o_wide_mux_344_OUT> 
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
     |     addrA          | connected to signal <msf_buf_so_ts<43:40>> |          |
-    |     diA            | connected to signal <GND>           |          |
-    |     doA            | connected to internal node          |          |
-    -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[39]_GND_7_o_wide_mux_345_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
-    -----------------------------------------------------------------------
-    | ram_type           | Distributed                         |          |
-    -----------------------------------------------------------------------
-    | Port A                                                              |
-    |     aspect ratio   | 16-word x 8-bit                     |          |
-    |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_so_ts<39:36>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2629,6 +2510,17 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[27]_GND_7_o_wide_mux_348_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[23]_GND_7_o_wide_mux_349_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 16-word x 8-bit                     |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <msf_buf_so_ts<23:20>> |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
 INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[19]_GND_7_o_wide_mux_350_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
@@ -2640,14 +2532,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[19]_GND_7_o_wide_mux_350_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[23]_GND_7_o_wide_mux_349_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[11]_GND_7_o_wide_mux_352_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_so_ts<23:20>> |          |
+    |     addrA          | connected to signal <msf_buf_so_ts<11:8>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2673,14 +2565,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[7]_GND_7_o_wide_mux_353_OUT> w
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_so_ts[11]_GND_7_o_wide_mux_352_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[63]_GND_7_o_wide_mux_373_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_so_ts<11:8>> |          |
+    |     addrA          | connected to signal <msf_buf_mo_ts<63:60>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2706,14 +2598,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[59]_GND_7_o_wide_mux_374_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[63]_GND_7_o_wide_mux_373_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[51]_GND_7_o_wide_mux_376_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_mo_ts<63:60>> |          |
+    |     addrA          | connected to signal <msf_buf_mo_ts<51:48>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2739,14 +2631,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[47]_GND_7_o_wide_mux_377_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[51]_GND_7_o_wide_mux_376_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[39]_GND_7_o_wide_mux_379_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_mo_ts<51:48>> |          |
+    |     addrA          | connected to signal <msf_buf_mo_ts<39:36>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2772,14 +2664,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[35]_GND_7_o_wide_mux_380_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[39]_GND_7_o_wide_mux_379_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[27]_GND_7_o_wide_mux_382_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_mo_ts<39:36>> |          |
+    |     addrA          | connected to signal <msf_buf_mo_ts<27:24>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2805,14 +2697,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[23]_GND_7_o_wide_mux_383_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[27]_GND_7_o_wide_mux_382_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[15]_GND_7_o_wide_mux_385_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_mo_ts<27:24>> |          |
+    |     addrA          | connected to signal <msf_buf_mo_ts<15:12>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2838,14 +2730,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[11]_GND_7_o_wide_mux_386_OUT> 
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[15]_GND_7_o_wide_mux_385_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[3]_GND_7_o_wide_mux_388_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_mo_ts<15:12>> |          |
+    |     addrA          | connected to signal <msf_buf_mo_ts<3:0>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2860,14 +2752,14 @@ INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[7]_GND_7_o_wide_mux_387_OUT> w
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_msf_buf_mo_ts[3]_GND_7_o_wide_mux_388_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_uptime[27]_PWR_7_o_wide_mux_1629_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msf_buf_mo_ts<3:0>> |          |
+    |     addrA          | connected to signal <uptime<27:24>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2882,14 +2774,14 @@ INFO:Xst:3231 - The small RAM <Mram_uptime[31]_PWR_7_o_wide_mux_1630_OUT> will b
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_uptime[27]_PWR_7_o_wide_mux_1629_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+INFO:Xst:3231 - The small RAM <Mram_uptime[39]_PWR_7_o_wide_mux_1632_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
     -----------------------------------------------------------------------
     | ram_type           | Distributed                         |          |
     -----------------------------------------------------------------------
     | Port A                                                              |
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <uptime<27:24>> |          |
+    |     addrA          | connected to signal <uptime<39:36>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2901,17 +2793,6 @@ INFO:Xst:3231 - The small RAM <Mram_uptime[35]_PWR_7_o_wide_mux_1631_OUT> will b
     |     aspect ratio   | 16-word x 8-bit                     |          |
     |     weA            | connected to signal <GND>           | high     |
     |     addrA          | connected to signal <uptime<35:32>> |          |
-    |     diA            | connected to signal <GND>           |          |
-    |     doA            | connected to internal node          |          |
-    -----------------------------------------------------------------------
-INFO:Xst:3231 - The small RAM <Mram_uptime[39]_PWR_7_o_wide_mux_1632_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
-    -----------------------------------------------------------------------
-    | ram_type           | Distributed                         |          |
-    -----------------------------------------------------------------------
-    | Port A                                                              |
-    |     aspect ratio   | 16-word x 8-bit                     |          |
-    |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <uptime<39:36>> |          |
     |     diA            | connected to signal <GND>           |          |
     |     doA            | connected to internal node          |          |
     -----------------------------------------------------------------------
@@ -2942,48 +2823,40 @@ INFO:Xst:3226 - The RAM <serial_fifo_unit/Mram_data> will be implemented as a BL
     | optimization       | speed                               |          |
     -----------------------------------------------------------------------
 Unit <top_level> synthesized (advanced).
-WARNING:Xst:2677 - Node <ibuf_2> of sequential type is unconnected in block <ddrserdes>.
 
 =========================================================================
 Advanced HDL Synthesis Report
 
 Macro Statistics
-# RAMs                                                 : 206
+# RAMs                                                 : 207
  1024x8-bit dual-port block RAM                        : 1
- 16x8-bit single-port distributed Read Only RAM        : 188
+ 16x8-bit single-port distributed Read Only RAM        : 189
  16x80-bit dual-port distributed RAM                   : 16
  64x80-bit dual-port block RAM                         : 1
-# Adders/Subtractors                                   : 22
+# Adders/Subtractors                                   : 19
  10-bit adder                                          : 1
- 29-bit adder                                          : 1
  4-bit adder                                           : 16
- 6-bit adder                                           : 3
+ 6-bit adder                                           : 1
  7-bit adder                                           : 1
-# Counters                                             : 40
+# Counters                                             : 37
  10-bit up counter                                     : 2
- 25-bit up counter                                     : 2
- 29-bit up counter                                     : 1
  4-bit up counter                                      : 33
  6-bit up counter                                      : 2
-# Registers                                            : 2748
- Flip-Flops                                            : 2748
-# Comparators                                          : 54
+# Registers                                            : 2519
+ Flip-Flops                                            : 2519
+# Comparators                                          : 36
  10-bit comparator equal                               : 2
- 29-bit comparator greater                             : 8
  4-bit comparator equal                                : 32
  6-bit comparator equal                                : 2
- 6-bit comparator greater                              : 2
- 8-bit comparator greater                              : 8
-# Multiplexers                                         : 450
+# Multiplexers                                         : 441
  1-bit 16-to-1 multiplexer                             : 1
  1-bit 2-to-1 multiplexer                              : 32
  10-bit 2-to-1 multiplexer                             : 1
- 29-bit 2-to-1 multiplexer                             : 2
  4-bit 2-to-1 multiplexer                              : 16
- 6-bit 2-to-1 multiplexer                              : 5
+ 6-bit 2-to-1 multiplexer                              : 1
  7-bit 2-to-1 multiplexer                              : 14
  8-bit 16-to-1 multiplexer                             : 10
- 8-bit 2-to-1 multiplexer                              : 369
+ 8-bit 2-to-1 multiplexer                              : 366
 
 =========================================================================
 
@@ -2994,15 +2867,15 @@ WARNING:Xst:1293 - FF/Latch <so_data_25_4> has a constant value of 0 in block <t
 WARNING:Xst:1293 - FF/Latch <so_data_25_5> has a constant value of 1 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_25_6> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_25_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <msf_buf_so_ts_0> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <msf_buf_so_ts_1> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <msf_buf_so_ts_2> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <dcf_buf_so_ts_0> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <dcf_buf_so_ts_1> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <dcf_buf_so_ts_2> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <dcf_buf_mo_ts_0> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <dcf_buf_mo_ts_1> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <dcf_buf_mo_ts_2> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1710 - FF/Latch <dcf_buf_so_ts_0> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1710 - FF/Latch <dcf_buf_so_ts_1> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1710 - FF/Latch <dcf_buf_so_ts_2> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1710 - FF/Latch <msf_buf_so_ts_0> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1710 - FF/Latch <msf_buf_so_ts_1> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1710 - FF/Latch <msf_buf_so_ts_2> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <msf_buf_mo_ts_0> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <msf_buf_mo_ts_1> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <msf_buf_mo_ts_2> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
@@ -3046,49 +2919,47 @@ WARNING:Xst:1293 - FF/Latch <so_data_25_0> has a constant value of 0 in block <t
 WARNING:Xst:1293 - FF/Latch <so_data_25_1> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_25_2> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_25_3> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-INFO:Xst:2261 - The FF/Latch <data_out_0> in Unit <ddrserdes> is equivalent to the following 3 FFs/Latches, which will be removed : <data_out_1> <data_out_2> <data_out_3> 
-INFO:Xst:2261 - The FF/Latch <data_out_4> in Unit <ddrserdes> is equivalent to the following 3 FFs/Latches, which will be removed : <data_out_5> <data_out_6> <data_out_7> 
-WARNING:Xst:1293 - FF/Latch <ssg_di_3_7> has a constant value of 1 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <ssg_di_0_7> has a constant value of 1 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <ssg_di_2_7> has a constant value of 1 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <ssg_di_1_7> has a constant value of 1 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <ssg_di_3_7> has a constant value of 1 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <ssg_di_2_7> has a constant value of 1 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <ssg_di_0_7> has a constant value of 1 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_15_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_14_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_12_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_11_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_13_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_9_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_8_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_11_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_10_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_6_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_5_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_12_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_8_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_7_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_3_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_2_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_9_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_5_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_4_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_0_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_6_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_2_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_1_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_50_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_3_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_0_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_49_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_47_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_48_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_48_6> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <sf_di_0_7> (without init value) has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_30_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_27_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_27_3> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_36_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_35_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_37_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_37_5> has a constant value of 1 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_34_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_33_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_35_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_31_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_31_5> has a constant value of 1 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_31_4> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_28_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_34_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_29_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_29_5> has a constant value of 1 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_29_1> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_31_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_31_5> has a constant value of 1 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_31_4> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_26_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_28_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_21_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_20_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_24_1> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
@@ -3110,17 +2981,17 @@ WARNING:Xst:1293 - FF/Latch <so_data_51_6> has a constant value of 0 in block <t
 WARNING:Xst:1293 - FF/Latch <so_data_51_5> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_51_4> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_51_1> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_46_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_48_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_48_6> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_48_2> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_48_0> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_44_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <so_data_43_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_50_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_46_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_45_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_45_0> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_47_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_43_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_42_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_42_1> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <so_data_44_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_41_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_40_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <so_data_39_7> has a constant value of 0 in block <top_level>. This FF/Latch will be trimmed during the optimization process.
@@ -3159,7 +3030,7 @@ INFO:Xst:2261 - The FF/Latch <so_data_5_4> in Unit <top_level> is equivalent to 
 INFO:Xst:2261 - The FF/Latch <so_data_26_1> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_29_6> 
 INFO:Xst:2261 - The FF/Latch <so_data_45_1> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_45_3> 
 INFO:Xst:2261 - The FF/Latch <so_data_45_2> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_45_6> 
-INFO:Xst:2261 - The FF/Latch <so_data_26_6> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_28_6> 
+INFO:Xst:2261 - The FF/Latch <so_data_28_6> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_26_6> 
 INFO:Xst:2261 - The FF/Latch <so_data_15_4> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_15_5> 
 INFO:Xst:2261 - The FF/Latch <so_data_17_4> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_17_5> 
 INFO:Xst:2261 - The FF/Latch <so_data_8_4> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_8_5> 
@@ -3168,13 +3039,14 @@ Optimizing unit <top_level> ...
 INFO:Xst:2261 - The FF/Latch <so_data_42_4> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_37_0> 
 INFO:Xst:2261 - The FF/Latch <so_data_51_0> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_48_4> 
 INFO:Xst:2261 - The FF/Latch <so_data_26_1> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_27_2> 
-INFO:Xst:2261 - The FF/Latch <so_data_27_0> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_30_0> 
+INFO:Xst:2261 - The FF/Latch <so_data_28_5> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_27_5> 
+INFO:Xst:2261 - The FF/Latch <so_data_28_6> in Unit <top_level> is equivalent to the following 2 FFs/Latches, which will be removed : <so_data_27_0> <so_data_30_0> 
 INFO:Xst:2261 - The FF/Latch <so_data_31_0> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_30_4> 
 INFO:Xst:2261 - The FF/Latch <so_data_31_3> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_30_6> 
 INFO:Xst:2261 - The FF/Latch <so_data_28_5> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_27_5> 
 INFO:Xst:2261 - The FF/Latch <so_data_51_0> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_48_4> 
 INFO:Xst:2261 - The FF/Latch <so_data_26_1> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_27_2> 
-INFO:Xst:2261 - The FF/Latch <so_data_26_6> in Unit <top_level> is equivalent to the following 2 FFs/Latches, which will be removed : <so_data_27_0> <so_data_30_0> 
+INFO:Xst:2261 - The FF/Latch <so_data_28_6> in Unit <top_level> is equivalent to the following 2 FFs/Latches, which will be removed : <so_data_27_0> <so_data_30_0> 
 INFO:Xst:2261 - The FF/Latch <so_data_31_0> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_30_4> 
 INFO:Xst:2261 - The FF/Latch <so_data_31_3> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_30_6> 
 INFO:Xst:2261 - The FF/Latch <so_data_45_5> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_48_1> 
@@ -3182,14 +3054,6 @@ INFO:Xst:2261 - The FF/Latch <so_data_45_5> in Unit <top_level> is equivalent to
 Optimizing unit <fifo_2> ...
 
 Optimizing unit <fifo_3> ...
-
-Optimizing unit <dcf_sync> ...
-
-Optimizing unit <msf_sync> ...
-
-Optimizing unit <dcf_bits> ...
-
-Optimizing unit <msf_bits> ...
 INFO:Xst:2399 - RAMs <edge_detect_and_fifo_units[15].event_fifo_unit/Mram_data141>, <edge_detect_and_fifo_units[15].event_fifo_unit/Mram_data142> are equivalent, second RAM is removed
 INFO:Xst:2399 - RAMs <edge_detect_and_fifo_units[14].event_fifo_unit/Mram_data141>, <edge_detect_and_fifo_units[14].event_fifo_unit/Mram_data142> are equivalent, second RAM is removed
 INFO:Xst:2399 - RAMs <edge_detect_and_fifo_units[13].event_fifo_unit/Mram_data141>, <edge_detect_and_fifo_units[13].event_fifo_unit/Mram_data142> are equivalent, second RAM is removed
@@ -3212,39 +3076,23 @@ INFO:Xst:2261 - The FF/Latch <edge_detect_and_fifo_units[15].event_fifo_unit/do_
 INFO:Xst:2261 - The FF/Latch <gf_di_9_6> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <gf_di_9_7> 
 INFO:Xst:2261 - The FF/Latch <edge_detect_and_fifo_units[2].event_fifo_unit/do_int_79> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <edge_detect_and_fifo_units[2].event_fifo_unit/do_int_78> 
 INFO:Xst:2261 - The FF/Latch <edge_detect_and_fifo_units[12].event_fifo_unit/do_int_79> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <edge_detect_and_fifo_units[12].event_fifo_unit/do_int_78> 
-INFO:Xst:2261 - The FF/Latch <dcf_sync_unit/di_var_0> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <dcf_bits_unit/di_var_0> 
-INFO:Xst:2261 - The FF/Latch <dcf_sync_unit/di_var_1> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <dcf_bits_unit/di_var_1> 
-INFO:Xst:2261 - The FF/Latch <dcf_sync_unit/di_var_2> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <dcf_bits_unit/di_var_2> 
-INFO:Xst:2261 - The FF/Latch <dcf_sync_unit/di_var_3> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <dcf_bits_unit/di_var_3> 
-INFO:Xst:2261 - The FF/Latch <dcf_sync_unit/di_var_4> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <dcf_bits_unit/di_var_4> 
-INFO:Xst:2261 - The FF/Latch <dcf_sync_unit/di_var_5> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <dcf_bits_unit/di_var_5> 
-INFO:Xst:2261 - The FF/Latch <dcf_sync_unit/di_var_6> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <dcf_bits_unit/di_var_6> 
-INFO:Xst:2261 - The FF/Latch <dcf_sync_unit/di_var_7> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <dcf_bits_unit/di_var_7> 
 INFO:Xst:2261 - The FF/Latch <edge_detect_and_fifo_units[7].event_fifo_unit/do_int_79> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <edge_detect_and_fifo_units[7].event_fifo_unit/do_int_78> 
 INFO:Xst:2261 - The FF/Latch <edge_detect_and_fifo_units[4].event_fifo_unit/do_int_79> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <edge_detect_and_fifo_units[4].event_fifo_unit/do_int_78> 
 INFO:Xst:2261 - The FF/Latch <edge_detect_and_fifo_units[14].event_fifo_unit/do_int_79> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <edge_detect_and_fifo_units[14].event_fifo_unit/do_int_78> 
 INFO:Xst:2261 - The FF/Latch <edge_detect_and_fifo_units[1].event_fifo_unit/do_int_79> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <edge_detect_and_fifo_units[1].event_fifo_unit/do_int_78> 
 INFO:Xst:2261 - The FF/Latch <edge_detect_and_fifo_units[11].event_fifo_unit/do_int_79> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <edge_detect_and_fifo_units[11].event_fifo_unit/do_int_78> 
 INFO:Xst:2261 - The FF/Latch <edge_detect_and_fifo_units[9].event_fifo_unit/do_int_79> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <edge_detect_and_fifo_units[9].event_fifo_unit/do_int_78> 
-INFO:Xst:2261 - The FF/Latch <so_data_23_0> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_26_6> 
+INFO:Xst:2261 - The FF/Latch <so_data_23_0> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_28_6> 
 INFO:Xst:2261 - The FF/Latch <edge_detect_and_fifo_units[6].event_fifo_unit/do_int_79> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <edge_detect_and_fifo_units[6].event_fifo_unit/do_int_78> 
 INFO:Xst:2261 - The FF/Latch <edge_detect_and_fifo_units[3].event_fifo_unit/do_int_79> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <edge_detect_and_fifo_units[3].event_fifo_unit/do_int_78> 
 INFO:Xst:2261 - The FF/Latch <edge_detect_and_fifo_units[13].event_fifo_unit/do_int_79> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <edge_detect_and_fifo_units[13].event_fifo_unit/do_int_78> 
 INFO:Xst:2261 - The FF/Latch <edge_detect_and_fifo_units[0].event_fifo_unit/do_int_79> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <edge_detect_and_fifo_units[0].event_fifo_unit/do_int_78> 
 INFO:Xst:2261 - The FF/Latch <edge_detect_and_fifo_units[10].event_fifo_unit/do_int_79> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <edge_detect_and_fifo_units[10].event_fifo_unit/do_int_78> 
-INFO:Xst:2261 - The FF/Latch <msf_sync_unit/di_var_0> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <msf_bits_unit/di_var_0> 
-INFO:Xst:2261 - The FF/Latch <msf_sync_unit/di_var_1> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <msf_bits_unit/di_var_1> 
-INFO:Xst:2261 - The FF/Latch <msf_sync_unit/di_var_2> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <msf_bits_unit/di_var_2> 
-INFO:Xst:2261 - The FF/Latch <msf_sync_unit/di_var_3> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <msf_bits_unit/di_var_3> 
-INFO:Xst:2261 - The FF/Latch <msf_sync_unit/di_var_4> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <msf_bits_unit/di_var_4> 
-INFO:Xst:2261 - The FF/Latch <msf_sync_unit/di_var_5> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <msf_bits_unit/di_var_5> 
-INFO:Xst:2261 - The FF/Latch <msf_sync_unit/di_var_6> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <msf_bits_unit/di_var_6> 
-INFO:Xst:2261 - The FF/Latch <msf_sync_unit/di_var_7> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <msf_bits_unit/di_var_7> 
 INFO:Xst:2261 - The FF/Latch <so_data_42_0> in Unit <top_level> is equivalent to the following FF/Latch, which will be removed : <so_data_45_2> 
 
 Mapping all equations...
 Building and optimizing final netlist ...
-Found area constraint ratio of 100 (+ 0) on block top_level, actual ratio is 61.
+Found area constraint ratio of 100 (+ 0) on block top_level, actual ratio is 60.
 INFO:Xst:2260 - The FF/Latch <cnt_4> in Unit <dcf_decode_unit> is equivalent to the following FF/Latch : <cnt_4_1> 
 INFO:Xst:2260 - The FF/Latch <cnt_3> in Unit <dcf_decode_unit> is equivalent to the following FF/Latch : <cnt_3_1> 
 INFO:Xst:2260 - The FF/Latch <secs_0_0> in Unit <dcf_decode_unit> is equivalent to the following FF/Latch : <secs_0_0_1> 
@@ -3261,7 +3109,7 @@ INFO:Xst:2260 - The FF/Latch <cnt_3> in Unit <msf_decode_unit> is equivalent to 
 INFO:Xst:2260 - The FF/Latch <cnt_2> in Unit <msf_decode_unit> is equivalent to the following FF/Latch : <cnt_2_1> 
 FlipFlop so_cnt_0 has been replicated 3 time(s)
 FlipFlop so_cnt_1 has been replicated 2 time(s)
-FlipFlop so_cnt_2 has been replicated 8 time(s)
+FlipFlop so_cnt_2 has been replicated 7 time(s)
 FlipFlop so_cnt_3 has been replicated 7 time(s)
 FlipFlop so_cnt_4 has been replicated 1 time(s)
 FlipFlop so_cnt_5 has been replicated 3 time(s)
@@ -3275,17 +3123,16 @@ Processing Unit <top_level> :
 	Found 2-bit shift register for signal <ex_ptr_2_1>.
 	Found 2-bit shift register for signal <ex_ptr_2_2>.
 	Found 2-bit shift register for signal <ex_ptr_2_3>.
-	Found 2-bit shift register for signal <dcf_bits_unit/tr>.
 Unit <top_level> processed.
 
 =========================================================================
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 2695
- Flip-Flops                                            : 2695
-# Shift Registers                                      : 6
- 2-bit shift register                                  : 5
+# Registers                                            : 2488
+ Flip-Flops                                            : 2488
+# Shift Registers                                      : 5
+ 2-bit shift register                                  : 4
  4-bit shift register                                  : 1
 
 =========================================================================
@@ -3309,33 +3156,33 @@ Top Level Output File Name         : top_level.ngc
 
 Primitive and Black Box Usage:
 ------------------------------
-# BELS                             : 3964
-#      GND                         : 9
-#      INV                         : 55
-#      LUT1                        : 204
-#      LUT2                        : 196
-#      LUT3                        : 226
-#      LUT4                        : 526
-#      LUT5                        : 543
-#      LUT6                        : 1371
-#      MUXCY                       : 264
-#      MUXF7                       : 259
+# BELS                             : 4182
+#      GND                         : 27
+#      INV                         : 67
+#      LUT1                        : 213
+#      LUT2                        : 207
+#      LUT3                        : 247
+#      LUT4                        : 621
+#      LUT5                        : 571
+#      LUT6                        : 1341
+#      MUXCY                       : 291
+#      MUXF7                       : 260
 #      MUXF8                       : 80
-#      VCC                         : 8
-#      XORCY                       : 223
-# FlipFlops/Latches                : 3381
-#      FD                          : 265
-#      FDE                         : 2238
-#      FDR                         : 470
-#      FDRE                        : 346
+#      VCC                         : 26
+#      XORCY                       : 231
+# FlipFlops/Latches                : 3576
+#      FD                          : 376
+#      FDE                         : 2247
+#      FDR                         : 597
+#      FDRE                        : 299
 #      FDS                         : 29
-#      FDSE                        : 33
+#      FDSE                        : 28
 # RAMS                             : 228
 #      RAM16X1D                    : 16
 #      RAM32M                      : 208
 #      RAMB16BWER                  : 4
-# Shift Registers                  : 6
-#      SRLC16E                     : 6
+# Shift Registers                  : 19
+#      SRLC16E                     : 19
 # Clock Buffers                    : 5
 #      BUFG                        : 5
 # IO Buffers                       : 38
@@ -3353,19 +3200,19 @@ Selected Device : 6slx16csg324-3
 
 
 Slice Logic Utilization: 
- Number of Slice Registers:            3381  out of  18224    18%  
- Number of Slice LUTs:                 3991  out of   9112    43%  
-    Number used as Logic:              3121  out of   9112    34%  
-    Number used as Memory:              870  out of   2176    39%  
+ Number of Slice Registers:            3576  out of  18224    19%  
+ Number of Slice LUTs:                 4150  out of   9112    45%  
+    Number used as Logic:              3267  out of   9112    35%  
+    Number used as Memory:              883  out of   2176    40%  
        Number used as RAM:              864
-       Number used as SRL:                6
+       Number used as SRL:               19
 
 Slice Logic Distribution: 
- Number of LUT Flip Flop pairs used:   5838
-   Number with an unused Flip Flop:    2457  out of   5838    42%  
-   Number with an unused LUT:          1847  out of   5838    31%  
-   Number of fully used LUT-FF pairs:  1534  out of   5838    26%  
-   Number of unique control sets:       126
+ Number of LUT Flip Flop pairs used:   6062
+   Number with an unused Flip Flop:    2486  out of   6062    41%  
+   Number with an unused LUT:          1912  out of   6062    31%  
+   Number of fully used LUT-FF pairs:  1664  out of   6062    27%  
+   Number of unique control sets:       168
 
 IO Utilization: 
  Number of IOs:                          38
@@ -3398,8 +3245,8 @@ Clock Information:
 -----------------------------------+------------------------+-------+
 Clock Signal                       | Clock buffer(FF name)  | Load  |
 -----------------------------------+------------------------+-------+
-pll_unit/clk_syn.pll_unit/CLKOUT2  | BUFG                   | 3569  |
-pll_unit/clk_syn.pll_unit/CLKOUT1  | BUFG                   | 46    |
+pll_unit/clk_syn.pll_unit/CLKOUT2  | BUFG                   | 3651  |
+pll_unit/clk_syn.pll_unit/CLKOUT1  | BUFG                   | 172   |
 -----------------------------------+------------------------+-------+
 
 Asynchronous Control Signals Information:
@@ -3410,8 +3257,8 @@ Timing Summary:
 ---------------
 Speed Grade: -3
 
-   Minimum period: 6.823ns (Maximum Frequency: 146.574MHz)
-   Minimum input arrival time before clock: 1.903ns
+   Minimum period: 6.702ns (Maximum Frequency: 149.218MHz)
+   Minimum input arrival time before clock: 1.801ns
    Maximum output required time after clock: 3.634ns
    Maximum combinational path delay: 1.801ns
 
@@ -3421,71 +3268,72 @@ All values displayed in nanoseconds (ns)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'pll_unit/clk_syn.pll_unit/CLKOUT2'
-  Clock period: 6.823ns (frequency: 146.574MHz)
-  Total number of paths / destination ports: 117260 / 8620
+  Clock period: 6.702ns (frequency: 149.218MHz)
+  Total number of paths / destination ports: 95120 / 8564
 -------------------------------------------------------------------------
-Delay:               6.823ns (Levels of Logic = 6)
-  Source:            so_cnt_2_1 (FF)
+Delay:               6.702ns (Levels of Logic = 6)
+  Source:            so_cnt_3_1 (FF)
   Destination:       so_cnt_5 (FF)
   Source Clock:      pll_unit/clk_syn.pll_unit/CLKOUT2 rising
   Destination Clock: pll_unit/clk_syn.pll_unit/CLKOUT2 rising
 
-  Data Path: so_cnt_2_1 to so_cnt_5
+  Data Path: so_cnt_3_1 to so_cnt_5
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FD:C->Q               5   0.447   0.943  so_cnt_2_1 (so_cnt_2_1)
-     LUT3:I0->O           19   0.205   1.176  Mmux_so_cnt[6]_X_7_o_wide_mux_505_OUT11211121 (Mmux_so_cnt[6]_X_7_o_wide_mux_505_OUT1121112)
+     FD:C->Q              12   0.447   1.013  so_cnt_3_1 (so_cnt_3_1)
+     LUT3:I1->O           11   0.203   0.987  Mmux_so_cnt[6]_X_7_o_wide_mux_505_OUT11211121 (Mmux_so_cnt[6]_X_7_o_wide_mux_505_OUT1121112)
      LUT6:I4->O            1   0.203   0.827  Mmux_so_cnt[6]_X_7_o_wide_mux_505_OUT11211 (Mmux_so_cnt[6]_X_7_o_wide_mux_505_OUT11210)
      LUT6:I2->O            2   0.203   0.617  Mmux_so_cnt[6]_X_7_o_wide_mux_505_OUT11218 (Mmux_so_cnt[6]_X_7_o_wide_mux_505_OUT11217)
      LUT4:I3->O            8   0.205   0.803  Mmux_so_cnt[6]_X_7_o_wide_mux_505_OUT11219 (so_cnt[6]_X_7_o_wide_mux_505_OUT<6>)
-     LUT6:I5->O            1   0.205   0.684  GND_7_o_so_cnt[6]_equal_507_o<7>_SW2 (N265)
+     LUT6:I5->O            1   0.205   0.684  GND_7_o_so_cnt[6]_equal_507_o<7>_SW2 (N240)
      LUT6:I4->O            4   0.203   0.000  Mmux_so_cnt[6]_so_cnt[6]_mux_523_OUT61 (so_cnt[6]_so_cnt[6]_mux_523_OUT<5>)
      FD:D                      0.102          so_cnt_5
     ----------------------------------------
-    Total                      6.823ns (1.773ns logic, 5.050ns route)
-                                       (26.0% logic, 74.0% route)
+    Total                      6.702ns (1.771ns logic, 4.931ns route)
+                                       (26.4% logic, 73.6% route)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'pll_unit/clk_syn.pll_unit/CLKOUT1'
-  Clock period: 1.557ns (frequency: 642.446MHz)
-  Total number of paths / destination ports: 46 / 30
+  Clock period: 1.659ns (frequency: 602.936MHz)
+  Total number of paths / destination ports: 382 / 142
 -------------------------------------------------------------------------
-Delay:               1.557ns (Levels of Logic = 1)
-  Source:            fast_io_units[1].serdes_unit/strobe_chg (FF)
-  Destination:       fast_io_units[1].serdes_unit/data_int_0 (FF)
+Delay:               1.659ns (Levels of Logic = 1)
+  Source:            slow_io_units[15].ddrserdes_unit/strobe_chg (FF)
+  Destination:       slow_io_units[15].ddrserdes_unit/data_int_0 (FF)
   Source Clock:      pll_unit/clk_syn.pll_unit/CLKOUT1 rising
   Destination Clock: pll_unit/clk_syn.pll_unit/CLKOUT1 rising
 
-  Data Path: fast_io_units[1].serdes_unit/strobe_chg to fast_io_units[1].serdes_unit/data_int_0
+  Data Path: slow_io_units[15].ddrserdes_unit/strobe_chg to slow_io_units[15].ddrserdes_unit/data_int_0
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FD:C->Q               8   0.447   0.803  strobe_chg (strobe_chg)
-     LUT4:I3->O            1   0.205   0.000  Mmux_data_des[3]_data_int[7]_mux_1_OUT81 (data_des[3]_data_int[7]_mux_1_OUT<7>)
-     FD:D                      0.102          data_int_7
+     FD:C->Q               8   0.447   0.907  strobe_chg (strobe_chg)
+     LUT4:I2->O            1   0.203   0.000  Mmux_data_pipe[0]_data_int[7]_mux_1_OUT41 (data_pipe[0]_data_int[7]_mux_1_OUT<3>)
+     FD:D                      0.102          data_int_3
     ----------------------------------------
-    Total                      1.557ns (0.754ns logic, 0.803ns route)
-                                       (48.4% logic, 51.6% route)
+    Total                      1.659ns (0.752ns logic, 0.907ns route)
+                                       (45.3% logic, 54.7% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'pll_unit/clk_syn.pll_unit/CLKOUT1'
   Total number of paths / destination ports: 30 / 30
 -------------------------------------------------------------------------
-Offset:              1.903ns (Levels of Logic = 1)
+Offset:              1.801ns (Levels of Logic = 2)
   Source:            sw<7> (PAD)
-  Destination:       slow_io_units[15].ddrserdes_unit/ibuf_0 (FF)
+  Destination:       slow_io_units[15].ddrserdes_unit/Mshreg_data_pipe_0 (FF)
   Destination Clock: pll_unit/clk_syn.pll_unit/CLKOUT1 rising
 
-  Data Path: sw<7> to slow_io_units[15].ddrserdes_unit/ibuf_0
+  Data Path: sw<7> to slow_io_units[15].ddrserdes_unit/Mshreg_data_pipe_0
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
      IBUF:I->O             1   1.222   0.579  sw_7_IBUF (sw_7_IBUF)
-     FD:D                      0.102          slow_io_units[15].ddrserdes_unit/ibuf_0
+     begin scope: 'slow_io_units[15].ddrserdes_unit:data_in'
+     SRLC16E:D                -0.060          Mshreg_data_pipe_0
     ----------------------------------------
-    Total                      1.903ns (1.324ns logic, 0.579ns route)
-                                       (69.6% logic, 30.4% route)
+    Total                      1.801ns (1.222ns logic, 0.579ns route)
+                                       (67.9% logic, 32.1% route)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'pll_unit/clk_syn.pll_unit/CLKOUT2'
@@ -3536,7 +3384,7 @@ Clock to Setup on destination clock pll_unit/clk_syn.pll_unit/CLKOUT1
                                  | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock                     |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------------------------+---------+---------+---------+---------+
-pll_unit/clk_syn.pll_unit/CLKOUT1|    1.557|         |         |         |
+pll_unit/clk_syn.pll_unit/CLKOUT1|    1.659|         |         |         |
 pll_unit/clk_syn.pll_unit/CLKOUT2|    1.856|         |         |         |
 ---------------------------------+---------+---------+---------+---------+
 
@@ -3546,21 +3394,21 @@ Clock to Setup on destination clock pll_unit/clk_syn.pll_unit/CLKOUT2
 Source Clock                     |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------------------------+---------+---------+---------+---------+
 pll_unit/clk_syn.pll_unit/CLKOUT1|    1.165|         |         |         |
-pll_unit/clk_syn.pll_unit/CLKOUT2|    6.823|         |         |         |
+pll_unit/clk_syn.pll_unit/CLKOUT2|    6.702|         |         |         |
 ---------------------------------+---------+---------+---------+---------+
 
 =========================================================================
 
 
-Total REAL time to Xst completion: 35.00 secs
-Total CPU time to Xst completion: 34.12 secs
+Total REAL time to Xst completion: 27.00 secs
+Total CPU time to Xst completion: 26.25 secs
  
 --> 
 
 
-Total memory usage is 150848 kilobytes
+Total memory usage is 147704 kilobytes
 
 Number of errors   :    0 (   0 filtered)
-Number of warnings :  149 (   0 filtered)
-Number of infos    :  325 (   0 filtered)
+Number of warnings :  152 (   0 filtered)
+Number of infos    :  309 (   0 filtered)
 
