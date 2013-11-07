@@ -25,11 +25,8 @@ end dcf_sync;
 
 architecture rtl of dcf_sync is
 
-  -- This keeps track of whether we're currently on a high or low pulse:
-  signal pulse:            std_logic   := 'X';
-
-  -- This contains the data input from the last clock cycle:
   signal di_sampled:       byte        := byte_null; -- Last data in
+  signal pulse:            std_logic   := 'X'; -- Whether we're on a high or low
 
   -- This is the minimum acceptable pulse length. The DCF signal uses 100 or
   -- 200ms pulses, so let's set this to a value slightly below the shortest
