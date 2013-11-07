@@ -56,7 +56,7 @@ architecture rtl of msf_sync is
   -- minute pulse.
   constant sec_uninit:    natural    := 62;
   constant sec_part_init: natural    := 61;
-  signal sec:             natural range 0 to sec_uninit := sec_uninit;
+  signal sec:             natural range 1 to sec_uninit := sec_uninit;
 begin
 
   process(clk, rst)
