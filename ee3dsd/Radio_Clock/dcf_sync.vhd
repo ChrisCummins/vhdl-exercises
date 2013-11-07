@@ -116,12 +116,6 @@ begin
           sec <= sec_uninit;
         end if;
 
-        if i < 10 then
-          foo <= 5;
-        else
-          bar <= 10;
-        end if;
-
       -- Check for the missing 59th second pulse, either because we're expecting
       -- it (we know it's the 59th second), or because we haven't received a
       -- full minute yet and so we'll assume that any missing pulse is the 59th
