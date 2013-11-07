@@ -54,13 +54,13 @@ architecture rtl of dcf_sync is
   -- The seconds counter (sec). This keeps track of what second we are on
   -- within a minute. When we first start, we are in an uninitialised state
   -- (sec_uninit). After receiving our first clock pulse, we move into a
-  -- partially-initialised state (M_PART_INIT), which means that we still don't
+  -- partially-initialised state (sec_part_init), which means that we still don't
   -- know exactly where in the minute we are yet (we haven't received a missing
   -- 59th second). After that, the counter will be incremented each second in
   -- order to predict when to output the missing second pulse and start of
   -- minute pulse.
   constant sec_uninit:       natural   := 62;
-  constant M_PART_INIT:    natural   := 61;
+  constant sec_part_init:    natural   := 61;
   signal sec:          natural range 0 to sec_uninit := sec_uninit;
 
 begin
@@ -99,7 +99,7 @@ begin
           -- We've now in a partially-initialised state, i.e. we've found our
           -- first second to latch onto but we haven't received a full minute
           -- yet so don't know when to expect the missing second.
-          sec <= M_PART_INIT;
+          sec <= sec_part_init;
         end if;
 
       -- Check for falling edge
@@ -111,7 +111,7 @@ begin
         -- random thermal noise spike. By ensuring that the first signal we
         -- latch on to is at least ~60ms, we minimise the chance that we're
         -- just using noise as our second pulse:
-        if sec = M_PART_INIT and cnt < min_pulse_cnt then
+        if sec = sec_part_init and cnt < min_pulse_cnt then
           cnt <= 0;
           sec <= sec_uninit;
         end if;
@@ -127,7 +127,7 @@ begin
       -- full minute yet and so we'll assume that any missing pulse is the 59th
       -- second:
       elsif (sec = 59 and cnt = clk_freq)
-        or (sec = M_PART_INIT and cnt > MAX_S_TIME) then
+        or (sec = sec_part_init and cnt > MAX_S_TIME) then
         cnt <= 0;                       -- Reset clock counter
         so_var  <= '1';                     -- Add in missing second pulse
         sec <= 60;
