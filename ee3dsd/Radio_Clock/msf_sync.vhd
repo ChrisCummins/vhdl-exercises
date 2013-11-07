@@ -62,14 +62,14 @@ begin
   process(clk, rst)
   begin
 
-    if rst = '1' then
+    if (rst = '1') then
 
       cnt        <= 0             after gate_delay;
       sec        <= sec_uninit    after gate_delay;
       so         <= '0'           after gate_delay;
       mo         <= '0'           after gate_delay;
 
-    elsif clk'event and clk = '1' then
+    elsif clk'event and (clk = '1') then
 
       so         <= '0'           after gate_delay; -- Zero the outputs
       mo         <= '0'           after gate_delay;
@@ -84,16 +84,16 @@ begin
         cnt      <= 0             after gate_delay; -- Reset clock counter
         so       <= '1'           after gate_delay; -- Output second pulse
 
-        if sec < 60 then
+        if (sec < 60) then
 
           sec    <= sec + 1       after gate_delay; -- Count another second
 
-        elsif sec = 60 then
+        elsif (sec = 60) then
 
           sec    <= 1             after gate_delay; -- Reset the minute counter
           mo     <= '1'           after gate_delay; -- Output start of minute
 
-        elsif sec = sec_uninit then
+        elsif (sec = sec_uninit) then
 
           -- We've now in a partially-initialised state, i.e. we've found our
           -- first second to latch onto but we haven't received a full minute
@@ -103,7 +103,7 @@ begin
         end if;
 
       -- Check for falling edge
-      elsif di < di_sampled then
+      elsif (di < di_sampled) then
 
         -- One further precaution: if we've only just latched on to the first
         -- signal pulse, then make sure that the pulse lasts for at least
@@ -111,13 +111,13 @@ begin
         -- random thermal noise spike. By ensuring that the first signal we
         -- latch on to is at least ~60ms, we minimise the chance that we're
         -- just using noise as our second pulse:
-        if sec = sec_part_init and cnt < min_pulse_cnt then
+        if (sec = sec_part_init) and (cnt < min_pulse_cnt) then
 
           cnt    <= 0             after gate_delay;
           sec    <= sec_uninit    after gate_delay;
 
         -- Check for the start of minute 500ms second pulse:
-        elsif sec = sec_part_init and cnt > som_pulse_cnt then
+        elsif (sec = sec_part_init) and (cnt > som_pulse_cnt) then
 
           sec    <= 1             after gate_delay;
 
@@ -128,7 +128,7 @@ begin
       -- a second properly, or because the signal has dropped. In either case,
       -- it's a bad sign, so just reset all counters to their starting values
       -- and start again:
-      elsif cnt = max_cnt then
+      elsif (cnt = max_cnt) then
 
         cnt      <= 0             after gate_delay;
         sec      <= sec_uninit    after gate_delay;
