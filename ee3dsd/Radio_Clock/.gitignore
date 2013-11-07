@@ -1,5 +1,6 @@
 /dcf_bits_tb
 /dcf_sync_tb
+/ddrserdes_tb
 /msf_bits_tb
 /msf_sync_tb
 *.vcd
