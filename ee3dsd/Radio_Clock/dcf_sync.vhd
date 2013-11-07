@@ -51,7 +51,7 @@ architecture rtl of dcf_sync is
   constant RESET_S_TIME:   natural   := clk_freq * 3;
   signal cnt:          natural range 0 to RESET_S_TIME + 1;
 
-  -- The seconds counter (m_count). This keeps track of what second we are on
+  -- The seconds counter (sec). This keeps track of what second we are on
   -- within a minute. When we first start, we are in an uninitialised state
   -- (M_UNINIT). After receiving our first clock pulse, we move into a
   -- partially-initialised state (M_PART_INIT), which means that we still don't
@@ -61,7 +61,7 @@ architecture rtl of dcf_sync is
   -- minute pulse.
   constant M_UNINIT:       natural   := 62;
   constant M_PART_INIT:    natural   := 61;
-  signal m_count:          natural range 0 to M_UNINIT := M_UNINIT;
+  signal sec:          natural range 0 to M_UNINIT := M_UNINIT;
 
 begin
 
@@ -71,7 +71,7 @@ begin
     if rst = '1' then
 
       cnt   <= 0        after gate_delay;
-      m_count   <= M_UNINIT after gate_delay;
+      sec   <= M_UNINIT after gate_delay;
       so        <= '0'      after gate_delay;
       mo        <= '0'      after gate_delay;
 
@@ -85,21 +85,21 @@ begin
       -- because we're in an uninitalised state and we're trying to latch on to
       -- the first received signal:
       if (di > di_var and cnt > MIN_S_TIME and cnt < MAX_S_TIME)
-        or (di > di_var and m_count = M_UNINIT) then
+        or (di > di_var and sec = M_UNINIT) then
         pulse <= '1';                       -- Register pulse
         cnt <= 0;                       -- Reset clock counter
         so_var  <= '1';                     -- Output second pulse
 
-        if m_count < 60 then
-          m_count <= m_count + 1;           -- Count another second
-        elsif m_count = 60 then
-          m_count <= 1;                     -- Reset the minute counter
+        if sec < 60 then
+          sec <= sec + 1;           -- Count another second
+        elsif sec = 60 then
+          sec <= 1;                     -- Reset the minute counter
           mo_var  <= '1';                   -- Output start of minute pulse
-        elsif m_count = M_UNINIT then
+        elsif sec = M_UNINIT then
           -- We've now in a partially-initialised state, i.e. we've found our
           -- first second to latch onto but we haven't received a full minute
           -- yet so don't know when to expect the missing second.
-          m_count <= M_PART_INIT;
+          sec <= M_PART_INIT;
         end if;
 
       -- Check for falling edge
@@ -111,20 +111,26 @@ begin
         -- random thermal noise spike. By ensuring that the first signal we
         -- latch on to is at least ~60ms, we minimise the chance that we're
         -- just using noise as our second pulse:
-        if m_count = M_PART_INIT and cnt < min_pulse_cnt then
+        if sec = M_PART_INIT and cnt < min_pulse_cnt then
           cnt <= 0;
-          m_count <= M_UNINIT;
+          sec <= M_UNINIT;
+        end if;
+
+        if i < 10 then
+          foo <= 5;
+        else
+          bar <= 10;
         end if;
 
       -- Check for the missing 59th second pulse, either because we're expecting
       -- it (we know it's the 59th second), or because we haven't received a
       -- full minute yet and so we'll assume that any missing pulse is the 59th
       -- second:
-      elsif (m_count = 59 and cnt = clk_freq)
-        or (m_count = M_PART_INIT and cnt > MAX_S_TIME) then
+      elsif (sec = 59 and cnt = clk_freq)
+        or (sec = M_PART_INIT and cnt > MAX_S_TIME) then
         cnt <= 0;                       -- Reset clock counter
         so_var  <= '1';                     -- Add in missing second pulse
-        m_count <= 60;
+        sec <= 60;
 
       -- This is our 'false start' check. If we reach this point, it's either
       -- because we initially latched onto a spike and aren't synchronised with
@@ -133,7 +139,7 @@ begin
       -- and start again:
       elsif cnt = RESET_S_TIME then
         cnt <= 0;
-        m_count <= M_UNINIT;
+        sec <= M_UNINIT;
       end if;
 
       di_var <= di;                         -- Save di for next time

@@ -53,7 +53,7 @@ architecture rtl of msf_sync is
   constant RESET_S_TIME:   natural   := clk_freq * 3;
   signal cnt:          natural range 0 to RESET_S_TIME + 1;
 
-  -- The seconds counter (m_count). This keeps track of what second we are on
+  -- The seconds counter (sec). This keeps track of what second we are on
   -- within a minute. When we first start, we are in an uninitialised state
   -- (M_UNINIT). After receiving our first clock pulse, we move into a
   -- partially-initialised state (M_PART_INIT), which means that we still don't
@@ -63,14 +63,14 @@ architecture rtl of msf_sync is
   -- minute pulse.
   constant M_UNINIT:       natural   := 62;
   constant M_PART_INIT:    natural   := 61;
-  signal m_count:          natural range 0 to M_UNINIT := M_UNINIT;
+  signal sec:          natural range 0 to M_UNINIT := M_UNINIT;
 begin
   process(clk, rst)
   begin
     -- Reset signal, so zero everything and reset internal state:
     if rst = '1' then
       cnt <= 0;
-      m_count <= M_UNINIT;
+      sec <= M_UNINIT;
       so <= '0' after gate_delay;
       mo <= '0' after gate_delay;
     -- Clock pulse:
@@ -83,21 +83,21 @@ begin
       -- because we're in an uninitalised state and we're trying to latch on to
       -- the first received signal:
       if (di > di_var and cnt > MIN_S_TIME and cnt < MAX_S_TIME)
-        or (di > di_var and m_count = M_UNINIT) then
+        or (di > di_var and sec = M_UNINIT) then
         pulse <= '1';                       -- Register pulse
         cnt <= 0;                       -- Reset clock counter
         so_var  <= '1';                     -- Output second pulse
 
-        if m_count < 60 then
-          m_count <= m_count + 1;           -- Count another second
-        elsif m_count = 60 then
-          m_count <= 1;                     -- Reset the minute counter
+        if sec < 60 then
+          sec <= sec + 1;           -- Count another second
+        elsif sec = 60 then
+          sec <= 1;                     -- Reset the minute counter
           mo_var  <= '1';                   -- Output start of minute pulse
-        elsif m_count = M_UNINIT then
+        elsif sec = M_UNINIT then
           -- We've now in a partially-initialised state, i.e. we've found our
           -- first second to latch onto but we haven't received a full minute
           -- yet so don't know when to expect the missing second.
-          m_count <= M_PART_INIT;
+          sec <= M_PART_INIT;
         end if;
 
       -- Check for falling edge
@@ -109,12 +109,12 @@ begin
         -- random thermal noise spike. By ensuring that the first signal we
         -- latch on to is at least ~60ms, we minimise the chance that we're
         -- just using noise as our second pulse:
-        if m_count = M_PART_INIT and cnt < min_pulse_cnt then
+        if sec = M_PART_INIT and cnt < min_pulse_cnt then
           cnt <= 0;
-          m_count <= M_UNINIT;
+          sec <= M_UNINIT;
         -- Check for the start of minute 500ms second pulse:
-        elsif m_count = M_PART_INIT and cnt > SOM_PULSE_TIME then
-          m_count <= 1;
+        elsif sec = M_PART_INIT and cnt > SOM_PULSE_TIME then
+          sec <= 1;
         end if;
 
       -- This is our 'false start' check. If we reach this point, it's either
@@ -124,7 +124,7 @@ begin
       -- and start again:
       elsif cnt = RESET_S_TIME then
         cnt <= 0;
-        m_count <= M_UNINIT;
+        sec <= M_UNINIT;
       end if;
 
       di_var <= di;                         -- Save di for next time
