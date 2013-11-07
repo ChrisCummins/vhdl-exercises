@@ -40,7 +40,7 @@ architecture rtl of dcf_sync is
   -- (~60ms) so as to allow for some margin of error:
   constant MIN_PULSE_TIME: natural   := clk_freq / 15;
 
-  -- The clock cycles counter (s_count). We use this to record the number of
+  -- The clock cycles counter (cnt). We use this to record the number of
   -- cycles since the last pulse. MIN_S_TIME and MAX_S_TIME defines the window
   -- of acceptable time between each second pulse (~900ms - ~1100ms).
   -- RESET_S_TIME is a hard limit on the amount of time to wait for a second
@@ -49,7 +49,7 @@ architecture rtl of dcf_sync is
   constant MIN_S_TIME:     natural   := clk_freq - clk_freq / 10;
   constant MAX_S_TIME:     natural   := clk_freq + clk_freq / 13;
   constant RESET_S_TIME:   natural   := clk_freq * 3;
-  signal s_count:          natural range 0 to RESET_S_TIME + 1;
+  signal cnt:          natural range 0 to RESET_S_TIME + 1;
 
   -- The seconds counter (m_count). This keeps track of what second we are on
   -- within a minute. When we first start, we are in an uninitialised state
@@ -70,7 +70,7 @@ begin
     -- Reset signal, so zero everything and reset internal state:
     if rst = '1' then
 
-      s_count   <= 0        after gate_delay;
+      cnt   <= 0        after gate_delay;
       m_count   <= M_UNINIT after gate_delay;
       so        <= '0'      after gate_delay;
       mo        <= '0'      after gate_delay;
@@ -79,15 +79,15 @@ begin
     elsif clk'event and clk = '1' then
       so_var  <= '0';                       -- Zero the outputs
       mo_var  <= '0';
-      s_count <= s_count + 1;               -- Bump the clock counter
+      cnt <= cnt + 1;               -- Bump the clock counter
 
       -- Check for rising edge, either because we're expecting a second, or
       -- because we're in an uninitalised state and we're trying to latch on to
       -- the first received signal:
-      if (di > di_var and s_count > MIN_S_TIME and s_count < MAX_S_TIME)
+      if (di > di_var and cnt > MIN_S_TIME and cnt < MAX_S_TIME)
         or (di > di_var and m_count = M_UNINIT) then
         pulse <= '1';                       -- Register pulse
-        s_count <= 0;                       -- Reset clock counter
+        cnt <= 0;                       -- Reset clock counter
         so_var  <= '1';                     -- Output second pulse
 
         if m_count < 60 then
@@ -111,8 +111,8 @@ begin
         -- random thermal noise spike. By ensuring that the first signal we
         -- latch on to is at least ~60ms, we minimise the chance that we're
         -- just using noise as our second pulse:
-        if m_count = M_PART_INIT and s_count < MIN_PULSE_TIME then
-          s_count <= 0;
+        if m_count = M_PART_INIT and cnt < MIN_PULSE_TIME then
+          cnt <= 0;
           m_count <= M_UNINIT;
         end if;
 
@@ -120,9 +120,9 @@ begin
       -- it (we know it's the 59th second), or because we haven't received a
       -- full minute yet and so we'll assume that any missing pulse is the 59th
       -- second:
-      elsif (m_count = 59 and s_count = clk_freq)
-        or (m_count = M_PART_INIT and s_count > MAX_S_TIME) then
-        s_count <= 0;                       -- Reset clock counter
+      elsif (m_count = 59 and cnt = clk_freq)
+        or (m_count = M_PART_INIT and cnt > MAX_S_TIME) then
+        cnt <= 0;                       -- Reset clock counter
         so_var  <= '1';                     -- Add in missing second pulse
         m_count <= 60;
 
@@ -131,8 +131,8 @@ begin
       -- a second properly, or because the signal has dropped. In either case,
       -- it's a bad sign, so just reset all counters to their starting values
       -- and start again:
-      elsif s_count = RESET_S_TIME then
-        s_count <= 0;
+      elsif cnt = RESET_S_TIME then
+        cnt <= 0;
         m_count <= M_UNINIT;
       end if;
 
