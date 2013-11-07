@@ -14,23 +14,17 @@ entity msf_sync is
 
     port
     (
-        rst: in  std_logic := 'X';          -- Reset
-        clk: in  std_logic := 'X';          -- Clock
+        rst: in     std_logic := 'X';          -- Reset
+        clk: in     std_logic := 'X';          -- Clock
 
-        di:  in  byte      := byte_unknown; -- Data in
-        so:  out std_logic := '0';          -- Start of second
-        mo:  out std_logic := '0'           -- Start of minute
+        di:  in     byte      := byte_unknown; -- Data in
+        so:  out    std_logic := '0';          -- Start of second
+        mo:  out    std_logic := '0'           -- Start of minute
     );
 
 end msf_sync;
 
 architecture rtl of msf_sync is
-  -- We use intermediate signals rather than writing directly to the ports:
-  signal so_var:           std_logic := '0';
-  signal mo_var:           std_logic := '0';
-
-  -- This keeps track of whether we're currently on a high or low pulse:
-  signal pulse:            std_logic := 'X';
 
   -- This contains the data input from the last clock cycle:
   signal di_var:           byte      := byte_null;
@@ -48,10 +42,10 @@ architecture rtl of msf_sync is
   -- pulse before figuring that something has gone wrong and resetting (~3000
   -- ms).
   constant som_pulse_cnt: natural   := clk_freq / 2 - clk_freq / 10;
-  constant min_sec:     natural   := clk_freq - clk_freq / 10;
-  constant max_sec:     natural   := clk_freq + clk_freq / 13;
-  constant max_cnt:   natural   := clk_freq * 3;
-  signal cnt:          natural range 0 to max_cnt + 1;
+  constant min_sec:       natural   := clk_freq - clk_freq / 10;
+  constant max_sec:       natural   := clk_freq + clk_freq / 13;
+  constant max_cnt:       natural   := clk_freq * 3;
+  signal cnt:             natural range 0 to max_cnt + 1;
 
   -- The seconds counter (sec). This keeps track of what second we are on
   -- within a minute. When we first start, we are in an uninitialised state
@@ -61,48 +55,46 @@ architecture rtl of msf_sync is
   -- pulse). After that, the counter will be incremented each second in
   -- order to predict when to output the missing second pulse and start of
   -- minute pulse.
-  constant sec_uninit:       natural   := 62;
-  constant sec_part_init:    natural   := 61;
-  signal sec:          natural range 0 to sec_uninit := sec_uninit;
+  constant sec_uninit:    natural   := 62;
+  constant sec_part_init: natural   := 61;
+  signal sec:             natural range 0 to sec_uninit := sec_uninit;
 begin
   process(clk, rst)
   begin
     -- Reset signal, so zero everything and reset internal state:
     if rst = '1' then
-      cnt <= 0 after gate_delay;
-      sec <= sec_uninit after gate_delay;
-      so <= '0' after gate_delay;
-      mo <= '0' after gate_delay;
+      cnt        <= 0             after gate_delay;
+      sec        <= sec_uninit    after gate_delay;
+      so         <= '0'           after gate_delay;
+      mo         <= '0'           after gate_delay;
     -- Clock pulse:
     elsif clk'event and clk = '1' then
-      so_var  <= '0' after gate_delay;                       -- Zero the outputs
-      mo_var  <= '0' after gate_delay;
-      cnt <= cnt + 1 after gate_delay;               -- Bump the clock counter
+      so         <= '0'           after gate_delay; -- Zero the outputs
+      mo         <= '0'           after gate_delay;
+      cnt        <= cnt + 1       after gate_delay; -- Bump the clock counter
 
       -- Check for rising edge, either because we're expecting a second, or
       -- because we're in an uninitalised state and we're trying to latch on to
       -- the first received signal:
       if (di > di_var and cnt > min_sec and cnt < max_sec)
         or (di > di_var and sec = sec_uninit) then
-        pulse <= '1' after gate_delay;                       -- Register pulse
-        cnt <= 0 after gate_delay;                       -- Reset clock counter
-        so_var  <= '1' after gate_delay;                     -- Output second pulse
+        cnt      <= 0             after gate_delay; -- Reset clock counter
+        so       <= '1'           after gate_delay; -- Output second pulse
 
         if sec < 60 then
-          sec <= sec + 1 after gate_delay;           -- Count another second
+          sec    <= sec + 1       after gate_delay; -- Count another second
         elsif sec = 60 then
-          sec <= 1 after gate_delay;                     -- Reset the minute counter
-          mo_var  <= '1' after gate_delay;                   -- Output start of minute pulse
+          sec    <= 1             after gate_delay; -- Reset the minute counter
+          mo     <= '1'           after gate_delay; -- Output start of minute
         elsif sec = sec_uninit then
           -- We've now in a partially-initialised state, i.e. we've found our
           -- first second to latch onto but we haven't received a full minute
           -- yet so don't know when to expect the missing second.
-          sec <= sec_part_init after gate_delay;
+          sec    <= sec_part_init after gate_delay;
         end if;
 
       -- Check for falling edge
       elsif di < di_var then
-        pulse <= '0' after gate_delay;                       -- Register end of pulse
         -- One further precaution: if we've only just latched on to the first
         -- signal pulse, then make sure that the pulse lasts for at least
         -- min_pulse_cnt, as otherwise we could have just latched on to a
@@ -110,11 +102,11 @@ begin
         -- latch on to is at least ~60ms, we minimise the chance that we're
         -- just using noise as our second pulse:
         if sec = sec_part_init and cnt < min_pulse_cnt then
-          cnt <= 0 after gate_delay;
-          sec <= sec_uninit after gate_delay;
+          cnt    <= 0             after gate_delay;
+          sec    <= sec_uninit    after gate_delay;
         -- Check for the start of minute 500ms second pulse:
         elsif sec = sec_part_init and cnt > som_pulse_cnt then
-          sec <= 1 after gate_delay;
+          sec    <= 1             after gate_delay;
         end if;
 
       -- This is our 'false start' check. If we reach this point, it's either
@@ -123,13 +115,11 @@ begin
       -- it's a bad sign, so just reset all counters to their starting values
       -- and start again:
       elsif cnt = max_cnt then
-        cnt <= 0 after gate_delay;
-        sec <= sec_uninit after gate_delay;
+        cnt      <= 0             after gate_delay;
+        sec      <= sec_uninit    after gate_delay;
       end if;
 
-      di_var <= di after gate_delay;                         -- Save di for next time
-      so     <= so_var after gate_delay;    -- Set our outputs
-      mo     <= mo_var after gate_delay;
+      di_var     <= di            after gate_delay; -- Save di for next time
     end if;
   end process;
 end rtl;
