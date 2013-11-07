@@ -8,18 +8,18 @@ entity msf_sync is
 
     generic
     (
-        clk_freq:   positive := 125000000; -- Hz
-        gate_delay: time     := 1 ns
+        clk_freq:          positive  := 125000000; -- Hz
+        gate_delay:        time      := 1 ns
     );
 
     port
     (
-        rst: in     std_logic := 'X';          -- Reset
-        clk: in     std_logic := 'X';          -- Clock
+        rst: in            std_logic := 'X';          -- Reset
+        clk: in            std_logic := 'X';          -- Clock
 
-        di:  in     byte      := byte_unknown; -- Data in
-        so:  out    std_logic := '0';          -- Start of second
-        mo:  out    std_logic := '0'           -- Start of minute
+        di:  in            byte      := byte_unknown; -- Data in
+        so:  out           std_logic := '0';          -- Start of second
+        mo:  out           std_logic := '0'           -- Start of minute
     );
 
 end msf_sync;
@@ -32,7 +32,7 @@ architecture rtl of msf_sync is
   -- This is the minimum acceptable pulse length. The MSF signal uses 100 -
   -- 500ms pulses, so let's set this to a value slightly below the shortest
   -- (~60ms) so as to allow for some margin of error:
-  constant min_pulse_cnt: natural   := clk_freq / 15;
+  constant min_pulse_cnt: natural    := clk_freq / 15;
 
   -- The clock cycles counter (cnt). We use this to record the number of
   -- cycles since the last pulse. som_pulse_cnt is the shortest acceptable
@@ -41,10 +41,10 @@ architecture rtl of msf_sync is
   -- max_cnt is a hard limit on the amount of time to wait for a second
   -- pulse before figuring that something has gone wrong and resetting (~3000
   -- ms).
-  constant som_pulse_cnt: natural   := clk_freq / 2 - clk_freq / 10;
-  constant min_sec:       natural   := clk_freq - clk_freq / 10;
-  constant max_sec:       natural   := clk_freq + clk_freq / 13;
-  constant max_cnt:       natural   := clk_freq * 3;
+  constant som_pulse_cnt: natural    := clk_freq / 2 - clk_freq / 10;
+  constant min_sec:       natural    := clk_freq - clk_freq / 10;
+  constant max_sec:       natural    := clk_freq + clk_freq / 13;
+  constant max_cnt:       natural    := clk_freq * 3;
   signal cnt:             natural range 0 to max_cnt + 1;
 
   -- The seconds counter (sec). This keeps track of what second we are on
@@ -55,8 +55,8 @@ architecture rtl of msf_sync is
   -- pulse). After that, the counter will be incremented each second in
   -- order to predict when to output the missing second pulse and start of
   -- minute pulse.
-  constant sec_uninit:    natural   := 62;
-  constant sec_part_init: natural   := 61;
+  constant sec_uninit:    natural    := 62;
+  constant sec_part_init: natural    := 61;
   signal sec:             natural range 0 to sec_uninit := sec_uninit;
 begin
   process(clk, rst)
