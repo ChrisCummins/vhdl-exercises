@@ -42,7 +42,7 @@ all simulation sim:
 		ghdl -r $$t --vcd=$$t.vcd; \
 	done
 
-TB := dcf_bits_tb
+TB := msf_bits_tb
 
 view:
 	gtkwave $(TB).vcd $(TB).sav >/dev/null 2>&1
