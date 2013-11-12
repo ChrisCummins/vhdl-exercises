@@ -26,66 +26,81 @@ entity dcf_bits is
 end dcf_bits;
 
 architecture rtl of dcf_bits is
-  -- We use an intermediate signal rather than writing directly to the port:
-  signal   tr_var:      std_logic := '0';
 
-  -- This contains the data input from the last clock cycle:
-  signal   di_var:      byte      := byte_null;
+  type     states  is (st_init, st_wait, st_sample);
+  subtype  counter is natural range 0 to clk_freq * 3;
 
-  -- This keeps track of whether we're currently on a high or low pulse:
-  signal   pulse:       std_logic := '0';
+  constant sample_time: natural   := 150; -- ms
+  constant cnt_sample:  counter   := clk_freq * sample_time / 1000;
 
-  -- This keeps track of whether we're currently sampling a pulse:
-  signal   sampling:    bit       := '0';
+  signal   state:       states    := st_init;
+  signal   next_state:  states    := st_init;
 
-  -- The number of clock cycles after a second begins that we decide on the bit
-  -- value:
-  constant SAMPLE_TIME: natural   := clk_freq * 150 / 1000;
+  signal   next_bo:     std_logic := '0';
+  signal   next_tr:     std_logic := '0';
 
-  -- The number of clock cycles since the start of a second:
-  signal   s_count:     natural range 0 to SAMPLE_TIME + 1;
+  signal   di_sampled:  byte      := byte_null;
+  signal   si_sampled:  std_logic := '0';
+
+  signal   cnt:         counter   := 0;
+  signal   next_cnt:    counter   := 0;
+
 begin
 
-  process(clk,rst)
+  process(clk, rst)
   begin
 
-    if rst = '1' then                       -- Reset everything
-      sampling <= '0';
-      s_count <= 0;
-      bo <= '0' after gate_delay;
-      tr <= '0' after gate_delay;
-    elsif clk'event and clk = '1' then
-      tr_var <= '0';                        -- Zero the trigger
+    if (rst = '1') then
 
-      if di > di_var then                   -- Check for rising or falling edges
-        pulse <= '1';
-      elsif di < di_var then
-        pulse <= '0';
-      end if;
+      state          <= st_init       after gate_delay;
+      cnt            <= 0             after gate_delay;
+      bo             <= '0'           after gate_delay;
+      tr             <= '0'           after gate_delay;
+      di_sampled     <= byte_null     after gate_delay;
+      si_sampled     <= '0'           after gate_delay;
 
-      if si = '1' then                      -- Check for a second-in pulse
-        sampling <= '1';
-      end if;
+    elsif clk'event and (clk = '1') then
 
-      if sampling = '1' then                -- Bump our clock counter
-        s_count <= s_count + 1;
-      end if;
+      state          <= next_state    after gate_delay;
+      cnt            <= next_cnt      after gate_delay;
+      bo             <= next_bo       after gate_delay;
+      tr             <= next_tr       after gate_delay;
+      di_sampled     <= di            after gate_delay;
+      si_sampled     <= si            after gate_delay;
 
-      -- if we're currently sampling a pulse and we've reached the sample time,
-      -- then make a decision on whether the bit is a high or low and trigger a
-      -- new bit out:
-      if sampling = '1' and s_count = SAMPLE_TIME then
-        sampling <= '0';
-        s_count <= 0;
-
-        bo <= pulse after gate_delay;
-
-        tr_var <= '1';
-      end if;
-
-      di_var <= di;                         -- Store the current input
-      tr <= tr_var after gate_delay;        -- Set our trigger output
     end if;
+
+  end process;
+
+  process(di_sampled, si_sampled, cnt, state)
+  begin
+
+    case state is
+
+      when st_init =>
+
+        next_cnt     <= 0             after gate_delay;
+        next_tr      <= '0'           after gate_delay;
+
+        if (si_sampled = '1') then
+          next_state <= st_wait       after gate_delay;
+        end if;
+
+      when st_wait =>
+
+        if (cnt < cnt_sample) then
+          next_cnt   <= cnt + 1       after gate_delay;
+        else
+          next_state <= st_sample     after gate_delay;
+        end if;
+
+      when st_sample =>
+
+        next_bo      <= di_sampled(7) after gate_delay;
+        next_tr      <= '1'           after gate_delay;
+        next_state   <= st_init       after gate_delay;
+
+    end case;
 
   end process;
 
