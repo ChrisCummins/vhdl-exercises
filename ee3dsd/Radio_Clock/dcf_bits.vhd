@@ -75,12 +75,14 @@ begin
   process(di_sampled, si_sampled, cnt, state)
   begin
 
+    next_state       <= state         after gate_delay;
+    next_cnt         <= 0             after gate_delay;
+    next_bo          <= '0'           after gate_delay;
+    next_tr          <= '0'           after gate_delay;
+
     case state is
 
       when st_init =>
-
-        next_cnt     <= 0             after gate_delay;
-        next_tr      <= '0'           after gate_delay;
 
         if (si_sampled = '1') then
           next_state <= st_wait       after gate_delay;

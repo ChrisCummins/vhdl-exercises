@@ -40,6 +40,7 @@ architecture rtl of msf_bits is
   signal   next_state:   states    := st_init;
 
   signal   bao_var:      std_logic := '0';
+  signal   next_bao_var: std_logic := '0';
   signal   next_bao:     std_logic := '0';
   signal   next_bbo:     std_logic := '0';
   signal   next_tr:      std_logic := '0';
@@ -61,6 +62,7 @@ begin
       cnt            <= 0             after gate_delay;
       bao            <= '0'           after gate_delay;
       bbo            <= '0'           after gate_delay;
+      bao_var        <= '0'           after gate_delay;
       tr             <= '0'           after gate_delay;
       di_sampled     <= byte_null     after gate_delay;
       si_sampled     <= '0'           after gate_delay;
@@ -71,6 +73,7 @@ begin
       cnt            <= next_cnt      after gate_delay;
       bao            <= next_bao      after gate_delay;
       bbo            <= next_bbo      after gate_delay;
+      bao_var        <= next_bao_var  after gate_delay;
       tr             <= next_tr       after gate_delay;
       di_sampled     <= di            after gate_delay;
       si_sampled     <= si            after gate_delay;
@@ -79,15 +82,19 @@ begin
 
   end process;
 
-  process(di_sampled, si_sampled, cnt, state)
+  process(di_sampled, si_sampled, cnt, state, bao_var)
   begin
+
+    next_state       <= state         after gate_delay;
+    next_cnt         <= 0             after gate_delay;
+    next_bao         <= '0'           after gate_delay;
+    next_bbo         <= '0'           after gate_delay;
+    next_bao_var     <= bao_var       after gate_delay;
+    next_tr          <= '0'           after gate_delay;
 
     case state is
 
       when st_init =>
-
-        next_cnt     <= 0             after gate_delay;
-        next_tr      <= '0'           after gate_delay;
 
         if (si_sampled = '1') then
           next_state <= st_wait1      after gate_delay;
@@ -103,7 +110,8 @@ begin
 
       when st_sample1 =>
 
-        bao_var      <= di_sampled(7) after gate_delay;
+        next_cnt     <= cnt + 1       after gate_delay;
+        next_bao_var <= di_sampled(7) after gate_delay;
         next_state   <= st_wait2      after gate_delay;
 
       when st_wait2 =>
