@@ -77,7 +77,6 @@ begin
 
     next_state       <= state         after gate_delay;
     next_cnt         <= 0             after gate_delay;
-    next_bo          <= '0'           after gate_delay;
     next_tr          <= '0'           after gate_delay;
 
     case state is

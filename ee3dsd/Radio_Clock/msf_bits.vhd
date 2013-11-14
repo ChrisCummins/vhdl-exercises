@@ -87,8 +87,6 @@ begin
 
     next_state       <= state         after gate_delay;
     next_cnt         <= cnt + 1       after gate_delay;
-    next_bao         <= '0'           after gate_delay;
-    next_bbo         <= '0'           after gate_delay;
     next_bao_var     <= bao_var       after gate_delay;
     next_tr          <= '0'           after gate_delay;
 
