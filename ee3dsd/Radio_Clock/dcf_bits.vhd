@@ -98,7 +98,12 @@ begin
 
       when st_sample =>
 
-        next_bo      <= di_sampled(7) after gate_delay;
+        if (di_sampled = "11111111") then
+          next_bo    <= '1'           after gate_delay;
+        else
+          next_bo    <= '0'           after gate_delay;
+        end if;
+
         next_tr      <= '1'           after gate_delay;
         next_state   <= st_init       after gate_delay;
 

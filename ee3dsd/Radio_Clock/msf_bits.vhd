@@ -110,7 +110,12 @@ begin
 
       when st_sample1 =>
 
-        next_bao_var <= di_sampled(7) after gate_delay;
+        if (di_sampled = "11111111") then
+          next_bao_var <= '1'         after gate_delay;
+        else
+          next_bao_var <= '0'         after gate_delay;
+        end if;
+
         next_state   <= st_wait2      after gate_delay;
 
       when st_wait2 =>
@@ -122,7 +127,13 @@ begin
       when st_sample2 =>
 
         next_bao     <= bao_var       after gate_delay;
-        next_bbo     <= di_sampled(7) after gate_delay;
+
+        if (di_sampled = "11111111") then
+          next_bbo   <= '1'           after gate_delay;
+        else
+          next_bbo   <= '0'           after gate_delay;
+        end if;
+
         next_tr      <= '1'           after gate_delay;
         next_state   <= st_init       after gate_delay;
 
