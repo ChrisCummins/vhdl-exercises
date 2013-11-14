@@ -86,7 +86,7 @@ begin
   begin
 
     next_state       <= state         after gate_delay;
-    next_cnt         <= 0             after gate_delay;
+    next_cnt         <= cnt + 1       after gate_delay;
     next_bao         <= '0'           after gate_delay;
     next_bbo         <= '0'           after gate_delay;
     next_bao_var     <= bao_var       after gate_delay;
@@ -96,29 +96,26 @@ begin
 
       when st_init =>
 
+        next_cnt     <= 0             after gate_delay;
+
         if (si_sampled = '1') then
           next_state <= st_wait1      after gate_delay;
         end if;
 
       when st_wait1 =>
 
-        if (cnt < cnt_sample1) then
-          next_cnt   <= cnt + 1       after gate_delay;
-        else
+        if (cnt = cnt_sample1) then
           next_state <= st_sample1    after gate_delay;
         end if;
 
       when st_sample1 =>
 
-        next_cnt     <= cnt + 1       after gate_delay;
         next_bao_var <= di_sampled(7) after gate_delay;
         next_state   <= st_wait2      after gate_delay;
 
       when st_wait2 =>
 
-        if (cnt < cnt_sample2) then
-          next_cnt   <= cnt + 1       after gate_delay;
-        else
+        if (cnt = cnt_sample2) then
           next_state <= st_sample2    after gate_delay;
         end if;
 
