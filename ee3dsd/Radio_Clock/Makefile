@@ -24,8 +24,6 @@ SOURCES = \
 
 TESTBENCHES = dcf_sync_tb \
 	msf_sync_tb \
-	dcf_bits_tb \
-	msf_bits_tb \
 	ddrserdes_tb \
 	dcf_bits_testbench \
 	msf_bits_testbench
