@@ -136,8 +136,10 @@ architecture tests of dcf_bits_tb is
   signal tr:  std_logic := 'X';
 begin
   sync: entity WORK.dcf_sync(rtl)
+    generic map (clk_freq => clk_freq)
     port map (rst, clk, di, so, mo);
   bits: entity WORK.dcf_bits(rtl)
+    generic map (clk_freq => clk_freq)
     port map (rst, clk, di, so, bo, tr);
   process is
     constant clk_period: time := 1000 ms / clk_freq;

@@ -162,8 +162,10 @@ architecture tests of msf_bits_tb is
   signal tr:  std_logic := 'X';
 begin
   sync: entity WORK.msf_sync(rtl)
+    generic map (clk_freq => clk_freq)
     port map (rst, clk, di, so, mo);
   bits: entity WORK.msf_bits(rtl)
+    generic map (clk_freq => clk_freq)
     port map (rst, clk, di, so, bao, bbo, tr);
   process is
     constant clk_period: time := 1000 ms / clk_freq;

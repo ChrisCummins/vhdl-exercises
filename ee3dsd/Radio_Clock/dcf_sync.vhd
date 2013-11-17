@@ -178,6 +178,7 @@ architecture tests of dcf_sync_tb is
   signal mo:  std_logic := 'X';
 begin
   dut: entity work.dcf_sync(rtl)
+    generic map (clk_freq => clk_freq)
     port map (rst, clk, di, so, mo);
   process is
     constant clk_period: time := 1000 ms / clk_freq;
