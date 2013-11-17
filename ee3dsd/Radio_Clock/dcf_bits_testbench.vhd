@@ -8,10 +8,16 @@ use WORK.std_logic_textio.all;
 use WORK.util.all;
 
 entity dcf_bits_testbench is
-    generic (clk_freq: positive := 100); -- 100 Hz
+
+  generic
+  (
+      clk_freq: positive := 100 -- 100 Hz
+  );
+
 end dcf_bits_testbench;
 
 architecture tests of dcf_bits_testbench is
+
   signal rst: std_logic := '0';
   signal clk: std_logic := '0';
   signal di:  byte      := byte_unknown;
@@ -20,14 +26,40 @@ architecture tests of dcf_bits_testbench is
   signal mo:  std_logic := 'X';
   signal bo:  std_logic := 'X';
   signal tr:  std_logic := 'X';
+
 begin
+
   sync: entity WORK.dcf_sync(rtl)
-    generic map (clk_freq => clk_freq)
-    port map (rst, clk, di, so, mo);
+    generic map
+    (
+        clk_freq => clk_freq
+    )
+    port map
+    (
+        rst      => rst,
+        clk      => clk,
+        di       => di,
+        so       => so,
+        mo       => mo
+    );
+
   bits: entity WORK.dcf_bits(rtl)
-    generic map (clk_freq => clk_freq)
-    port map (rst, clk, di, so, bo, tr);
+    generic map
+    (
+        clk_freq => clk_freq
+    )
+    port map
+    (
+        rst      => rst,
+        clk      => clk,
+        di       => di,
+        si       => so,
+        bo       => bo,
+        tr       => tr
+    );
+
   process is
+
     constant clk_period: time := 1000 ms / clk_freq;
 
     file     data:       text;
@@ -35,6 +67,7 @@ begin
 
     variable clk_var:    std_logic;
     variable di_var:     byte;
+
   begin
 
     file_open(data, "../cw/cw2/dcf_sync_tb-stimulus.txt", read_mode);
@@ -52,5 +85,7 @@ begin
 
     file_close(data);
     wait;
+
   end process;
+
 end tests;
