@@ -18,13 +18,17 @@ SOURCES = \
 	serdes.vhd \
 	serial_port.vhd \
 	ssg.vhd \
-	uptime_counter.vhd
+	uptime_counter.vhd \
+	dcf_bits_testbench.vhd \
+	msf_bits_testbench.vhd
 
 TESTBENCHES = dcf_sync_tb \
 	msf_sync_tb \
 	dcf_bits_tb \
 	msf_bits_tb \
-	ddrserdes_tb
+	ddrserdes_tb \
+	dcf_bits_testbench \
+	msf_bits_testbench
 
 TMP_DIR=/tmp/$(USER)
 
@@ -42,7 +46,7 @@ all simulation sim:
 		ghdl -r $$t --vcd=$$t.vcd; \
 	done
 
-TB := msf_bits_tb
+TB := dcf_bits_testbench
 
 view:
 	gtkwave $(TB).vcd $(TB).sav >/dev/null 2>&1
