@@ -132,7 +132,7 @@ begin
 
 end rtl;
 
------- END OF MSF_SYNC ------
+------ END OF MSF_BITS ------
 
 --
 -- Test bench

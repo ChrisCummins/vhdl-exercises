@@ -107,7 +107,7 @@ begin
 
 end rtl;
 
------- END OF DCF_SYNC ------
+------ END OF DCF_BITS ------
 
 --
 -- Test bench
