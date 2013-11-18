@@ -18,6 +18,11 @@ end msf_bits_testbench;
 
 architecture tests of msf_bits_testbench is
 
+  constant test_duration: time := 60000 ms;
+  constant clk_period: time := 1000 ms / clk_freq;
+
+  signal end_flag: std_logic := '0';
+
   signal rst: std_logic := '0';
   signal clk: std_logic := '0';
   signal di:  byte      := byte_unknown;
@@ -45,34 +50,57 @@ begin
         tr       => tr
     );
 
-  process is
+  process -- Process to end test after duration
+  begin
 
-    constant clk_period: time := 1000 ms / clk_freq;
+    wait for test_duration;
+    end_flag <= '1';
+
+    wait;
+  end process;
+
+  process is -- Process to set 'clk'
+    variable clk_var:    std_logic := '0';
+  begin
+
+    while (end_flag = '0') loop
+      clk <= '1';
+      wait for clk_period / 2;
+      clk <= '0';
+      wait for clk_period / 2;
+    end loop;
+
+    wait;
+  end process;
+
+  process is -- Process to set 'di'
 
     file     data:       text;
     variable data_line:  line;
-
-    variable clk_var:    std_logic;
-    variable di_var:     byte;
+    variable t_var:      time;
 
   begin
 
-    file_open(data, "../cw/cw2/msf_sync_tb-stimulus.txt", read_mode);
+    file_open(data, "msf.txt", read_mode);
 
     while not endfile(data) loop
+
+      di <= byte_zero;
+
       readline(data, data_line);
-      read(data_line, clk_var);
-      read(data_line, di_var);
+      read(data_line, t_var);
+      wait for t_var - now;
 
-      clk <= clk_var;
-      di  <= di_var;
+      di <= byte_255;
 
-      wait for clk_period / 2;
+      readline(data, data_line);
+      read(data_line, t_var);
+      wait for t_var - now;
+
     end loop;
 
     file_close(data);
     wait;
-
   end process;
 
 end tests;
