@@ -27,7 +27,6 @@ architecture tests of msf_bits_testbench is
   signal clk: std_logic := '0';
   signal di:  byte      := byte_unknown;
   signal si:  std_logic := 'X';
-  signal mo:  std_logic := 'X';
   signal bao: std_logic := 'X';
   signal bbo: std_logic := 'X';
   signal tr:  std_logic := 'X';
