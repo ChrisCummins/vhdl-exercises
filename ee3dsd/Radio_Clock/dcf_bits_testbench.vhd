@@ -158,7 +158,10 @@ begin
 
       wait until (tr = '1');
 
-      assert (r_bo = bo) report "r_bo: " & std_logic'image(r_bo) & ", 'bo': " & std_logic'image(bo) severity error;
+      while (now < t_var) loop
+        assert (r_bo = bo) report "r_bo: " & std_logic'image(r_bo) & ", 'bo': " & std_logic'image(bo) severity error;
+        wait for clk_period;
+      end loop;
 
     end loop;
 
