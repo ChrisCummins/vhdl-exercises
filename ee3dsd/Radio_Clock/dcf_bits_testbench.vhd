@@ -26,27 +26,11 @@ architecture tests of dcf_bits_testbench is
   signal rst: std_logic := '0';
   signal clk: std_logic := '0';
   signal di:  byte      := byte_unknown;
-
-  signal so:  std_logic := 'X';
-  signal mo:  std_logic := 'X';
+  signal si:  std_logic := 'X';
   signal bo:  std_logic := 'X';
   signal tr:  std_logic := 'X';
 
 begin
-
-  sync: entity WORK.dcf_sync(rtl)
-    generic map
-    (
-        clk_freq => clk_freq
-    )
-    port map
-    (
-        rst      => rst,
-        clk      => clk,
-        di       => di,
-        so       => so,
-        mo       => mo
-    );
 
   bits: entity WORK.dcf_bits(rtl)
     generic map
@@ -58,7 +42,7 @@ begin
         rst      => rst,
         clk      => clk,
         di       => di,
-        si       => so,
+        si       => si,
         bo       => bo,
         tr       => tr
     );
