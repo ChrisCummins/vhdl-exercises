@@ -47,7 +47,7 @@ begin
         tr       => tr
     );
 
-  process -- Test duration
+  process -- Process to end test after duration
   begin
 
     wait for test_duration;
@@ -56,7 +56,7 @@ begin
     wait;
   end process;
 
-  process is -- Clock process
+  process is -- Process to set 'clk'
     variable clk_var:    std_logic := '0';
   begin
 
@@ -70,7 +70,7 @@ begin
     wait;
   end process;
 
-  process is
+  process is -- Process to set 'di'
   begin
 
     di <= byte_255;
