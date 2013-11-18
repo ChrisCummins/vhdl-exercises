@@ -17,17 +17,19 @@ end dcf_bits_testbench;
 
 architecture tests of dcf_bits_testbench is
 
-  constant test_duration: time := 60000 ms;
-  constant clk_period: time := 1000 ms / clk_freq;
+  constant test_duration: time      := 60000 ms;
+  constant clk_period:    time      := 1000 ms / clk_freq;
 
-  signal end_flag: std_logic := '0';
+  signal end_flag:        std_logic := '0';
 
-  signal rst: std_logic := '0';
-  signal clk: std_logic := '0';
-  signal di:  byte      := byte_unknown;
-  signal si:  std_logic := 'X';
-  signal bo:  std_logic := 'X';
-  signal tr:  std_logic := 'X';
+  signal rst:             std_logic := '0';
+  signal clk:             std_logic := '0';
+  signal di:              byte      := byte_unknown;
+  signal si:              std_logic := 'X';
+  signal bo:              std_logic := 'X';
+  signal tr:              std_logic := 'X';
+
+  signal r_bo:            std_logic := '0';
 
 begin
 
@@ -102,6 +104,37 @@ begin
 
     file_close(data);
     wait;
+  end process;
+
+  process is -- Assert that our decoded bits match hand decoded bits
+
+    file     data:       text;
+    variable data_line:  line;
+    variable t_var:      time;
+    variable bo_var:     std_logic := '0';
+
+  begin
+
+    file_open(data, "dcf.txt", read_mode);
+
+    while not endfile(data) loop
+
+      readline(data, data_line);
+      wait for 80 ms; -- (pretty arbitrary) settling time
+
+      r_bo <= bo_var;
+      assert (bo = bo_var) report "bo_var: " & std_logic'image(bo_var) & ", 'bo': " & std_logic'image(bo) severity error;
+
+      readline(data, data_line);
+      read(data_line, t_var);
+      read(data_line, bo_var);
+      wait for t_var - now;
+
+    end loop;
+
+    file_close(data);
+    wait;
+
   end process;
 
 end tests;
