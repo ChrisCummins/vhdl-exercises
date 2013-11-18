@@ -18,6 +18,11 @@ end dcf_bits_testbench;
 
 architecture tests of dcf_bits_testbench is
 
+  constant test_duration: time := 60000 ms;
+  constant clk_period: time := 1000 ms / clk_freq;
+
+  signal end_flag: std_logic := '0';
+
   signal rst: std_logic := '0';
   signal clk: std_logic := '0';
   signal di:  byte      := byte_unknown;
@@ -58,32 +63,28 @@ begin
         tr       => tr
     );
 
+  process
+  begin
+
+    wait for test_duration;
+    end_flag <= '1';
+    wait;
+
+  end process;
+
   process is
 
-    constant clk_period: time := 1000 ms / clk_freq;
-
-    file     data:       text;
-    variable data_line:  line;
-
-    variable clk_var:    std_logic;
-    variable di_var:     byte;
+    variable clk_var:    std_logic := '0';
 
   begin
 
-    file_open(data, "../cw/cw2/dcf_sync_tb-stimulus.txt", read_mode);
-
-    while not endfile(data) loop
-      readline(data, data_line);
-      read(data_line, clk_var);
-      read(data_line, di_var);
-
-      clk <= clk_var;
-      di  <= di_var;
-
+    while (end_flag = '0') loop
+      clk <= '1';
+      wait for clk_period / 2;
+      clk <= '0';
       wait for clk_period / 2;
     end loop;
 
-    file_close(data);
     wait;
 
   end process;
