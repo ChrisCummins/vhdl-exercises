@@ -17,18 +17,21 @@ end msf_bits_testbench;
 
 architecture tests of msf_bits_testbench is
 
-  constant test_duration: time := 60000 ms;
-  constant clk_period: time := 1000 ms / clk_freq;
+  constant test_duration: time      := 60000 ms;
+  constant clk_period:    time      := 1000 ms / clk_freq;
 
-  signal end_flag: std_logic := '0';
+  signal end_flag:        std_logic := '0';
 
-  signal rst: std_logic := '0';
-  signal clk: std_logic := '0';
-  signal di:  byte      := byte_unknown;
-  signal si:  std_logic := 'X';
-  signal bao: std_logic := 'X';
-  signal bbo: std_logic := 'X';
-  signal tr:  std_logic := 'X';
+  signal rst:             std_logic := '0';
+  signal clk:             std_logic := '0';
+  signal di:              byte      := byte_unknown;
+  signal si:              std_logic := 'X';
+  signal bao:             std_logic := 'X';
+  signal bbo:             std_logic := 'X';
+  signal tr:              std_logic := 'X';
+
+  signal r_bao:           std_logic := '0';
+  signal r_bbo:           std_logic := '0';
 
 begin
 
@@ -104,6 +107,42 @@ begin
 
     file_close(data);
     wait;
+  end process;
+
+  process is -- Assert that our decoded bits match hand decoded bits
+
+    file     data:       text;
+    variable data_line:  line;
+    variable t_var:      time;
+    variable bao_var:    std_logic := '0';
+    variable bbo_var:    std_logic := '0';
+
+  begin
+
+    file_open(data, "msf.txt", read_mode);
+
+    while not endfile(data) loop
+
+      readline(data, data_line);
+      wait for 80 ms; -- (pretty arbitrary) settling time
+
+      r_bao <= bao_var;
+      r_bbo <= bbo_var;
+
+      assert (bao = bao_var) report "bao_var: " & std_logic'image(bao_var) & ", 'bao': " & std_logic'image(bao) severity error;
+      assert (bbo = bbo_var) report "bbo_var: " & std_logic'image(bbo_var) & ", 'bbo': " & std_logic'image(bbo) severity error;
+
+      readline(data, data_line);
+      read(data_line, t_var);
+      read(data_line, bao_var);
+      read(data_line, bbo_var);
+      wait for t_var - now;
+
+    end loop;
+
+    file_close(data);
+    wait;
+
   end process;
 
 end tests;
