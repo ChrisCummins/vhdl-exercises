@@ -11,7 +11,7 @@ entity msf_bits_testbench is
 
   generic
   (
-      clk_freq: positive := 100 -- 100 Hz
+      clk_freq: positive := 100 -- Hz
   );
 
 end msf_bits_testbench;

@@ -11,7 +11,7 @@ entity dcf_bits_testbench is
 
   generic
   (
-      clk_freq: positive := 100 -- 100 Hz
+      clk_freq: positive := 100 -- Hz
   );
 
 end dcf_bits_testbench;
@@ -74,8 +74,7 @@ begin
 
     file     data:       text;
     variable data_line:  line;
-
-    variable t_var : time;
+    variable t_var:      time;
 
   begin
 
