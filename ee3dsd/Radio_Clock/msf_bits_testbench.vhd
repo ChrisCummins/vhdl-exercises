@@ -109,6 +109,41 @@ begin
     wait;
   end process;
 
+  process is -- Set 'r_bao' and 'r_bbo' signals
+
+    file     data:       text;
+    variable data_line:  line;
+    variable t_var:      time;
+    variable bao_var:    std_logic := '0';
+    variable bbo_var:    std_logic := '0';
+
+  begin
+
+    file_open(data, "msf.txt", read_mode);
+
+    while not endfile(data) loop
+
+      r_bao <= bao_var;
+      r_bbo <= bbo_var;
+
+      readline(data, data_line);
+      read(data_line, t_var);
+      if (t_var > now) then
+        wait for t_var - now; -- Wait until next second
+      end if;
+
+      readline(data, data_line);
+      read(data_line, t_var);
+      read(data_line, bao_var);
+      read(data_line, bbo_var);
+
+    end loop;
+
+    file_close(data);
+    wait;
+
+  end process;
+
   process is -- Assert that our decoded bits match hand decoded bits
 
     file     data:       text;
@@ -124,19 +159,15 @@ begin
     while not endfile(data) loop
 
       readline(data, data_line);
-      wait for 80 ms; -- (pretty arbitrary) settling time
-
-      r_bao <= bao_var;
-      r_bbo <= bbo_var;
-
-      assert (bao = bao_var) report "bao_var: " & std_logic'image(bao_var) & ", 'bao': " & std_logic'image(bao) severity error;
-      assert (bbo = bbo_var) report "bbo_var: " & std_logic'image(bbo_var) & ", 'bbo': " & std_logic'image(bbo) severity error;
-
       readline(data, data_line);
       read(data_line, t_var);
       read(data_line, bao_var);
       read(data_line, bbo_var);
-      wait for t_var - now;
+
+      wait until (tr = '1');
+
+      assert (r_bao = bao) report "r_bao: " & std_logic'image(r_bao) & ", 'bao': " & std_logic'image(bao) severity error;
+      assert (r_bbo = bbo) report "r_bbo: " & std_logic'image(r_bbo) & ", 'bbo': " & std_logic'image(bbo) severity error;
 
     end loop;
 
