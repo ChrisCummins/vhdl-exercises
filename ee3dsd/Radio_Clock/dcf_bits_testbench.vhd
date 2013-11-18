@@ -68,7 +68,27 @@ begin
     end loop;
 
     wait;
+  end process;
 
+  process is
+  begin
+
+    di <= byte_255;
+    wait for 100 ms;
+    di <= byte_zero;
+    wait for 900 ms;
+
+    di <= byte_255;
+    wait for 100 ms;
+    di <= byte_zero;
+    wait for 900 ms;
+
+    di <= byte_255;
+    wait for 100 ms;
+    di <= byte_zero;
+    wait for 900 ms;
+
+    wait;
   end process;
 
 end tests;
