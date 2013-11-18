@@ -71,23 +71,33 @@ begin
   end process;
 
   process is -- Process to set 'di'
+
+    file     data:       text;
+    variable data_line:  line;
+
+    variable t_var : time;
+
   begin
 
-    di <= byte_255;
-    wait for 100 ms;
-    di <= byte_zero;
-    wait for 900 ms;
+    file_open(data, "dcf.txt", read_mode);
 
-    di <= byte_255;
-    wait for 100 ms;
-    di <= byte_zero;
-    wait for 900 ms;
+    while not endfile(data) loop
 
-    di <= byte_255;
-    wait for 100 ms;
-    di <= byte_zero;
-    wait for 900 ms;
+      di <= byte_zero;
 
+      readline(data, data_line);
+      read(data_line, t_var);
+      wait for t_var - now;
+
+      di <= byte_255;
+
+      readline(data, data_line);
+      read(data_line, t_var);
+      wait for t_var - now;
+
+    end loop;
+
+    file_close(data);
     wait;
   end process;
 
