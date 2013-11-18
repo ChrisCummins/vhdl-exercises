@@ -2,7 +2,6 @@ library IEEE;
 
 use IEEE.numeric_std.all;
 use IEEE.std_logic_1164.all;
-use IEEE.std_logic_1164.all;
 use STD.textio.all;
 use WORK.std_logic_textio.all;
 use WORK.util.all;
