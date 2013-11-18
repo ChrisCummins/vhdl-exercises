@@ -47,19 +47,17 @@ begin
         tr       => tr
     );
 
-  process
+  process -- Test duration
   begin
 
     wait for test_duration;
     end_flag <= '1';
-    wait;
 
+    wait;
   end process;
 
-  process is
-
+  process is -- Clock process
     variable clk_var:    std_logic := '0';
-
   begin
 
     while (end_flag = '0') loop
