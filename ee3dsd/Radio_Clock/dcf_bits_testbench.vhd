@@ -11,7 +11,7 @@ entity dcf_bits_testbench is
 
   generic
   (
-      clk_freq: positive := 100 -- Hz
+      clk_freq: positive := 1000 -- Hz
   );
 
 end dcf_bits_testbench;
