@@ -62,9 +62,9 @@ begin
   begin
 
     while (end_flag = '0') loop
-      clk <= '1';
-      wait for clk_period / 2;
       clk <= '0';
+      wait for clk_period / 2;
+      clk <= '1';
       wait for clk_period / 2;
     end loop;
 
