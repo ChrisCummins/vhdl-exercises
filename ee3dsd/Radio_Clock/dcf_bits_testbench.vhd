@@ -70,7 +70,7 @@ begin
     wait;
   end process;
 
-  process is -- Process to set 'di'
+  process is -- Process to set 'di' and 'si'
 
     file     data:       text;
     variable data_line:  line;
@@ -92,6 +92,11 @@ begin
 
       readline(data, data_line);
       read(data_line, t_var);
+
+      si <= '1'; -- Spoof the output of the dcf_sync component
+      wait for 1 ms;
+      si <= '0';
+
       wait for t_var - now;
 
     end loop;
