@@ -19,7 +19,6 @@ architecture tests of msf_bits_testbench is
 
   constant test_duration: time      := 60000 ms;
   constant clk_period:    time      := 1000 ms / clk_freq;
-
   signal end_flag:        std_logic := '0';
 
   signal rst:             std_logic := '0';
