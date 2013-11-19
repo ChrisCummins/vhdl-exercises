@@ -25,11 +25,66 @@ end ssg;
 
 architecture behav of ssg is
 
-  -- Your declarations go here --
+  type   states is (st_wait, st_wr0, st_wr1, st_wr2, st_wr3);
+
+  signal state:      states := st_wait;
+  signal next_state: states := st_wait;
 
 begin
 
-  -- Your implementation goes here --
+  process(clk)
+  begin
+
+    if clk'event and (clk = '1') then
+
+      state <= next_state after gate_delay;
+
+    end if;
+
+  end process;
+
+  process (state)
+  begin
+
+    an <= (others => '1') after gate_delay;
+
+    case state is
+
+      when st_wait =>
+
+        if (wr = '1') then
+          next_state <= st_wr0   after gate_delay;
+        else
+          next_state <= state    after gate_delay;
+        end if;
+
+      when st_wr0 =>
+
+        an(0)        <= '0'      after gate_delay;
+        ka           <= di(0)    after gate_delay;
+        next_state   <= st_wr1   after gate_delay;
+
+      when st_wr1 =>
+
+        an(1)        <= '0'      after gate_delay;
+        ka           <= di(1)    after gate_delay;
+        next_state   <= st_wr1   after gate_delay;
+
+      when st_wr2 =>
+
+        an(2)        <= '0'      after gate_delay;
+        ka           <= di(2)    after gate_delay;
+        next_state   <= st_wr1   after gate_delay;
+
+      when st_wr3 =>
+
+        an(3)        <= '0'      after gate_delay;
+        ka           <= di(3)    after gate_delay;
+        next_state   <= st_wait  after gate_delay;
+
+    end case;
+
+  end process;
 
 end behav;
 
