@@ -32,3 +32,34 @@ begin
   -- Your implementation goes here --
 
 end behav;
+
+------ END OF SSG ------
+
+--
+-- Test bench
+--
+library IEEE;
+
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+use WORK.util.all;
+
+entity ssg_tb is
+  generic (clk_freq: positive := 100); -- Hz
+end ssg_tb;
+
+architecture tests of ssg_tb is
+
+  signal clk: std_logic;
+  signal wr: std_logic;
+  signal di: byte_vector(3 downto 0);
+  signal an: std_logic_vector(3 downto 0);
+  signal ka: std_logic_vector(7 downto 0);
+
+begin
+
+  dut: entity work.ssg(behav)
+    generic map (clk_freq => clk_freq)
+    port map (clk, wr, di, an, ka);
+
+end architecture;

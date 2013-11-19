@@ -26,7 +26,8 @@ TESTBENCHES = dcf_sync_tb \
 	msf_sync_tb \
 	ddrserdes_tb \
 	dcf_bits_testbench \
-	msf_bits_testbench
+	msf_bits_testbench \
+	ssg_tb
 
 TMP_DIR=/tmp/$(USER)
 
