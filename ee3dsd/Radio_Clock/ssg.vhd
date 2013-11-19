@@ -159,4 +159,25 @@ begin
     wait;
   end process;
 
+  process is -- Process to set 'wr'
+
+    variable index: natural := 0;
+
+  begin
+
+    while (index < 10) loop
+
+      wr <= '1';
+      wait for clk_period;
+      wr <= '0';
+
+      index := index + 1;
+
+      wait for 1000 ms;
+    end loop;
+
+    wait;
+
+  end process;
+
 end architecture;
