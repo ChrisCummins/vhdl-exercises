@@ -3,5 +3,5 @@
 /ddrserdes_tb
 /msf_bits_testbench
 /msf_sync_tb
-/ssg_tb
+/ssg_testbench
 *.vcd

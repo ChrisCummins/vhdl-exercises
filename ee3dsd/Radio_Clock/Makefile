@@ -27,7 +27,7 @@ TESTBENCHES = dcf_sync_tb \
 	ddrserdes_tb \
 	dcf_bits_testbench \
 	msf_bits_testbench \
-	ssg_tb
+	ssg_testbench
 
 TMP_DIR=/tmp/$(USER)
 
@@ -45,7 +45,7 @@ all simulation sim:
 		ghdl -r $$t --vcd=$$t.vcd; \
 	done
 
-TB := dcf_bits_testbench
+TB := ssg_testbench
 
 view:
 	gtkwave $(TB).vcd $(TB).sav >/dev/null 2>&1
