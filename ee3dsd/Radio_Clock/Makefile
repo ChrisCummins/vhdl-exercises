@@ -20,7 +20,8 @@ SOURCES = \
 	ssg.vhd \
 	uptime_counter.vhd \
 	dcf_bits_testbench.vhd \
-	msf_bits_testbench.vhd
+	msf_bits_testbench.vhd \
+	ssg_testbench.vhd
 
 TESTBENCHES = dcf_sync_tb \
 	msf_sync_tb \
