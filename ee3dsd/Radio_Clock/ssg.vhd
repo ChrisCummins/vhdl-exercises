@@ -73,7 +73,7 @@ begin
 
   end process;
 
-  process (di_sampled, state, cnt, an_index)
+  process (di_sampled, state, cnt, an_index, curr_an, curr_ka)
   begin
 
     next_cnt              <= cnt                      after gate_delay;

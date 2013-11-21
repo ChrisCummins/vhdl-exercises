@@ -75,7 +75,7 @@ begin
 
   end process;
 
-  process(di_sampled, si_sampled, cnt, state)
+  process(di_sampled, si_sampled, cnt, state, curr_bo)
   begin
 
     next_state       <= state         after gate_delay;
