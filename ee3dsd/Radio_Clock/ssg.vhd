@@ -25,12 +25,16 @@ end ssg;
 
 architecture behav of ssg is
 
-  type   states is (st_wait, st_wr0, st_wr1, st_wr2, st_wr3);
+  type    states is (st_wait, st_wr0, st_wr1, st_wr2, st_wr3);
+  subtype index is natural range 3 downto 0;
 
   signal state:      states                  := st_wait;
   signal next_state: states                  := st_wait;
   signal wr_sampled: std_logic               := '0';
   signal di_sampled: byte_vector(3 downto 0) := (others => byte_zero);
+
+  signal an_index:      index := 0;
+  signal next_an_index: index := 0;
 
 begin
 
