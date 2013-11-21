@@ -41,7 +41,9 @@ architecture rtl of msf_bits is
 
   signal   bao_var:      std_logic := '0';
   signal   next_bao_var: std_logic := '0';
+  signal   curr_bao:     std_logic := '0';
   signal   next_bao:     std_logic := '0';
+  signal   curr_bbo:     std_logic := '0';
   signal   next_bbo:     std_logic := '0';
   signal   next_tr:      std_logic := '0';
 
@@ -53,7 +55,7 @@ architecture rtl of msf_bits is
 
 begin
 
-  process(clk, rst)
+  process(clk, rst, next_bao, next_bbo)
   begin
 
     if (rst = '1') then
@@ -66,6 +68,8 @@ begin
       tr             <= '0'           after gate_delay;
       di_sampled     <= byte_null     after gate_delay;
       si_sampled     <= '0'           after gate_delay;
+      curr_bao       <= next_bao      after gate_delay;
+      curr_bbo       <= next_bbo      after gate_delay;
 
     elsif clk'event and (clk = '1') then
 
@@ -77,18 +81,22 @@ begin
       tr             <= next_tr       after gate_delay;
       di_sampled     <= di            after gate_delay;
       si_sampled     <= si            after gate_delay;
+      curr_bao       <= next_bao      after gate_delay;
+      curr_bbo       <= next_bbo      after gate_delay;
 
     end if;
 
   end process;
 
-  process(di_sampled, si_sampled, cnt, state, bao_var)
+  process(di_sampled, si_sampled, cnt, state, bao_var, curr_bao, curr_bbo)
   begin
 
     next_state       <= state         after gate_delay;
     next_cnt         <= cnt + 1       after gate_delay;
     next_bao_var     <= bao_var       after gate_delay;
     next_tr          <= '0'           after gate_delay;
+    next_bao         <= curr_bao      after gate_delay;
+    next_bbo         <= curr_bbo      after gate_delay;
 
     case state is
 
@@ -120,9 +128,7 @@ begin
       when st_sample2 =>
 
         next_bao     <= bao_var       after gate_delay;
-
         next_bbo     <= di_sampled(7) after gate_delay;
-
         next_tr      <= '1'           after gate_delay;
         next_state   <= st_init       after gate_delay;
 
