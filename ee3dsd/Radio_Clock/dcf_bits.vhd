@@ -36,6 +36,7 @@ architecture rtl of dcf_bits is
   signal   state:       states    := st_init;
   signal   next_state:  states    := st_init;
 
+  signal   curr_bo:     std_logic := '0';
   signal   next_bo:     std_logic := '0';
   signal   next_tr:     std_logic := '0';
 
@@ -67,6 +68,8 @@ begin
       tr             <= next_tr       after gate_delay;
       di_sampled     <= di            after gate_delay;
       si_sampled     <= si            after gate_delay;
+      curr_bo        <= next_bo       after gate_delay;
+      bo             <= curr_bo       after gate_delay;
 
     end if;
 
@@ -78,6 +81,7 @@ begin
     next_state       <= state         after gate_delay;
     next_cnt         <= 0             after gate_delay;
     next_tr          <= '0'           after gate_delay;
+    next_bo          <= curr_bo       after gate_delay;
 
     case state is
 
