@@ -91,7 +91,7 @@ synthesis syn:
 	    echo "-opt_mode speed"; \
 	    echo "-opt_level 1" \
 	) > $(TMP_DIR)/top_level.xst
-	@xst -intstyle silent -ifn $(TMP_DIR)/top_level.xst -ofn reports/xst.log
+	@/usr/local/Xilinx/14.1/ISE_DS/ISE/bin/lin/xst -intstyle silent -ifn $(TMP_DIR)/top_level.xst -ofn reports/xst.log
 	@mv _xmsgs/* $(TMP_DIR)/_xmsgs
 	@rmdir _xmsgs
 	@mv top_level_xst.xrpt $(TMP_DIR)
@@ -106,14 +106,14 @@ implementation impl:
 	@[ -d reports                    ] || mkdir reports
 	@[ -d $(TMP_DIR)                 ] || mkdir $(TMP_DIR)
 	@[ -d $(TMP_DIR)/xlnx_auto_0_xdb ] || mkdir $(TMP_DIR)/xlnx_auto_0_xdb
-	@ngdbuild -intstyle silent -quiet -dd $(TMP_DIR) -uc top_level.ucf -p xc6slx16-csg324-3 top_level.ngc top_level.ngd
+	@/usr/local/Xilinx/14.1/ISE_DS/ISE/bin/lin/ngdbuild -intstyle silent -quiet -dd $(TMP_DIR) -uc top_level.ucf -p xc6slx16-csg324-3 top_level.ngc top_level.ngd
 	@mv top_level.bld reports/ngdbuild.log
 	@mv _xmsgs/* $(TMP_DIR)/_xmsgs
 	@rmdir _xmsgs
 	@mv xlnx_auto_0_xdb/* $(TMP_DIR)
 	@rmdir xlnx_auto_0_xdb
 	@mv top_level_ngdbuild.xrpt $(TMP_DIR)
-	@map -intstyle silent -mt 2 -detail -p xc6slx16-csg324-3 -pr b -c 100 -w -o top_level_map.ncd top_level.ngd top_level.pcf
+	@/usr/local/Xilinx/14.1/ISE_DS/ISE/bin/lin/map -intstyle silent -mt 2 -detail -p xc6slx16-csg324-3 -pr b -c 100 -w -o top_level_map.ncd top_level.ngd top_level.pcf
 	@mv top_level_map.mrp reports/map.log
 	@mv _xmsgs/* $(TMP_DIR)/_xmsgs
 	@rmdir _xmsgs
@@ -139,7 +139,7 @@ bitfile bit:
 	@echo "Generate bitfile running..."
 	@[ -d reports ] || mkdir reports
 	@touch webtalk.log
-	@bitgen -intstyle silent -w top_level.ncd 2>&1 | \
+	@/usr/local/Xilinx/14.1/ISE_DS/ISE/bin/lin/bitgen -intstyle silent -w top_level.ncd 2>&1 | \
 	 grep -v "WARNING:PhysDesignRules:367 - The signal" | \
 	 grep -v "event_fifo_unit/Mram_data" | \
 	 grep -v "incomplete. The signal does not drive any load pins in the design." | \
@@ -154,7 +154,7 @@ bitfile bit:
 upload up:
 	@echo "Uploading bitfile..."
 
-	djtgcfg prog -d Nexys3 -i 0 -f design.bit
+	/usr/local/bin/djtgcfg prog -d Nexys3 -i 0 -f design.bit
 
 clean:
 	@rm -vf *~ *.o trace.dat test_bench test_bench.ghw work-obj93.cf unisim-obj93.cf top_level.ngc top_level.ngd top_level_map.ngm \
