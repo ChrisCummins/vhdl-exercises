@@ -15,7 +15,7 @@ end ssg_testbench;
 
 architecture tests of ssg_testbench is
 
-  constant test_duration: time      := 40 ms;
+  constant test_duration: time      := 400 ms;
   constant clk_period:    time      := 1000 ms / clk_freq;
   signal end_flag:        std_logic := '0';
 
@@ -80,7 +80,7 @@ begin
       wait for clk_period;
       wr <= '0';
 
-      wait for 10 ms;
+      wait for test_duration / 4;
     end loop;
 
     wait;
