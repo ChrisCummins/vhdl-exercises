@@ -5,3 +5,26 @@
 /msf_sync_tb
 /ssg_testbench
 *.vcd
+
+# Implementation by-products
+/_xmsgs/*
+/design.bit
+/reports/*
+/top_level.bgn
+/top_level.bit
+/top_level.drc
+/top_level.ncd
+/top_level.ngc
+/top_level.ngd
+/top_level.par
+/top_level.pcf
+/top_level_bitgen.xwbt
+/top_level_map.map
+/top_level_map.mrp
+/top_level_map.ncd
+/top_level_map.ngm
+/top_level_map.xrpt
+/top_level_summary.xml
+/top_level_usage.xml
+/usage_statistics_webtalk.html
+/webtalk.log
