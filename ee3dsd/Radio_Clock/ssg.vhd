@@ -37,6 +37,9 @@ architecture behav of ssg is
   signal curr_an:       std_logic_vector(3 downto 0) := (others => '1');
   signal next_an:       std_logic_vector(3 downto 0) := (others => '1');
 
+  signal curr_ka:       std_logic_vector(7 downto 0) := (others => '1');
+  signal next_ka:       std_logic_vector(7 downto 0) := (others => '1');
+
   signal an_index:      index                        := 0;
   signal next_an_index: index                        := 0;
 
@@ -57,6 +60,8 @@ begin
       cnt                 <= next_cnt                 after gate_delay;
       curr_an             <= next_an                  after gate_delay;
       an                  <= curr_an                  after gate_delay;
+      curr_ka             <= next_ka                  after gate_delay;
+      ka                  <= curr_ka                  after gate_delay;
 
       if (wr = '1') then
 
@@ -74,6 +79,7 @@ begin
     next_cnt              <= cnt                      after gate_delay;
     next_an_index         <= an_index                 after gate_delay;
     next_an               <= curr_an                  after gate_delay;
+    next_ka               <= curr_ka                  after gate_delay;
 
     case state is
 
@@ -81,7 +87,7 @@ begin
 
         next_an           <= (others => '1')          after gate_delay;
         next_an(an_index) <= '0'                      after gate_delay;
-        ka                <= di_sampled(3 - an_index) after gate_delay;
+        next_ka           <= di_sampled(3 - an_index) after gate_delay;
         next_state        <= st_wait                  after gate_delay;
 
         if (an_index = 3) then
