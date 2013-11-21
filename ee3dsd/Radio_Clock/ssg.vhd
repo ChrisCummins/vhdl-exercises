@@ -51,10 +51,13 @@ begin
   begin
 
     an               <= (others => '1') after gate_delay;
+    ka               <= byte_255        after gate_delay;
 
     case state is
 
       when st_wait =>
+
+        ka           <= byte_255        after gate_delay;
 
         if (wr_sampled = '1') then
           next_state <= st_wr0          after gate_delay;
