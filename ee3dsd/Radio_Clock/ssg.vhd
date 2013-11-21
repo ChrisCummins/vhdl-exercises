@@ -170,15 +170,17 @@ begin
 
   begin
 
-    while (index < 10) loop
+    while (end_flag = '0') loop
+
+      di <= (others => byte_255);
+      di(index) <= byte_zero;
+      index := index + 1;
 
       wr <= '1';
       wait for clk_period;
       wr <= '0';
 
-      index := index + 1;
-
-      wait for 1000 ms;
+      wait for 10 ms;
     end loop;
 
     wait;
