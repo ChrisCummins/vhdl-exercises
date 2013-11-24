@@ -25,28 +25,28 @@ end ssg;
 
 architecture behav of ssg is
 
-  constant wait_period: natural := clk_freq * 4 / 1000;
+  constant refresh_time:  natural                := 4; -- ms
 
-  type    states  is (st_write, st_wait);
-  subtype index   is natural range 3 downto 0;
-  subtype counter is natural range wait_period + 1 downto 0;
+  type     states         is (st_write, st_wait);
+  signal   state:         states                 := st_wait;
+  signal   next_state:    states                 := st_wait;
 
-  signal state:         states                       := st_wait;
-  signal next_state:    states                       := st_wait;
+  subtype  index          is natural range 3 downto 0;
+  signal   an_index:      index                  := 0;
+  signal   next_an_index: index                  := 0;
 
-  signal curr_an:       std_logic_vector(3 downto 0) := (others => '1');
-  signal next_an:       std_logic_vector(3 downto 0) := (others => '1');
+  constant refresh_cnt:   natural := clk_freq * refresh_time / 1000;
+  subtype  counter        is natural range refresh_cnt + 1 downto 0;
+  signal   cnt:           counter                := 0;
+  signal   next_cnt:      counter                := 0;
 
-  signal curr_ka:       std_logic_vector(7 downto 0) := (others => '1');
-  signal next_ka:       std_logic_vector(7 downto 0) := (others => '1');
+  signal   curr_an: std_logic_vector(3 downto 0) := (others => '1');
+  signal   next_an: std_logic_vector(3 downto 0) := (others => '1');
 
-  signal an_index:      index                        := 0;
-  signal next_an_index: index                        := 0;
+  signal   curr_ka: std_logic_vector(7 downto 0) := (others => '1');
+  signal   next_ka: std_logic_vector(7 downto 0) := (others => '1');
 
-  signal cnt:           counter                      := 0;
-  signal next_cnt:      counter                      := 0;
-
-  signal di_sampled:    byte_vector(3 downto 0)      := (others => byte_zero);
+  signal   di_sampled: byte_vector(3 downto 0)   := (others => byte_zero);
 
 begin
 
@@ -64,9 +64,7 @@ begin
       ka                  <= curr_ka                  after gate_delay;
 
       if (wr = '1') then
-
         di_sampled        <= di                       after gate_delay;
-
       end if;
 
     end if;
@@ -91,27 +89,19 @@ begin
         next_state        <= st_wait                  after gate_delay;
 
         if (an_index = 3) then
-
           next_an_index   <= 0                        after gate_delay;
-
         else
-
           next_an_index   <= an_index + 1             after gate_delay;
-
         end if;
 
       when st_wait =>
 
-        if (cnt = wait_period) then
-
+        if (cnt = refresh_cnt) then
           next_cnt        <= 0                        after gate_delay;
           next_state      <= st_write                 after gate_delay;
-
         else
-
           next_cnt        <= cnt + 1                  after gate_delay;
           next_state      <= st_wait                  after gate_delay;
-
         end if;
 
     end case;

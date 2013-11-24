@@ -27,24 +27,23 @@ end dcf_bits;
 
 architecture rtl of dcf_bits is
 
-  type     states  is (st_init, st_wait, st_sample);
-
   constant sample_time: natural   := 150; -- ms
-  subtype  counter is natural range 0 to sample_time + 1;
-  constant cnt_sample:  counter   := clk_freq * sample_time / 1000;
 
+  type     states is (st_init, st_wait, st_sample);
   signal   state:       states    := st_init;
   signal   next_state:  states    := st_init;
 
-  signal   curr_bo:     std_logic := '0';
-  signal   next_bo:     std_logic := '0';
-  signal   next_tr:     std_logic := '0';
+  constant cnt_sample:  natural   := clk_freq * sample_time / 1000;
+  subtype  counter is natural range 0 to cnt_sample + 1;
+  signal   cnt:         counter   := 0;
+  signal   next_cnt:    counter   := 0;
 
   signal   di_sampled:  byte      := byte_null;
   signal   si_sampled:  std_logic := '0';
 
-  signal   cnt:         counter   := 0;
-  signal   next_cnt:    counter   := 0;
+  signal   curr_bo:     std_logic := '0';
+  signal   next_bo:     std_logic := '0';
+  signal   next_tr:     std_logic := '0';
 
 begin
 
@@ -59,6 +58,8 @@ begin
       tr             <= '0'           after gate_delay;
       di_sampled     <= byte_null     after gate_delay;
       si_sampled     <= '0'           after gate_delay;
+      curr_bo        <= '0'           after gate_delay;
+      bo             <= '0'           after gate_delay;
 
     elsif clk'event and (clk = '1') then
 
@@ -93,10 +94,10 @@ begin
 
       when st_wait =>
 
-        if (cnt < cnt_sample) then
-          next_cnt   <= cnt + 1       after gate_delay;
-        else
+        if (cnt = cnt_sample) then
           next_state <= st_sample     after gate_delay;
+        else
+          next_cnt   <= cnt + 1       after gate_delay;
         end if;
 
       when st_sample =>

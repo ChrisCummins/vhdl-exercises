@@ -17,20 +17,20 @@ architecture tests of ssg_testbench is
 
   constant test_duration: time      := 400 ms;
   constant clk_period:    time      := 1000 ms / clk_freq;
-  signal end_flag:        std_logic := '0';
+  signal   end_flag:      std_logic := '0';
 
-  signal clk: std_logic;
-  signal wr: std_logic;
-  signal di: byte_vector(3 downto 0);
-  signal an: std_logic_vector(3 downto 0);
-  signal ka: std_logic_vector(7 downto 0);
+  signal   clk:           std_logic;
+  signal   wr:            std_logic;
+  signal   di:            byte_vector(3 downto 0);
+  signal   an:            std_logic_vector(3 downto 0);
+  signal   ka:            std_logic_vector(7 downto 0);
 
 begin
 
   dut: entity work.ssg(behav)
     generic map
     (
-        clk_freq => clk_freq
+         clk_freq => clk_freq
     )
     port map
     (

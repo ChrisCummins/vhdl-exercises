@@ -28,30 +28,30 @@ end msf_bits;
 
 architecture rtl of msf_bits is
 
-  type     states  is (st_init, st_wait1, st_sample1, st_wait2, st_sample2);
-  subtype  counter is natural range 0 to clk_freq * 3;
-
   constant sample1_time: natural   := 150; -- ms
   constant sample2_time: natural   := 250; -- ms
-  constant cnt_sample1:  counter   := clk_freq * sample1_time / 1000;
-  constant cnt_sample2:  counter   := clk_freq * sample2_time / 1000;
 
+  type     states is (st_init, st_wait1, st_sample1, st_wait2, st_sample2);
   signal   state:        states    := st_init;
   signal   next_state:   states    := st_init;
 
+  constant cnt_sample1:  natural   := clk_freq * sample1_time / 1000;
+  constant cnt_sample2:  natural   := clk_freq * sample2_time / 1000;
+  subtype  counter is natural range 0 to cnt_sample2 + 1;
+  signal   cnt:          counter   := 0;
+  signal   next_cnt:     counter   := 0;
+
+  signal   di_sampled:   byte      := byte_null;
+  signal   si_sampled:   std_logic := '0';
+
   signal   bao_var:      std_logic := '0';
   signal   next_bao_var: std_logic := '0';
+
   signal   curr_bao:     std_logic := '0';
   signal   next_bao:     std_logic := '0';
   signal   curr_bbo:     std_logic := '0';
   signal   next_bbo:     std_logic := '0';
   signal   next_tr:      std_logic := '0';
-
-  signal   di_sampled:   byte      := byte_null;
-  signal   si_sampled:   std_logic := '0';
-
-  signal   cnt:          counter   := 0;
-  signal   next_cnt:     counter   := 0;
 
 begin
 
@@ -68,8 +68,8 @@ begin
       tr             <= '0'           after gate_delay;
       di_sampled     <= byte_null     after gate_delay;
       si_sampled     <= '0'           after gate_delay;
-      curr_bao       <= next_bao      after gate_delay;
-      curr_bbo       <= next_bbo      after gate_delay;
+      curr_bao       <= '0'           after gate_delay;
+      curr_bbo       <= '0'           after gate_delay;
 
     elsif clk'event and (clk = '1') then
 
@@ -92,7 +92,7 @@ begin
   begin
 
     next_state       <= state         after gate_delay;
-    next_cnt         <= cnt + 1       after gate_delay;
+    next_cnt         <= 0             after gate_delay;
     next_bao_var     <= bao_var       after gate_delay;
     next_tr          <= '0'           after gate_delay;
     next_bao         <= curr_bao      after gate_delay;
@@ -102,13 +102,13 @@ begin
 
       when st_init =>
 
-        next_cnt     <= 0             after gate_delay;
-
         if (si_sampled = '1') then
           next_state <= st_wait1      after gate_delay;
         end if;
 
       when st_wait1 =>
+
+        next_cnt     <= cnt + 1       after gate_delay;
 
         if (cnt = cnt_sample1) then
           next_state <= st_sample1    after gate_delay;
@@ -116,10 +116,13 @@ begin
 
       when st_sample1 =>
 
+        next_cnt     <= cnt + 1       after gate_delay;
         next_bao_var <= di_sampled(7) after gate_delay;
         next_state   <= st_wait2      after gate_delay;
 
       when st_wait2 =>
+
+        next_cnt     <= cnt + 1       after gate_delay;
 
         if (cnt = cnt_sample2) then
           next_state <= st_sample2    after gate_delay;
