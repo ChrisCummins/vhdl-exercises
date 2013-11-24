@@ -28,9 +28,9 @@ end dcf_bits;
 architecture rtl of dcf_bits is
 
   type     states  is (st_init, st_wait, st_sample);
-  subtype  counter is natural range 0 to clk_freq * 3;
 
   constant sample_time: natural   := 150; -- ms
+  subtype  counter is natural range 0 to sample_time + 1;
   constant cnt_sample:  counter   := clk_freq * sample_time / 1000;
 
   signal   state:       states    := st_init;
