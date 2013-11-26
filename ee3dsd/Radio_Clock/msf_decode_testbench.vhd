@@ -17,8 +17,9 @@ end msf_decode_testbench;
 
 architecture tests of msf_decode_testbench is
 
-  constant test_duration: time      := 58000 ms;
   constant clk_period:    time      := 1000 ms / clk_freq;
+  constant sec_period:    time      := 2 * clk_period;
+  constant test_duration: time      := 62 * sec_period;
   signal end_flag:        std_logic := '0';
 
   signal rst:             std_logic := '0';
@@ -69,7 +70,6 @@ begin
   end process;
 
   process is -- Process to set 'clk'
-    variable clk_var:    std_logic := '0';
   begin
 
     while (end_flag = '0') loop
@@ -79,6 +79,65 @@ begin
       wait for clk_period / 2;
     end loop;
 
+    wait;
+  end process;
+
+  process is -- Process to set 'si'
+  begin
+
+    while (end_flag = '0') loop
+      si <= '1';
+      wait for clk_period;
+      si <= '0';
+      wait for clk_period;
+    end loop;
+
+    wait;
+  end process;
+
+  process is -- Process to set 'mi'
+  begin
+
+    mi <= '1'; -- First minute
+    wait for clk_period;
+    mi <= '0';
+    wait for 60 * sec_period - clk_period;
+    mi <= '1'; -- Second minute
+    wait for clk_period;
+    mi <= '0';
+
+    wait;
+  end process;
+
+  process is -- Process to set 'bai' and 'bbi'
+
+    file     data:       text;
+    variable data_line:  line;
+    variable bai_var:    std_logic;
+    variable bbi_var:    std_logic;
+
+  begin
+
+    file_open(data, "msf-decode.txt", read_mode);
+
+    while not endfile(data) loop
+
+      readline(data, data_line);
+      read(data_line, bai_var);
+      read(data_line, bbi_var);
+
+      bai <= bai_var;
+      bbi <= bbi_var;
+      si <= '1';
+      wait for clk_period;
+      bai <= '0';
+      bbi <= '0';
+      si <= '0';
+      wait for sec_period - clk_period;
+
+    end loop;
+
+    file_close(data);
     wait;
   end process;
 
