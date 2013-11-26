@@ -81,7 +81,7 @@ begin
 
   begin
 
-    file_open(data, "msf.txt", read_mode);
+    file_open(data, "msf-bits.txt", read_mode);
 
     while not endfile(data) loop
 
@@ -118,7 +118,7 @@ begin
 
   begin
 
-    file_open(data, "msf.txt", read_mode);
+    file_open(data, "msf-bits.txt", read_mode);
 
     while not endfile(data) loop
 
@@ -153,7 +153,7 @@ begin
 
   begin
 
-    file_open(data, "msf.txt", read_mode);
+    file_open(data, "msf-bits.txt", read_mode);
 
     while not endfile(data) loop
 

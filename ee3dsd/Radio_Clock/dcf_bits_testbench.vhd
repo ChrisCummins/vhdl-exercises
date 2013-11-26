@@ -78,7 +78,7 @@ begin
 
   begin
 
-    file_open(data, "dcf.txt", read_mode);
+    file_open(data, "dcf-bits.txt", read_mode);
 
     while not endfile(data) loop
 
@@ -114,7 +114,7 @@ begin
 
   begin
 
-    file_open(data, "dcf.txt", read_mode);
+    file_open(data, "dcf-bits.txt", read_mode);
 
     while not endfile(data) loop
 
@@ -146,7 +146,7 @@ begin
 
   begin
 
-    file_open(data, "dcf.txt", read_mode);
+    file_open(data, "dcf-bits.txt", read_mode);
 
     while not endfile(data) loop
 
