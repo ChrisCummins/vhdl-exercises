@@ -1,25 +1,91 @@
 [*]
 [*] GTKWave Analyzer v3.3.34 (w)1999-2012 BSI
-[*] Tue Nov 26 17:49:58 2013
+[*] Tue Nov 26 18:20:19 2013
 [*]
 [dumpfile] "/home/chris/src/vhdl-exercises/ee3dsd/Radio_Clock/dcf_decode_testbench.vcd"
-[dumpfile_mtime] "Tue Nov 26 17:49:34 2013"
-[dumpfile_size] 7452
+[dumpfile_mtime] "Tue Nov 26 18:20:00 2013"
+[dumpfile_size] 21461
 [savefile] "/home/chris/src/vhdl-exercises/ee3dsd/Radio_Clock/dcf_decode_testbench.sav"
 [timestart] 0
 [size] 1920 1056
 [pos] -1 -1
-*-44.000000 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-46.000000 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [sst_width] 223
-[signals_width] 78
+[signals_width] 150
 [sst_expanded] 1
-[sst_vpaned_height] 320
+[sst_vpaned_height] 328
 @28
 clk
 si
 mi
 bi
-@29
 tr
+@c00022
+decode.reg[59:0]
+@28
+(0)decode.reg[59:0]
+(1)decode.reg[59:0]
+(2)decode.reg[59:0]
+(3)decode.reg[59:0]
+(4)decode.reg[59:0]
+(5)decode.reg[59:0]
+(6)decode.reg[59:0]
+(7)decode.reg[59:0]
+(8)decode.reg[59:0]
+(9)decode.reg[59:0]
+(10)decode.reg[59:0]
+(11)decode.reg[59:0]
+(12)decode.reg[59:0]
+(13)decode.reg[59:0]
+(14)decode.reg[59:0]
+(15)decode.reg[59:0]
+(16)decode.reg[59:0]
+(17)decode.reg[59:0]
+(18)decode.reg[59:0]
+(19)decode.reg[59:0]
+(20)decode.reg[59:0]
+(21)decode.reg[59:0]
+(22)decode.reg[59:0]
+(23)decode.reg[59:0]
+(24)decode.reg[59:0]
+(25)decode.reg[59:0]
+(26)decode.reg[59:0]
+(27)decode.reg[59:0]
+(28)decode.reg[59:0]
+(29)decode.reg[59:0]
+(30)decode.reg[59:0]
+(31)decode.reg[59:0]
+(32)decode.reg[59:0]
+(33)decode.reg[59:0]
+(34)decode.reg[59:0]
+(35)decode.reg[59:0]
+(36)decode.reg[59:0]
+(37)decode.reg[59:0]
+(38)decode.reg[59:0]
+(39)decode.reg[59:0]
+(40)decode.reg[59:0]
+(41)decode.reg[59:0]
+(42)decode.reg[59:0]
+(43)decode.reg[59:0]
+(44)decode.reg[59:0]
+(45)decode.reg[59:0]
+(46)decode.reg[59:0]
+(47)decode.reg[59:0]
+(48)decode.reg[59:0]
+(49)decode.reg[59:0]
+(50)decode.reg[59:0]
+(51)decode.reg[59:0]
+(52)decode.reg[59:0]
+(53)decode.reg[59:0]
+(54)decode.reg[59:0]
+(55)decode.reg[59:0]
+(56)decode.reg[59:0]
+(57)decode.reg[59:0]
+(58)decode.reg[59:0]
+(59)decode.reg[59:0]
+@1401200
+-group_end
+@23
+decode.index[31:0]
 [pattern_trace] 1
 [pattern_trace] 0
