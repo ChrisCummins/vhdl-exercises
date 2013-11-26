@@ -21,14 +21,18 @@ SOURCES = \
 	uptime_counter.vhd \
 	dcf_bits_testbench.vhd \
 	msf_bits_testbench.vhd \
-	ssg_testbench.vhd
+	ssg_testbench.vhd \
+	dcf_decode_testbench.vhd \
+	msf_decode_testbench.vhd
 
 TESTBENCHES = dcf_sync_tb \
 	msf_sync_tb \
 	ddrserdes_tb \
 	dcf_bits_testbench \
 	msf_bits_testbench \
-	ssg_testbench
+	ssg_testbench \
+	dcf_decode_testbench \
+	msf_decode_testbench
 
 TMP_DIR=/tmp/$(USER)
 
@@ -46,7 +50,7 @@ all simulation sim:
 		ghdl -r $$t --vcd=$$t.vcd; \
 	done
 
-TB := ssg_testbench
+TB := dcf_decode_testbench
 
 view:
 	gtkwave $(TB).vcd $(TB).sav >/dev/null 2>&1

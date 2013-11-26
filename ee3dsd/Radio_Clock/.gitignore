@@ -4,6 +4,8 @@
 /msf_bits_testbench
 /msf_sync_tb
 /ssg_testbench
+/dcf_decode_testbench
+/msf_decode_testbench
 *.vcd
 
 # Implementation by-products
