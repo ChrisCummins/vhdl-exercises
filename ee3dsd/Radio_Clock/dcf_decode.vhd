@@ -33,7 +33,11 @@ end dcf_decode;
 
 architecture rtl of dcf_decode is
 
-  -- Your declarations go here --
+  subtype bit_register       is std_logic_vector(59 downto 0);
+  subtype bit_register_index is natural range bit_register'length downto 0;
+
+  signal  reg:    bit_register       := (others => 'X');
+  signal  index:  bit_register_index := 0;
 
 begin
 
