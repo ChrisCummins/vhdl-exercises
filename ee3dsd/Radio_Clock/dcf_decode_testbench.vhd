@@ -18,7 +18,7 @@ end dcf_decode_testbench;
 architecture tests of dcf_decode_testbench is
 
   constant clk_period:    time      := 1000 ms / clk_freq;
-  constant sec_period:    time      := 5 * clk_period;
+  constant sec_period:    time      := 1000 ms;
   constant test_duration: time      := 62 * sec_period;
   signal end_flag:        std_logic := '0';
 
