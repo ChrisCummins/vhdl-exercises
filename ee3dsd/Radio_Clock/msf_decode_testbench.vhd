@@ -89,7 +89,7 @@ begin
       si <= '1';
       wait for clk_period;
       si <= '0';
-      wait for clk_period;
+      wait for sec_period - clk_period;
     end loop;
 
     wait;
@@ -128,11 +128,9 @@ begin
 
       bai <= bai_var;
       bbi <= bbi_var;
-      si <= '1';
       wait for clk_period;
       bai <= '0';
       bbi <= '0';
-      si <= '0';
       wait for sec_period - clk_period;
 
     end loop;
