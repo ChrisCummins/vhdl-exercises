@@ -41,8 +41,8 @@ architecture rtl of dcf_decode is
   signal  mi_sampled: std_logic          := '0';
   signal  bi_sampled: std_logic          := '0';
 
-  signal  state:      states := st_wait;
-  signal  next_state: states := st_wait;
+  signal  state:      states             := st_wait;
+  signal  next_state: states             := st_wait;
 
   signal  reg:        bit_register       := (others => '0');
   signal  index:      bit_register_index := 0;
@@ -55,21 +55,21 @@ begin
 
     if (rst = '1') then
 
-      si_sampled <= '0' after gate_delay;
-      mi_sampled <= '0' after gate_delay;
-      bi_sampled <= '0' after gate_delay;
+      si_sampled        <= '0'          after gate_delay;
+      mi_sampled        <= '0'          after gate_delay;
+      bi_sampled        <= '0'          after gate_delay;
 
-      state <= st_wait after gate_delay;
-      index <= 0 after gate_delay;
+      state             <= st_wait      after gate_delay;
+      index             <= 0            after gate_delay;
 
     elsif clk'event and (clk = '1') then
 
-      si_sampled <= si after gate_delay;
-      mi_sampled <= mi after gate_delay;
-      bi_sampled <= bi after gate_delay;
+      si_sampled        <= si           after gate_delay;
+      mi_sampled        <= mi           after gate_delay;
+      bi_sampled        <= bi           after gate_delay;
 
-      state <= next_state after gate_delay;
-      index <= next_index after gate_delay;
+      state             <= next_state   after gate_delay;
+      index             <= next_index   after gate_delay;
 
     end if;
 
@@ -78,7 +78,7 @@ begin
   process(si_sampled, mi_sampled, bi_sampled, state, index)
   begin
 
-    tr <= '0' after gate_delay;
+    tr                  <= '0'          after gate_delay;
 
     case state is
 
@@ -86,35 +86,35 @@ begin
 
         if (si_sampled = '1') then
 
-          next_state <= st_sample after gate_delay;
+          next_state    <= st_sample    after gate_delay;
 
           if (mi_sampled = '1') then
-            next_index <= 0 after gate_delay;
+            next_index  <= 0            after gate_delay;
           else
-            next_index <= index + 1 after gate_delay;
+            next_index  <= index + 1    after gate_delay;
           end if;
 
         end if;
 
       when st_sample =>
 
-        tr <= '1' after gate_delay;
+        tr              <= '1'          after gate_delay;
 
         -- TODO: set second out.
 
-        reg(index) <= bi_sampled after gate_delay;
+        reg(index)      <= bi_sampled   after gate_delay;
 
         if (index = 59) then
-          next_state <= st_write after gate_delay;
+          next_state    <= st_write     after gate_delay;
         else
-          next_state <= st_wait after gate_delay;
+          next_state    <= st_wait      after gate_delay;
         end if;
 
       when st_write =>
 
         -- TODO: perform parity checks and write out data.
 
-        next_state <= st_wait after gate_delay;
+        next_state      <= st_wait      after gate_delay;
 
     end case;
 
