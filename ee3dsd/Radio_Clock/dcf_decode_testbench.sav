@@ -1,10 +1,10 @@
 [*]
 [*] GTKWave Analyzer v3.3.34 (w)1999-2012 BSI
-[*] Tue Nov 26 18:20:19 2013
+[*] Tue Nov 26 18:32:54 2013
 [*]
 [dumpfile] "/home/chris/src/vhdl-exercises/ee3dsd/Radio_Clock/dcf_decode_testbench.vcd"
-[dumpfile_mtime] "Tue Nov 26 18:20:00 2013"
-[dumpfile_size] 21461
+[dumpfile_mtime] "Tue Nov 26 18:32:54 2013"
+[dumpfile_size] 26233
 [savefile] "/home/chris/src/vhdl-exercises/ee3dsd/Radio_Clock/dcf_decode_testbench.sav"
 [timestart] 0
 [size] 1920 1056
@@ -85,7 +85,5 @@ decode.reg[59:0]
 (59)decode.reg[59:0]
 @1401200
 -group_end
-@23
-decode.index[31:0]
 [pattern_trace] 1
 [pattern_trace] 0
