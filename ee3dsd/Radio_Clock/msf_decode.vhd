@@ -53,6 +53,75 @@ architecture rtl of msf_decode is
 
 begin
 
-  -- Your implementation goes here --
+  process(clk, rst)
+  begin
+
+    if (rst = '1') then
+
+      si_sampled        <= '0'          after gate_delay;
+      mi_sampled        <= '0'          after gate_delay;
+      bai_sampled       <= '0'          after gate_delay;
+      bbi_sampled       <= '0'          after gate_delay;
+
+      state             <= st_wait      after gate_delay;
+      index             <= 0            after gate_delay;
+
+    elsif clk'event and (clk = '1') then
+
+      si_sampled        <= si           after gate_delay;
+      mi_sampled        <= mi           after gate_delay;
+      bai_sampled       <= bi           after gate_delay;
+      bbi_sampled       <= bi           after gate_delay;
+
+      state             <= next_state   after gate_delay;
+      index             <= next_index   after gate_delay;
+
+    end if;
+
+  end process;
+
+  process(si_sampled, mi_sampled, bai_sampled, bbi_sampled, state, index)
+  begin
+
+    tr                   <= '0'          after gate_delay;
+
+    case state is
+
+      when st_wait =>
+
+        if (si_sampled = '1') then
+
+          next_state     <= st_sample    after gate_delay;
+
+          if (mi_sampled = '1') then
+            next_index <= 0            after gate_delay;
+          else
+            next_index <= index + 1  after gate_delay;
+          end if;
+
+        end if;
+
+      when st_sample =>
+
+        tr               <= '1'          after gate_delay;
+
+        -- TODO: set second out.
+
+        a_reg(index)     <= bai_sampled  after gate_delay;
+        b_reg(index)     <= bbi_sampled  after gate_delay;
+
+        if (index = 59) then
+          next_state     <= st_write     after gate_delay;
+        else
+          next_state     <= st_wait      after gate_delay;
+        end if;
+
+      when st_write =>
+
+        -- TODO: write out bits and parity checks.
+
+    end case;
+
+  end process;
 
 end rtl;
