@@ -34,7 +34,22 @@ end msf_decode;
 
 architecture rtl of msf_decode is
 
-  -- Your declarations go here --
+  type    states             is (st_wait, st_sample, st_write);
+  subtype bit_register       is std_logic_vector(59 downto 0);
+  subtype bit_register_index is natural range bit_register'length downto 0;
+
+  signal  si_sampled:   std_logic          := '0';
+  signal  mi_sampled:   std_logic          := '0';
+  signal  bai_sampled:  std_logic          := '0';
+  signal  bbi_sampled:  std_logic          := '0';
+
+  signal  state:        states             := st_wait;
+  signal  next_state:   states             := st_wait;
+
+  signal  a_reg:        bit_register       := (others => '0');
+  signal  b_reg:        bit_register       := (others => '0');
+  signal  index:        bit_register_index := 0;
+  signal  next_index:   bit_register_index := 0;
 
 begin
 
