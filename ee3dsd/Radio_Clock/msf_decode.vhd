@@ -70,8 +70,8 @@ begin
 
       si_sampled        <= si           after gate_delay;
       mi_sampled        <= mi           after gate_delay;
-      bai_sampled       <= bi           after gate_delay;
-      bbi_sampled       <= bi           after gate_delay;
+      bai_sampled       <= bai          after gate_delay;
+      bbi_sampled       <= bbi          after gate_delay;
 
       state             <= next_state   after gate_delay;
       index             <= next_index   after gate_delay;
