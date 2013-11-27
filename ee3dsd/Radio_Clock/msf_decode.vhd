@@ -46,8 +46,8 @@ architecture rtl of msf_decode is
   signal  state:        states             := st_wait;
   signal  next_state:   states             := st_wait;
 
-  signal  a_reg:        bit_register       := (others => '0');
-  signal  b_reg:        bit_register       := (others => '0');
+  signal  areg:         bit_register       := (others => '0');
+  signal  breg:         bit_register       := (others => '0');
   signal  index:        bit_register_index := 0;
   signal  next_index:   bit_register_index := 0;
 
@@ -107,8 +107,8 @@ begin
 
         -- TODO: set second out.
 
-        a_reg(index)     <= bai_sampled  after gate_delay;
-        b_reg(index)     <= bbi_sampled  after gate_delay;
+        areg(index)      <= bai_sampled  after gate_delay;
+        breg(index)      <= bbi_sampled  after gate_delay;
 
         if (index = 59) then
           next_state     <= st_write     after gate_delay;
