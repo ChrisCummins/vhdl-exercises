@@ -120,6 +120,27 @@ begin
 
         -- TODO: write out bits and parity checks.
 
+        -- Time (bits: 39A - 51A, parity-bit: 57)
+        if ((areg(39) xor areg(40) xor areg(41) xor areg(42) xor
+             areg(43) xor areg(44) xor areg(45) xor areg(46) xor
+             areg(47) xor areg(48) xor areg(49) xor areg(50) xor
+             areg(51) xor areg(52) xor areg(53) xor areg(54) xor
+             areg(55) xor areg(56) xor areg(57))) = '1' then
+
+          hour   <= (('0', '0', areg(39), areg(40)),
+                     (areg(41), areg(42), (areg(43), areg(44))
+                                                         after gate_delay;
+          minute <= (('0', '0', areg(39), areg(40)),
+                     (areg(41), areg(42), (areg(43), areg(44))
+                                                         after gate_delay;
+
+        else
+
+          hour   <= (others => bcd_error)                after gate_delay;
+          minute <= (others => bcd_error)                after gate_delay;
+
+        end if;
+
     end case;
 
   end process;
