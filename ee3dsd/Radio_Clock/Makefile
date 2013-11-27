@@ -1,6 +1,7 @@
 #
 # Makefile to simulate and synthesize VHDL designs
 #
+TB := dcf_decode_testbench
 
 SOURCES = \
 	std_logic_textio.vhd \
@@ -49,8 +50,6 @@ all simulation sim:
 		echo "ghdl -r $$t --vcd=$$t.vcd"; \
 		ghdl -r $$t --vcd=$$t.vcd; \
 	done
-
-TB := dcf_decode_testbench
 
 view:
 	gtkwave $(TB).vcd $(TB).sav >/dev/null 2>&1
