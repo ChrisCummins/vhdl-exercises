@@ -128,10 +128,7 @@ begin
 
       bai <= bai_var;
       bbi <= bbi_var;
-      wait for clk_period;
-      bai <= '0';
-      bbi <= '0';
-      wait for sec_period - clk_period;
+      wait for sec_period;
 
     end loop;
 
