@@ -128,16 +128,14 @@ begin
              areg(55) xor areg(56) xor breg(57))) = '1' then
 
           hour   <= (('0', '0', areg(39), areg(40)),
-                     (areg(41), areg(42), (areg(43), areg(44))
-                                                         after gate_delay;
+                     (areg(41), areg(42), areg(43), areg(44))) after gate_delay;
           minute <= (('0', '0', areg(39), areg(40)),
-                     (areg(41), areg(42), (areg(43), areg(44))
-                                                         after gate_delay;
+                     (areg(41), areg(42), areg(43), areg(44))) after gate_delay;
 
         else
 
-          hour   <= (others => bcd_error)                after gate_delay;
-          minute <= (others => bcd_error)                after gate_delay;
+          hour   <= (others => bcd_error)                      after gate_delay;
+          minute <= (others => bcd_error)                      after gate_delay;
 
         end if;
 
