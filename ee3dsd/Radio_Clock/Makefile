@@ -1,7 +1,7 @@
 #
 # Makefile to simulate and synthesize VHDL designs
 #
-TB := msf_decode_testbench
+TB := dcf_decode_testbench
 
 SOURCES = \
 	std_logic_textio.vhd \
