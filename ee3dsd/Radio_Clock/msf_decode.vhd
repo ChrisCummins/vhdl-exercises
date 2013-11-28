@@ -38,11 +38,6 @@ architecture rtl of msf_decode is
   subtype bit_register       is std_logic_vector(59 downto 0);
   subtype bit_register_index is natural range bit_register'length downto 0;
 
-  signal  si_sampled:   std_logic          := '0';
-  signal  mi_sampled:   std_logic          := '0';
-  signal  bai_sampled:  std_logic          := '0';
-  signal  bbi_sampled:  std_logic          := '0';
-
   signal  state:        states             := st_wait;
   signal  next_state:   states             := st_wait;
 
@@ -55,150 +50,143 @@ architecture rtl of msf_decode is
     return bcd_digit is
   begin
     case digit is
-    when 0 => return bcd_zero;
-    when 1 => return bcd_one;
-    when 2 => return bcd_two;
-    when 3 => return bcd_three;
-    when 4 => return bcd_four;
-    when 5 => return bcd_five;
-    when 6 => return bcd_six;
-    when 7 => return bcd_seven;
-    when 8 => return bcd_eight;
-    when 9 => return bcd_nine;
-    when others => return bcd_error;
-  end case;
+      when 0 => return bcd_zero;
+      when 1 => return bcd_one;
+      when 2 => return bcd_two;
+      when 3 => return bcd_three;
+      when 4 => return bcd_four;
+      when 5 => return bcd_five;
+      when 6 => return bcd_six;
+      when 7 => return bcd_seven;
+      when 8 => return bcd_eight;
+      when 9 => return bcd_nine;
+      when others => return bcd_error;
+    end case;
   end function;
 
 begin
 
   process(clk, rst)
-  begin
-
-    if (rst = '1') then
-
-      si_sampled        <= '0'          after gate_delay;
-      mi_sampled        <= '0'          after gate_delay;
-      bai_sampled       <= '0'          after gate_delay;
-      bbi_sampled       <= '0'          after gate_delay;
-
-      state             <= st_wait      after gate_delay;
-      index             <= 0            after gate_delay;
-
-    elsif clk'event and (clk = '1') then
-
-      si_sampled        <= si           after gate_delay;
-      mi_sampled        <= mi           after gate_delay;
-      bai_sampled       <= bai          after gate_delay;
-      bbi_sampled       <= bbi          after gate_delay;
-
-      state             <= next_state   after gate_delay;
-      index             <= next_index   after gate_delay;
-
-    end if;
-
-  end process;
-
-  process(si_sampled, mi_sampled, bai_sampled, bbi_sampled, state, index, areg, breg)
 
     variable dsec_0: natural;
     variable dsec_1: natural;
 
   begin
 
-    tr                   <= '0'          after gate_delay;
+    if (rst = '1') then
 
-    case state is
+      state             <= st_wait      after gate_delay;
+      index             <= 0            after gate_delay;
 
-      when st_wait =>
+      year   <= (3 => bcd_two, 2 => bcd_zero, others => bcd_minus) after gate_delay;
+      month  <= (others => bcd_minus)   after gate_delay;
+      day    <= (others => bcd_minus)   after gate_delay;
+      hour   <= (others => bcd_minus)   after gate_delay;
+      minute <= (others => bcd_minus)   after gate_delay;
+      second <= (others => bcd_zero)    after gate_delay;
+      tr     <= '0'                     after gate_delay;
 
-        if (si_sampled = '1') then
+    elsif clk'event and (clk = '1') then
 
-          next_state     <= st_sample    after gate_delay;
+      state             <= next_state   after gate_delay;
+      index             <= next_index   after gate_delay;
 
-          if (mi_sampled = '1') then
-            next_index <= 0            after gate_delay;
-          else
-            next_index <= index + 1  after gate_delay;
+      tr                <= '0'          after gate_delay;
+
+      case state is
+
+        when st_wait =>
+
+          if (si = '1') then
+
+            next_state     <= st_sample    after gate_delay;
+
+            if (mi = '1') then
+              next_index <= 0            after gate_delay;
+            else
+              next_index <= index + 1    after gate_delay;
+            end if;
+
           end if;
 
-        end if;
+        when st_sample =>
 
-      when st_sample =>
+          tr               <= '1'          after gate_delay;
 
-        tr               <= '1'          after gate_delay;
+          -- Set second out
+          dsec_0 := index rem 10;
+          dsec_1 := index / 10;
+          second(0) <= bin2bcd(dsec_0);
+          second(1) <= bin2bcd(dsec_1);
 
-        -- Set second out
-        dsec_0 := index rem 10;
-        dsec_1 := index / 10;
-        second(0) <= bin2bcd(dsec_0);
-        second(1) <= bin2bcd(dsec_1);
+          areg(index)      <= bai  after gate_delay;
+          breg(index)      <= bbi  after gate_delay;
 
-        areg(index)      <= bai_sampled  after gate_delay;
-        breg(index)      <= bbi_sampled  after gate_delay;
+          if (index = 59) then
+            next_state     <= st_write     after gate_delay;
+          else
+            next_state     <= st_wait      after gate_delay;
+          end if;
 
-        if (index = 59) then
-          next_state     <= st_write     after gate_delay;
-        else
-          next_state     <= st_wait      after gate_delay;
-        end if;
+        when st_write =>
 
-      when st_write =>
+          -- Year (bits: 17A - 24A, parity-bit: 54B)
+          if ((areg(17) xor areg(18) xor areg(19) xor areg(20) xor
+               areg(21) xor areg(22) xor areg(23) xor areg(24) xor
+               breg(54))) = '1' then
 
-        -- Year (bits: 17A - 24A, parity-bit: 54B)
-        if ((areg(17) xor areg(18) xor areg(19) xor areg(20) xor
-             areg(21) xor areg(22) xor areg(23) xor areg(24) xor
-             breg(54))) = '1' then
+            year <= (3 => bcd_two, 2 => bcd_zero,
+                     1 => (areg(17), areg(18), areg(19), areg(20)),
+                     0 => (areg(21), areg(22), areg(23), areg(24)))
+                    after gate_delay;
 
-          year <= (3 => bcd_two, 2 => bcd_zero,
-                   1 => (areg(17), areg(18), areg(19), areg(20)),
-                   0 => (areg(21), areg(22), areg(23), areg(24)))
-                                                             after gate_delay;
+          else
 
-        else
+            year <= (bcd_two, bcd_one, others => bcd_error)    after gate_delay;
 
-          year <= (bcd_two, bcd_one, others => bcd_error)    after gate_delay;
+          end if;
 
-        end if;
+          -- Month and day (bits: 25A - 35A, parity-bit: 55B)
+          if ((areg(25) xor areg(26) xor areg(27) xor areg(28) xor
+               areg(29) xor areg(30) xor areg(31) xor areg(32) xor
+               areg(33) xor areg(34) xor areg(35) xor breg(55))) = '1' then
 
-        -- Month and day (bits: 25A - 35A, parity-bit: 55B)
-        if ((areg(25) xor areg(26) xor areg(27) xor areg(28) xor
-             areg(29) xor areg(30) xor areg(31) xor areg(32) xor
-             areg(33) xor areg(34) xor areg(35) xor breg(55))) = '1' then
+            month <= (('0', '0', '0', areg(25)),
+                      (areg(26), areg(27), areg(28), areg(29)))  after gate_delay;
+            day   <= (('0', '0', areg(30), areg(31)),
+                      (areg(32), areg(33), areg(34), areg(35)))  after gate_delay;
 
-          month <= (('0', '0', '0', areg(25)),
-                    (areg(26), areg(27), areg(28), areg(29)))  after gate_delay;
-          day   <= (('0', '0', areg(30), areg(31)),
-                    (areg(32), areg(33), areg(34), areg(35)))  after gate_delay;
+          else
 
-        else
+            month <= (others => bcd_error)                       after gate_delay;
+            day   <= (others => bcd_error)                       after gate_delay;
 
-          month <= (others => bcd_error)                       after gate_delay;
-          day   <= (others => bcd_error)                       after gate_delay;
+          end if;
 
-        end if;
+          -- Hours and minutes (bits: 39A - 51A, parity-bit: 57B)
+          if ((areg(39) xor areg(40) xor areg(41) xor areg(42) xor
+               areg(43) xor areg(44) xor areg(45) xor areg(46) xor
+               areg(47) xor areg(48) xor areg(49) xor areg(50) xor
+               areg(51) xor areg(52) xor areg(53) xor areg(54) xor
+               areg(55) xor areg(56) xor breg(57))) = '1' then
 
-        -- Hours and minutes (bits: 39A - 51A, parity-bit: 57B)
-        if ((areg(39) xor areg(40) xor areg(41) xor areg(42) xor
-             areg(43) xor areg(44) xor areg(45) xor areg(46) xor
-             areg(47) xor areg(48) xor areg(49) xor areg(50) xor
-             areg(51) xor areg(52) xor areg(53) xor areg(54) xor
-             areg(55) xor areg(56) xor breg(57))) = '1' then
+            hour   <= (('0', '0', areg(39), areg(40)),
+                       (areg(41), areg(42), areg(43), areg(44))) after gate_delay;
+            minute <= (('0', '0', areg(39), areg(40)),
+                       (areg(41), areg(42), areg(43), areg(44))) after gate_delay;
 
-          hour   <= (('0', '0', areg(39), areg(40)),
-                     (areg(41), areg(42), areg(43), areg(44))) after gate_delay;
-          minute <= (('0', '0', areg(39), areg(40)),
-                     (areg(41), areg(42), areg(43), areg(44))) after gate_delay;
+          else
 
-        else
+            hour   <= (others => bcd_error)                      after gate_delay;
+            minute <= (others => bcd_error)                      after gate_delay;
 
-          hour   <= (others => bcd_error)                      after gate_delay;
-          minute <= (others => bcd_error)                      after gate_delay;
+          end if;
 
-        end if;
+          next_state <= st_wait after gate_delay;
 
-        next_state <= st_wait after gate_delay;
+      end case;
 
-    end case;
+    end if;
 
   end process;
 
