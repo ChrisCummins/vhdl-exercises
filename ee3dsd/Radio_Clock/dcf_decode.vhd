@@ -97,7 +97,6 @@ begin
           if (si = '1') then
 
             next_state    <= st_sample    after gate_delay;
-
             index <= curr_sec after gate_delay;
 
             if (mi = '1') then
@@ -120,7 +119,7 @@ begin
 
           reg(index)      <= bi           after gate_delay;
 
-          if (index = 59) then
+          if (index = 58) then
             next_state    <= st_write     after gate_delay;
           else
             next_state    <= st_wait      after gate_delay;

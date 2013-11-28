@@ -43,8 +43,8 @@ architecture rtl of msf_decode is
 
   signal  areg:         bit_register       := (others => '0');
   signal  breg:         bit_register       := (others => '0');
+  signal  curr_sec:   bit_register_index := 0;
   signal  index:        bit_register_index := 0;
-  signal  next_index:   bit_register_index := 0;
 
   function bin2bcd(digit : natural)
     return bcd_digit is
@@ -76,6 +76,7 @@ begin
     if (rst = '1') then
 
       state             <= st_wait      after gate_delay;
+      curr_sec          <= 0            after gate_delay;
       index             <= 0            after gate_delay;
 
       year   <= (3 => bcd_two, 2 => bcd_zero, others => bcd_minus) after gate_delay;
@@ -89,7 +90,6 @@ begin
     elsif clk'event and (clk = '1') then
 
       state             <= next_state   after gate_delay;
-      index             <= next_index   after gate_delay;
 
       tr                <= '0'          after gate_delay;
 
@@ -99,12 +99,13 @@ begin
 
           if (si = '1') then
 
-            next_state     <= st_sample    after gate_delay;
+            next_state  <= st_sample    after gate_delay;
+            index       <= curr_sec     after gate_delay;
 
             if (mi = '1') then
-              next_index <= 0            after gate_delay;
+              curr_sec <= 0 after gate_delay;
             else
-              next_index <= index + 1    after gate_delay;
+              curr_sec <= curr_sec + 1 after gate_delay;
             end if;
 
           end if;
@@ -114,15 +115,15 @@ begin
           tr               <= '1'          after gate_delay;
 
           -- Set second out
-          dsec_0 := index rem 10;
-          dsec_1 := index / 10;
+          dsec_0 := curr_sec rem 10;
+          dsec_1 := curr_sec / 10;
           second(0) <= bin2bcd(dsec_0);
           second(1) <= bin2bcd(dsec_1);
 
           areg(index)      <= bai  after gate_delay;
           breg(index)      <= bbi  after gate_delay;
 
-          if (index = 59) then
+          if (index = 58) then
             next_state     <= st_write     after gate_delay;
           else
             next_state     <= st_wait      after gate_delay;
