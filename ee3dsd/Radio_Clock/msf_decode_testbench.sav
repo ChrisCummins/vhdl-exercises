@@ -1,25 +1,154 @@
 [*]
 [*] GTKWave Analyzer v3.3.34 (w)1999-2012 BSI
-[*] Tue Nov 26 18:38:11 2013
+[*] Thu Nov 28 13:19:41 2013
 [*]
 [dumpfile] "/home/chris/src/vhdl-exercises/ee3dsd/Radio_Clock/msf_decode_testbench.vcd"
-[dumpfile_mtime] "Tue Nov 26 18:38:03 2013"
-[dumpfile_size] 3079796
+[dumpfile_mtime] "Thu Nov 28 13:18:52 2013"
+[dumpfile_size] 4254351
 [savefile] "/home/chris/src/vhdl-exercises/ee3dsd/Radio_Clock/msf_decode_testbench.sav"
 [timestart] 0
 [size] 1920 1056
 [pos] -1 -1
 *-53.000000 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [sst_width] 223
-[signals_width] 78
+[signals_width] 110
 [sst_expanded] 1
 [sst_vpaned_height] 320
-@29
-clk
 @28
+clk
 si
 bai
 bbi
 tr
+@c00023
+decode.areg[59:0]
+@28
+(0)decode.areg[59:0]
+(1)decode.areg[59:0]
+(2)decode.areg[59:0]
+(3)decode.areg[59:0]
+(4)decode.areg[59:0]
+(5)decode.areg[59:0]
+(6)decode.areg[59:0]
+(7)decode.areg[59:0]
+(8)decode.areg[59:0]
+(9)decode.areg[59:0]
+(10)decode.areg[59:0]
+(11)decode.areg[59:0]
+(12)decode.areg[59:0]
+(13)decode.areg[59:0]
+(14)decode.areg[59:0]
+(15)decode.areg[59:0]
+(16)decode.areg[59:0]
+(17)decode.areg[59:0]
+(18)decode.areg[59:0]
+(19)decode.areg[59:0]
+(20)decode.areg[59:0]
+(21)decode.areg[59:0]
+(22)decode.areg[59:0]
+(23)decode.areg[59:0]
+(24)decode.areg[59:0]
+(25)decode.areg[59:0]
+(26)decode.areg[59:0]
+(27)decode.areg[59:0]
+(28)decode.areg[59:0]
+(29)decode.areg[59:0]
+(30)decode.areg[59:0]
+(31)decode.areg[59:0]
+(32)decode.areg[59:0]
+(33)decode.areg[59:0]
+(34)decode.areg[59:0]
+(35)decode.areg[59:0]
+(36)decode.areg[59:0]
+(37)decode.areg[59:0]
+(38)decode.areg[59:0]
+(39)decode.areg[59:0]
+(40)decode.areg[59:0]
+(41)decode.areg[59:0]
+(42)decode.areg[59:0]
+(43)decode.areg[59:0]
+(44)decode.areg[59:0]
+(45)decode.areg[59:0]
+(46)decode.areg[59:0]
+(47)decode.areg[59:0]
+(48)decode.areg[59:0]
+(49)decode.areg[59:0]
+(50)decode.areg[59:0]
+(51)decode.areg[59:0]
+(52)decode.areg[59:0]
+(53)decode.areg[59:0]
+(54)decode.areg[59:0]
+(55)decode.areg[59:0]
+(56)decode.areg[59:0]
+(57)decode.areg[59:0]
+(58)decode.areg[59:0]
+(59)decode.areg[59:0]
+@1401201
+-group_end
+@c00022
+decode.breg[59:0]
+@28
+(0)decode.breg[59:0]
+(1)decode.breg[59:0]
+(2)decode.breg[59:0]
+(3)decode.breg[59:0]
+(4)decode.breg[59:0]
+(5)decode.breg[59:0]
+(6)decode.breg[59:0]
+(7)decode.breg[59:0]
+(8)decode.breg[59:0]
+(9)decode.breg[59:0]
+(10)decode.breg[59:0]
+(11)decode.breg[59:0]
+(12)decode.breg[59:0]
+(13)decode.breg[59:0]
+(14)decode.breg[59:0]
+(15)decode.breg[59:0]
+(16)decode.breg[59:0]
+(17)decode.breg[59:0]
+(18)decode.breg[59:0]
+(19)decode.breg[59:0]
+(20)decode.breg[59:0]
+(21)decode.breg[59:0]
+(22)decode.breg[59:0]
+(23)decode.breg[59:0]
+(24)decode.breg[59:0]
+(25)decode.breg[59:0]
+(26)decode.breg[59:0]
+(27)decode.breg[59:0]
+(28)decode.breg[59:0]
+(29)decode.breg[59:0]
+(30)decode.breg[59:0]
+(31)decode.breg[59:0]
+(32)decode.breg[59:0]
+(33)decode.breg[59:0]
+(34)decode.breg[59:0]
+(35)decode.breg[59:0]
+(36)decode.breg[59:0]
+(37)decode.breg[59:0]
+(38)decode.breg[59:0]
+(39)decode.breg[59:0]
+(40)decode.breg[59:0]
+(41)decode.breg[59:0]
+(42)decode.breg[59:0]
+(43)decode.breg[59:0]
+(44)decode.breg[59:0]
+(45)decode.breg[59:0]
+(46)decode.breg[59:0]
+(47)decode.breg[59:0]
+(48)decode.breg[59:0]
+(49)decode.breg[59:0]
+(50)decode.breg[59:0]
+(51)decode.breg[59:0]
+(52)decode.breg[59:0]
+(53)decode.breg[59:0]
+(54)decode.breg[59:0]
+(55)decode.breg[59:0]
+(56)decode.breg[59:0]
+(57)decode.breg[59:0]
+(58)decode.breg[59:0]
+(59)decode.breg[59:0]
+@1401200
+-group_end
 [pattern_trace] 1
 [pattern_trace] 0
