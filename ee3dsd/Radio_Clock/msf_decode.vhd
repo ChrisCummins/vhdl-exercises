@@ -196,6 +196,8 @@ begin
 
         end if;
 
+        next_state <= st_wait after gate_delay;
+
     end case;
 
   end process;
