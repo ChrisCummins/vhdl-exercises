@@ -26,8 +26,8 @@ architecture tests of msf_decode_testbench is
   signal clk:             std_logic := '0';
   signal si:              std_logic := 'X'; -- start of second in
   signal mi:              std_logic := 'X'; -- start of minute in
-  signal bai:             std_logic := 'X'; -- bit in
-  signal bbi:             std_logic := 'X'; -- bit in
+  signal bai:             std_logic := '0'; -- bit in
+  signal bbi:             std_logic := '0'; -- bit in
   signal year:   bcd_digit_vector(3 downto 0) := (3 => bcd_two, 2 => bcd_zero, others => bcd_minus);
   signal month:  bcd_digit_vector(1 downto 0) := (others => bcd_minus);
   signal day:    bcd_digit_vector(1 downto 0) := (others => bcd_minus);
@@ -126,9 +126,10 @@ begin
       read(data_line, bai_var);
       read(data_line, bbi_var);
 
+      wait for 250 ms;
       bai <= bai_var;
       bbi <= bbi_var;
-      wait for sec_period;
+      wait for sec_period - 250 ms;
 
     end loop;
 

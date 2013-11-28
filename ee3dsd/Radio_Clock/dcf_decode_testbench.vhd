@@ -26,7 +26,7 @@ architecture tests of dcf_decode_testbench is
   signal clk:             std_logic := '0';
   signal si:              std_logic := 'X'; -- start of second in
   signal mi:              std_logic := 'X'; -- start of minute in
-  signal bi:              std_logic := 'X'; -- bit in
+  signal bi:              std_logic := '0'; -- bit in
   signal year:   bcd_digit_vector(3 downto 0) := (3 => bcd_two, 2 => bcd_zero, others => bcd_minus);
   signal month:  bcd_digit_vector(1 downto 0) := (others => bcd_minus);
   signal day:    bcd_digit_vector(1 downto 0) := (others => bcd_minus);
@@ -122,8 +122,9 @@ begin
       readline(data, data_line);
       read(data_line, bi_var);
 
+      wait for 150 ms;
       bi <= bi_var;
-      wait for sec_period;
+      wait for sec_period - 150 ms;
 
     end loop;
 
