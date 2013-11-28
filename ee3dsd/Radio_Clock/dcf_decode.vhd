@@ -41,8 +41,8 @@ architecture rtl of dcf_decode is
   signal  next_state: states             := st_wait;
 
   signal  reg:        bit_register       := (others => '0');
+  signal  curr_sec:   bit_register_index := 0;
   signal  index:      bit_register_index := 0;
-  signal  next_index: bit_register_index := 0;
 
   function bin2bcd(digit : natural)
     return bcd_digit is
@@ -74,6 +74,7 @@ begin
     if (rst = '1') then
 
       state             <= st_wait      after gate_delay;
+      curr_sec          <= 0            after gate_delay;
       index             <= 0            after gate_delay;
 
       year   <= (3 => bcd_two, 2 => bcd_zero, others => bcd_minus) after gate_delay;
@@ -87,8 +88,6 @@ begin
     elsif clk'event and (clk = '1') then
 
       state             <= next_state   after gate_delay;
-      index             <= next_index   after gate_delay;
-
       tr                <= '0'          after gate_delay;
 
       case state is
@@ -99,10 +98,12 @@ begin
 
             next_state    <= st_sample    after gate_delay;
 
+            index <= curr_sec after gate_delay;
+
             if (mi = '1') then
-              next_index  <= 0            after gate_delay;
+              curr_sec <= 0 after gate_delay;
             else
-              next_index  <= index + 1    after gate_delay;
+              curr_sec <= curr_sec + 1 after gate_delay;
             end if;
 
           end if;
@@ -112,8 +113,8 @@ begin
           tr              <= '1'          after gate_delay;
 
           -- Set second out
-          dsec_0 := index rem 10;
-          dsec_1 := index / 10;
+          dsec_0 := curr_sec rem 10;
+          dsec_1 := curr_sec / 10;
           second(0) <= bin2bcd(dsec_0);
           second(1) <= bin2bcd(dsec_1);
 
@@ -145,9 +146,8 @@ begin
           if (reg(29) xor reg(30) xor reg(31) xor reg(32) xor
               reg(33) xor reg(34) xor reg(35)) = '0' then
 
-            --hour <= (('0', '0', reg(34), reg(33)),
-            --         (reg(32), reg(31), reg(30), reg(29))) after gate_delay;
-            hour <= (bcd_eight, bcd_nine);
+            hour <= (('0', '0', reg(34), reg(33)),
+                     (reg(32), reg(31), reg(30), reg(29))) after gate_delay;
 
           else
 
@@ -166,7 +166,7 @@ begin
             year  <= (3 => bcd_two, 2 => bcd_zero,
                       1 => (reg(50), reg(51), reg(52), reg(53)),
                       0 => (reg(54), reg(55), reg(56), reg(57)))
-                     after gate_delay;
+                                                            after gate_delay;
 
             month <= (('0', '0', '0', reg(49)),
                       (reg(48), reg(47), reg(46), reg(45))) after gate_delay;
