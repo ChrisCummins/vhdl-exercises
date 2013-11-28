@@ -48,6 +48,24 @@ architecture rtl of dcf_decode is
   signal  index:      bit_register_index := 0;
   signal  next_index: bit_register_index := 0;
 
+  function bin2bcd(digit : natural)
+    return bcd_digit is
+  begin
+    case digit is
+    when 0 => return bcd_zero;
+    when 1 => return bcd_one;
+    when 2 => return bcd_two;
+    when 3 => return bcd_three;
+    when 4 => return bcd_four;
+    when 5 => return bcd_five;
+    when 6 => return bcd_six;
+    when 7 => return bcd_seven;
+    when 8 => return bcd_eight;
+    when 9 => return bcd_nine;
+    when others => return bcd_error;
+  end case;
+  end function;
+
 begin
 
   process(clk, rst)
@@ -76,6 +94,10 @@ begin
   end process;
 
   process(si_sampled, mi_sampled, bi_sampled, state, index)
+
+    variable dsec_0: natural;
+    variable dsec_1: natural;
+
   begin
 
     tr                  <= '0'          after gate_delay;
@@ -100,7 +122,11 @@ begin
 
         tr              <= '1'          after gate_delay;
 
-        -- TODO: set second out.
+        -- Set second out
+        dsec_0 := index rem 10;
+        dsec_1 := index / 10;
+        second(0) <= bin2bcd(dsec_0);
+        second(1) <= bin2bcd(dsec_1);
 
         reg(index)      <= bi_sampled   after gate_delay;
 
