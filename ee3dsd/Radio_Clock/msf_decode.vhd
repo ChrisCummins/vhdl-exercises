@@ -98,7 +98,7 @@ begin
 
   end process;
 
-  process(si_sampled, mi_sampled, bai_sampled, bbi_sampled, state, index)
+  process(si_sampled, mi_sampled, bai_sampled, bbi_sampled, state, index, areg, breg)
 
     variable dsec_0: natural;
     variable dsec_1: natural;

@@ -93,7 +93,7 @@ begin
 
   end process;
 
-  process(si_sampled, mi_sampled, bi_sampled, state, index)
+  process(si_sampled, mi_sampled, bi_sampled, state, index, reg)
 
     variable dsec_0: natural;
     variable dsec_1: natural;
