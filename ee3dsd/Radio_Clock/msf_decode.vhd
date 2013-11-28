@@ -118,7 +118,37 @@ begin
 
       when st_write =>
 
-        -- TODO: write out bits and parity checks.
+        -- Year (bits: 17A - 24A, parity-bit: 54B)
+        if ((areg(17) xor areg(18) xor areg(19) xor areg(20) xor
+             areg(21) xor areg(22) xor areg(23) xor areg(24) xor
+             breg(54))) = '1' then
+
+          year <= (bcd_two, bcd_one,
+                   (areg(17), areg(18), areg(19), areg(20)),
+                   (areg(21), areg(22), areg(23), areg(24)))   after gate_delay;
+
+        else
+
+          year <= (bcd_two, bcd_one, others => bcd_error)    after gate_delay;
+
+        end if;
+
+        -- Month and day (bits: 25A - 35A, parity-bit: 55B)
+        if ((areg(25) xor areg(26) xor areg(27) xor areg(28) xor
+             areg(29) xor areg(30) xor areg(31) xor areg(32) xor
+             areg(33) xor areg(34) xor areg(35) xor breg(55))) = '1' then
+
+          month <= (('0', '0', '0', areg(25)),
+                    (areg(26), areg(27), areg(28), areg(29)))  after gate_delay;
+          day   <= (('0', '0', areg(30), areg(31)),
+                    (areg(32), areg(33), areg(34), areg(35)))  after gate_delay;
+
+        else
+
+          month <= (others => bcd_error)                       after gate_delay;
+          day   <= (others => bcd_error)                       after gate_delay;
+
+        end if;
 
         -- Hours and minutes (bits: 39A - 51A, parity-bit: 57B)
         if ((areg(39) xor areg(40) xor areg(41) xor areg(42) xor
