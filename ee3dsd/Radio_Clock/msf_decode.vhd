@@ -114,10 +114,10 @@ begin
           tr               <= '1'             after gate_delay;
 
           -- Set second out
-          dsec_0 := curr_sec rem 10;
-          dsec_1 := curr_sec / 10;
-          second(0) <= bin2bcd(dsec_0);
-          second(1) <= bin2bcd(dsec_1);
+          dsec_0           := curr_sec rem 10 after gate_delay;
+          dsec_1           := curr_sec / 10   after gate_delay;
+          second(0)        <= bin2bcd(dsec_0) after gate_delay;
+          second(1)        <= bin2bcd(dsec_1) after gate_delay;
 
           areg(index)      <= bai             after gate_delay;
           breg(index)      <= bbi             after gate_delay;
