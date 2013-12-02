@@ -73,22 +73,22 @@ begin
 
     if (rst = '1') then
 
-      state             <= st_wait      after gate_delay;
-      curr_sec          <= 0            after gate_delay;
-      index             <= 0            after gate_delay;
+      state    <= st_wait                     after gate_delay;
+      curr_sec <= 0                           after gate_delay;
+      index    <= 0                           after gate_delay;
 
-      year   <= (3 => bcd_two, 2 => bcd_zero, others => bcd_minus) after gate_delay;
-      month  <= (others => bcd_minus)   after gate_delay;
-      day    <= (others => bcd_minus)   after gate_delay;
-      hour   <= (others => bcd_minus)   after gate_delay;
-      minute <= (others => bcd_minus)   after gate_delay;
-      second <= (others => bcd_zero)    after gate_delay;
-      tr     <= '0'                     after gate_delay;
+      year     <= (3 => bcd_two, 2 => bcd_zero, others => bcd_minus) after gate_delay;
+      month    <= (others => bcd_minus)       after gate_delay;
+      day      <= (others => bcd_minus)       after gate_delay;
+      hour     <= (others => bcd_minus)       after gate_delay;
+      minute   <= (others => bcd_minus)       after gate_delay;
+      second   <= (others => bcd_zero)        after gate_delay;
+      tr       <= '0'                         after gate_delay;
 
     elsif clk'event and (clk = '1') then
 
-      state             <= next_state   after gate_delay;
-      tr                <= '0'          after gate_delay;
+      state               <= next_state       after gate_delay;
+      tr                  <= '0'              after gate_delay;
 
       case state is
 
@@ -96,33 +96,33 @@ begin
 
           if (si = '1') then
 
-            next_state    <= st_sample    after gate_delay;
-            index <= curr_sec after gate_delay;
+            next_state    <= st_sample        after gate_delay;
+            index         <= curr_sec         after gate_delay;
 
             if (mi = '1') then
-              curr_sec <= 0 after gate_delay;
+              curr_sec    <= 0                after gate_delay;
             else
-              curr_sec <= curr_sec + 1 after gate_delay;
+              curr_sec    <= curr_sec + 1     after gate_delay;
             end if;
 
           end if;
 
         when st_sample =>
 
-          tr              <= '1'          after gate_delay;
+          tr              <= '1'              after gate_delay;
 
           -- Set second out
-          dsec_0 := curr_sec rem 10;
-          dsec_1 := curr_sec / 10;
-          second(0) <= bin2bcd(dsec_0);
-          second(1) <= bin2bcd(dsec_1);
+          dsec_0          := curr_sec rem 10;
+          dsec_1          := curr_sec / 10;
+          second(0)       <= bin2bcd(dsec_0);
+          second(1)       <= bin2bcd(dsec_1);
 
-          reg(index)      <= bi           after gate_delay;
+          reg(index)      <= bi               after gate_delay;
 
           if (index = 58) then
-            next_state    <= st_write     after gate_delay;
+            next_state    <= st_write         after gate_delay;
           else
-            next_state    <= st_wait      after gate_delay;
+            next_state    <= st_wait          after gate_delay;
           end if;
 
         when st_write =>
@@ -133,11 +133,11 @@ begin
 
             minute <= (('0', reg(27), reg(26), reg(25)),
                        (reg(24), reg(23), reg(22), reg(21)))
-                      after gate_delay;
+                                              after gate_delay;
 
           else
 
-            minute <= (others => bcd_error)                after gate_delay;
+            minute <= (others => bcd_error)   after gate_delay;
 
           end if;
 
@@ -146,11 +146,12 @@ begin
               reg(33) xor reg(34) xor reg(35)) = '0' then
 
             hour <= (('0', '0', reg(34), reg(33)),
-                     (reg(32), reg(31), reg(30), reg(29))) after gate_delay;
+                     (reg(32), reg(31), reg(30), reg(29)))
+                                              after gate_delay;
 
           else
 
-            hour <= (others => bcd_error) after gate_delay;
+            hour <= (others => bcd_error)     after gate_delay;
 
           end if;
 
@@ -165,24 +166,26 @@ begin
             year  <= (3 => bcd_two, 2 => bcd_zero,
                       1 => (reg(57), reg(56), reg(55), reg(54)),
                       0 => (reg(53), reg(52), reg(51), reg(50)))
-                                                            after gate_delay;
+                                              after gate_delay;
 
             month <= (('0', '0', '0', reg(49)),
-                      (reg(48), reg(47), reg(46), reg(45))) after gate_delay;
+                      (reg(48), reg(47), reg(46), reg(45)))
+                                              after gate_delay;
 
             day   <= (('0', '0', reg(41), reg(40)),
-                      (reg(39), reg(38), reg(37), reg(36))) after gate_delay;
+                      (reg(39), reg(38), reg(37), reg(36)))
+                                              after gate_delay;
 
           else
 
             year  <= (bcd_zero, bcd_two, others => bcd_error)
-                     after gate_delay;
-            month <= (others => bcd_error)                  after gate_delay;
-            day   <= (others => bcd_error)                  after gate_delay;
+                                              after gate_delay;
+            month <= (others => bcd_error)    after gate_delay;
+            day   <= (others => bcd_error)    after gate_delay;
 
           end if;
 
-          next_state <= st_wait after gate_delay;
+          next_state <= st_wait               after gate_delay;
 
       end case;
 
