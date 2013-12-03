@@ -111,9 +111,11 @@ begin
 
           tr              <= '1'              after gate_delay;
 
-          -- Set second out
+          -- Split the second count into its single digit components
           sec0            := curr_sec rem 10;
           sec1            := curr_sec / 10;
+
+          -- Set the second output
           second(0)       <= bin2bcd(sec0)    after gate_delay;
           second(1)       <= bin2bcd(sec1)    after gate_delay;
 
