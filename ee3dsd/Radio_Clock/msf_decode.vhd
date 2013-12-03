@@ -135,9 +135,9 @@ begin
                areg(21) xor areg(22) xor areg(23) xor areg(24) xor
                breg(54))) = '1' then
 
-            year <= (3 => bcd_two, 2 => bcd_zero,
-                     1 => (areg(17), areg(18), areg(19), areg(20)),
-                     0 => (areg(21), areg(22), areg(23), areg(24)))
+            year <= (bcd_two, bcd_zero,
+                     (areg(17), areg(18), areg(19), areg(20)),
+                     (areg(21), areg(22), areg(23), areg(24)))
                                               after gate_delay;
 
           else

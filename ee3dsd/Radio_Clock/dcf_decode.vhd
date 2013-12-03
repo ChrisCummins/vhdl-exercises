@@ -163,9 +163,9 @@ begin
                reg(52) xor reg(53) xor reg(54) xor reg(55) xor
                reg(56) xor reg(57) xor reg(58)) = '0') then
 
-            year  <= (3 => bcd_two, 2 => bcd_zero,
-                      1 => (reg(57), reg(56), reg(55), reg(54)),
-                      0 => (reg(53), reg(52), reg(51), reg(50)))
+            year  <= (bcd_two, bcd_zero,
+                      (reg(57), reg(56), reg(55), reg(54)),
+                      (reg(53), reg(52), reg(51), reg(50)))
                                               after gate_delay;
 
             month <= (('0', '0', '0', reg(49)),
