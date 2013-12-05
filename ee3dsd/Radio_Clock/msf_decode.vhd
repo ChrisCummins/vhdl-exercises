@@ -144,7 +144,7 @@ begin
 
           else
 
-            year <= (bcd_two, bcd_one, others => bcd_error)
+            year <= (bcd_two, bcd_zero, others => bcd_error)
                                               after gate_delay;
 
           end if;
