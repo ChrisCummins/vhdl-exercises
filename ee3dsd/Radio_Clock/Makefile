@@ -47,12 +47,12 @@ all simulation sim:
 	@for t in $(TESTBENCHES); do \
 		echo "ghdl -e $$t"; \
 		ghdl -e $$t; \
-		echo "ghdl -r $$t --vcd=$$t.vcd"; \
-		ghdl -r $$t --vcd=$$t.vcd; \
+		echo "ghdl -r $$t --wave=$$t.ghw"; \
+		ghdl -r $$t --wave=$$t.ghw; \
 	done
 
 view:
-	gtkwave $(TB).vcd $(TB).sav >/dev/null 2>&1
+	gtkwave $(TB).ghw $(TB).sav >/dev/null 2>&1
 
 uber: syn impl bit up
 
