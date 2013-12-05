@@ -6,6 +6,7 @@
 /ssg_testbench
 /dcf_decode_testbench
 /msf_decode_testbench
+/util.s
 *.vcd
 *.ghw
 
