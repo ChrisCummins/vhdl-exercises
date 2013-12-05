@@ -177,8 +177,8 @@ begin
             hour   <= (('0', '0', areg(39), areg(40)),
                        (areg(41), areg(42), areg(43), areg(44)))
                                               after gate_delay;
-            minute <= (('0', '0', areg(39), areg(40)),
-                       (areg(41), areg(42), areg(43), areg(44)))
+            minute <= (('0', areg(45), areg(46), areg(47)),
+                       (areg(48), areg(49), areg(50), areg(51)))
                                               after gate_delay;
 
           else
