@@ -19,7 +19,7 @@ architecture tests of msf_decode_testbench is
 
   constant clk_period:    time      := 1000 ms / clk_freq;
   constant sec_period:    time      := 1000 ms;
-  constant test_duration: time      := 62 * sec_period;
+  constant test_duration: time      := 122 * sec_period;
   signal end_flag:        std_logic := '0';
 
   signal rst:             std_logic := '0';
@@ -98,13 +98,12 @@ begin
   process is -- Process to set 'mi'
   begin
 
-    mi <= '1'; -- First minute
-    wait for clk_period;
-    mi <= '0';
-    wait for 60 * sec_period - clk_period;
-    mi <= '1'; -- Second minute
-    wait for clk_period;
-    mi <= '0';
+    while (end_flag = '0') loop
+      mi <= '1';
+      wait for clk_period;
+      mi <= '0';
+      wait for 60 * sec_period - clk_period;
+    end loop;
 
     wait;
   end process;
