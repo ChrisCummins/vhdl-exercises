@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.34 (w)1999-2012 BSI
-[*] Thu Dec  5 16:35:51 2013
+[*] Thu Dec  5 16:47:28 2013
 [*]
 [dumpfile] "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/msf_decode_testbench.ghw"
-[dumpfile_mtime] "Thu Dec  5 16:32:28 2013"
-[dumpfile_size] 1366967
+[dumpfile_mtime] "Thu Dec  5 16:47:14 2013"
+[dumpfile_size] 2688527
 [savefile] "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/msf_decode_testbench.sav"
 [timestart] 0
 [size] 1920 1056
 [pos] -1 -1
-*-53.000000 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-54.000000 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.msf_decode_testbench.
 [sst_width] 223

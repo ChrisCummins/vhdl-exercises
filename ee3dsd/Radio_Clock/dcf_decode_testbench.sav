@@ -1,89 +1,42 @@
 [*]
 [*] GTKWave Analyzer v3.3.34 (w)1999-2012 BSI
-[*] Tue Nov 26 18:37:13 2013
+[*] Thu Dec  5 16:50:04 2013
 [*]
-[dumpfile] "/home/chris/src/vhdl-exercises/ee3dsd/Radio_Clock/dcf_decode_testbench.vcd"
-[dumpfile_mtime] "Tue Nov 26 18:37:05 2013"
-[dumpfile_size] 4254386
-[savefile] "/home/chris/src/vhdl-exercises/ee3dsd/Radio_Clock/dcf_decode_testbench.sav"
+[dumpfile] "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/dcf_decode_testbench.ghw"
+[dumpfile_mtime] "Thu Dec  5 16:48:30 2013"
+[dumpfile_size] 2688281
+[savefile] "/users/c/cummince/src/vhdl-exercises/ee3dsd/Radio_Clock/dcf_decode_testbench.sav"
 [timestart] 0
 [size] 1920 1056
 [pos] -1 -1
-*-53.000000 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-54.000000 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.dcf_decode_testbench.
+[treeopen] top.dcf_decode_testbench.decode.
 [sst_width] 223
 [signals_width] 150
 [sst_expanded] 1
 [sst_vpaned_height] 328
 @28
-clk
-si
-mi
-bi
-tr
-@c00022
-decode.reg[59:0]
-@28
-(0)decode.reg[59:0]
-(1)decode.reg[59:0]
-(2)decode.reg[59:0]
-(3)decode.reg[59:0]
-(4)decode.reg[59:0]
-(5)decode.reg[59:0]
-(6)decode.reg[59:0]
-(7)decode.reg[59:0]
-(8)decode.reg[59:0]
-(9)decode.reg[59:0]
-(10)decode.reg[59:0]
-(11)decode.reg[59:0]
-(12)decode.reg[59:0]
-(13)decode.reg[59:0]
-(14)decode.reg[59:0]
-(15)decode.reg[59:0]
-(16)decode.reg[59:0]
-(17)decode.reg[59:0]
-(18)decode.reg[59:0]
-(19)decode.reg[59:0]
-(20)decode.reg[59:0]
-(21)decode.reg[59:0]
-(22)decode.reg[59:0]
-(23)decode.reg[59:0]
-(24)decode.reg[59:0]
-(25)decode.reg[59:0]
-(26)decode.reg[59:0]
-(27)decode.reg[59:0]
-(28)decode.reg[59:0]
-(29)decode.reg[59:0]
-(30)decode.reg[59:0]
-(31)decode.reg[59:0]
-(32)decode.reg[59:0]
-(33)decode.reg[59:0]
-(34)decode.reg[59:0]
-(35)decode.reg[59:0]
-(36)decode.reg[59:0]
-(37)decode.reg[59:0]
-(38)decode.reg[59:0]
-(39)decode.reg[59:0]
-(40)decode.reg[59:0]
-(41)decode.reg[59:0]
-(42)decode.reg[59:0]
-(43)decode.reg[59:0]
-(44)decode.reg[59:0]
-(45)decode.reg[59:0]
-(46)decode.reg[59:0]
-(47)decode.reg[59:0]
-(48)decode.reg[59:0]
-(49)decode.reg[59:0]
-(50)decode.reg[59:0]
-(51)decode.reg[59:0]
-(52)decode.reg[59:0]
-(53)decode.reg[59:0]
-(54)decode.reg[59:0]
-(55)decode.reg[59:0]
-(56)decode.reg[59:0]
-(57)decode.reg[59:0]
-(58)decode.reg[59:0]
-(59)decode.reg[59:0]
-@1401200
--group_end
+top.dcf_decode_testbench.clk
+top.dcf_decode_testbench.si
+top.dcf_decode_testbench.bi
+top.dcf_decode_testbench.mi
+@22
+#{top.dcf_decode_testbench.decode.second[0][3:0]} top.dcf_decode_testbench.decode.second[0][3] top.dcf_decode_testbench.decode.second[0][2] top.dcf_decode_testbench.decode.second[0][1] top.dcf_decode_testbench.decode.second[0][0]
+#{top.dcf_decode_testbench.decode.second[1][3:0]} top.dcf_decode_testbench.decode.second[1][3] top.dcf_decode_testbench.decode.second[1][2] top.dcf_decode_testbench.decode.second[1][1] top.dcf_decode_testbench.decode.second[1][0]
+#{top.dcf_decode_testbench.decode.minute[0][3:0]} top.dcf_decode_testbench.decode.minute[0][3] top.dcf_decode_testbench.decode.minute[0][2] top.dcf_decode_testbench.decode.minute[0][1] top.dcf_decode_testbench.decode.minute[0][0]
+#{top.dcf_decode_testbench.decode.minute[1][3:0]} top.dcf_decode_testbench.decode.minute[1][3] top.dcf_decode_testbench.decode.minute[1][2] top.dcf_decode_testbench.decode.minute[1][1] top.dcf_decode_testbench.decode.minute[1][0]
+#{top.dcf_decode_testbench.decode.hour[0][3:0]} top.dcf_decode_testbench.decode.hour[0][3] top.dcf_decode_testbench.decode.hour[0][2] top.dcf_decode_testbench.decode.hour[0][1] top.dcf_decode_testbench.decode.hour[0][0]
+#{top.dcf_decode_testbench.decode.hour[1][3:0]} top.dcf_decode_testbench.decode.hour[1][3] top.dcf_decode_testbench.decode.hour[1][2] top.dcf_decode_testbench.decode.hour[1][1] top.dcf_decode_testbench.decode.hour[1][0]
+#{top.dcf_decode_testbench.decode.day[0][3:0]} top.dcf_decode_testbench.decode.day[0][3] top.dcf_decode_testbench.decode.day[0][2] top.dcf_decode_testbench.decode.day[0][1] top.dcf_decode_testbench.decode.day[0][0]
+#{top.dcf_decode_testbench.decode.day[1][3:0]} top.dcf_decode_testbench.decode.day[1][3] top.dcf_decode_testbench.decode.day[1][2] top.dcf_decode_testbench.decode.day[1][1] top.dcf_decode_testbench.decode.day[1][0]
+#{top.dcf_decode_testbench.decode.month[0][3:0]} top.dcf_decode_testbench.decode.month[0][3] top.dcf_decode_testbench.decode.month[0][2] top.dcf_decode_testbench.decode.month[0][1] top.dcf_decode_testbench.decode.month[0][0]
+#{top.dcf_decode_testbench.decode.month[1][3:0]} top.dcf_decode_testbench.decode.month[1][3] top.dcf_decode_testbench.decode.month[1][2] top.dcf_decode_testbench.decode.month[1][1] top.dcf_decode_testbench.decode.month[1][0]
+#{top.dcf_decode_testbench.decode.year[0][3:0]} top.dcf_decode_testbench.decode.year[0][3] top.dcf_decode_testbench.decode.year[0][2] top.dcf_decode_testbench.decode.year[0][1] top.dcf_decode_testbench.decode.year[0][0]
+#{top.dcf_decode_testbench.decode.year[1][3:0]} top.dcf_decode_testbench.decode.year[1][3] top.dcf_decode_testbench.decode.year[1][2] top.dcf_decode_testbench.decode.year[1][1] top.dcf_decode_testbench.decode.year[1][0]
+#{top.dcf_decode_testbench.decode.year[2][3:0]} top.dcf_decode_testbench.decode.year[2][3] top.dcf_decode_testbench.decode.year[2][2] top.dcf_decode_testbench.decode.year[2][1] top.dcf_decode_testbench.decode.year[2][0]
+@23
+#{top.dcf_decode_testbench.decode.year[3][3:0]} top.dcf_decode_testbench.decode.year[3][3] top.dcf_decode_testbench.decode.year[3][2] top.dcf_decode_testbench.decode.year[3][1] top.dcf_decode_testbench.decode.year[3][0]
 [pattern_trace] 1
 [pattern_trace] 0
