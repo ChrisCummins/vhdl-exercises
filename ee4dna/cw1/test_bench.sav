@@ -1,0 +1,37 @@
+[timestart] 0
+[size] 1600 1107
+[pos] -1 -1
+*-33.135094 227004000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+@28
+top.test_bench.clk
+@200
+-
+@28
+#{top.test_bench.sw[7:0]} top.test_bench.sw[7] top.test_bench.sw[6] top.test_bench.sw[5] top.test_bench.sw[4] top.test_bench.sw[3] top.test_bench.sw[2] top.test_bench.sw[1] top.test_bench.sw[0]
+top.test_bench.top_level_uut.btnu
+top.test_bench.top_level_uut.btnd
+top.test_bench.top_level_uut.btnc
+top.test_bench.top_level_uut.btnl
+top.test_bench.top_level_uut.btnr
+top.test_bench.top_level_uut.msf
+top.test_bench.top_level_uut.dcf
+@200
+-
+@28
+#{top.test_bench.top_level_uut.ld[7:0]} top.test_bench.top_level_uut.ld[7] top.test_bench.top_level_uut.ld[6] top.test_bench.top_level_uut.ld[5] top.test_bench.top_level_uut.ld[4] top.test_bench.top_level_uut.ld[3] top.test_bench.top_level_uut.ld[2] top.test_bench.top_level_uut.ld[1] top.test_bench.top_level_uut.ld[0]
+@200
+-
+@28
+top.test_bench.top_level_uut.rst
+#{top.test_bench.top_level_uut.execution_unit.io_in[0][7:0]} top.test_bench.top_level_uut.execution_unit.io_in[0][7] top.test_bench.top_level_uut.execution_unit.io_in[0][6] top.test_bench.top_level_uut.execution_unit.io_in[0][5] top.test_bench.top_level_uut.execution_unit.io_in[0][4] top.test_bench.top_level_uut.execution_unit.io_in[0][3] top.test_bench.top_level_uut.execution_unit.io_in[0][2] top.test_bench.top_level_uut.execution_unit.io_in[0][1] top.test_bench.top_level_uut.execution_unit.io_in[0][0]
+#{top.test_bench.top_level_uut.execution_unit.io_in[1][7:0]} top.test_bench.top_level_uut.execution_unit.io_in[1][7] top.test_bench.top_level_uut.execution_unit.io_in[1][6] top.test_bench.top_level_uut.execution_unit.io_in[1][5] top.test_bench.top_level_uut.execution_unit.io_in[1][4] top.test_bench.top_level_uut.execution_unit.io_in[1][3] top.test_bench.top_level_uut.execution_unit.io_in[1][2] top.test_bench.top_level_uut.execution_unit.io_in[1][1] top.test_bench.top_level_uut.execution_unit.io_in[1][0]
+#{top.test_bench.top_level_uut.execution_unit.io_out[0][7:0]} top.test_bench.top_level_uut.execution_unit.io_out[0][7] top.test_bench.top_level_uut.execution_unit.io_out[0][6] top.test_bench.top_level_uut.execution_unit.io_out[0][5] top.test_bench.top_level_uut.execution_unit.io_out[0][4] top.test_bench.top_level_uut.execution_unit.io_out[0][3] top.test_bench.top_level_uut.execution_unit.io_out[0][2] top.test_bench.top_level_uut.execution_unit.io_out[0][1] top.test_bench.top_level_uut.execution_unit.io_out[0][0]
+@200
+-
+@22
+#{top.test_bench.test_pc[5:0]} top.test_bench.test_pc[5] top.test_bench.test_pc[4] top.test_bench.test_pc[3] top.test_bench.test_pc[2] top.test_bench.test_pc[1] top.test_bench.test_pc[0]
+#{top.test_bench.test_opcode[7:0]} top.test_bench.test_opcode[7] top.test_bench.test_opcode[6] top.test_bench.test_opcode[5] top.test_bench.test_opcode[4] top.test_bench.test_opcode[3] top.test_bench.test_opcode[2] top.test_bench.test_opcode[1] top.test_bench.test_opcode[0]
+#{top.test_bench.test_ins_data[23:0]} top.test_bench.test_ins_data[23] top.test_bench.test_ins_data[22] top.test_bench.test_ins_data[21] top.test_bench.test_ins_data[20] top.test_bench.test_ins_data[19] top.test_bench.test_ins_data[18] top.test_bench.test_ins_data[17] top.test_bench.test_ins_data[16] top.test_bench.test_ins_data[15] top.test_bench.test_ins_data[14] top.test_bench.test_ins_data[13] top.test_bench.test_ins_data[12] top.test_bench.test_ins_data[11] top.test_bench.test_ins_data[10] top.test_bench.test_ins_data[9] top.test_bench.test_ins_data[8] top.test_bench.test_ins_data[7] top.test_bench.test_ins_data[6] top.test_bench.test_ins_data[5] top.test_bench.test_ins_data[4] top.test_bench.test_ins_data[3] top.test_bench.test_ins_data[2] top.test_bench.test_ins_data[1] top.test_bench.test_ins_data[0]
+[pattern_trace] 1
+[pattern_trace] 0
