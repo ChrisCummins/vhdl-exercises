@@ -41,9 +41,9 @@ end execution_unit;
 architecture syn of execution_unit is
 
   -- Your declarations go here --
-  
+
 begin
-  
+
   -- Your implementation goes here --
-    
+
 end syn;
