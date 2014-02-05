@@ -40,10 +40,56 @@ end execution_unit;
 
 architecture syn of execution_unit is
 
-  -- Your declarations go here --
+  signal pc: unsigned((n_bits(rom_size) - 1) downto 0) := (others => '0');
+  signal next_pc: unsigned((n_bits(rom_size) - 1) downto 0) := (others => '0');
+  signal opcode: std_logic_vector(7 downto 0) := (others => '0');
+  signal ins_data: std_logic_vector(word_size - 9 downto 0) := (others => '0');
 
 begin
 
-  -- Your implementation goes here --
+  process (clk, rst, next_pc) is
+  begin
+    if rst = '1' then
+
+      pc <= (others => '0');
+      next_pc <= (others => '0');
+      test_pc <= (others => '0');
+      rom_en <= '0';
+
+    elsif clk = '1' then
+
+      pc <= next_pc;
+      test_pc <= pc;
+
+      rom_addr <= std_logic_vector(pc);
+      rom_en <= '1';
+
+      next_pc <= pc + 1;
+
+    end if;
+  end process;
+
+  process (rom_data) is
+  begin
+
+    opcode <= rom_data(word_size - 1 downto word_size - 8);
+    ins_data <= rom_data(word_size - 9 downto 0);
+
+    -- Test outputs
+    test_opcode <= opcode;
+    test_ins_data <= ins_data;
+
+  end process;
+
+  process (pc, opcode, ins_data) is
+  begin
+
+    --case opcode is
+    --  when "00000000" => next_pc <= pc + 1;
+    --  when "00000001" => next_pc <= pc;
+    --  when others => next_pc <= pc + 1;
+    --end case;
+
+  end process;
 
 end syn;
