@@ -64,7 +64,7 @@ begin
       rom_addr <= std_logic_vector(pc);
       rom_en <= '1';
 
-      next_pc <= pc + 1;
+      next_pc <= pc + 1; -- FIXME: o rly?
 
     end if;
   end process;
@@ -84,6 +84,7 @@ begin
   process (pc, opcode, ins_data) is
   begin
 
+    -- FIXME: o rly?
     --case opcode is
     --  when "00000000" => next_pc <= pc + 1;
     --  when "00000001" => next_pc <= pc;
