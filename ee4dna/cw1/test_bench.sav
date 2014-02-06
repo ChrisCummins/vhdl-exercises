@@ -1,8 +1,23 @@
+[*]
+[*] GTKWave Analyzer v3.3.34 (w)1999-2012 BSI
+[*] Fri Feb  7 15:16:01 2014
+[*]
+[dumpfile] "/users/c/cummince/src/vhdl-exercises/ee4dna/cw1/test_bench.ghw"
+[dumpfile_mtime] "Fri Feb  7 15:13:23 2014"
+[dumpfile_size] 69217
+[savefile] "/users/c/cummince/src/vhdl-exercises/ee4dna/cw1/test_bench.sav"
 [timestart] 0
-[size] 1600 1107
+[size] 1920 1056
 [pos] -1 -1
-*-33.135094 227004000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-37.135094 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
+[treeopen] top.test_bench.
+[treeopen] top.test_bench.top_level_uut.
+[treeopen] top.test_bench.top_level_uut.execution_unit.
+[sst_width] 223
+[signals_width] 182
+[sst_expanded] 1
+[sst_vpaned_height] 452
 @28
 top.test_bench.clk
 @200
@@ -33,5 +48,15 @@ top.test_bench.top_level_uut.rst
 #{top.test_bench.test_pc[5:0]} top.test_bench.test_pc[5] top.test_bench.test_pc[4] top.test_bench.test_pc[3] top.test_bench.test_pc[2] top.test_bench.test_pc[1] top.test_bench.test_pc[0]
 #{top.test_bench.test_opcode[7:0]} top.test_bench.test_opcode[7] top.test_bench.test_opcode[6] top.test_bench.test_opcode[5] top.test_bench.test_opcode[4] top.test_bench.test_opcode[3] top.test_bench.test_opcode[2] top.test_bench.test_opcode[1] top.test_bench.test_opcode[0]
 #{top.test_bench.test_ins_data[23:0]} top.test_bench.test_ins_data[23] top.test_bench.test_ins_data[22] top.test_bench.test_ins_data[21] top.test_bench.test_ins_data[20] top.test_bench.test_ins_data[19] top.test_bench.test_ins_data[18] top.test_bench.test_ins_data[17] top.test_bench.test_ins_data[16] top.test_bench.test_ins_data[15] top.test_bench.test_ins_data[14] top.test_bench.test_ins_data[13] top.test_bench.test_ins_data[12] top.test_bench.test_ins_data[11] top.test_bench.test_ins_data[10] top.test_bench.test_ins_data[9] top.test_bench.test_ins_data[8] top.test_bench.test_ins_data[7] top.test_bench.test_ins_data[6] top.test_bench.test_ins_data[5] top.test_bench.test_ins_data[4] top.test_bench.test_ins_data[3] top.test_bench.test_ins_data[2] top.test_bench.test_ins_data[1] top.test_bench.test_ins_data[0]
+@200
+-
+@22
+#{top.test_bench.top_level_uut.execution_unit.next_pc[5:0]} top.test_bench.top_level_uut.execution_unit.next_pc[5] top.test_bench.top_level_uut.execution_unit.next_pc[4] top.test_bench.top_level_uut.execution_unit.next_pc[3] top.test_bench.top_level_uut.execution_unit.next_pc[2] top.test_bench.top_level_uut.execution_unit.next_pc[1] top.test_bench.top_level_uut.execution_unit.next_pc[0]
+@28
+top.test_bench.top_level_uut.execution_unit.current_tst_flag
+@29
+top.test_bench.top_level_uut.execution_unit.pc_en
+@28
+top.test_bench.top_level_uut.execution_unit.pc_ld
 [pattern_trace] 1
 [pattern_trace] 0
