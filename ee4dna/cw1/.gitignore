@@ -1,2 +1,7 @@
-/test_bench
 *.ghw
+/design.bit
+/reports/
+/test_bench
+/tmp/
+/top_level*
+/usage_statistics_webtalk.html
