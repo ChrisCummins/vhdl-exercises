@@ -171,4 +171,34 @@ begin
         wait;
     end process;
     
+
+    process
+      file     data_file:         text;
+      variable data_line:         line;
+    begin
+      file_open(data_file, "my_test_bench_outputs.dat", write_mode);
+
+      wait for 4500 ns;
+
+      while end_flag = '0' loop
+
+        write(data_line, std_logic_vector(test_pc));
+        write(data_line, ' ');
+        write(data_line, test_opcode);
+        write(data_line, ' ');
+        write(data_line, test_ins_data);
+        write(data_line, ' ');
+        write(data_line, ld);
+        write(data_line, ' ');
+        write(data_line, now);
+
+        writeline(data_file, data_line);
+        wait for clk_period;
+      end loop;
+
+      file_close(data_file);
+      wait;
+
+    end process;
+
 end behav;
