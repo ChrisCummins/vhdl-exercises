@@ -132,7 +132,6 @@ begin
   begin
     current_opcode <= rom_data(word_size - 1 downto word_size - 8)
                         after gate_delay;
-    current_ins_data <= rom_data(word_size - 9 downto 0) after gate_delay;
     current_address <= unsigned(rom_data((program_counter'length - 1) downto 0))
                          after gate_delay;
     current_port <= unsigned(rom_data(word_size - 9 downto word_size - 16))
@@ -140,6 +139,10 @@ begin
     current_and <= rom_data(word_size - 17 downto word_size - 24)
                      after gate_delay;
     current_xor <= rom_data(word_size - 25 downto 0) after gate_delay;
+
+--synopsys synthesis_off
+    current_ins_data <= rom_data(word_size - 9 downto 0) after gate_delay;
+--synopsys synthesis_on
   end process;
 
 
@@ -151,7 +154,11 @@ begin
     pc_ld <= '0' after gate_delay;
     next_io_out <= current_io_out after gate_delay;
     next_tst_flag <= current_tst_flag after gate_delay;
+
+--synopsys synthesis_off
     debug_invalid_opcode <= '0' after gate_delay;
+--synopsys synthesis_on
+
 
     if not rst = '1' then
       case current_opcode is
@@ -194,7 +201,9 @@ begin
 
         when others => -- Invalid operation
 
+--synopsys synthesis_off
           debug_invalid_opcode <= '1' after gate_delay;
+--synopsys synthesis_on
 
       end case;
     end if;
