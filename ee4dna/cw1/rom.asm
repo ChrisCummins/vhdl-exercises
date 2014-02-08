@@ -1,26 +1,18 @@
 ;;; rom.asm - Safe unlocking program
 ;;
-;;; Fri 7 February 2014
-;;
 ;; The program requires the user to enter a 4 digit PIN code by
 ;; setting the switches to the appropriate digit and then pressing
-;; the center key to confirm the digit. Once completed, the LED 0 or
-;; 1 is set to display whether the user entered the correct
-;; code (0702) or not.
-;;
-;; The program requires the user to enter a 4 digit PIN code by
-;; setting the switches to the appropriate digit and then pressing
-;; the center key to confirm the digit. Once completed, the LED 0 or
+;; the center key to confirm the digit. Once completed, LED 0 or
 ;; 1 is set to display whether the user entered the correct
 ;; code (0702) or not.
 ;;
 ;; The program progresses linearlly up until the test for whether
 ;; the first digit (A) was correct. At this point, it branches into
-;; two possiblities, either A was correct or incorrect. The parallel
-;; branches then continue to test digits B, C, and D in the same
-;; manner. At each point, the correct branch may transition to the
-;; incorrect branch if the user enters the wrong digit, but not visa
-;; versa:
+;; one of two possibilities: either A was correct or incorrect. The
+;; parallel branches then continue to test digits B, C, and D in the
+;; same manner. At each point, the correct branch may transition to
+;; the incorrect branch if the user enters the wrong digit, but not
+;; vice versa:
 ;;
 ;;  Correct Incorrect
 ;;     A
@@ -93,7 +85,8 @@ d-correct-confirm:
         seto 0x00, 0xFF, 0x01   ; Toggle LED 0
         buc code-correct
 
-;; Incorrect digits
+;; Incorrect digits. We don't actually need to test the switch inputs since we
+;; know the code is incorrect.
 a-incorrect:
         seto 0x00, 0xFF, 0x80   ; Toggle LED 8
 a-incorrect-confirm:
