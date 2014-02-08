@@ -6,34 +6,33 @@ use WORK.util.all;
 
 entity execution_unit is
 
-    generic
+  generic
     (
-        gate_delay: time;     -- delay per gate for simulation only
-        word_size:  positive; -- width of data bus in bits
-        rom_size:   positive; -- size of ROM in words
-        ports_in:   positive; -- number of 8 bit wide input ports
-        ports_out:  positive  -- number of 8 bit wide output ports
+      gate_delay: time;     -- delay per gate for simulation only
+      word_size:  positive; -- width of data bus in bits
+      rom_size:   positive; -- size of ROM in words
+      ports_in:   positive; -- number of 8 bit wide input ports
+      ports_out:  positive  -- number of 8 bit wide output ports
     );
 
-    port
+  port
     (
-        clk:           in  std_logic                                             :=            'X';  -- clock
-        rst:           in  std_logic                                             :=            'X';  -- rst
-        en:            in  std_logic                                             :=            'X';  -- enable
+      clk:           in  std_logic                                             :=            'X';  -- clock
+      rst:           in  std_logic                                             :=            'X';  -- rst
+      en:            in  std_logic                                             :=            'X';  -- enable
 
 --synopsys synthesis_off
-        test_pc:       out unsigned((n_bits(rom_size) - 1) downto 0)             := (others => 'X'); -- program counter
-        test_opcode:   out std_logic_vector(7 downto 0)                          := (others => 'X'); -- instruction opcode
-        test_ins_data: out std_logic_vector(word_size - 9 downto 0)              := (others => 'X'); -- instruction data
+      test_pc:       out unsigned((n_bits(rom_size) - 1) downto 0)             := (others => 'X'); -- program counter
+      test_opcode:   out std_logic_vector(7 downto 0)                          := (others => 'X'); -- instruction opcode
+      test_ins_data: out std_logic_vector(word_size - 9 downto 0)              := (others => 'X'); -- instruction data
 --synopsys synthesis_on
 
-        rom_en:        out std_logic                                             :=            'X';  -- ROM enable
-        rom_addr:      out std_logic_vector((n_bits(rom_size - 1) - 1) downto 0) := (others => 'X'); -- ROM address to read
-        rom_data:      in  std_logic_vector((word_size - 1) downto 0)            := (others => 'Z'); -- ROM data
+      rom_en:        out std_logic                                             :=            'X';  -- ROM enable
+      rom_addr:      out std_logic_vector((n_bits(rom_size - 1) - 1) downto 0) := (others => 'X'); -- ROM address to read
+      rom_data:      in  std_logic_vector((word_size - 1) downto 0)            := (others => 'Z'); -- ROM data
 
-        io_in:         in  byte_vector((ports_in - 1) downto 0)                  := (others => byte_unknown); -- 8 bit wide input ports
-        io_out:        out byte_vector((ports_out - 1) downto 0)                 := (others => byte_null)     -- 8 bit wide output ports
-
+      io_in:         in  byte_vector((ports_in - 1) downto 0)                  := (others => byte_unknown); -- 8 bit wide input ports
+      io_out:        out byte_vector((ports_out - 1) downto 0)                 := (others => byte_null)     -- 8 bit wide output ports
     );
 
 end execution_unit;
@@ -54,14 +53,14 @@ architecture syn of execution_unit is
   constant TSTI: opcode := "00000101";
 
   -- The program counter
-  constant pc_start: program_counter := (others => '1'); -- .code section
+  constant pc_start: program_counter := (others => '1'); -- Start on -1
 
   signal current_pc: program_counter := pc_start;
   signal next_pc:    program_counter := pc_start;
 
   -- Status registers
-  signal pc_en:            std_logic := '0'; -- Counter enable
-  signal pc_ld:            std_logic := '0'; -- Counter load
+  signal pc_en:            std_logic := '0'; -- Program counter enable
+  signal pc_ld:            std_logic := '0'; -- Program counter load
   signal current_tst_flag: std_logic := '0';
   signal next_tst_flag:    std_logic := '0';
 
@@ -73,10 +72,10 @@ architecture syn of execution_unit is
   signal debug_invalid_opcode: std_logic := '0';
 
   -- Current instruction components
-  signal current_opcode:   opcode := (others => '0');
-  signal current_ins_data: address := (others => '0');
-  signal current_address:  program_counter := pc_start;
-  signal current_port:     unsigned(7 downto 0) := (others => '0');
+  signal current_opcode:   opcode                       := (others => '0');
+  signal current_ins_data: address                      := (others => '0');
+  signal current_address:  program_counter              := (others => '0');
+  signal current_port:     unsigned(7 downto 0)         := (others => '0');
   signal current_and:      std_logic_vector(7 downto 0) := (others => '0');
   signal current_xor:      std_logic_vector(7 downto 0) := (others => '0');
 
@@ -106,15 +105,15 @@ begin
   begin
     next_pc   <= current_pc       after gate_delay;
 
-    if pc_en = '1' then    -- Increment program counter
+    if pc_en = '1' then
       next_pc <= current_pc + 1  after gate_delay;
-    elsif pc_ld = '1' then -- Load program counter
+    elsif pc_ld = '1' then
       next_pc <= current_address after gate_delay;
     end if;
   end process;
 
 
-  -- Request the next instruction pointed to by the program counter from ROM.
+  -- Request the instruction at address next_pc from ROM.
   process (next_pc) is
   begin
     rom_en   <= '1'                       after gate_delay;
@@ -134,7 +133,8 @@ begin
                          after gate_delay;
     current_and     <= rom_data(word_size - 17 downto word_size - 24)
                          after gate_delay;
-    current_xor     <= rom_data(word_size - 25 downto 0) after gate_delay;
+    current_xor     <= rom_data(word_size - 25 downto 0)
+                         after gate_delay;
 
 --synopsys synthesis_off
     current_ins_data <= rom_data(word_size - 9 downto 0) after gate_delay;
@@ -142,35 +142,35 @@ begin
   end process;
 
 
-  -- Execute an instruction, interacting with IO ports and setting the pc_en
-  -- and pc_ld registers appropriately. This process contains the instruction
-  -- set implementation.
+  -- Execute an instruction, interacting with IO ports and setting the pc_en and
+  -- pc_ld registers appropriately. This process implements the instruction set.
   process(rst, current_opcode, current_port, current_and,
           current_xor, current_tst_flag, current_io_out, io_in) is
   begin
-    pc_en         <= '0'              after gate_delay;
-    pc_ld         <= '0'              after gate_delay;
-    next_io_out   <= current_io_out   after gate_delay;
-    next_tst_flag <= current_tst_flag after gate_delay;
+    pc_en                <= '0'              after gate_delay;
+    pc_ld                <= '0'              after gate_delay;
+    next_io_out          <= current_io_out   after gate_delay;
+    next_tst_flag        <= current_tst_flag after gate_delay;
 
 --synopsys synthesis_off
-    debug_invalid_opcode <= '0' after gate_delay;
+    debug_invalid_opcode <= '0'              after gate_delay;
 --synopsys synthesis_on
 
     if not rst = '1' then
       case current_opcode is
-        -- Increment unconditional
+
+        -- Increment unconditional:
         when IUC =>
           pc_en <= '1' after gate_delay;
 
-          -- Halt unconditional
+        -- Halt unconditional:
         when HUC =>
 
-        -- Branch unconditional
+        -- Branch unconditional:
         when BUC =>
           pc_ld <= '1' after gate_delay;
 
-        -- Branch conditional
+        -- Branch conditional:
         when BIC =>
           if current_tst_flag = '1' then
             pc_ld <= '1' after gate_delay;
@@ -178,14 +178,14 @@ begin
             pc_en <= '1' after gate_delay;
           end if;
 
-        -- Set outputs
+        -- Set outputs:
         when SETO =>
           next_io_out(to_integer(current_port)) <=
             ((current_io_out(to_integer(current_port))
               and current_and) xor current_xor);
           pc_en <= '1' after gate_delay;
 
-        -- Test Inputs
+        -- Test Inputs:
         when TSTI =>
           if (std_logic_vector((io_in(to_integer(current_port))
                                 and current_and) xor current_xor)
@@ -196,7 +196,7 @@ begin
           end if;
           pc_en <= '1' after gate_delay;
 
-        -- Invalid operation
+        -- Invalid operation:
         when others =>
 --synopsys synthesis_off
           debug_invalid_opcode <= '1' after gate_delay;
@@ -220,8 +220,8 @@ begin
   -- Set the debugging signals as used in the test bench.
   process (current_pc, current_opcode, current_ins_data) is
   begin
-    test_pc <= current_pc;
-    test_opcode <= current_opcode;
+    test_pc       <= current_pc;
+    test_opcode   <= current_opcode;
     test_ins_data <= current_ins_data;
   end process;
 --synopsys synthesis_on
