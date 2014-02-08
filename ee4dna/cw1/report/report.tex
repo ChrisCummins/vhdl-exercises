@@ -1,0 +1,51 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{float}
+\restylefloat{figure}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{gensymb}
+\usepackage[title]{appendix}
+\usepackage[dotinlabels]{titletoc}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage{mathtools}
+\usepackage[margin=0.5in]{geometry}
+\renewcommand{\thefootnote}{\arabic{footnote}}
+
+\newcommand*\wrapletters[1]{\wr@pletters#1\@nil}
+\def\wr@pletters#1#2\@nil{#1\allowbreak\if&#2&\else\wr@pletters#2\@nil\fi}
+
+\usepackage{enumitem}
+\setenumerate{itemsep=0pt}
+
+% Add support for multi-page tables.
+\usepackage{longtable}
+
+\pagenumbering{arabic}
+
+\title{EE4DSA Coursework 1}
+\author{Chris Cummins}
+
+\begin{document}
+\maketitle
+
+\section{Disassembling the program ROM}
+
+\section{Implementing the Execution Unit}
+
+\begin{verbatim}
+$ make synthesis
+Synthesis running...
+WARNING:Xst:2999 - Signal 'data', unconnected in block 'rom', is tied to its     \
+ initial value.
+WARNING:Xst:647 - Input <en> is never used. This port will be preserved and left \
+ unconnected if it belongs to a top-level block or it belongs to a sub-block and \
+ the hierarchy of this sub-block is preserved.
+WARNING:Xst:2042 - Unit rom: 32 internal tristates are replaced by logic (pull-u \
+ p yes): do<0>, do<10>, do<11>, do<12>, do<13>, do<14>, do<15>, do<16>, do<17>,  \
+ do<18>, do<19>, do<1>, do<20>, do<21>, do<22>, do<23>, do<24>, do<25>, do<26>,  \
+ do<27>, do<28>, do<29>, do<2>, do<30>, do<31>, do<3>, do<4>, do<5>, do<6>, do<7>\
+ , do<8>, do<9>.5189
+\end{verbatim}
+
+\end{document}
