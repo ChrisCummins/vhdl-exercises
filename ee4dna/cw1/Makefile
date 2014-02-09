@@ -9,7 +9,17 @@ SOURCES = \
 	trigger.vhd \
 	execution_unit.vhd
 
-all help:
+all simulation sim:
+	@for f in $(SOURCES); do \
+	echo "ghdl -a $$f"; \
+	ghdl -a $$f; \
+	done
+	ghdl -a top_level.vhd
+	ghdl -a test_bench.vhd
+	ghdl -e test_bench
+	ghdl -r test_bench --wave=test_bench.ghw
+
+help:
 	@echo ""
 	@echo "Simulation:"
 	@echo ""
@@ -30,16 +40,6 @@ all help:
 	@echo ""
 	@echo "make clean          - delete temporary files and cleanup directory"
 	@echo ""
-
-simulation sim:
-	@for f in $(SOURCES); do \
-	    echo "ghdl -a $$f"; \
-	    ghdl -a $$f; \
-	done
-	ghdl -a top_level.vhd
-	ghdl -a test_bench.vhd
-	ghdl -e test_bench
-	ghdl -r test_bench --wave=test_bench.ghw 
 
 viewer view:
 	gtkwave test_bench.ghw test_bench.sav &
