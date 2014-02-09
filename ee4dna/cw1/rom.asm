@@ -83,7 +83,7 @@ d-correct-confirm:
         tsti 0x01, 0x20, 0x20   ; Centre button toggled
         bic d-correct-confirm
         seto 0x00, 0xFF, 0x01   ; Toggle LED 0
-        buc code-correct
+        buc end
 
 ;; Incorrect digits. We don't actually need to test the switch inputs since we
 ;; know the code is incorrect.
@@ -117,12 +117,12 @@ d-incorrect-confirm:
         tsti 0x01, 0x20, 0x20   ; Centre button toggled
         bic d-incorrect-confirm
         seto 0x00, 0xFF, 0x02   ; Toggle LED 1
-code-correct:
-        tsti 0x01, 0x40, 0x00   ; Down button pressed
-        bic code-correct
 end:
-        tsti 0x01, 0x40, 0x40   ; Down button toggled
+        tsti 0x01, 0x40, 0x00   ; Down button pressed
         bic end
+restart:
+        tsti 0x01, 0x40, 0x40   ; Down button toggled
+        bic restart
         buc reset               ; Repeat
         iuc
         iuc
