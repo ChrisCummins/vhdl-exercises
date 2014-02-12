@@ -11,6 +11,8 @@ entity execution_unit is
       gate_delay: time;     -- delay per gate for simulation only
       word_size:  positive; -- width of data bus in bits
       rom_size:   positive; -- size of ROM in words
+      ram_size:   positive; -- size of RAM in words
+      intr_size:  positive; -- number of interrupt lines
       ports_in:   positive; -- number of 8 bit wide input ports
       ports_out:  positive  -- number of 8 bit wide output ports
     );
@@ -22,14 +24,23 @@ entity execution_unit is
       en:            in  std_logic                                             :=            'X';  -- enable
 
 --synopsys synthesis_off
-      test_pc:       out unsigned((n_bits(rom_size) - 1) downto 0)             := (others => 'X'); -- program counter
-      test_opcode:   out std_logic_vector(7 downto 0)                          := (others => 'X'); -- instruction opcode
-      test_ins_data: out std_logic_vector(word_size - 9 downto 0)              := (others => 'X'); -- instruction data
+      test_pc:       out unsigned(        (n_bits(rom_size) - 1) downto 0) := (others => '0');     -- program counter
+      test_sp:       out unsigned(        (n_bits(ram_size) - 1) downto 0) := (others => '0');     -- stack pointer
+      test_sr:       out std_logic_vector((       word_size - 1) downto 0) := (others => '0');     -- status register
 --synopsys synthesis_on
 
       rom_en:        out std_logic                                             :=            'X';  -- ROM enable
       rom_addr:      out std_logic_vector((n_bits(rom_size - 1) - 1) downto 0) := (others => 'X'); -- ROM address to read
       rom_data:      in  std_logic_vector((word_size - 1) downto 0)            := (others => 'Z'); -- ROM data
+
+      ram_wr:        out std_logic                                         :=            '0';           -- RAM write
+      ram_waddr:     out std_logic_vector((n_bits(ram_size) - 1) downto 0) := (others => '0');          -- RAM address to write
+      ram_wdata:     out std_logic_vector((       word_size - 1) downto 0) := (others => '0');          -- RAM data to write
+      ram_rd:        out std_logic                                         :=            '0';           -- RAM read
+      ram_raddr:     out std_logic_vector((n_bits(ram_size) - 1) downto 0) := (others => '0');          -- RAM address to read
+      ram_rdata:     in  std_logic_vector((       word_size - 1) downto 0) := (others => 'X');          -- RAM data to read
+
+      intr:          in  std_logic_vector((       intr_size - 1) downto 0) := (others => 'X');          -- Interrupt lines
 
       io_in:         in  byte_vector((ports_in - 1) downto 0)                  := (others => byte_unknown); -- 8 bit wide input ports
       io_out:        out byte_vector((ports_out - 1) downto 0)                 := (others => byte_null)     -- 8 bit wide output ports
@@ -221,8 +232,6 @@ begin
   process (current_pc, current_opcode, current_ins_data) is
   begin
     test_pc       <= current_pc;
-    test_opcode   <= current_opcode;
-    test_ins_data <= current_ins_data;
   end process;
 --synopsys synthesis_on
 
