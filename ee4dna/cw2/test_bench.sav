@@ -1,0 +1,152 @@
+[timestart] 0
+[size] 1600 1107
+[pos] -1 -1
+*-36.763405 58451000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.test_bench.top_level_uut.timer_unit.
+@28
+top.test_bench.clk
+top.test_bench.top_level_uut.rst
+@200
+-
+@c00029
+#{top.test_bench.sw[7:0]} top.test_bench.sw[7] top.test_bench.sw[6] top.test_bench.sw[5] top.test_bench.sw[4] top.test_bench.sw[3] top.test_bench.sw[2] top.test_bench.sw[1] top.test_bench.sw[0]
+@29
+top.test_bench.sw[7]
+top.test_bench.sw[6]
+top.test_bench.sw[5]
+top.test_bench.sw[4]
+top.test_bench.sw[3]
+top.test_bench.sw[2]
+top.test_bench.sw[1]
+top.test_bench.sw[0]
+@1401201
+-group_end
+@28
+top.test_bench.top_level_uut.btnu
+top.test_bench.top_level_uut.btnd
+top.test_bench.top_level_uut.btnc
+top.test_bench.top_level_uut.btnl
+top.test_bench.top_level_uut.btnr
+top.test_bench.top_level_uut.msf
+top.test_bench.top_level_uut.dcf
+@200
+-
+@c00028
+#{top.test_bench.test_intr[7:0]} top.test_bench.test_intr[7] top.test_bench.test_intr[6] top.test_bench.test_intr[5] top.test_bench.test_intr[4] top.test_bench.test_intr[3] top.test_bench.test_intr[2] top.test_bench.test_intr[1] top.test_bench.test_intr[0]
+@28
+top.test_bench.test_intr[7]
+top.test_bench.test_intr[6]
+top.test_bench.test_intr[5]
+top.test_bench.test_intr[4]
+top.test_bench.test_intr[3]
+top.test_bench.test_intr[2]
+top.test_bench.test_intr[1]
+top.test_bench.test_intr[0]
+@1401200
+-group_end
+@200
+-
+@c00028
+#{top.test_bench.comp_ld[7:0]} top.test_bench.comp_ld[7] top.test_bench.comp_ld[6] top.test_bench.comp_ld[5] top.test_bench.comp_ld[4] top.test_bench.comp_ld[3] top.test_bench.comp_ld[2] top.test_bench.comp_ld[1] top.test_bench.comp_ld[0]
+@28
+top.test_bench.comp_ld[7]
+top.test_bench.comp_ld[6]
+top.test_bench.comp_ld[5]
+top.test_bench.comp_ld[4]
+top.test_bench.comp_ld[3]
+top.test_bench.comp_ld[2]
+top.test_bench.comp_ld[1]
+top.test_bench.comp_ld[0]
+@1401200
+-group_end
+@800028
+#{top.test_bench.top_level_uut.ld[7:0]} top.test_bench.top_level_uut.ld[7] top.test_bench.top_level_uut.ld[6] top.test_bench.top_level_uut.ld[5] top.test_bench.top_level_uut.ld[4] top.test_bench.top_level_uut.ld[3] top.test_bench.top_level_uut.ld[2] top.test_bench.top_level_uut.ld[1] top.test_bench.top_level_uut.ld[0]
+@28
+top.test_bench.top_level_uut.ld[7]
+top.test_bench.top_level_uut.ld[6]
+top.test_bench.top_level_uut.ld[5]
+top.test_bench.top_level_uut.ld[4]
+top.test_bench.top_level_uut.ld[3]
+top.test_bench.top_level_uut.ld[2]
+top.test_bench.top_level_uut.ld[1]
+top.test_bench.top_level_uut.ld[0]
+@1001200
+-group_end
+@200
+-
+@22
+#{top.test_bench.comp_sr[31:0]} top.test_bench.comp_sr[31] top.test_bench.comp_sr[30] top.test_bench.comp_sr[29] top.test_bench.comp_sr[28] top.test_bench.comp_sr[27] top.test_bench.comp_sr[26] top.test_bench.comp_sr[25] top.test_bench.comp_sr[24] top.test_bench.comp_sr[23] top.test_bench.comp_sr[22] top.test_bench.comp_sr[21] top.test_bench.comp_sr[20] top.test_bench.comp_sr[19] top.test_bench.comp_sr[18] top.test_bench.comp_sr[17] top.test_bench.comp_sr[16] top.test_bench.comp_sr[15] top.test_bench.comp_sr[14] top.test_bench.comp_sr[13] top.test_bench.comp_sr[12] top.test_bench.comp_sr[11] top.test_bench.comp_sr[10] top.test_bench.comp_sr[9] top.test_bench.comp_sr[8] top.test_bench.comp_sr[7] top.test_bench.comp_sr[6] top.test_bench.comp_sr[5] top.test_bench.comp_sr[4] top.test_bench.comp_sr[3] top.test_bench.comp_sr[2] top.test_bench.comp_sr[1] top.test_bench.comp_sr[0]
+#{top.test_bench.test_sr[31:0]} top.test_bench.test_sr[31] top.test_bench.test_sr[30] top.test_bench.test_sr[29] top.test_bench.test_sr[28] top.test_bench.test_sr[27] top.test_bench.test_sr[26] top.test_bench.test_sr[25] top.test_bench.test_sr[24] top.test_bench.test_sr[23] top.test_bench.test_sr[22] top.test_bench.test_sr[21] top.test_bench.test_sr[20] top.test_bench.test_sr[19] top.test_bench.test_sr[18] top.test_bench.test_sr[17] top.test_bench.test_sr[16] top.test_bench.test_sr[15] top.test_bench.test_sr[14] top.test_bench.test_sr[13] top.test_bench.test_sr[12] top.test_bench.test_sr[11] top.test_bench.test_sr[10] top.test_bench.test_sr[9] top.test_bench.test_sr[8] top.test_bench.test_sr[7] top.test_bench.test_sr[6] top.test_bench.test_sr[5] top.test_bench.test_sr[4] top.test_bench.test_sr[3] top.test_bench.test_sr[2] top.test_bench.test_sr[1] top.test_bench.test_sr[0]
+#{top.test_bench.comp_pc[5:0]} top.test_bench.comp_pc[5] top.test_bench.comp_pc[4] top.test_bench.comp_pc[3] top.test_bench.comp_pc[2] top.test_bench.comp_pc[1] top.test_bench.comp_pc[0]
+#{top.test_bench.test_pc[5:0]} top.test_bench.test_pc[5] top.test_bench.test_pc[4] top.test_bench.test_pc[3] top.test_bench.test_pc[2] top.test_bench.test_pc[1] top.test_bench.test_pc[0]
+#{top.test_bench.comp_sp[6:0]} top.test_bench.comp_sp[6] top.test_bench.comp_sp[5] top.test_bench.comp_sp[4] top.test_bench.comp_sp[3] top.test_bench.comp_sp[2] top.test_bench.comp_sp[1] top.test_bench.comp_sp[0]
+#{top.test_bench.test_sp[6:0]} top.test_bench.test_sp[6] top.test_bench.test_sp[5] top.test_bench.test_sp[4] top.test_bench.test_sp[3] top.test_bench.test_sp[2] top.test_bench.test_sp[1] top.test_bench.test_sp[0]
+@200
+-
+@28
+top.test_bench.comp_rom_en
+top.test_bench.top_level_uut.test_rom_en
+@22
+#{top.test_bench.comp_rom_addr[5:0]} top.test_bench.comp_rom_addr[5] top.test_bench.comp_rom_addr[4] top.test_bench.comp_rom_addr[3] top.test_bench.comp_rom_addr[2] top.test_bench.comp_rom_addr[1] top.test_bench.comp_rom_addr[0]
+#{top.test_bench.test_rom_addr[5:0]} top.test_bench.test_rom_addr[5] top.test_bench.test_rom_addr[4] top.test_bench.test_rom_addr[3] top.test_bench.test_rom_addr[2] top.test_bench.test_rom_addr[1] top.test_bench.test_rom_addr[0]
+#{top.test_bench.comp_rom_data[31:0]} top.test_bench.comp_rom_data[31] top.test_bench.comp_rom_data[30] top.test_bench.comp_rom_data[29] top.test_bench.comp_rom_data[28] top.test_bench.comp_rom_data[27] top.test_bench.comp_rom_data[26] top.test_bench.comp_rom_data[25] top.test_bench.comp_rom_data[24] top.test_bench.comp_rom_data[23] top.test_bench.comp_rom_data[22] top.test_bench.comp_rom_data[21] top.test_bench.comp_rom_data[20] top.test_bench.comp_rom_data[19] top.test_bench.comp_rom_data[18] top.test_bench.comp_rom_data[17] top.test_bench.comp_rom_data[16] top.test_bench.comp_rom_data[15] top.test_bench.comp_rom_data[14] top.test_bench.comp_rom_data[13] top.test_bench.comp_rom_data[12] top.test_bench.comp_rom_data[11] top.test_bench.comp_rom_data[10] top.test_bench.comp_rom_data[9] top.test_bench.comp_rom_data[8] top.test_bench.comp_rom_data[7] top.test_bench.comp_rom_data[6] top.test_bench.comp_rom_data[5] top.test_bench.comp_rom_data[4] top.test_bench.comp_rom_data[3] top.test_bench.comp_rom_data[2] top.test_bench.comp_rom_data[1] top.test_bench.comp_rom_data[0]
+#{top.test_bench.test_rom_data[31:0]} top.test_bench.test_rom_data[31] top.test_bench.test_rom_data[30] top.test_bench.test_rom_data[29] top.test_bench.test_rom_data[28] top.test_bench.test_rom_data[27] top.test_bench.test_rom_data[26] top.test_bench.test_rom_data[25] top.test_bench.test_rom_data[24] top.test_bench.test_rom_data[23] top.test_bench.test_rom_data[22] top.test_bench.test_rom_data[21] top.test_bench.test_rom_data[20] top.test_bench.test_rom_data[19] top.test_bench.test_rom_data[18] top.test_bench.test_rom_data[17] top.test_bench.test_rom_data[16] top.test_bench.test_rom_data[15] top.test_bench.test_rom_data[14] top.test_bench.test_rom_data[13] top.test_bench.test_rom_data[12] top.test_bench.test_rom_data[11] top.test_bench.test_rom_data[10] top.test_bench.test_rom_data[9] top.test_bench.test_rom_data[8] top.test_bench.test_rom_data[7] top.test_bench.test_rom_data[6] top.test_bench.test_rom_data[5] top.test_bench.test_rom_data[4] top.test_bench.test_rom_data[3] top.test_bench.test_rom_data[2] top.test_bench.test_rom_data[1] top.test_bench.test_rom_data[0]
+@200
+-
+@28
+top.test_bench.comp_ram_rd
+top.test_bench.top_level_uut.test_ram_rd
+@22
+#{top.test_bench.comp_ram_raddr[6:0]} top.test_bench.comp_ram_raddr[6] top.test_bench.comp_ram_raddr[5] top.test_bench.comp_ram_raddr[4] top.test_bench.comp_ram_raddr[3] top.test_bench.comp_ram_raddr[2] top.test_bench.comp_ram_raddr[1] top.test_bench.comp_ram_raddr[0]
+#{top.test_bench.test_ram_raddr[6:0]} top.test_bench.test_ram_raddr[6] top.test_bench.test_ram_raddr[5] top.test_bench.test_ram_raddr[4] top.test_bench.test_ram_raddr[3] top.test_bench.test_ram_raddr[2] top.test_bench.test_ram_raddr[1] top.test_bench.test_ram_raddr[0]
+@c00022
+#{top.test_bench.comp_ram_rdata[31:0]} top.test_bench.comp_ram_rdata[31] top.test_bench.comp_ram_rdata[30] top.test_bench.comp_ram_rdata[29] top.test_bench.comp_ram_rdata[28] top.test_bench.comp_ram_rdata[27] top.test_bench.comp_ram_rdata[26] top.test_bench.comp_ram_rdata[25] top.test_bench.comp_ram_rdata[24] top.test_bench.comp_ram_rdata[23] top.test_bench.comp_ram_rdata[22] top.test_bench.comp_ram_rdata[21] top.test_bench.comp_ram_rdata[20] top.test_bench.comp_ram_rdata[19] top.test_bench.comp_ram_rdata[18] top.test_bench.comp_ram_rdata[17] top.test_bench.comp_ram_rdata[16] top.test_bench.comp_ram_rdata[15] top.test_bench.comp_ram_rdata[14] top.test_bench.comp_ram_rdata[13] top.test_bench.comp_ram_rdata[12] top.test_bench.comp_ram_rdata[11] top.test_bench.comp_ram_rdata[10] top.test_bench.comp_ram_rdata[9] top.test_bench.comp_ram_rdata[8] top.test_bench.comp_ram_rdata[7] top.test_bench.comp_ram_rdata[6] top.test_bench.comp_ram_rdata[5] top.test_bench.comp_ram_rdata[4] top.test_bench.comp_ram_rdata[3] top.test_bench.comp_ram_rdata[2] top.test_bench.comp_ram_rdata[1] top.test_bench.comp_ram_rdata[0]
+@28
+top.test_bench.comp_ram_rdata[31]
+top.test_bench.comp_ram_rdata[30]
+top.test_bench.comp_ram_rdata[29]
+top.test_bench.comp_ram_rdata[28]
+top.test_bench.comp_ram_rdata[27]
+top.test_bench.comp_ram_rdata[26]
+top.test_bench.comp_ram_rdata[25]
+top.test_bench.comp_ram_rdata[24]
+top.test_bench.comp_ram_rdata[23]
+top.test_bench.comp_ram_rdata[22]
+top.test_bench.comp_ram_rdata[21]
+top.test_bench.comp_ram_rdata[20]
+top.test_bench.comp_ram_rdata[19]
+top.test_bench.comp_ram_rdata[18]
+top.test_bench.comp_ram_rdata[17]
+top.test_bench.comp_ram_rdata[16]
+top.test_bench.comp_ram_rdata[15]
+top.test_bench.comp_ram_rdata[14]
+top.test_bench.comp_ram_rdata[13]
+top.test_bench.comp_ram_rdata[12]
+top.test_bench.comp_ram_rdata[11]
+top.test_bench.comp_ram_rdata[10]
+top.test_bench.comp_ram_rdata[9]
+top.test_bench.comp_ram_rdata[8]
+top.test_bench.comp_ram_rdata[7]
+top.test_bench.comp_ram_rdata[6]
+top.test_bench.comp_ram_rdata[5]
+top.test_bench.comp_ram_rdata[4]
+top.test_bench.comp_ram_rdata[3]
+top.test_bench.comp_ram_rdata[2]
+top.test_bench.comp_ram_rdata[1]
+top.test_bench.comp_ram_rdata[0]
+@1401200
+-group_end
+@22
+#{top.test_bench.test_ram_rdata[31:0]} top.test_bench.test_ram_rdata[31] top.test_bench.test_ram_rdata[30] top.test_bench.test_ram_rdata[29] top.test_bench.test_ram_rdata[28] top.test_bench.test_ram_rdata[27] top.test_bench.test_ram_rdata[26] top.test_bench.test_ram_rdata[25] top.test_bench.test_ram_rdata[24] top.test_bench.test_ram_rdata[23] top.test_bench.test_ram_rdata[22] top.test_bench.test_ram_rdata[21] top.test_bench.test_ram_rdata[20] top.test_bench.test_ram_rdata[19] top.test_bench.test_ram_rdata[18] top.test_bench.test_ram_rdata[17] top.test_bench.test_ram_rdata[16] top.test_bench.test_ram_rdata[15] top.test_bench.test_ram_rdata[14] top.test_bench.test_ram_rdata[13] top.test_bench.test_ram_rdata[12] top.test_bench.test_ram_rdata[11] top.test_bench.test_ram_rdata[10] top.test_bench.test_ram_rdata[9] top.test_bench.test_ram_rdata[8] top.test_bench.test_ram_rdata[7] top.test_bench.test_ram_rdata[6] top.test_bench.test_ram_rdata[5] top.test_bench.test_ram_rdata[4] top.test_bench.test_ram_rdata[3] top.test_bench.test_ram_rdata[2] top.test_bench.test_ram_rdata[1] top.test_bench.test_ram_rdata[0]
+@200
+-
+@28
+top.test_bench.comp_ram_wr
+top.test_bench.top_level_uut.test_ram_wr
+@22
+#{top.test_bench.comp_ram_waddr[6:0]} top.test_bench.comp_ram_waddr[6] top.test_bench.comp_ram_waddr[5] top.test_bench.comp_ram_waddr[4] top.test_bench.comp_ram_waddr[3] top.test_bench.comp_ram_waddr[2] top.test_bench.comp_ram_waddr[1] top.test_bench.comp_ram_waddr[0]
+#{top.test_bench.test_ram_waddr[6:0]} top.test_bench.test_ram_waddr[6] top.test_bench.test_ram_waddr[5] top.test_bench.test_ram_waddr[4] top.test_bench.test_ram_waddr[3] top.test_bench.test_ram_waddr[2] top.test_bench.test_ram_waddr[1] top.test_bench.test_ram_waddr[0]
+#{top.test_bench.comp_ram_wdata[31:0]} top.test_bench.comp_ram_wdata[31] top.test_bench.comp_ram_wdata[30] top.test_bench.comp_ram_wdata[29] top.test_bench.comp_ram_wdata[28] top.test_bench.comp_ram_wdata[27] top.test_bench.comp_ram_wdata[26] top.test_bench.comp_ram_wdata[25] top.test_bench.comp_ram_wdata[24] top.test_bench.comp_ram_wdata[23] top.test_bench.comp_ram_wdata[22] top.test_bench.comp_ram_wdata[21] top.test_bench.comp_ram_wdata[20] top.test_bench.comp_ram_wdata[19] top.test_bench.comp_ram_wdata[18] top.test_bench.comp_ram_wdata[17] top.test_bench.comp_ram_wdata[16] top.test_bench.comp_ram_wdata[15] top.test_bench.comp_ram_wdata[14] top.test_bench.comp_ram_wdata[13] top.test_bench.comp_ram_wdata[12] top.test_bench.comp_ram_wdata[11] top.test_bench.comp_ram_wdata[10] top.test_bench.comp_ram_wdata[9] top.test_bench.comp_ram_wdata[8] top.test_bench.comp_ram_wdata[7] top.test_bench.comp_ram_wdata[6] top.test_bench.comp_ram_wdata[5] top.test_bench.comp_ram_wdata[4] top.test_bench.comp_ram_wdata[3] top.test_bench.comp_ram_wdata[2] top.test_bench.comp_ram_wdata[1] top.test_bench.comp_ram_wdata[0]
+#{top.test_bench.test_ram_wdata[31:0]} top.test_bench.test_ram_wdata[31] top.test_bench.test_ram_wdata[30] top.test_bench.test_ram_wdata[29] top.test_bench.test_ram_wdata[28] top.test_bench.test_ram_wdata[27] top.test_bench.test_ram_wdata[26] top.test_bench.test_ram_wdata[25] top.test_bench.test_ram_wdata[24] top.test_bench.test_ram_wdata[23] top.test_bench.test_ram_wdata[22] top.test_bench.test_ram_wdata[21] top.test_bench.test_ram_wdata[20] top.test_bench.test_ram_wdata[19] top.test_bench.test_ram_wdata[18] top.test_bench.test_ram_wdata[17] top.test_bench.test_ram_wdata[16] top.test_bench.test_ram_wdata[15] top.test_bench.test_ram_wdata[14] top.test_bench.test_ram_wdata[13] top.test_bench.test_ram_wdata[12] top.test_bench.test_ram_wdata[11] top.test_bench.test_ram_wdata[10] top.test_bench.test_ram_wdata[9] top.test_bench.test_ram_wdata[8] top.test_bench.test_ram_wdata[7] top.test_bench.test_ram_wdata[6] top.test_bench.test_ram_wdata[5] top.test_bench.test_ram_wdata[4] top.test_bench.test_ram_wdata[3] top.test_bench.test_ram_wdata[2] top.test_bench.test_ram_wdata[1] top.test_bench.test_ram_wdata[0]
+[pattern_trace] 1
+[pattern_trace] 0
