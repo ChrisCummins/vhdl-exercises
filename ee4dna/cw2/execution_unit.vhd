@@ -50,6 +50,7 @@ end execution_unit;
 
 architecture syn of execution_unit is
 
+  -- The program counter input multiplexer
   type    pc_mux_src      is (current, increment, load, stack);
 
   subtype word            is std_logic_vector((word_size - 1) downto 0);
@@ -119,22 +120,30 @@ begin
   test_sr         <= current_sr;
 --synopsys synthesis_on
 
-  -- Immediate outputs and inputs
+  -- Request next instruction from ROM
   rom_en          <= '1'                                                       after gate_delay;
   rom_addr        <= std_logic_vector(next_pc)                                 after gate_delay;
+
+  -- Request current address from RAM
   ram_rd          <= '1'                                                       after gate_delay;
   ram_raddr       <= current_ram_raddr                                         after gate_delay;
+
+  -- Update IO ports with internal signal
   io_out          <= next_io_out                                               after gate_delay;
+
+  -- Decode data from ROM
   current_opcode  <= rom_data(word_size - 1 downto word_size - 8)              after gate_delay;
   current_port    <= unsigned(rom_data(word_size - 9 downto word_size - 16))   after gate_delay;
   current_and     <= rom_data(word_size - 17 downto word_size - 24)            after gate_delay;
   current_xor     <= rom_data(word_size - 25 downto 0)                         after gate_delay;
   load_address    <= unsigned(rom_data((program_counter'length - 1) downto 0)) after gate_delay;
+
+  -- Decode data from RAM
   stack_address   <= unsigned(ram_rdata((n_bits(rom_size) - 1) downto 0))      after gate_delay;
 
 
   -- Our clock process. Perform the house keeping of setting new current values
-  -- for registers, and nothing more.
+  -- for registers.
   process (clk, rst) is
   begin
     if rst = '1' then
@@ -158,11 +167,15 @@ begin
           current_xor, current_sr, current_io_out, current_sp,
           current_ram_raddr, io_in) is
   begin
-    ram_wr                     <= '0'                          after gate_delay;
+
+    -- Hold current register values
     next_io_out                <= current_io_out               after gate_delay;
     next_sp                    <= current_sp                   after gate_delay;
     next_sr                    <= current_sr                   after gate_delay;
     next_ram_raddr             <= current_ram_raddr            after gate_delay;
+
+    -- Don't write anything to RAM
+    ram_wr                     <= '0'                          after gate_delay;
     ram_waddr                  <= (others => '0')              after gate_delay;
     ram_wdata                  <= (others => '0')              after gate_delay;
 
@@ -171,8 +184,10 @@ begin
 --synopsys synthesis_on
 
     if rst = '1' then
+      -- Halt program counter
       next_pc_src              <= current                      after gate_delay;
     else
+      -- Increment program counter by default
       next_pc_src              <= increment                    after gate_delay;
 
       case current_opcode is
@@ -213,21 +228,21 @@ begin
 
         -- Branch to Subroutine:
         when BSR =>
-          -- Push return address to stack.
+          -- Push return address to stack
           ram_wr               <= '1'                          after gate_delay;
           ram_waddr            <= std_logic_vector(current_sp) after gate_delay;
           ram_wdata((n_bits(rom_size) - 1) downto 0)
                                <= std_logic_vector(current_pc + 1)
                                                                after gate_delay;
 
-          -- Set RAM read address and decrement stack pointer.
+          -- Set RAM read address and decrement stack pointer
           next_ram_raddr       <= std_logic_vector(current_sp) after gate_delay;
           next_sp              <= current_sp - 1               after gate_delay;
           next_pc_src          <= load                         after gate_delay;
 
         -- Return from Subroutine:
         when RSR =>
-          -- Reset RAM read address and increment stack pointer.
+          -- Reset RAM read address and increment stack pointer
           next_ram_raddr       <= (others => '0')              after gate_delay;
           next_sp              <= current_sp + 1               after gate_delay;
           next_pc_src          <= stack                        after gate_delay;
@@ -244,7 +259,7 @@ begin
         when CLI =>
           -- TODO: Interrupts implementation
 
-        -- Invalid operation:
+        -- Undefined operation:
         when others =>
 --synopsys synthesis_off
           debug_invalid_opcode <= '1'                          after gate_delay;
@@ -255,7 +270,7 @@ begin
   end process;
 
   -- Program counter multiplexer. Decides on what the next program counter
-  -- should be pased upon the next_pc_src.
+  -- should be based upon the next_pc_src.
   process (next_pc_src, current_pc, load_address, stack_address) is
   begin
 
