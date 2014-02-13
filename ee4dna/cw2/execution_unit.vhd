@@ -19,28 +19,28 @@ entity execution_unit is
 
   port
     (
-      clk:           in  std_logic                                             :=            'X';  -- clock
-      rst:           in  std_logic                                             :=            'X';  -- rst
-      en:            in  std_logic                                             :=            'X';  -- enable
+      clk:           in  std_logic                                             :=            'X';           -- clock
+      rst:           in  std_logic                                             :=            'X';           -- rst
+      en:            in  std_logic                                             :=            'X';           -- enable
 
 --synopsys synthesis_off
-      test_pc:       out unsigned(        (n_bits(rom_size) - 1) downto 0) := (others => '0');     -- program counter
-      test_sp:       out unsigned(        (n_bits(ram_size) - 1) downto 0) := (others => '0');     -- stack pointer
-      test_sr:       out std_logic_vector((       word_size - 1) downto 0) := (others => '0');     -- status register
+      test_pc:       out unsigned(        (n_bits(rom_size) - 1) downto 0)     := (others => '0');          -- program counter
+      test_sp:       out unsigned(        (n_bits(ram_size) - 1) downto 0)     := (others => '0');          -- stack pointer
+      test_sr:       out std_logic_vector((       word_size - 1) downto 0)     := (others => '0');          -- status register
 --synopsys synthesis_on
 
-      rom_en:        out std_logic                                             :=            'X';  -- ROM enable
-      rom_addr:      out std_logic_vector((n_bits(rom_size - 1) - 1) downto 0) := (others => 'X'); -- ROM address to read
-      rom_data:      in  std_logic_vector((word_size - 1) downto 0)            := (others => 'Z'); -- ROM data
+      rom_en:        out std_logic                                             :=            'X';           -- ROM enable
+      rom_addr:      out std_logic_vector((n_bits(rom_size - 1) - 1) downto 0) := (others => 'X');          -- ROM address to read
+      rom_data:      in  std_logic_vector((word_size - 1) downto 0)            := (others => 'Z');          -- ROM data
 
-      ram_wr:        out std_logic                                         :=            '0';           -- RAM write
-      ram_waddr:     out std_logic_vector((n_bits(ram_size) - 1) downto 0) := (others => '0');          -- RAM address to write
-      ram_wdata:     out std_logic_vector((       word_size - 1) downto 0) := (others => '0');          -- RAM data to write
-      ram_rd:        out std_logic                                         :=            '0';           -- RAM read
-      ram_raddr:     out std_logic_vector((n_bits(ram_size) - 1) downto 0) := (others => '0');          -- RAM address to read
-      ram_rdata:     in  std_logic_vector((       word_size - 1) downto 0) := (others => 'X');          -- RAM data to read
+      ram_wr:        out std_logic                                             :=            '0';           -- RAM write
+      ram_waddr:     out std_logic_vector((n_bits(ram_size) - 1) downto 0)     := (others => '0');          -- RAM address to write
+      ram_wdata:     out std_logic_vector((       word_size - 1) downto 0)     := (others => '0');          -- RAM data to write
+      ram_rd:        out std_logic                                             :=            '0';           -- RAM read
+      ram_raddr:     out std_logic_vector((n_bits(ram_size) - 1) downto 0)     := (others => '0');          -- RAM address to read
+      ram_rdata:     in  std_logic_vector((       word_size - 1) downto 0)     := (others => 'X');          -- RAM data to read
 
-      intr:          in  std_logic_vector((       intr_size - 1) downto 0) := (others => 'X');          -- Interrupt lines
+      intr:          in  std_logic_vector((       intr_size - 1) downto 0)     := (others => 'X');          -- Interrupt lines
 
       io_in:         in  byte_vector((ports_in - 1) downto 0)                  := (others => byte_unknown); -- 8 bit wide input ports
       io_out:        out byte_vector((ports_out - 1) downto 0)                 := (others => byte_null)     -- 8 bit wide output ports
@@ -72,7 +72,7 @@ architecture syn of execution_unit is
   constant CLI:  opcode := "00001010";
 
   -- The status register flags
-  constant TST_FLAG: integer         := 1;   -- Test flag
+  constant TST_FLAG:     integer := 1;   -- Test flag
 
   -- Initial values
   constant pc_start:     program_counter := (3 => '1', others => '0'); -- 0x008
