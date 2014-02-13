@@ -121,25 +121,25 @@ begin
 --synopsys synthesis_on
 
   -- Request next instruction from ROM
-  rom_en          <= '1'                                                       after gate_delay;
-  rom_addr        <= std_logic_vector(next_pc)                                 after gate_delay;
+  rom_en          <= '1'                                                        after gate_delay;
+  rom_addr        <= std_logic_vector(next_pc)                                  after gate_delay;
 
   -- Request current address from RAM
-  ram_rd          <= '1'                                                       after gate_delay;
-  ram_raddr       <= current_ram_raddr                                         after gate_delay;
+  ram_rd          <= '1'                                                        after gate_delay;
+  ram_raddr       <= current_ram_raddr                                          after gate_delay;
 
   -- Update IO ports with internal signal
-  io_out          <= next_io_out                                               after gate_delay;
+  io_out          <= next_io_out                                                after gate_delay;
 
   -- Decode data from ROM
-  current_opcode  <= rom_data(word_size - 1 downto word_size - 8)              after gate_delay;
-  current_port    <= unsigned(rom_data(word_size - 9 downto word_size - 16))   after gate_delay;
-  current_and     <= rom_data(word_size - 17 downto word_size - 24)            after gate_delay;
-  current_xor     <= rom_data(word_size - 25 downto 0)                         after gate_delay;
-  load_address    <= unsigned(rom_data((program_counter'length - 1) downto 0)) after gate_delay;
+  current_opcode  <= rom_data(word_size - 1 downto word_size - 8)               after gate_delay;
+  current_port    <= unsigned(rom_data(word_size - 9 downto word_size - 16))    after gate_delay;
+  current_and     <= rom_data(word_size - 17 downto word_size - 24)             after gate_delay;
+  current_xor     <= rom_data(word_size - 25 downto 0)                          after gate_delay;
 
-  -- Decode data from RAM
-  stack_address   <= unsigned(ram_rdata((n_bits(rom_size) - 1) downto 0))      after gate_delay;
+  -- Inputs to the program counter multiplex
+  load_address    <= unsigned(rom_data((program_counter'length - 1)  downto 0)) after gate_delay;
+  stack_address   <= unsigned(ram_rdata((program_counter'length - 1) downto 0)) after gate_delay;
 
 
   -- Our clock process. Perform the house keeping of setting new current values
