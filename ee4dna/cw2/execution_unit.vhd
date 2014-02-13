@@ -138,17 +138,17 @@ begin
   process (clk, rst) is
   begin
     if rst = '1' then
-      current_pc        <= pc_start              after gate_delay;
-      current_sp        <= sp_start              after gate_delay;
-      current_sr        <= sr_start              after gate_delay;
-      current_io_out    <= (others => byte_null) after gate_delay;
-      current_ram_raddr <= (others => '0')       after gate_delay;
+      current_pc               <= pc_start                     after gate_delay;
+      current_sp               <= sp_start                     after gate_delay;
+      current_sr               <= sr_start                     after gate_delay;
+      current_io_out           <= (others => byte_null)        after gate_delay;
+      current_ram_raddr        <= (others => '0')              after gate_delay;
     elsif clk'event and clk = '1' then
-      current_pc        <= next_pc               after gate_delay;
-      current_sp        <= next_sp               after gate_delay;
-      current_sr        <= next_sr               after gate_delay;
-      current_io_out    <= next_io_out           after gate_delay;
-      current_ram_raddr <= next_ram_raddr        after gate_delay;
+      current_pc               <= next_pc                      after gate_delay;
+      current_sp               <= next_sp                      after gate_delay;
+      current_sr               <= next_sr                      after gate_delay;
+      current_io_out           <= next_io_out                  after gate_delay;
+      current_ram_raddr        <= next_ram_raddr               after gate_delay;
     end if;
   end process;
 
@@ -158,22 +158,22 @@ begin
           current_xor, current_sr, current_io_out, current_sp,
           current_ram_raddr, io_in) is
   begin
-    ram_wr               <= '0'               after gate_delay;
-    next_io_out          <= current_io_out    after gate_delay;
-    next_sp              <= current_sp        after gate_delay;
-    next_sr              <= current_sr        after gate_delay;
-    next_ram_raddr       <= current_ram_raddr after gate_delay;
-    ram_waddr            <= (others => '0')   after gate_delay;
-    ram_wdata            <= (others => '0')   after gate_delay;
+    ram_wr                     <= '0'                          after gate_delay;
+    next_io_out                <= current_io_out               after gate_delay;
+    next_sp                    <= current_sp                   after gate_delay;
+    next_sr                    <= current_sr                   after gate_delay;
+    next_ram_raddr             <= current_ram_raddr            after gate_delay;
+    ram_waddr                  <= (others => '0')              after gate_delay;
+    ram_wdata                  <= (others => '0')              after gate_delay;
 
 --synopsys synthesis_off
-    debug_invalid_opcode <= '0'               after gate_delay;
+    debug_invalid_opcode       <= '0'                          after gate_delay;
 --synopsys synthesis_on
 
     if rst = '1' then
-      next_pc_src <= current after gate_delay;
+      next_pc_src              <= current                      after gate_delay;
     else
-      next_pc_src <= increment after gate_delay;
+      next_pc_src              <= increment                    after gate_delay;
 
       case current_opcode is
 
@@ -182,53 +182,55 @@ begin
 
         -- Halt unconditional:
         when HUC =>
-          next_pc_src <= current after gate_delay;
+          next_pc_src          <= current                      after gate_delay;
 
         -- Branch unconditional:
         when BUC =>
-          next_pc_src <= load after gate_delay;
+          next_pc_src          <= load                         after gate_delay;
 
         -- Branch conditional:
         when BIC =>
           if current_sr(TST_FLAG) = '1' then
-            next_pc_src <= load after gate_delay;
+            next_pc_src        <= load                         after gate_delay;
           end if;
 
         -- Set outputs:
         when SETO =>
-          next_io_out(to_integer(current_port)) <=
-            ((current_io_out(to_integer(current_port))
-              and current_and) xor current_xor);
+          next_io_out(to_integer(current_port))
+                               <= ((current_io_out(to_integer(current_port))
+                                    and current_and) xor current_xor)
+                                                               after gate_delay;
 
         -- Test Inputs:
         when TSTI =>
           if (std_logic_vector((io_in(to_integer(current_port))
                                 and current_and) xor current_xor)
               = "00000000") then
-            next_sr(TST_FLAG) <= '1'                         after gate_delay;
+            next_sr(TST_FLAG)  <= '1'                          after gate_delay;
           else
-            next_sr(TST_FLAG) <= '0' after gate_delay;
+            next_sr(TST_FLAG)  <= '0'                          after gate_delay;
           end if;
 
         -- Branch to Subroutine:
         when BSR =>
           -- Push return address to stack.
-          ram_wr         <= '1'                                after gate_delay;
-          ram_waddr      <= std_logic_vector(current_sp)       after gate_delay;
+          ram_wr               <= '1'                          after gate_delay;
+          ram_waddr            <= std_logic_vector(current_sp) after gate_delay;
           ram_wdata((n_bits(rom_size) - 1) downto 0)
-                         <= std_logic_vector(current_pc + 1)   after gate_delay;
+                               <= std_logic_vector(current_pc + 1)
+                                                               after gate_delay;
 
           -- Set RAM read address and decrement stack pointer.
-          next_ram_raddr <= std_logic_vector(current_sp)       after gate_delay;
-          next_sp        <= current_sp - 1                     after gate_delay;
-          next_pc_src    <= load                               after gate_delay;
+          next_ram_raddr       <= std_logic_vector(current_sp) after gate_delay;
+          next_sp              <= current_sp - 1               after gate_delay;
+          next_pc_src          <= load                         after gate_delay;
 
         -- Return from Subroutine:
         when RSR =>
           -- Reset RAM read address and increment stack pointer.
-          next_ram_raddr <= (others => '0')                    after gate_delay;
-          next_sp        <= current_sp + 1                     after gate_delay;
-          next_pc_src    <= stack                              after gate_delay;
+          next_ram_raddr       <= (others => '0')              after gate_delay;
+          next_sp              <= current_sp + 1               after gate_delay;
+          next_pc_src          <= stack                        after gate_delay;
 
         -- Return from Interrupt:
         when RIR =>
@@ -259,13 +261,13 @@ begin
 
     case next_pc_src is
       when current =>   -- Hold counter
-        next_pc <= current_pc     after gate_delay;
+        next_pc                <= current_pc                   after gate_delay;
       when increment => -- Increment counter by one
-        next_pc <= current_pc + 1 after gate_delay;
+        next_pc                <= current_pc + 1               after gate_delay;
       when load =>      -- Load counter from instruction argument
-        next_pc <= load_address   after gate_delay;
+        next_pc                <= load_address                 after gate_delay;
       when stack =>     -- Load counter from RAM
-        next_pc <= stack_address  after gate_delay;
+        next_pc                <= stack_address                after gate_delay;
     end case;
 
   end process;
