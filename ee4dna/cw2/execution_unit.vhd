@@ -112,10 +112,12 @@ begin
   begin
     if rst = '1' then
       current_pc       <= pc_start              after gate_delay;
+      current_sp       <= sp_start              after gate_delay;
       current_tst_flag <= '0'                   after gate_delay;
       current_io_out   <= (others => byte_null) after gate_delay;
     elsif clk'event and clk = '1' then
       current_pc       <= next_pc               after gate_delay;
+      current_sp       <= next_sp               after gate_delay;
       current_tst_flag <= next_tst_flag         after gate_delay;
       current_io_out   <= next_io_out           after gate_delay;
     end if;
@@ -145,6 +147,11 @@ begin
     rom_addr <= std_logic_vector(next_pc) after gate_delay;
   end process;
 
+  -- FIXME: When do we want to read the RAM?
+  process (next_sp) is
+  begin
+    ram_rd <= '1' after gate_delay;
+  end process;
 
   -- Read the received instruction from ROM and decode the individual
   -- components into registers.
@@ -165,13 +172,14 @@ begin
 
   -- Execute an instruction, interacting with IO ports and setting the pc_en and
   -- pc_ld registers appropriately. This process implements the instruction set.
-  process(rst, current_opcode, current_port, current_and,
-          current_xor, current_tst_flag, current_io_out, io_in) is
+  process(rst, current_opcode, current_port, current_and, current_pc,
+          current_xor, current_tst_flag, current_io_out, current_sp, io_in) is
   begin
     pc_en                <= '0'              after gate_delay;
     pc_ld                <= '0'              after gate_delay;
     next_io_out          <= current_io_out   after gate_delay;
     next_tst_flag        <= current_tst_flag after gate_delay;
+    next_sp              <= current_sp       after gate_delay;
 
 --synopsys synthesis_off
     debug_invalid_opcode <= '0'              after gate_delay;
@@ -215,6 +223,39 @@ begin
           else
             next_tst_flag <= '0' after gate_delay;
           end if;
+          pc_en <= '1' after gate_delay;
+
+        -- Branch to Subroutine:
+        when BSR =>
+          ram_waddr <= std_logic_vector(current_sp) after gate_delay;
+          -- FIXME: Causes bound check failure
+          --ram_wdata <= std_logic_vector(current_pc) after gate_delay;
+          ram_wr <= '1' after gate_delay;
+
+          next_sp <= current_sp - 1 after gate_delay;
+          pc_ld <= '1' after gate_delay;
+
+        -- Return from Subroutine:
+        when RSR =>
+          -- TODO: Read address from RAM at stack pointer
+          ram_rd <= '1' after gate_delay;
+
+          next_sp <= current_sp + 1 after gate_delay;
+          pc_ld <= '1' after gate_delay;
+
+        -- Return from Interrupt:
+        when RIR =>
+          -- TODO: Interrupts implementation
+          pc_en <= '1' after gate_delay;
+
+        -- Set Enable Interrupts:
+        when SEI =>
+          -- TODO: Interrupts implementation
+          pc_en <= '1' after gate_delay;
+
+        -- Clean Interrupts flag:
+        when CLI =>
+          -- TODO: Interrupts implementation
           pc_en <= '1' after gate_delay;
 
         -- Invalid operation:
