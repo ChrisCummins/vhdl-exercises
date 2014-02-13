@@ -54,6 +54,7 @@ architecture syn of execution_unit is
   subtype opcode          is std_logic_vector(7 downto 0);
   subtype address         is std_logic_vector(word_size - 9 downto 0);
   subtype program_counter is unsigned((n_bits(rom_size) - 1) downto 0);
+  subtype stack_pointer   is unsigned((n_bits(ram_size) - 1) downto 0);
 
   -- The instruction set
   constant IUC:  opcode := "00000000";
@@ -62,14 +63,28 @@ architecture syn of execution_unit is
   constant BIC:  opcode := "00000011";
   constant SETO: opcode := "00000100";
   constant TSTI: opcode := "00000101";
+  constant BSR:  opcode := "00000110";
+  constant RSR:  opcode := "00000111";
+  constant RIR:  opcode := "00001000";
+  constant SEI:  opcode := "00001001";
+  constant CLI:  opcode := "00001010";
 
   -- The program counter
-  constant pc_start: program_counter := (others => '1'); -- Start on -1
+  constant pc_start: program_counter := (3 => '1', others => '0'); -- 0x008
 
   signal current_pc: program_counter := pc_start;
   signal next_pc:    program_counter := pc_start;
 
-  -- Status registers
+  -- The stack pointer
+  constant sp_start: stack_pointer   := (others => '1');
+
+  signal current_sp: stack_pointer   := sp_start;
+  signal next_sp:    stack_pointer   := sp_start;
+
+  -- The status register
+  signal current_sr:       word      := (others => '0');
+  signal next_sr:          word      := (others => '0');
+
   signal pc_en:            std_logic := '0'; -- Program counter enable
   signal pc_ld:            std_logic := '0'; -- Program counter load
   signal current_tst_flag: std_logic := '0';
@@ -84,7 +99,6 @@ architecture syn of execution_unit is
 
   -- Current instruction components
   signal current_opcode:   opcode                       := (others => '0');
-  signal current_ins_data: address                      := (others => '0');
   signal current_address:  program_counter              := (others => '0');
   signal current_port:     unsigned(7 downto 0)         := (others => '0');
   signal current_and:      std_logic_vector(7 downto 0) := (others => '0');
@@ -146,10 +160,6 @@ begin
                          after gate_delay;
     current_xor     <= rom_data(word_size - 25 downto 0)
                          after gate_delay;
-
---synopsys synthesis_off
-    current_ins_data <= rom_data(word_size - 9 downto 0) after gate_delay;
---synopsys synthesis_on
   end process;
 
 
@@ -229,9 +239,11 @@ begin
 
 --synopsys synthesis_off
   -- Set the debugging signals as used in the test bench.
-  process (current_pc, current_opcode, current_ins_data) is
+  process (current_pc, current_sp, current_sr) is
   begin
-    test_pc       <= current_pc;
+    test_pc <= current_pc;
+    test_sp <= current_sp;
+    test_sr <= current_sr;
   end process;
 --synopsys synthesis_on
 
