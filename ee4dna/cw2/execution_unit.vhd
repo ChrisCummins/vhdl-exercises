@@ -71,55 +71,66 @@ architecture syn of execution_unit is
   constant SEI:  opcode := "00001001";
   constant CLI:  opcode := "00001010";
 
-  -- The program counter
-  constant pc_start: program_counter := (3 => '1', others => '0'); -- 0x008
-
-  signal current_pc: program_counter := pc_start;
-  signal next_pc:    program_counter := pc_start;
-
-  signal pc_src:     pc_mux_src      := increment;
-
-  -- The stack pointer
-  constant sp_start: stack_pointer   := (others => '1');
-
-  signal current_sp: stack_pointer   := sp_start;
-  signal next_sp:    stack_pointer   := sp_start;
-
-  -- The status register
-  constant sr_start: word            := (others => '0'); -- 0x008
-
-  signal current_sr: word            := sr_start;
-  signal next_sr:    word            := sr_start;
-
-  -- Status register indexes
+  -- The status register flags
   constant TST_FLAG: integer         := 1;   -- Test flag
 
-  signal pc_en:      std_logic       := '0'; -- Program counter enable
-  signal pc_ld:      std_logic       := '0'; -- Program counter load
+  -- Initial values
+  constant pc_start:     program_counter := (3 => '1', others => '0'); -- 0x008
+  constant sp_start:     stack_pointer   := (others => '1');
+  constant sr_start:     word            := (others => '0');
+
+  -- The program counter
+  signal current_pc:     program_counter := pc_start;
+  signal next_pc:        program_counter := pc_start;
+  signal load_address:   program_counter := (others => '0');
+  signal stack_address:  program_counter := (others => '0');
+  signal next_pc_src:    pc_mux_src      := increment;
+
+  -- The stack pointer
+  signal current_sp:     stack_pointer   := sp_start;
+  signal next_sp:        stack_pointer   := sp_start;
+
+  -- The status register
+  signal current_sr:     word            := sr_start;
+  signal next_sr:        word            := sr_start;
 
   -- IO port registers
-  signal current_io_out: byte_vector((ports_out - 1) downto 0) := (others => byte_null);
-  signal next_io_out:    byte_vector((ports_out - 1) downto 0) := (others => byte_null);
+  signal current_io_out:    byte_vector((ports_out - 1) downto 0)             := (others => byte_null);
+  signal next_io_out:       byte_vector((ports_out - 1) downto 0)             := (others => byte_null);
+
+  -- RAM address registers
+  signal current_ram_raddr: std_logic_vector((n_bits(ram_size) - 1) downto 0) := (others => '0');
+  signal next_ram_raddr:    std_logic_vector((n_bits(ram_size) - 1) downto 0) := (others => '0');
+
+  -- Current instruction components
+  signal current_opcode:    opcode                       := (others => '0');
+  signal current_port:      unsigned(7 downto 0)         := (others => '0');
+  signal current_and:       std_logic_vector(7 downto 0) := (others => '0');
+  signal current_xor:       std_logic_vector(7 downto 0) := (others => '0');
 
   -- Debugging registers
   signal debug_invalid_opcode: std_logic := '0';
 
-  -- Current instruction components
-  signal current_opcode:   opcode                       := (others => '0');
-  signal current_address:  program_counter              := (others => '0');
-  signal current_port:     unsigned(7 downto 0)         := (others => '0');
-  signal current_and:      std_logic_vector(7 downto 0) := (others => '0');
-  signal current_xor:      std_logic_vector(7 downto 0) := (others => '0');
-
-  signal current_ram_raddr: std_logic_vector((n_bits(ram_size) - 1) downto 0) := (others => '0');
-  signal next_ram_raddr:    std_logic_vector((n_bits(ram_size) - 1) downto 0) := (others => '0');
-
 begin
 
+--synopsys synthesis_off
+  test_pc         <= current_pc;
+  test_sp         <= current_sp;
+  test_sr         <= current_sr;
+--synopsys synthesis_on
 
-  io_out <= next_io_out after gate_delay;
-  ram_rd <= '1' after gate_delay;
-  ram_raddr <= current_ram_raddr after gate_delay;
+  -- Immediate outputs and inputs
+  rom_en          <= '1'                                                       after gate_delay;
+  rom_addr        <= std_logic_vector(next_pc)                                 after gate_delay;
+  ram_rd          <= '1'                                                       after gate_delay;
+  ram_raddr       <= current_ram_raddr                                         after gate_delay;
+  io_out          <= next_io_out                                               after gate_delay;
+  current_opcode  <= rom_data(word_size - 1 downto word_size - 8)              after gate_delay;
+  current_port    <= unsigned(rom_data(word_size - 9 downto word_size - 16))   after gate_delay;
+  current_and     <= rom_data(word_size - 17 downto word_size - 24)            after gate_delay;
+  current_xor     <= rom_data(word_size - 25 downto 0)                         after gate_delay;
+  load_address    <= unsigned(rom_data((program_counter'length - 1) downto 0)) after gate_delay;
+  stack_address   <= unsigned(ram_rdata((n_bits(rom_size) - 1) downto 0))      after gate_delay;
 
 
   -- Our clock process. Perform the house keeping of setting new current values
@@ -137,59 +148,16 @@ begin
       current_sp        <= next_sp               after gate_delay;
       current_sr        <= next_sr               after gate_delay;
       current_io_out    <= next_io_out           after gate_delay;
-      current_ram_raddr <= next_ram_raddr after gate_delay;
+      current_ram_raddr <= next_ram_raddr        after gate_delay;
     end if;
   end process;
 
 
-  -- Program counter logic. Set the next program counter dependent on whether
-  -- the pc_en and pc_ld flags are set. The pc_en flag causes the program
-  -- counter to incremented, the pc_ld flag causes the program counter to
-  -- loaded from the current_address register.
-  process (current_pc, pc_en, pc_ld, current_address) is
-  begin
-    next_pc   <= current_pc       after gate_delay;
-
-    if pc_en = '1' then
-      next_pc <= current_pc + 1  after gate_delay;
-    elsif pc_ld = '1' then
-      next_pc <= current_address after gate_delay;
-    end if;
-  end process;
-
-
-  -- Request the instruction at address next_pc from ROM.
-  process (next_pc) is
-  begin
-    rom_en   <= '1'                       after gate_delay;
-    rom_addr <= std_logic_vector(next_pc) after gate_delay;
-  end process;
-
-
-  -- Read the received instruction from ROM and decode the individual
-  -- components into registers.
-  process (rom_data) is
-  begin
-    current_opcode  <= rom_data(word_size - 1 downto word_size - 8)
-                         after gate_delay;
-    current_address <= unsigned(rom_data((program_counter'length - 1) downto 0))
-                         after gate_delay;
-    current_port    <= unsigned(rom_data(word_size - 9 downto word_size - 16))
-                         after gate_delay;
-    current_and     <= rom_data(word_size - 17 downto word_size - 24)
-                         after gate_delay;
-    current_xor     <= rom_data(word_size - 25 downto 0)
-                         after gate_delay;
-  end process;
-
-
-  -- Execute an instruction, interacting with IO ports and setting the pc_en and
-  -- pc_ld registers appropriately. This process implements the instruction set.
+  -- This process implements the instruction set.
   process(rst, current_opcode, current_port, current_and, current_pc,
           current_xor, current_sr, current_io_out, current_sp,
           current_ram_raddr, io_in) is
   begin
-    pc_ld                <= '0'               after gate_delay;
     ram_wr               <= '0'               after gate_delay;
     next_io_out          <= current_io_out    after gate_delay;
     next_sp              <= current_sp        after gate_delay;
@@ -203,9 +171,9 @@ begin
 --synopsys synthesis_on
 
     if rst = '1' then
-      pc_en              <= '0'               after gate_delay;
+      next_pc_src <= current after gate_delay;
     else
-      pc_en              <= '1'               after gate_delay;
+      next_pc_src <= increment after gate_delay;
 
       case current_opcode is
 
@@ -214,18 +182,16 @@ begin
 
         -- Halt unconditional:
         when HUC =>
-          pc_en <= '0' after gate_delay;
+          next_pc_src <= current after gate_delay;
 
         -- Branch unconditional:
         when BUC =>
-          pc_en <= '0' after gate_delay;
-          pc_ld <= '1' after gate_delay;
+          next_pc_src <= load after gate_delay;
 
         -- Branch conditional:
         when BIC =>
           if current_sr(TST_FLAG) = '1' then
-            pc_en <= '0' after gate_delay;
-            pc_ld <= '1' after gate_delay;
+            next_pc_src <= load after gate_delay;
           end if;
 
         -- Set outputs:
@@ -239,36 +205,30 @@ begin
           if (std_logic_vector((io_in(to_integer(current_port))
                                 and current_and) xor current_xor)
               = "00000000") then
-            next_sr(TST_FLAG) <= '1' after gate_delay;
+            next_sr(TST_FLAG) <= '1'                         after gate_delay;
           else
             next_sr(TST_FLAG) <= '0' after gate_delay;
           end if;
 
         -- Branch to Subroutine:
         when BSR =>
-          -- Push return address to stack
-          ram_waddr <= std_logic_vector(current_sp) after gate_delay;
-          ram_wdata((n_bits(rom_size) - 1) downto 0) <=
-            std_logic_vector(current_pc + 1) after gate_delay;
-          ram_wr <= '1' after gate_delay;
+          -- Push return address to stack.
+          ram_wr         <= '1'                                after gate_delay;
+          ram_waddr      <= std_logic_vector(current_sp)       after gate_delay;
+          ram_wdata((n_bits(rom_size) - 1) downto 0)
+                         <= std_logic_vector(current_pc + 1)   after gate_delay;
 
-          -- Decrement stack pointer
-          next_sp <= current_sp - 1 after gate_delay;
-          pc_en <= '0' after gate_delay;
-          pc_ld <= '1' after gate_delay;
-
-          -- Set next RAM read address
-          next_ram_raddr <= std_logic_vector(current_sp) after gate_delay;
+          -- Set RAM read address and decrement stack pointer.
+          next_ram_raddr <= std_logic_vector(current_sp)       after gate_delay;
+          next_sp        <= current_sp - 1                     after gate_delay;
+          next_pc_src    <= load                               after gate_delay;
 
         -- Return from Subroutine:
         when RSR =>
-          -- Pop return address from stack
-
-
-          -- Increment stack pointer
-          next_sp <= current_sp + 1 after gate_delay;
-          pc_en <= '0' after gate_delay;
-          pc_ld <= '1' after gate_delay;
+          -- Reset RAM read address and increment stack pointer.
+          next_ram_raddr <= (others => '0')                    after gate_delay;
+          next_sp        <= current_sp + 1                     after gate_delay;
+          next_pc_src    <= stack                              after gate_delay;
 
         -- Return from Interrupt:
         when RIR =>
@@ -285,22 +245,29 @@ begin
         -- Invalid operation:
         when others =>
 --synopsys synthesis_off
-          debug_invalid_opcode <= '1' after gate_delay;
+          debug_invalid_opcode <= '1'                          after gate_delay;
 --synopsys synthesis_on
 
       end case;
     end if;
   end process;
 
-
---synopsys synthesis_off
-  -- Set the debugging signals as used in the test bench.
-  process (current_pc, current_sp, current_sr) is
+  -- Program counter multiplexer. Decides on what the next program counter
+  -- should be pased upon the next_pc_src.
+  process (next_pc_src, current_pc, load_address, stack_address) is
   begin
-    test_pc <= current_pc;
-    test_sp <= current_sp;
-    test_sr <= current_sr;
+
+    case next_pc_src is
+      when current =>   -- Hold counter
+        next_pc <= current_pc     after gate_delay;
+      when increment => -- Increment counter by one
+        next_pc <= current_pc + 1 after gate_delay;
+      when load =>      -- Load counter from instruction argument
+        next_pc <= load_address   after gate_delay;
+      when stack =>     -- Load counter from RAM
+        next_pc <= stack_address  after gate_delay;
+    end case;
+
   end process;
---synopsys synthesis_on
 
 end syn;
