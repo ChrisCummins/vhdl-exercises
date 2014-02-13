@@ -106,6 +106,12 @@ architecture syn of execution_unit is
 
 begin
 
+
+  -- We need to keep an internal representation of the output ports since we
+  -- can't read an out port in VHDL.
+  io_out <= next_io_out after gate_delay;
+
+
   -- Our clock process. Perform the house keeping of setting new current values
   -- for registers, and nothing more.
   process (clk, rst) is
@@ -172,8 +178,8 @@ begin
 
   -- Execute an instruction, interacting with IO ports and setting the pc_en and
   -- pc_ld registers appropriately. This process implements the instruction set.
-  process(rst, current_opcode, current_port, current_and, current_pc,
-          current_xor, current_tst_flag, current_io_out, current_sp, io_in) is
+  process(current_opcode, current_port, current_and, current_pc, current_xor,
+          current_tst_flag, current_io_out, current_sp, io_in) is
   begin
     pc_en                <= '0'              after gate_delay;
     pc_ld                <= '0'              after gate_delay;
@@ -185,96 +191,85 @@ begin
     debug_invalid_opcode <= '0'              after gate_delay;
 --synopsys synthesis_on
 
-    if not rst = '1' then
-      case current_opcode is
+    case current_opcode is
 
-        -- Increment unconditional:
-        when IUC =>
-          pc_en <= '1' after gate_delay;
+      -- Increment unconditional:
+      when IUC =>
+        pc_en <= '1' after gate_delay;
 
-        -- Halt unconditional:
-        when HUC =>
+      -- Halt unconditional:
+      when HUC =>
 
-        -- Branch unconditional:
-        when BUC =>
+      -- Branch unconditional:
+      when BUC =>
+        pc_ld <= '1' after gate_delay;
+
+      -- Branch conditional:
+      when BIC =>
+        if current_tst_flag = '1' then
           pc_ld <= '1' after gate_delay;
-
-        -- Branch conditional:
-        when BIC =>
-          if current_tst_flag = '1' then
-            pc_ld <= '1' after gate_delay;
-          else
-            pc_en <= '1' after gate_delay;
-          end if;
-
-        -- Set outputs:
-        when SETO =>
-          next_io_out(to_integer(current_port)) <=
-            ((current_io_out(to_integer(current_port))
-              and current_and) xor current_xor);
+        else
           pc_en <= '1' after gate_delay;
+        end if;
 
-        -- Test Inputs:
-        when TSTI =>
-          if (std_logic_vector((io_in(to_integer(current_port))
-                                and current_and) xor current_xor)
-              = "00000000") then
-            next_tst_flag <= '1' after gate_delay;
-          else
-            next_tst_flag <= '0' after gate_delay;
-          end if;
-          pc_en <= '1' after gate_delay;
+      -- Set outputs:
+      when SETO =>
+        next_io_out(to_integer(current_port)) <=
+          ((current_io_out(to_integer(current_port))
+            and current_and) xor current_xor);
+        pc_en <= '1' after gate_delay;
 
-        -- Branch to Subroutine:
-        when BSR =>
-          ram_waddr <= std_logic_vector(current_sp) after gate_delay;
-          -- FIXME: Causes bound check failure
-          --ram_wdata <= std_logic_vector(current_pc) after gate_delay;
-          ram_wr <= '1' after gate_delay;
+      -- Test Inputs:
+      when TSTI =>
+        if (std_logic_vector((io_in(to_integer(current_port))
+                              and current_and) xor current_xor)
+            = "00000000") then
+          next_tst_flag <= '1' after gate_delay;
+        else
+          next_tst_flag <= '0' after gate_delay;
+        end if;
+        pc_en <= '1' after gate_delay;
 
-          next_sp <= current_sp - 1 after gate_delay;
-          pc_ld <= '1' after gate_delay;
+      -- Branch to Subroutine:
+      when BSR =>
+        ram_waddr <= std_logic_vector(current_sp) after gate_delay;
+        -- FIXME: Causes bound check failure
+        --ram_wdata <= std_logic_vector(current_pc) after gate_delay;
+        ram_wr <= '1' after gate_delay;
 
-        -- Return from Subroutine:
-        when RSR =>
-          -- TODO: Read address from RAM at stack pointer
-          ram_rd <= '1' after gate_delay;
+        next_sp <= current_sp - 1 after gate_delay;
+        pc_ld <= '1' after gate_delay;
 
-          next_sp <= current_sp + 1 after gate_delay;
-          pc_ld <= '1' after gate_delay;
+      -- Return from Subroutine:
+      when RSR =>
+        -- TODO: Read address from RAM at stack pointer
+        ram_rd <= '1' after gate_delay;
 
-        -- Return from Interrupt:
-        when RIR =>
-          -- TODO: Interrupts implementation
-          pc_en <= '1' after gate_delay;
+        next_sp <= current_sp + 1 after gate_delay;
+        pc_ld <= '1' after gate_delay;
 
-        -- Set Enable Interrupts:
-        when SEI =>
-          -- TODO: Interrupts implementation
-          pc_en <= '1' after gate_delay;
+      -- Return from Interrupt:
+      when RIR =>
+        -- TODO: Interrupts implementation
+        pc_en <= '1' after gate_delay;
 
-        -- Clean Interrupts flag:
-        when CLI =>
-          -- TODO: Interrupts implementation
-          pc_en <= '1' after gate_delay;
+      -- Set Enable Interrupts:
+      when SEI =>
+        -- TODO: Interrupts implementation
+        pc_en <= '1' after gate_delay;
 
-        -- Invalid operation:
-        when others =>
+      -- Clean Interrupts flag:
+      when CLI =>
+        -- TODO: Interrupts implementation
+        pc_en <= '1' after gate_delay;
+
+      -- Invalid operation:
+      when others =>
 --synopsys synthesis_off
-          debug_invalid_opcode <= '1' after gate_delay;
+        debug_invalid_opcode <= '1' after gate_delay;
 --synopsys synthesis_on
 
-      end case;
-    end if;
-  end process;
-
-
-  -- Keep the internal and real output ports synced. We need to keep an
-  -- internal representation of the output ports since we can't read an out
-  -- port in VHDL, so we use an intermediate signal.
-  process (next_io_out) is
-  begin
-    io_out <= next_io_out after gate_delay;
+    end case;
   end process;
 
 
