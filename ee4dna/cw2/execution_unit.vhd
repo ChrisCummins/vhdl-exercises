@@ -51,7 +51,7 @@ end execution_unit;
 architecture syn of execution_unit is
 
   -- The program counter input multiplexer
-  type    pc_mux_src      is (current, increment, load, stack);
+  type    pc_mux_src      is (current, increment, load, stack, interrupt);
 
   subtype word            is std_logic_vector((word_size - 1) downto 0);
   subtype opcode          is std_logic_vector(7 downto 0);
@@ -73,6 +73,7 @@ architecture syn of execution_unit is
   constant CLI:  opcode := "00001010";
 
   -- The status register flags
+  constant INTR_EN:      integer := 0;   -- Interrupts enabled
   constant TST_FLAG:     integer := 1;   -- Test flag
 
   -- Initial values
@@ -85,6 +86,7 @@ architecture syn of execution_unit is
   signal next_pc:        program_counter := pc_start;
   signal load_address:   program_counter := (others => '0');
   signal stack_address:  program_counter := (others => '0');
+  signal intr_address:   program_counter := (others => '0');
   signal next_pc_src:    pc_mux_src      := increment;
 
   -- The stack pointer
@@ -94,6 +96,11 @@ architecture syn of execution_unit is
   -- The status register
   signal current_sr:     word            := sr_start;
   signal next_sr:        word            := sr_start;
+  signal current_sr_ld:  std_logic       := '0'; -- Load from RAM
+  signal next_sr_ld:     std_logic       := '0';
+
+  -- Interrupt lines register
+  signal current_intr:   byte            := (others => '0');
 
   -- IO port registers
   signal current_io_out:    byte_vector((ports_out - 1) downto 0)             := (others => byte_null);
@@ -152,12 +159,16 @@ begin
       current_sr               <= sr_start                     after gate_delay;
       current_io_out           <= (others => byte_null)        after gate_delay;
       current_ram_raddr        <= (others => '0')              after gate_delay;
+      current_intr             <= (others => '0')              after gate_delay;
+      current_sr_ld            <= '0'                          after gate_delay;
     elsif clk'event and clk = '1' then
       current_pc               <= next_pc                      after gate_delay;
       current_sp               <= next_sp                      after gate_delay;
       current_sr               <= next_sr                      after gate_delay;
       current_io_out           <= next_io_out                  after gate_delay;
       current_ram_raddr        <= next_ram_raddr               after gate_delay;
+      current_intr             <= intr                         after gate_delay;
+      current_sr_ld            <= next_sr_ld                   after gate_delay;
     end if;
   end process;
 
@@ -165,7 +176,7 @@ begin
   -- This process implements the instruction set.
   process(rst, current_opcode, current_port, current_and, current_pc,
           current_xor, current_sr, current_io_out, current_sp,
-          current_ram_raddr, io_in) is
+          current_ram_raddr, current_intr, current_sr_ld, io_in) is
   begin
 
     -- Hold current register values
@@ -179,6 +190,13 @@ begin
     ram_waddr                  <= (others => '0')              after gate_delay;
     ram_wdata                  <= (others => '0')              after gate_delay;
 
+    -- Load status register from RAM
+    if current_sr_ld = '1' then
+      next_sr_ld             <= '0'                            after gate_delay;
+      next_sr(15 downto 0)   <= ram_rdata((word_size - 1) downto (word_size / 2))
+                                                               after gate_delay;
+    end if;
+
 --synopsys synthesis_off
     debug_invalid_opcode       <= '0'                          after gate_delay;
 --synopsys synthesis_on
@@ -186,6 +204,32 @@ begin
     if rst = '1' then
       -- Halt program counter
       next_pc_src              <= current                      after gate_delay;
+
+    elsif current_intr /= "00000000" and current_sr(INTR_EN) = '1' then
+      -- Execute interrupt routine
+      next_pc_src              <= interrupt                    after gate_delay;
+
+      -- Push the return address and status register to stack
+      ram_wr                   <= '1'                          after gate_delay;
+      ram_waddr                <= std_logic_vector(current_sp) after gate_delay;
+      -- TODO: Only write the bottom half of the current_pc
+      ram_wdata(program_counter'length - 1 downto 0)
+                               <= std_logic_vector(current_pc) after gate_delay;
+      ram_wdata((word_size - 1) downto (word_size / 2))
+                               <= current_sr(15 downto 0)      after gate_delay;
+
+      next_ram_raddr           <= std_logic_vector(current_sp) after gate_delay;
+      next_sp                  <= current_sp - 1               after gate_delay;
+      next_sr(INTR_EN)         <= '0'                          after gate_delay;
+
+      -- Set the interrupt handler address
+      for i in 0 to intr_size - 1 loop
+        if (current_intr(i) = '1') then
+          intr_address         <= to_unsigned(i, program_counter'length)
+                                                               after gate_delay;
+        end if;
+      end loop;
+
     else
       -- Increment program counter by default
       next_pc_src              <= increment                    after gate_delay;
@@ -249,15 +293,24 @@ begin
 
         -- Return from Interrupt:
         when RIR =>
-          -- TODO: Interrupts implementation
+          -- Restore status register from RAM
+          next_sr(INTR_EN)     <= '1'                          after gate_delay;
+          next_sr_ld           <= '1'                          after gate_delay;
+
+          -- Pop the return address from the stack
+          -- FIXME: wtf, why does the raddr have to be offset by 2 ??
+          next_ram_raddr       <= std_logic_vector(current_sp + 2)
+                                                               after gate_delay;
+          next_sp              <= current_sp + 1               after gate_delay;
+          next_pc_src          <= stack                        after gate_delay;
 
         -- Set Enable Interrupts:
         when SEI =>
-          -- TODO: Interrupts implementation
+          next_sr(INTR_EN)     <= '1'                          after gate_delay;
 
         -- Clear Interrupts flag:
         when CLI =>
-          -- TODO: Interrupts implementation
+          next_sr(INTR_EN)     <= '0'                          after gate_delay;
 
         -- Undefined operation:
         when others =>
@@ -283,6 +336,8 @@ begin
         next_pc                <= load_address                 after gate_delay;
       when stack =>     -- Load counter from RAM
         next_pc                <= stack_address                after gate_delay;
+      when interrupt => -- Load address of interrupt handler
+        next_pc                <= intr_address                 after gate_delay;
     end case;
 
   end process;
