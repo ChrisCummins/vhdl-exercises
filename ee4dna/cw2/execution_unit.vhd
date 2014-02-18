@@ -50,16 +50,16 @@ end execution_unit;
 
 architecture syn of execution_unit is
 
-  type    pc_mux_src      is (current, increment, load, stack, interrupt);
+  type    next_pc_sel is (current, increment, load, stack, interrupt);
 
-  subtype opcode          is byte;
-  subtype ports           is byte_vector(ports_out - 1             downto 0);
-  subtype port_index      is unsigned(byte'length - 1              downto 0);
-  subtype word            is std_logic_vector(word_size - 1        downto 0);
-  subtype rom_address     is std_logic_vector(n_bits(rom_size) - 1 downto 0);
-  subtype ram_address     is std_logic_vector(n_bits(ram_size) - 1 downto 0);
-  subtype program_counter is unsigned(rom_address'length - 1       downto 0);
-  subtype stack_pointer   is unsigned(ram_address'length - 1       downto 0);
+  subtype opcode           is byte;
+  subtype ports            is byte_vector(ports_out - 1             downto 0);
+  subtype port_index       is unsigned(byte'length - 1              downto 0);
+  subtype word             is std_logic_vector(word_size - 1        downto 0);
+  subtype rom_address      is std_logic_vector(n_bits(rom_size) - 1 downto 0);
+  subtype ram_address      is std_logic_vector(n_bits(ram_size) - 1 downto 0);
+  subtype program_counter  is unsigned(rom_address'length - 1       downto 0);
+  subtype stack_pointer    is unsigned(ram_address'length - 1       downto 0);
 
   -- The instruction set
   constant IUC:  opcode := "00000000";
@@ -78,44 +78,44 @@ architecture syn of execution_unit is
   constant INTR_EN:      integer := 0;   -- Interrupts enabled
   constant TST_FLAG:     integer := 1;   -- Test flag
 
-  constant pc_start:     program_counter := (3 => '1', others => '0'); -- 0x008
-  constant sp_start:     stack_pointer   := (others => '1');
-  constant sr_start:     word            := (others => '0');
+  constant pc_start:     program_counter  := (3 => '1', others => '0'); -- 0x008
+  constant sp_start:     stack_pointer    := (others => '1');
+  constant sr_start:     word             := (others => '0');
 
   -- The program counter
-  signal current_pc:     program_counter := pc_start;
-  signal next_pc:        program_counter := pc_start;
-  signal next_pc_src:    pc_mux_src      := increment;
+  signal current_pc:     program_counter  := pc_start;
+  signal next_pc:        program_counter  := pc_start;
+  signal next_pc_src:    next_pc_sel      := increment;
 
-  signal load_address:   program_counter := (others => '0');
-  signal stack_address:  program_counter := (others => '0');
-  signal intr_address:   program_counter := (others => '0');
+  signal load_address:   program_counter  := (others => '0');
+  signal stack_address:  program_counter  := (others => '0');
+  signal intr_address:   program_counter  := (others => '0');
 
   -- The stack pointer
-  signal current_sp:     stack_pointer   := sp_start;
-  signal next_sp:        stack_pointer   := sp_start;
+  signal current_sp:     stack_pointer    := sp_start;
+  signal next_sp:        stack_pointer    := sp_start;
 
   -- The status register
-  signal current_sr:     word            := sr_start;
-  signal next_sr:        word            := sr_start;
+  signal current_sr:     word             := sr_start;
+  signal next_sr:        word             := sr_start;
 
-  signal current_sr_ld:  std_logic       := '0'; -- Load from RAM flag
-  signal next_sr_ld:     std_logic       := '0';
+  signal current_sr_ld:  std_logic        := '0'; -- Load from RAM flag
+  signal next_sr_ld:     std_logic        := '0';
 
   -- Port registers
   signal current_intr:      byte                                := (others => '0');
-  signal current_io_out:    ports        := (others => byte_null);
-  signal next_io_out:       ports        := (others => byte_null);
+  signal current_io_out:    ports         := (others => byte_null);
+  signal next_io_out:       ports         := (others => byte_null);
 
   -- RAM address register
-  signal current_ram_raddr: ram_address  := (others => '0');
-  signal next_ram_raddr:    ram_address  := (others => '0');
+  signal current_ram_raddr: ram_address   := (others => '0');
+  signal next_ram_raddr:    ram_address   := (others => '0');
 
   -- Instruction components
-  signal current_opcode:    opcode       := (others => '0');
-  signal current_port:      port_index   := (others => '0');
-  signal current_and:       byte         := (others => '0');
-  signal current_xor:       byte         := (others => '0');
+  signal current_opcode:    opcode        := (others => '0');
+  signal current_port:      port_index    := (others => '0');
+  signal current_and:       byte          := (others => '0');
+  signal current_xor:       byte          := (others => '0');
 
 begin
 
