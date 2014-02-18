@@ -51,6 +51,7 @@ end execution_unit;
 architecture syn of execution_unit is
 
   type    next_pc_sel is (current, increment, load, stack, interrupt);
+  type    next_sr_sel is (current, ram);
 
   subtype opcode           is byte;
   subtype ports            is byte_vector(ports_out - 1             downto 0);
@@ -60,6 +61,7 @@ architecture syn of execution_unit is
   subtype ram_address      is std_logic_vector(n_bits(ram_size) - 1 downto 0);
   subtype program_counter  is unsigned(rom_address'length - 1       downto 0);
   subtype stack_pointer    is unsigned(ram_address'length - 1       downto 0);
+  subtype status_register  is word;
 
   -- The instruction set
   constant IUC:  opcode := "00000000";
@@ -80,7 +82,7 @@ architecture syn of execution_unit is
 
   constant pc_start:     program_counter  := (3 => '1', others => '0'); -- 0x008
   constant sp_start:     stack_pointer    := (others => '1');
-  constant sr_start:     word             := (others => '0');
+  constant sr_start:     status_register  := (others => '0');
 
   -- The program counter
   signal current_pc:     program_counter  := pc_start;
@@ -96,11 +98,11 @@ architecture syn of execution_unit is
   signal next_sp:        stack_pointer    := sp_start;
 
   -- The status register
-  signal current_sr:     word             := sr_start;
-  signal next_sr:        word             := sr_start;
+  signal current_sr:     status_register  := sr_start;
+  signal next_sr:        status_register  := sr_start;
 
-  signal current_sr_ld:  std_logic        := '0'; -- Load from RAM flag
-  signal next_sr_ld:     std_logic        := '0';
+  signal current_sr_src: next_sr_sel      := current;
+  signal next_sr_src:    next_sr_sel      := current;
 
   -- Port registers
   signal current_intr:      byte                                := (others => '0');
@@ -148,7 +150,7 @@ begin
       current_io_out           <= (others => byte_null)        after gate_delay;
       current_ram_raddr        <= (others => '0')              after gate_delay;
       current_intr             <= (others => '0')              after gate_delay;
-      current_sr_ld            <= '0'                          after gate_delay;
+      current_sr_src           <= current                      after gate_delay;
     elsif clk'event and clk = '1' then
       current_pc               <= next_pc                      after gate_delay;
       current_sp               <= next_sp                      after gate_delay;
@@ -156,7 +158,7 @@ begin
       current_io_out           <= next_io_out                  after gate_delay;
       current_ram_raddr        <= next_ram_raddr               after gate_delay;
       current_intr             <= intr                         after gate_delay;
-      current_sr_ld            <= next_sr_ld                   after gate_delay;
+      current_sr_src           <= next_sr_src                  after gate_delay;
     end if;
   end process;
 
@@ -164,23 +166,26 @@ begin
   -- The instruction set implementation.
   process(rst, current_opcode, current_port, current_and, current_pc,
           current_xor, current_sr, current_io_out, current_sp,
-          current_ram_raddr, current_intr, current_sr_ld, io_in) is
+          current_ram_raddr, current_intr, current_sr_src, io_in) is
   begin
 
     next_io_out                <= current_io_out               after gate_delay;
     next_sp                    <= current_sp                   after gate_delay;
-    next_sr                    <= current_sr                   after gate_delay;
     next_ram_raddr             <= current_ram_raddr            after gate_delay;
+    next_sr_src                <= current                      after gate_delay;
     ram_wr                     <= '0'                          after gate_delay;
     ram_waddr                  <= (others => '0')              after gate_delay;
     ram_wdata                  <= (others => '0')              after gate_delay;
 
-    if current_sr_ld = '1' then -- Load status register from RAM
-      -- TODO: is this needed? The test bench passes with it removed.
-      next_sr_ld             <= '0'                            after gate_delay;
-      next_sr(15 downto 0)   <= ram_rdata(word_size - 1 downto word_size / 2)
+    -- Status register input multiplexer
+    case current_sr_src is
+      when current => -- Preserve status register
+        next_sr                <= current_sr                   after gate_delay;
+      when ram =>     -- Load status register from RAM
+        next_sr                <= (others => '0')              after gate_delay;
+        next_sr(15 downto 0)   <= ram_rdata(word_size - 1 downto word_size / 2)
                                                                after gate_delay;
-    end if;
+    end case;
 
     if rst = '1' then
       -- Halt program counter
@@ -264,7 +269,7 @@ begin
           next_pc_src          <= stack                        after gate_delay;
 
           next_sr(INTR_EN)     <= '1'                          after gate_delay;
-          next_sr_ld           <= '1'                          after gate_delay;
+          next_sr_src          <= ram                          after gate_delay;
 
         when SEI =>   -- Set Enable Interrupts
           next_sr(INTR_EN)     <= '1'                          after gate_delay;
