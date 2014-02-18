@@ -87,9 +87,9 @@ architecture syn of execution_unit is
   signal next_pc:        program_counter  := pc_start;
   signal next_pc_src:    next_pc_sel      := increment;
 
-  signal load_address:   program_counter  := (others => '0');
-  signal stack_address:  program_counter  := (others => '0');
-  signal intr_address:   program_counter  := (others => '0');
+  signal load_pc:        program_counter  := (others => '0');
+  signal stack_pc:       program_counter  := (others => '0');
+  signal intr_pc:        program_counter  := (others => '0');
 
   -- The stack pointer
   signal current_sp:     stack_pointer    := sp_start;
@@ -134,8 +134,8 @@ begin
   current_port    <= unsigned(rom_data(word_size - 9 downto word_size - 16))    after gate_delay;
   current_and     <= rom_data(word_size - 17 downto word_size - 24)             after gate_delay;
   current_xor     <= rom_data(word_size - 25 downto 0)                          after gate_delay;
-  load_address    <= unsigned(rom_data(program_counter'length - 1  downto 0))   after gate_delay;
-  stack_address   <= unsigned(ram_rdata(program_counter'length - 1 downto 0))   after gate_delay;
+  load_pc         <= unsigned(rom_data(program_counter'length - 1  downto 0))   after gate_delay;
+  stack_pc        <= unsigned(ram_rdata(program_counter'length - 1 downto 0))   after gate_delay;
 
 
   -- Our clock process. Performs house keeping on registers.
@@ -205,7 +205,7 @@ begin
       -- Set the interrupt handler address
       for i in 0 to intr_size - 1 loop
         if (current_intr(i) = '1') then
-          intr_address         <= to_unsigned(i, program_counter'length)
+          intr_pc              <= to_unsigned(i, program_counter'length)
                                                                after gate_delay;
         end if;
       end loop;
@@ -278,14 +278,14 @@ begin
   end process;
 
   -- Program counter multiplexer.
-  process (next_pc_src, current_pc, load_address, stack_address) is
+  process (next_pc_src, current_pc, load_pc, stack_pc) is
   begin
     case next_pc_src is
       when current     => next_pc <= current_pc                after gate_delay;
       when increment   => next_pc <= current_pc + 1            after gate_delay;
-      when load        => next_pc <= load_address              after gate_delay;
-      when stack       => next_pc <= stack_address             after gate_delay;
-      when interrupt   => next_pc <= intr_address              after gate_delay;
+      when load        => next_pc <= load_pc                   after gate_delay;
+      when stack       => next_pc <= stack_pc                  after gate_delay;
+      when interrupt   => next_pc <= intr_pc                   after gate_delay;
     end case;
   end process;
 
