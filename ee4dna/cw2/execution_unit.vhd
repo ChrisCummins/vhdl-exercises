@@ -50,9 +50,11 @@ end execution_unit;
 
 architecture syn of execution_unit is
 
-  type    next_pc_sel is (current, increment, load, stack, interrupt);
-  type    next_sr_sel is (current, ram);
+  -- Multiplex selectors
+  type    pc_mux_sel       is (current, increment, load, stack, interrupt);
+  type    sr_mux_sel       is (current, ram);
 
+  -- Register types
   subtype opcode           is byte;
   subtype ports            is byte_vector(ports_out - 1             downto 0);
   subtype port_index       is unsigned(byte'length - 1              downto 0);
@@ -80,6 +82,7 @@ architecture syn of execution_unit is
   constant INTR_EN:      integer := 0;   -- Interrupts enabled
   constant TST_FLAG:     integer := 1;   -- Test flag
 
+  -- Initial values
   constant pc_start:     program_counter  := (3 => '1', others => '0'); -- 0x008
   constant sp_start:     stack_pointer    := (others => '1');
   constant sr_start:     status_register  := (others => '0');
@@ -87,7 +90,7 @@ architecture syn of execution_unit is
   -- The program counter
   signal current_pc:     program_counter  := pc_start;
   signal next_pc:        program_counter  := pc_start;
-  signal next_pc_src:    next_pc_sel      := increment;
+  signal next_pc_src:    pc_mux_sel       := increment;
 
   signal load_pc:        program_counter  := (others => '0');
   signal stack_pc:       program_counter  := (others => '0');
@@ -101,8 +104,8 @@ architecture syn of execution_unit is
   signal current_sr:     status_register  := sr_start;
   signal next_sr:        status_register  := sr_start;
 
-  signal current_sr_src: next_sr_sel      := current;
-  signal next_sr_src:    next_sr_sel      := current;
+  signal current_sr_src: sr_mux_sel       := current;
+  signal next_sr_src:    sr_mux_sel       := current;
 
   -- Port registers
   signal current_intr:      byte                                := (others => '0');
