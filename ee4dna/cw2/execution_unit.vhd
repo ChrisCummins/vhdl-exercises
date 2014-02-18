@@ -108,7 +108,7 @@ architecture syn of execution_unit is
   signal next_sr_src:    sr_mux_sel       := current;
 
   -- Port registers
-  signal current_intr:      byte                                := (others => '0');
+  signal current_intr:      byte          := (others => '0');
   signal current_io_out:    ports         := (others => byte_null);
   signal next_io_out:       ports         := (others => byte_null);
 
