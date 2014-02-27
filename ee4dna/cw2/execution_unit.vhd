@@ -179,6 +179,7 @@ begin
     ram_wr                     <= '0'                          after gate_delay;
     ram_waddr                  <= (others => '0')              after gate_delay;
     ram_wdata                  <= (others => '0')              after gate_delay;
+    intr_pc                    <= (others => '0')              after gate_delay;
 
     -- Status register input multiplexer
     case current_sr_src is
