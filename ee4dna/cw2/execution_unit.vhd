@@ -65,6 +65,12 @@ architecture syn of execution_unit is
   subtype stack_pointer    is unsigned(ram_address'length - 1       downto 0);
   subtype status_register  is word;
 
+  -- Instruction components
+  alias current_opcode: opcode is rom_data(word_size - 1  downto word_size - 8);
+  alias current_port:   byte   is rom_data(word_size - 9  downto word_size - 16);
+  alias current_and:    byte   is rom_data(word_size - 17 downto word_size - 24);
+  alias current_xor:    byte   is rom_data(word_size - 25 downto 0);
+
   -- The instruction set
   constant IUC:  opcode := "00000000";
   constant HUC:  opcode := "00000001";
@@ -116,12 +122,6 @@ architecture syn of execution_unit is
   signal current_ram_raddr: ram_address   := (others => '0');
   signal next_ram_raddr:    ram_address   := (others => '0');
 
-  -- Instruction components
-  signal current_opcode:    opcode        := (others => '0');
-  signal current_port:      port_index    := (others => '0');
-  signal current_and:       byte          := (others => '0');
-  signal current_xor:       byte          := (others => '0');
-
 begin
 
 --synopsys synthesis_off
@@ -135,10 +135,6 @@ begin
   ram_rd          <= '1'                                                        after gate_delay;
   ram_raddr       <= current_ram_raddr                                          after gate_delay;
   io_out          <= next_io_out                                                after gate_delay;
-  current_opcode  <= rom_data(word_size - 1 downto word_size - 8)               after gate_delay;
-  current_port    <= unsigned(rom_data(word_size - 9 downto word_size - 16))    after gate_delay;
-  current_and     <= rom_data(word_size - 17 downto word_size - 24)             after gate_delay;
-  current_xor     <= rom_data(word_size - 25 downto 0)                          after gate_delay;
   load_pc         <= unsigned(rom_data(program_counter'length - 1  downto 0))   after gate_delay;
   stack_pc        <= unsigned(ram_rdata(program_counter'length - 1 downto 0))   after gate_delay;
 
@@ -167,8 +163,7 @@ begin
 
 
   -- The instruction set implementation.
-  process(rst, current_opcode, current_port, current_and, current_pc,
-          current_xor, current_sr, current_io_out, current_sp,
+  process(rst, current_and, current_pc, current_sr, current_io_out, current_sp,
           current_ram_raddr, current_intr, current_sr_src, ram_rdata, io_in) is
   begin
 
@@ -236,13 +231,13 @@ begin
           end if;
 
         when SETO =>  -- Set outputs
-          next_io_out(to_integer(current_port))
-                               <= ((current_io_out(to_integer(current_port))
+          next_io_out(to_integer(unsigned(current_port)))
+                               <= ((current_io_out(to_integer(unsigned(current_port)))
                                     and current_and) xor current_xor)
                                                                after gate_delay;
 
         when TSTI =>  -- Test Inputs
-          if (std_logic_vector((io_in(to_integer(current_port))
+          if (std_logic_vector((io_in(to_integer(unsigned(current_port)))
                                 and current_and) xor current_xor)
               = "00000000") then
             next_sr(TST_FLAG)  <= '1'                          after gate_delay;
