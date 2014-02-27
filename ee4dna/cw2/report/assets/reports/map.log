@@ -1,0 +1,616 @@
+Release 14.1 Map P.15xf (lin)
+Xilinx Mapping Report File for Design 'top_level'
+
+Design Information
+------------------
+Command Line   : map -intstyle silent -detail -p xc6slx16-csg324-3 -pr b -c 100
+-w -o top_level_map.ncd top_level.ngd top_level.pcf 
+Target Device  : xc6slx16
+Target Package : csg324
+Target Speed   : -3
+Mapper Version : spartan6 -- $Revision: 1.55 $
+Mapped Date    : Thu Feb 27 16:08:39 2014
+
+Design Summary
+--------------
+Number of errors:      0
+Number of warnings:    0
+Slice Logic Utilization:
+  Number of Slice Registers:                   482 out of  18,224    2%
+    Number used as Flip Flops:                 482
+    Number used as Latches:                      0
+    Number used as Latch-thrus:                  0
+    Number used as AND/OR logics:                0
+  Number of Slice LUTs:                        924 out of   9,112   10%
+    Number used as logic:                      905 out of   9,112    9%
+      Number using O6 output only:             513
+      Number using O5 output only:             338
+      Number using O5 and O6:                   54
+      Number used as ROM:                        0
+    Number used as Memory:                       0 out of   2,176    0%
+    Number used exclusively as route-thrus:     19
+      Number with same-slice register load:      0
+      Number with same-slice carry load:        19
+      Number with other load:                    0
+
+Slice Logic Distribution:
+  Number of occupied Slices:                   255 out of   2,278   11%
+  Nummber of MUXCYs used:                      380 out of   4,556    8%
+  Number of LUT Flip Flop pairs used:          930
+    Number with an unused Flip Flop:           469 out of     930   50%
+    Number with an unused LUT:                   6 out of     930    1%
+    Number of fully used LUT-FF pairs:         455 out of     930   48%
+    Number of unique control sets:               4
+    Number of slice register sites lost
+      to control set restrictions:              14 out of  18,224    1%
+
+  A LUT Flip Flop pair for this architecture represents one LUT paired with
+  one Flip Flop within a slice.  A control set is a unique combination of
+  clock, reset, set, and enable signals for a registered element.
+  The Slice Logic Distribution report is not meaningful if the design is
+  over-mapped for a non-slice resource or if Placement fails.
+
+IO Utilization:
+  Number of bonded IOBs:                        38 out of     232   16%
+    Number of LOCed IOBs:                       38 out of      38  100%
+    IOB Flip Flops:                             14
+
+Specific Feature Utilization:
+  Number of RAMB16BWERs:                         1 out of      32    3%
+  Number of RAMB8BWERs:                          0 out of      64    0%
+  Number of BUFIO2/BUFIO2_2CLKs:                 0 out of      32    0%
+  Number of BUFIO2FB/BUFIO2FB_2CLKs:             0 out of      32    0%
+  Number of BUFG/BUFGMUXs:                       1 out of      16    6%
+    Number used as BUFGs:                        1
+    Number used as BUFGMUX:                      0
+  Number of DCM/DCM_CLKGENs:                     0 out of       4    0%
+  Number of ILOGIC2/ISERDES2s:                  14 out of     248    5%
+    Number used as ILOGIC2s:                    14
+    Number used as ISERDES2s:                    0
+  Number of IODELAY2/IODRP2/IODRP2_MCBs:         0 out of     248    0%
+  Number of OLOGIC2/OSERDES2s:                   0 out of     248    0%
+  Number of BSCANs:                              0 out of       4    0%
+  Number of BUFHs:                               0 out of     128    0%
+  Number of BUFPLLs:                             0 out of       8    0%
+  Number of BUFPLL_MCBs:                         0 out of       4    0%
+  Number of DSP48A1s:                            0 out of      32    0%
+  Number of ICAPs:                               0 out of       1    0%
+  Number of MCBs:                                0 out of       2    0%
+  Number of PCILOGICSEs:                         0 out of       2    0%
+  Number of PLL_ADVs:                            0 out of       2    0%
+  Number of PMVs:                                0 out of       1    0%
+  Number of STARTUPs:                            0 out of       1    0%
+  Number of SUSPEND_SYNCs:                       0 out of       1    0%
+
+Average Fanout of Non-Clock Nets:                3.27
+
+Peak Memory Usage:  239 MB
+Total REAL time to MAP completion:  21 secs 
+Total CPU time to MAP completion:   8 secs 
+
+Table of Contents
+-----------------
+Section 1 - Errors
+Section 2 - Warnings
+Section 3 - Informational
+Section 4 - Removed Logic Summary
+Section 5 - Removed Logic
+Section 6 - IOB Properties
+Section 7 - RPMs
+Section 8 - Guide Report
+Section 9 - Area Group and Partition Summary
+Section 10 - Timing Report
+Section 11 - Configuration String Information
+Section 12 - Control Set Information
+Section 13 - Utilization by Hierarchy
+
+Section 1 - Errors
+------------------
+
+Section 2 - Warnings
+--------------------
+
+Section 3 - Informational
+-------------------------
+INFO:MapLib:562 - No environment variables are currently set.
+INFO:Pack:1716 - Initializing temperature to 85.000 Celsius. (default - Range:
+   0.000 to 85.000 Celsius)
+INFO:Pack:1720 - Initializing voltage to 1.140 Volts. (default - Range: 1.140 to
+   1.260 Volts)
+INFO:Map:215 - The Interim Design Summary has been generated in the MAP Report
+   (.mrp).
+INFO:Pack:1650 - Map created a placed design.
+
+Section 4 - Removed Logic Summary
+---------------------------------
+   2 block(s) optimized away
+ 357 Block(s) redundant
+
+Section 5 - Removed Logic
+-------------------------
+
+Optimized Block(s):
+TYPE 		BLOCK
+GND 		XST_GND
+VCC 		XST_VCC
+
+Redundant Block(s):
+TYPE 		BLOCK
+LUT1 		timer_unit/Mcount_cnt_cy<1>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<2>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<3>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<4>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<5>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<6>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<7>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<8>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<9>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<10>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<11>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<12>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<13>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<14>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<15>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<16>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<17>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<18>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<19>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<20>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<21>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<22>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<23>_rt
+LUT1 		timer_unit/Mcount_cnt_cy<24>_rt
+LUT1 		reset_unit/Mcount_cnt_cy<1>_rt
+LUT1 		reset_unit/Mcount_cnt_cy<2>_rt
+LUT1 		reset_unit/Mcount_cnt_cy<3>_rt
+LUT1 		reset_unit/Mcount_cnt_cy<4>_rt
+LUT1 		reset_unit/Mcount_cnt_cy<5>_rt
+LUT1 		reset_unit/Mcount_cnt_cy<6>_rt
+LUT1 		reset_unit/Mcount_cnt_cy<7>_rt
+LUT1 		reset_unit/Mcount_cnt_cy<8>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<18>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<17>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<16>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<15>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<14>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<13>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<12>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<11>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<10>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<9>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<8>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<7>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<6>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<5>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<4>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<3>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<2>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_cy<1>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<18>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<17>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<16>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<15>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<14>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<13>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<12>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<11>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<10>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<9>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<8>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<7>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<6>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<5>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<4>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<3>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<2>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_cy<1>_rt
+LUT1 		timer_unit/Mcount_cnt_xor<25>_rt
+LUT1 		reset_unit/Mcount_cnt_xor<9>_rt
+LUT1 		reset_debounce_unit/Madd_cnt[0][19]_GND_9_o_add_8_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[0][19]_GND_13_o_add_8_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[15][19]_GND_13_o_add_263_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[14][19]_GND_13_o_add_246_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[13][19]_GND_13_o_add_229_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[12][19]_GND_13_o_add_212_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[11][19]_GND_13_o_add_195_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[10][19]_GND_13_o_add_178_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[9][19]_GND_13_o_add_161_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[8][19]_GND_13_o_add_144_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[7][19]_GND_13_o_add_127_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[6][19]_GND_13_o_add_110_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[5][19]_GND_13_o_add_93_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[4][19]_GND_13_o_add_76_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[3][19]_GND_13_o_add_59_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[2][19]_GND_13_o_add_42_OUT_xor<19>_rt
+LUT1 		debounce_unit/Madd_cnt[1][19]_GND_13_o_add_25_OUT_xor<19>_rt
+
+Section 6 - IOB Properties
+--------------------------
+
++---------------------------------------------------------------------------------------------------------------------------------------------------------+
+| IOB Name                           | Type             | Direction | IO Standard          | Diff  | Drive    | Slew | Reg (s)      | Resistor | IOB      |
+|                                    |                  |           |                      | Term  | Strength | Rate |              |          | Delay    |
++---------------------------------------------------------------------------------------------------------------------------------------------------------+
+| an<0>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| an<1>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| an<2>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| an<3>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| btnc                               | IOB              | INPUT     | LVCMOS33             |       |          |      | IFF          |          |          |
+| btnd                               | IOB              | INPUT     | LVCMOS33             |       |          |      | IFF          |          |          |
+| btnl                               | IOB              | INPUT     | LVCMOS33             |       |          |      | IFF          |          |          |
+| btnr                               | IOB              | INPUT     | LVCMOS33             |       |          |      | IFF          |          |          |
+| btnu                               | IOB              | INPUT     | LVCMOS33             |       |          |      | IFF          |          |          |
+| clk                                | IOB              | INPUT     | LVCMOS33             |       |          |      |              |          |          |
+| dcf                                | IOB              | INPUT     | LVCMOS33             |       |          |      |              |          |          |
+| ka<0>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ka<1>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ka<2>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ka<3>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ka<4>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ka<5>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ka<6>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ka<7>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ld<0>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ld<1>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ld<2>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ld<3>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ld<4>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ld<5>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ld<6>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| ld<7>                              | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
+| msf                                | IOB              | INPUT     | LVCMOS33             |       |          |      |              |          |          |
+| rx                                 | IOB              | INPUT     | LVCMOS33             |       |          |      | IFF          |          |          |
+| sw<0>                              | IOB              | INPUT     | LVCMOS33             |       |          |      | IFF          |          |          |
+| sw<1>                              | IOB              | INPUT     | LVCMOS33             |       |          |      | IFF          |          |          |
+| sw<2>                              | IOB              | INPUT     | LVCMOS33             |       |          |      | IFF          |          |          |
+| sw<3>                              | IOB              | INPUT     | LVCMOS33             |       |          |      | IFF          |          |          |
+| sw<4>                              | IOB              | INPUT     | LVCMOS33             |       |          |      | IFF          |          |          |
+| sw<5>                              | IOB              | INPUT     | LVCMOS33             |       |          |      | IFF          |          |          |
+| sw<6>                              | IOB              | INPUT     | LVCMOS33             |       |          |      | IFF          |          |          |
+| sw<7>                              | IOB              | INPUT     | LVCMOS33             |       |          |      | IFF          |          |          |
+| tx                                 | IOB              | OUTPUT    | LVCMOS33             |       | 12       | FAST |              |          |          |
++---------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+Section 7 - RPMs
+----------------
+
+Section 8 - Guide Report
+------------------------
+Guide not run on this design.
+
+Section 9 - Area Group and Partition Summary
+--------------------------------------------
+
+Partition Implementation Status
+-------------------------------
+
+  No Partitions were found in this design.
+
+-------------------------------
+
+Area Group Information
+----------------------
+
+  No area groups were found in this design.
+
+----------------------
+
+Section 10 - Timing Report
+--------------------------
+A logic-level (pre-route) timing report can be generated by using Xilinx static
+timing analysis tools, Timing Analyzer (GUI) or TRCE (command line), with the
+mapped NCD and PCF files. Please note that this timing report will be generated
+using estimated delay information. For accurate numbers, please generate a
+timing report with the post Place and Route NCD file.
+
+For more information about the Timing Analyzer, consult the Xilinx Timing
+Analyzer Reference Manual; for more information about TRCE, consult the Xilinx
+Command Line Tools User Guide "TRACE" chapter.
+
+Section 11 - Configuration String Details
+-----------------------------------------
+
+Section 12 - Control Set Information
+------------------------------------
++------------------------------------------------------------------------------------------------------------------------+
+| Clock Signal | Reset Signal | Set Signal | Enable Signal                           | Slice Load Count | Bel Load Count |
++------------------------------------------------------------------------------------------------------------------------+
+| clk_BUFGP    |              |            |                                         | 14               | 44             |
+| clk_BUFGP    |              |            | reset_unit/cnt[9]_PWR_8_o_equal_2_o_inv | 3                | 10             |
+| clk_BUFGP    | rst          |            |                                         | 112              | 415            |
+| clk_BUFGP    | rst          |            | execution_unit/_n0261_inv               | 5                | 13             |
++------------------------------------------------------------------------------------------------------------------------+
+
+Section 13 - Utilization by Hierarchy
+-------------------------------------
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Module               | Partition | Slices*       | Slice Reg     | LUTs          | LUTRAM        | BRAM/FIFO | DSP48A1 | BUFG  | BUFIO | BUFR  | DCM   | PLL_ADV   | Full Hierarchical Name         |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| top_level/           |           | 11/274        | 0/482         | 23/924        | 0/0           | 0/1       | 0/0     | 1/1   | 0/0   | 0/0   | 0/0   | 0/0       | top_level                      |
+| +debounce_unit       |           | 185/185       | 355/355       | 704/704       | 0/0           | 0/0       | 0/0     | 0/0   | 0/0   | 0/0   | 0/0   | 0/0       | top_level/debounce_unit        |
+| +execution_unit      |           | 39/39         | 47/47         | 96/96         | 0/0           | 0/0       | 0/0     | 0/0   | 0/0   | 0/0   | 0/0   | 0/0       | top_level/execution_unit       |
+| +ram_unit            |           | 0/0           | 0/0           | 0/0           | 0/0           | 1/1       | 0/0     | 0/0   | 0/0   | 0/0   | 0/0   | 0/0       | top_level/ram_unit             |
+| +reset_debounce_unit |           | 14/14         | 23/23         | 45/45         | 0/0           | 0/0       | 0/0     | 0/0   | 0/0   | 0/0   | 0/0   | 0/0       | top_level/reset_debounce_unit  |
+| +reset_unit          |           | 4/4           | 10/10         | 12/12         | 0/0           | 0/0       | 0/0     | 0/0   | 0/0   | 0/0   | 0/0   | 0/0       | top_level/reset_unit           |
+| +rom_unit            |           | 6/6           | 21/21         | 0/0           | 0/0           | 0/0       | 0/0     | 0/0   | 0/0   | 0/0   | 0/0   | 0/0       | top_level/rom_unit             |
+| +timer_unit          |           | 15/15         | 26/26         | 44/44         | 0/0           | 0/0       | 0/0     | 0/0   | 0/0   | 0/0   | 0/0   | 0/0       | top_level/timer_unit           |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+* Slices can be packed with basic elements from multiple hierarchies.
+  Therefore, a slice will be counted in every hierarchical module
+  that each of its packed basic elements belong to.
+** For each column, there are two numbers reported <A>/<B>.
+   <A> is the number of elements that belong to that specific hierarchical module.
+   <B> is the total number of elements from that hierarchical module and any lower level
+   hierarchical modules below.
+*** The LUTRAM column counts all LUTs used as memory including RAM, ROM, and shift registers.
