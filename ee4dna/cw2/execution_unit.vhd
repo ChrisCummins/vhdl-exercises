@@ -260,12 +260,12 @@ begin
           next_pc_src          <= load                         after gate_delay;
 
         when RSR =>   -- Return from Subroutine
-          next_ram_raddr       <= (others => '0')              after gate_delay;
+          next_ram_raddr       <= std_logic_vector(current_sp + 2)
+                                                               after gate_delay;
           next_sp              <= current_sp + 1               after gate_delay;
           next_pc_src          <= stack                        after gate_delay;
 
         when RIR =>   -- Return from Interrupt:
-          -- FIXME: wtf, why does the raddr have to be offset by 2 ??
           next_ram_raddr       <= std_logic_vector(current_sp + 2)
                                                                after gate_delay;
           next_sp              <= current_sp + 1               after gate_delay;
