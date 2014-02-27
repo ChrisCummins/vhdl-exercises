@@ -169,7 +169,7 @@ begin
   -- The instruction set implementation.
   process(rst, current_opcode, current_port, current_and, current_pc,
           current_xor, current_sr, current_io_out, current_sp,
-          current_ram_raddr, current_intr, current_sr_src, io_in) is
+          current_ram_raddr, current_intr, current_sr_src, ram_rdata, io_in) is
   begin
 
     next_io_out                <= current_io_out               after gate_delay;
@@ -286,7 +286,7 @@ begin
   end process;
 
   -- Program counter multiplexer.
-  process (next_pc_src, current_pc, load_pc, stack_pc) is
+  process (next_pc_src, current_pc, load_pc, stack_pc, intr_pc) is
   begin
     case next_pc_src is
       when current     => next_pc <= current_pc                after gate_delay;
