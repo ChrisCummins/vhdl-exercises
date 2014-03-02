@@ -48,15 +48,18 @@ Generated label names now distinguish between subroutines, interrupt
 handlers and sections, and the UI now supports syntax highlighting,
 automatic comment generation, line highlighting and jumping to
 sections (clicking on a branch or jump instruction will now take the
-user to the specific address).
+user to the specific address). Backwards compatibility with the first
+coursework instruction set is ensured by allowing the user to select
+between an initial program counter of either 0x00 or 0x08.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=6in]{assets/disassembler.png}
+  \includegraphics[width=6.2in]{assets/disassembler.png}
 \end{figure}
 
-The disassembler is implemented in JavaScript, with the source code
-available at\\* \url{http://chriscummins.cc/js/disassembler.js}.
+The disassembler is implemented in 479 lines of JavaScript, with the
+source code available at\\*
+\url{http://chriscummins.cc/js/disassembler.js}.
 
 \section{Modifying the ROM program}
 
@@ -65,33 +68,21 @@ the last four digits of my SUN number (5189) as the code to the
 safe. The only modifications required were to the \texttt{AND}
 components of the four \texttt{TSTI} instructions. The
 \texttt{test\_bench\_inputs.dat} file was then modified so as to test
-this new code, and a process was added to the test bench program which
-created a new \texttt{test\_bench\_outputs.dat} file.
+this new code.
 
 \section{Implementing the Execution Unit}
 
 The file \texttt{execution\_unit.vhd} contains my implementation of
-the instruction set. In order to prevent warnings warnings during
-synthesis about unused signals, assignments to test signals are
-guarded with \texttt{--synopsys} directives. As a result, the program synthesises
-without any pertinent warnings:
+the instruction set. The execution unit uses three processes, with two
+multiplexers controlling the next values for program counter and
+status registers.
 
-\begin{verbatim}
-$ make synthesis
-Synthesis running...
-WARNING:Xst:2999 - Signal 'data', unconnected in block 'rom', is tied to its     \
- initial value.
-WARNING:Xst:647 - Input <en> is never used. This port will be preserved and left \
- unconnected if it belongs to a top-level block or it belongs to a sub-block and \
- the hierarchy of this sub-block is preserved.
-WARNING:Xst:2042 - Unit rom: 32 internal tristates are replaced by logic (pull-u \
- p yes): do<0>, do<10>, do<11>, do<12>, do<13>, do<14>, do<15>, do<16>, do<17>,  \
- do<18>, do<19>, do<1>, do<20>, do<21>, do<22>, do<23>, do<24>, do<25>, do<26>,  \
- do<27>, do<28>, do<29>, do<2>, do<30>, do<31>, do<3>, do<4>, do<5>, do<6>, do<7>\
- , do<8>, do<9>.5189
-\end{verbatim}
+%% TODO: Max frequency, and longest paths. (2 processes would be
+%% faster). Mention the big refactor for .5Mhz increase.
 
-A short video demonstrating the program can be found at
-\url{http://youtu.be/KNiRIqV4vLQ}.
+A video demonstration of the program can be found at
+\url{http://youtu.be/TODO}, showing how the program behaves when
+inputting a correct code, invalid code, and interrupting normal
+program behaviour by resetting the board.
 
 \end{document}
