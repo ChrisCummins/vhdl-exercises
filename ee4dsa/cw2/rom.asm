@@ -73,26 +73,30 @@ d-incorrect-confirm:
         tsti   0x01, 0x20, 0x20
         bic    d-incorrect-confirm
         seto   0x00, 0xFF, 0x02         ; Toggle LED 1
+
+;; End of program:
 wait-for-reset:
         tsti   0x01, 0x40, 0x00         ; Down button toggled
         bic    wait-for-reset
 wait-for-reset-release:
         tsti   0x01, 0x40, 0x40         ; Down button toggled
         bic    wait-for-reset-release
-        buc    _main
+        buc    _main                    ; Repeat
 
+;; Center button press subroutine:
 wait-for-cbtn-toggle:
         tsti   0x01, 0x20, 0x20
         bic    wait-for-cbtn-toggle
-
 wait-for-cbtn-release:
         tsti   0x01, 0x20, 0x00
         bic    wait-for-cbtn-release
         rsr
 
+;; Interrupt vector 0:
 irq0:
         seto   0x00, 0xFF, 0x0C         ; Toggle LEDs 0-3
         rir
+
         iuc
         iuc
         iuc
