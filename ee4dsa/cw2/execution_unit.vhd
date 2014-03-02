@@ -78,6 +78,7 @@ architecture syn of execution_unit is
   constant BIC:  opcode := "00000011";
   constant SETO: opcode := "00000100";
   constant TSTI: opcode := "00000101";
+
   constant BSR:  opcode := "00000110";
   constant RSR:  opcode := "00000111";
   constant RIR:  opcode := "00001000";
