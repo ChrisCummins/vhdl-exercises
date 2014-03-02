@@ -59,10 +59,12 @@ architecture syn of execution_unit is
   subtype ports            is byte_vector(ports_out - 1             downto 0);
   subtype port_index       is unsigned(byte'length - 1              downto 0);
   subtype word             is std_logic_vector(word_size - 1        downto 0);
-  subtype rom_address      is std_logic_vector(n_bits(rom_size) - 1 downto 0);
-  subtype ram_address      is std_logic_vector(n_bits(ram_size) - 1 downto 0);
-  subtype program_counter  is unsigned(rom_address'length - 1       downto 0);
-  subtype stack_pointer    is unsigned(ram_address'length - 1       downto 0);
+  subtype rom_word         is std_logic_vector(n_bits(rom_size) - 1 downto 0);
+  subtype ram_word         is std_logic_vector(n_bits(ram_size) - 1 downto 0);
+  subtype ram_sr           is std_logic_vector(word_size - 1        downto word_size / 2);
+  subtype ram_pc           is std_logic_vector(rom_word'length - 1  downto 0);
+  subtype program_counter  is unsigned(rom_word'length - 1          downto 0);
+  subtype stack_pointer    is unsigned(ram_word'length - 1          downto 0);
   subtype status_register  is word;
 
   -- Instruction components
@@ -70,6 +72,11 @@ architecture syn of execution_unit is
   alias current_port:   byte   is rom_data(word_size - 9  downto word_size - 16);
   alias current_and:    byte   is rom_data(word_size - 17 downto word_size - 24);
   alias current_xor:    byte   is rom_data(word_size - 25 downto 0);
+
+  -- RAM components
+  alias ram_wdata_pc:   ram_pc is ram_wdata(program_counter'length - 1 downto 0);
+  alias ram_wdata_sr:   ram_sr is ram_wdata(word_size - 1 downto word_size / 2);
+  alias ram_rdata_sr:   ram_sr is ram_rdata(word_size - 1 downto word_size / 2);
 
   -- The instruction set
   constant IUC:  opcode := "00000000";
@@ -90,7 +97,7 @@ architecture syn of execution_unit is
   constant TST_FLAG:     integer := 1;   -- Test flag
 
   -- Initial values
-  constant pc_start:     program_counter  := (3 => '1', others => '0'); -- 0x008
+  constant pc_start:     program_counter  := (3 => '1', others => '0'); -- 0x08
   constant sp_start:     stack_pointer    := (others => '1');
   constant sr_start:     status_register  := (others => '0');
 
@@ -120,8 +127,8 @@ architecture syn of execution_unit is
   signal next_io_out:       ports         := (others => byte_null);
 
   -- RAM address register
-  signal current_ram_raddr: ram_address   := (others => '0');
-  signal next_ram_raddr:    ram_address   := (others => '0');
+  signal current_ram_raddr: ram_word      := (others => '0');
+  signal next_ram_raddr:    ram_word      := (others => '0');
 
 begin
 
@@ -184,30 +191,26 @@ begin
         next_sr                <= current_sr                   after gate_delay;
       when ram =>     -- Load status register from RAM
         next_sr                <= (others => '0')              after gate_delay;
-        next_sr(15 downto 0)   <= ram_rdata(word_size - 1 downto word_size / 2)
-                                                               after gate_delay;
+        next_sr(15 downto 0)   <= ram_rdata_sr                 after gate_delay;
     end case;
 
     if current_intr /= byte_null and current_sr(INTR_EN) = '1' then
       -- Execute interrupt routine
       next_pc_src              <= interrupt                    after gate_delay;
-      next_ram_raddr           <= std_logic_vector(current_sp) after gate_delay;
+      next_ram_raddr           <= ram_word(current_sp)         after gate_delay;
       next_sp                  <= current_sp - 1               after gate_delay;
       next_sr(INTR_EN)         <= '0'                          after gate_delay;
 
       -- Push the return address and status register to stack
       ram_wr                   <= '1'                          after gate_delay;
-      ram_waddr                <= std_logic_vector(current_sp) after gate_delay;
-      ram_wdata(program_counter'length - 1 downto 0)
-                               <= std_logic_vector(current_pc) after gate_delay;
-      ram_wdata(word_size - 1 downto word_size / 2)
-                               <= current_sr(15 downto 0)      after gate_delay;
+      ram_waddr                <= ram_word(current_sp)         after gate_delay;
+      ram_wdata_pc             <= rom_word(current_pc)         after gate_delay;
+      ram_wdata_sr             <= current_sr(15 downto 0)      after gate_delay;
 
       -- Set the interrupt handler address
       for i in 0 to intr_size - 1 loop
         if (current_intr(i) = '1') then
-          intr_pc              <= to_unsigned(i, program_counter'length)
-                                                               after gate_delay;
+          intr_pc <= to_unsigned(i, program_counter'length)    after gate_delay;
         end if;
       end loop;
 
@@ -244,23 +247,19 @@ begin
 
         when BSR =>   -- Branch to Subroutine
           ram_wr               <= '1'                          after gate_delay;
-          ram_waddr            <= std_logic_vector(current_sp) after gate_delay;
-          ram_wdata(program_counter'length - 1 downto 0)
-                               <= std_logic_vector(current_pc + 1)
-                                                               after gate_delay;
-          next_ram_raddr       <= std_logic_vector(current_sp) after gate_delay;
+          ram_waddr            <= ram_word(current_sp)         after gate_delay;
+          ram_wdata_pc         <= rom_word(current_pc + 1)     after gate_delay;
+          next_ram_raddr       <= ram_word(current_sp)         after gate_delay;
           next_sp              <= current_sp - 1               after gate_delay;
           next_pc_src          <= load                         after gate_delay;
 
         when RSR =>   -- Return from Subroutine
-          next_ram_raddr       <= std_logic_vector(current_sp + 2)
-                                                               after gate_delay;
+          next_ram_raddr       <= ram_word(current_sp + 2)     after gate_delay;
           next_sp              <= current_sp + 1               after gate_delay;
           next_pc_src          <= stack                        after gate_delay;
 
         when RIR =>   -- Return from Interrupt:
-          next_ram_raddr       <= std_logic_vector(current_sp + 2)
-                                                               after gate_delay;
+          next_ram_raddr       <= ram_word(current_sp + 2)     after gate_delay;
           next_sp              <= current_sp + 1               after gate_delay;
           next_pc_src          <= stack                        after gate_delay;
 
