@@ -65,13 +65,13 @@ architecture syn of execution_unit is
   subtype status_register  is word;
 
   -- Word components
-  alias rom_data_opcode: opcode is rom_data(word_size - 1        downto word_size - 8);
-  alias rom_data_port:   byte   is rom_data(word_size - 9        downto word_size - 16);
-  alias rom_data_and:    byte   is rom_data(word_size - 17       downto word_size - 24);
-  alias rom_data_xor:    byte   is rom_data(word_size - 25       downto 0);
-  alias ram_wdata_sr:    ram_sr is ram_wdata(word_size - 1       downto word_size - 16);
-  alias ram_wdata_pc:    ram_pc is ram_wdata(rom_word'length - 1 downto 0);
-  alias ram_rdata_sr:    ram_sr is ram_rdata(word_size - 1       downto word_size - 16);
+  alias rom_data_opcode: opcode is rom_data(word_size - 1           downto word_size - 8);
+  alias rom_data_port:   byte   is rom_data(word_size - 9           downto word_size - 16);
+  alias rom_data_and:    byte   is rom_data(word_size - 17          downto word_size - 24);
+  alias rom_data_xor:    byte   is rom_data(word_size - 25          downto 0);
+  alias ram_wdata_sr:    ram_sr is ram_wdata(word_size - 1          downto word_size - 16);
+  alias ram_wdata_pc:    ram_pc is ram_wdata(rom_word'length - 1    downto 0);
+  alias ram_rdata_sr:    ram_sr is ram_rdata(word_size - 1          downto word_size - 16);
 
   -- The instruction set
   constant IUC:  opcode := "00000000";
