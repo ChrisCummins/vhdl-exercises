@@ -191,7 +191,7 @@ begin
       -- Halt program counter
       next_pc_src              <= current                      after gate_delay;
 
-    elsif current_intr /= "00000000" and current_sr(INTR_EN) = '1' then
+    elsif current_intr /= byte_null and current_sr(INTR_EN) = '1' then
       -- Execute interrupt routine
       next_pc_src              <= interrupt                    after gate_delay;
       next_ram_raddr           <= std_logic_vector(current_sp) after gate_delay;
