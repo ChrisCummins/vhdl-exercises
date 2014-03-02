@@ -67,16 +67,16 @@ architecture syn of execution_unit is
   subtype stack_pointer    is unsigned(ram_word'length - 1          downto 0);
   subtype status_register  is word;
 
-  -- Instruction components
-  alias current_opcode: opcode is rom_data(word_size - 1  downto word_size - 8);
-  alias current_port:   byte   is rom_data(word_size - 9  downto word_size - 16);
-  alias current_and:    byte   is rom_data(word_size - 17 downto word_size - 24);
-  alias current_xor:    byte   is rom_data(word_size - 25 downto 0);
+  -- ROM components
+  alias rom_data_opcode: opcode is rom_data(word_size - 1  downto word_size - 8);
+  alias rom_data_port:   byte   is rom_data(word_size - 9  downto word_size - 16);
+  alias rom_data_and:    byte   is rom_data(word_size - 17 downto word_size - 24);
+  alias rom_data_xor:    byte   is rom_data(word_size - 25 downto 0);
 
   -- RAM components
-  alias ram_wdata_pc:   ram_pc is ram_wdata(program_counter'length - 1 downto 0);
-  alias ram_wdata_sr:   ram_sr is ram_wdata(word_size - 1 downto word_size / 2);
-  alias ram_rdata_sr:   ram_sr is ram_rdata(word_size - 1 downto word_size / 2);
+  alias ram_wdata_pc:    ram_pc is ram_wdata(rom_word'length - 1 downto 0);
+  alias ram_wdata_sr:    ram_sr is ram_wdata(word_size - 1 downto word_size / 2);
+  alias ram_rdata_sr:    ram_sr is ram_rdata(word_size - 1 downto word_size / 2);
 
   -- The instruction set
   constant IUC:  opcode := "00000000";
@@ -218,7 +218,7 @@ begin
       -- Increment program counter by default
       next_pc_src              <= increment                    after gate_delay;
 
-      case current_opcode is
+      case rom_data_opcode is
         when HUC =>   -- Halt unconditional
           next_pc_src          <= current                      after gate_delay;
 
@@ -231,15 +231,13 @@ begin
           end if;
 
         when SETO =>  -- Set outputs
-          next_io_out(to_integer(unsigned(current_port)))
-                               <= ((current_io_out(to_integer(unsigned(current_port)))
-                                    and current_and) xor current_xor)
-                                                               after gate_delay;
+          next_io_out(to_integer(unsigned(rom_data_port)))
+            <= ((current_io_out(to_integer(unsigned(rom_data_port)))
+                 and rom_data_and) xor rom_data_xor)           after gate_delay;
 
         when TSTI =>  -- Test Inputs
-          if (std_logic_vector((io_in(to_integer(unsigned(current_port)))
-                                and current_and) xor current_xor)
-              = "00000000") then
+          if (byte((io_in(to_integer(unsigned(rom_data_port)))
+                    and rom_data_and) xor rom_data_xor) = byte_null) then
             next_sr(TST_FLAG)  <= '1'                          after gate_delay;
           else
             next_sr(TST_FLAG)  <= '0'                          after gate_delay;
