@@ -168,10 +168,11 @@ begin
           current_ram_raddr, current_intr, current_sr_src, ram_rdata, io_in) is
   begin
 
+    next_pc_src                <= current                      after gate_delay;
+    next_sr_src                <= current                      after gate_delay;
     next_io_out                <= current_io_out               after gate_delay;
     next_sp                    <= current_sp                   after gate_delay;
     next_ram_raddr             <= current_ram_raddr            after gate_delay;
-    next_sr_src                <= current                      after gate_delay;
     ram_wr                     <= '0'                          after gate_delay;
     ram_waddr                  <= (others => '0')              after gate_delay;
     ram_wdata                  <= (others => '0')              after gate_delay;
@@ -187,11 +188,7 @@ begin
                                                                after gate_delay;
     end case;
 
-    if rst = '1' then
-      -- Halt program counter
-      next_pc_src              <= current                      after gate_delay;
-
-    elsif current_intr /= byte_null and current_sr(INTR_EN) = '1' then
+    if current_intr /= byte_null and current_sr(INTR_EN) = '1' then
       -- Execute interrupt routine
       next_pc_src              <= interrupt                    after gate_delay;
       next_ram_raddr           <= std_logic_vector(current_sp) after gate_delay;
@@ -215,7 +212,7 @@ begin
         end if;
       end loop;
 
-    else
+    elsif rst /= '1' then
       -- Increment program counter by default
       next_pc_src              <= increment                    after gate_delay;
 
