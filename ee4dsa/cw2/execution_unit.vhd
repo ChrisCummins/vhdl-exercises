@@ -198,7 +198,6 @@ begin
       -- Push the return address and status register to stack
       ram_wr                   <= '1'                          after gate_delay;
       ram_waddr                <= std_logic_vector(current_sp) after gate_delay;
-      -- TODO: Only write the bottom half of the current_pc
       ram_wdata(program_counter'length - 1 downto 0)
                                <= std_logic_vector(current_pc) after gate_delay;
       ram_wdata(word_size - 1 downto word_size / 2)
