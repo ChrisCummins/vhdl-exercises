@@ -173,6 +173,14 @@ begin
   -- The instruction set implementation.
   process(rst, rom_data, current_pc, current_sr, current_io_out, current_sp,
           current_ram_raddr, current_intr, current_sr_src, ram_rdata, io_in) is
+
+    -- Resolve an active port with the AND and XOR masks
+    function get_port(ports: byte_vector; active_port: byte; and_mask: byte; xor_mask: byte)
+      return byte is
+    begin
+      return (ports(to_integer(unsigned(active_port))) and and_mask) xor xor_mask;
+    end get_port;
+
   begin
 
     next_pc_src                <= current                      after gate_delay;
@@ -232,12 +240,11 @@ begin
 
         when SETO =>  -- Set outputs
           next_io_out(to_integer(unsigned(rom_data_port)))
-            <= ((current_io_out(to_integer(unsigned(rom_data_port)))
-                 and rom_data_and) xor rom_data_xor)           after gate_delay;
+            <= get_port(current_io_out, rom_data_port, rom_data_and, rom_data_xor)
+                                                               after gate_delay;
 
         when TSTI =>  -- Test Inputs
-          if (byte((io_in(to_integer(unsigned(rom_data_port)))
-                    and rom_data_and) xor rom_data_xor) = byte_null) then
+          if get_port(io_in, rom_data_port, rom_data_and, rom_data_xor) = byte_null then
             next_sr(TST_FLAG)  <= '1'                          after gate_delay;
           else
             next_sr(TST_FLAG)  <= '0'                          after gate_delay;
