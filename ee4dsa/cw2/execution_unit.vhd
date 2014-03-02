@@ -164,7 +164,7 @@ begin
 
 
   -- The instruction set implementation.
-  process(rst, current_and, current_pc, current_sr, current_io_out, current_sp,
+  process(rst, rom_data, current_pc, current_sr, current_io_out, current_sp,
           current_ram_raddr, current_intr, current_sr_src, ram_rdata, io_in) is
   begin
 
