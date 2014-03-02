@@ -250,7 +250,6 @@ begin
           next_pc_src          <= stack                        after gate_delay;
 
           next_sr(15 downto 0) <= ram_rdata_sr                 after gate_delay;
-          --next_sr(INTR_EN)     <= '1'                          after gate_delay;
 
         when SEI =>   -- Set Enable Interrupts
           next_sr(INTR_EN)     <= '1'                          after gate_delay;
