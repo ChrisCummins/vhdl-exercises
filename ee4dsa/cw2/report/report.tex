@@ -80,6 +80,11 @@ status registers.
 %% TODO: Max frequency, and longest paths. (2 processes would be
 %% faster). Mention the big refactor for .5Mhz increase.
 
+%% TODO: Mention how std_logic_vector(to_unsigned(0, byte'length)
+%% would be more flexible than hard coded opcode constants, but can't
+%% before VHDL 2008, see:
+%% https://groups.google.com/forum/#!topic/comp.lang.vhdl/S9sRjLJbdqA
+
 A video demonstration of the program can be found at
 \url{http://youtu.be/TODO}, showing how the program behaves when
 inputting a correct code, invalid code, and interrupting normal
