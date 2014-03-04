@@ -71,8 +71,6 @@ end execution_unit;
 
 architecture syn of execution_unit is
 
-  type    pc_mux_sel       is (current, increment, load, stack, interrupt);
-
   subtype opcode           is byte;
   subtype ports            is byte_vector(ports_out - 1             downto 0);
   subtype port_index       is unsigned(byte'length - 1              downto 0);
@@ -90,9 +88,11 @@ architecture syn of execution_unit is
   alias rom_data_port:   byte   is rom_data(word_size - 9           downto word_size - 16);
   alias rom_data_and:    byte   is rom_data(word_size - 17          downto word_size - 24);
   alias rom_data_xor:    byte   is rom_data(word_size - 25          downto 0);
+  alias rom_data_pc:     ram_pc is rom_data(rom_word'length - 1     downto 0);
   alias ram_wdata_sr:    ram_sr is ram_wdata(word_size - 1          downto word_size - 16);
   alias ram_wdata_pc:    ram_pc is ram_wdata(rom_word'length - 1    downto 0);
   alias ram_rdata_sr:    ram_sr is ram_rdata(word_size - 1          downto word_size - 16);
+  alias ram_rdata_pc:    ram_pc is ram_rdata(rom_word'length - 1    downto 0);
 
   -- The instruction set
   constant IUC:  opcode := "00000000";
@@ -120,11 +120,6 @@ architecture syn of execution_unit is
   -- The program counter
   signal current_pc:        program_counter  := pc_start;
   signal next_pc:           program_counter  := pc_start;
-  signal next_pc_src:       pc_mux_sel       := increment;
-
-  signal load_pc:           program_counter  := (others => '0');
-  signal stack_pc:          program_counter  := (others => '0');
-  signal intr_pc:           program_counter  := (others => '0');
 
   -- The stack pointer
   signal current_sp:        stack_pointer    := sp_start;
@@ -135,13 +130,13 @@ architecture syn of execution_unit is
   signal next_sr:           status_register  := sr_start;
 
   -- Port registers
-  signal current_intr:      byte          := (others => '0');
-  signal current_io_out:    ports         := (others => byte_null);
-  signal next_io_out:       ports         := (others => byte_null);
+  signal current_intr:      byte             := (others => '0');
+  signal current_io_out:    ports            := (others => byte_null);
+  signal next_io_out:       ports            := (others => byte_null);
 
   -- RAM address register
-  signal current_ram_addr:  ram_word      := (others => '0');
-  signal next_ram_addr:     ram_word      := (others => '0');
+  signal current_ram_addr:  ram_word         := (others => '0');
+  signal next_ram_addr:     ram_word         := (others => '0');
 
 begin
 
@@ -151,13 +146,11 @@ begin
   test_sr   <= current_sr;
 --synopsys synthesis_on
 
-  rom_en    <= '1'                                                      after gate_delay;
-  rom_addr  <= std_logic_vector(next_pc)                                after gate_delay;
-  ram_rd    <= '1'                                                      after gate_delay;
-  ram_addr  <= current_ram_addr                                         after gate_delay;
-  io_out    <= next_io_out                                              after gate_delay;
-  load_pc   <= unsigned(rom_data(program_counter'length - 1  downto 0)) after gate_delay;
-  stack_pc  <= unsigned(ram_rdata(program_counter'length - 1 downto 0)) after gate_delay;
+  rom_en    <= '1'                                             after gate_delay;
+  rom_addr  <= std_logic_vector(next_pc)                       after gate_delay;
+  ram_rd    <= '1'                                             after gate_delay;
+  ram_addr  <= current_ram_addr                                after gate_delay;
+  io_out    <= next_io_out                                     after gate_delay;
 
 
   -- Our clock process. Performs house keeping on registers.
@@ -185,6 +178,10 @@ begin
   process(rst, rom_data, current_pc, current_sr, current_io_out, current_sp,
           current_ram_addr, current_intr, ram_rdata, io_in) is
 
+    variable load_pc:  program_counter;
+    variable stack_pc: program_counter;
+    variable intr_pc:  program_counter;
+
     -- Resolve an active port with the AND and XOR masks
     function get_port(ports: byte_vector; active_port: byte; and_mask: byte; xor_mask: byte)
       return byte is
@@ -194,19 +191,31 @@ begin
 
   begin
 
-    next_pc_src                <= current                      after gate_delay;
-    next_io_out                <= current_io_out               after gate_delay;
+    -- Program counter variables
+    load_pc  := unsigned(rom_data_pc);
+    stack_pc := unsigned(ram_rdata_pc);
+    intr_pc  := (others => '0');
+
+    next_pc                    <= current_pc                   after gate_delay;
     next_sp                    <= current_sp                   after gate_delay;
     next_sr                    <= current_sr                   after gate_delay;
+    next_io_out                <= current_io_out               after gate_delay;
     next_ram_addr              <= current_ram_addr             after gate_delay;
     ram_wr                     <= '0'                          after gate_delay;
     ram_addr                   <= (others => '0')              after gate_delay;
     ram_wdata                  <= (others => '0')              after gate_delay;
-    intr_pc                    <= (others => '0')              after gate_delay;
 
     if current_intr /= byte_null and current_sr(INTR_EN) = '1' then
+
+      -- Set the interrupt handler address
+      for i in 0 to intr_size - 1 loop
+        if (current_intr(i) = '1') then
+          intr_pc := to_unsigned(i, program_counter'length);
+        end if;
+      end loop;
+
       -- Execute interrupt routine
-      next_pc_src              <= interrupt                    after gate_delay;
+      next_pc                  <= intr_pc                      after gate_delay;
       next_ram_addr            <= ram_word(current_sp)         after gate_delay;
       next_sp                  <= current_sp - 1               after gate_delay;
       next_sr(INTR_EN)         <= '0'                          after gate_delay;
@@ -217,27 +226,20 @@ begin
       ram_wdata_pc             <= rom_word(current_pc)         after gate_delay;
       ram_wdata_sr             <= current_sr(15 downto 0)      after gate_delay;
 
-      -- Set the interrupt handler address
-      for i in 0 to intr_size - 1 loop
-        if (current_intr(i) = '1') then
-          intr_pc <= to_unsigned(i, program_counter'length)    after gate_delay;
-        end if;
-      end loop;
-
     elsif rst /= '1' then
       -- Increment program counter by default
-      next_pc_src              <= increment                    after gate_delay;
+      next_pc                  <= current_pc + 1               after gate_delay;
 
       case rom_data_opcode is
         when HUC =>   -- Halt unconditional
-          next_pc_src          <= current                      after gate_delay;
+          next_pc              <= current_pc                   after gate_delay;
 
         when BUC =>   -- Branch unconditional
-          next_pc_src          <= load                         after gate_delay;
+          next_pc              <= load_pc                      after gate_delay;
 
         when BIC =>   -- Branch conditional
           if current_sr(TST_FLAG) = '1' then
-            next_pc_src        <= load                         after gate_delay;
+            next_pc            <= load_pc                      after gate_delay;
           end if;
 
         when SETO =>  -- Set outputs
@@ -258,20 +260,19 @@ begin
           ram_wdata_pc         <= rom_word(current_pc + 1)     after gate_delay;
           next_ram_addr        <= ram_word(current_sp)         after gate_delay;
           next_sp              <= current_sp - 1               after gate_delay;
-          next_pc_src          <= load                         after gate_delay;
+          next_pc              <= load_pc                      after gate_delay;
 
         when RSR =>   -- Return from Subroutine
           next_ram_addr        <= ram_word(current_sp + 2)     after gate_delay;
           next_sp              <= current_sp + 1               after gate_delay;
-          next_pc_src          <= stack                        after gate_delay;
+          next_pc              <= stack_pc                     after gate_delay;
 
         when RIR =>   -- Return from Interrupt:
           next_ram_addr        <= ram_word(current_sp + 2)     after gate_delay;
           next_sp              <= current_sp + 1               after gate_delay;
-          next_pc_src          <= stack                        after gate_delay;
+          next_pc              <= stack_pc                     after gate_delay;
 
           next_sr(15 downto 0) <= ram_rdata_sr                 after gate_delay;
-          --next_sr(INTR_EN)     <= '1'                          after gate_delay;
 
         when SEI =>   -- Set Enable Interrupts
           next_sr(INTR_EN)     <= '1'                          after gate_delay;
@@ -282,18 +283,7 @@ begin
         when others => -- Undefined operation
       end case;
     end if;
-  end process;
 
-  -- Program counter multiplexer.
-  process (next_pc_src, current_pc, load_pc, stack_pc, intr_pc) is
-  begin
-    case next_pc_src is
-      when current     => next_pc <= current_pc                after gate_delay;
-      when increment   => next_pc <= current_pc + 1            after gate_delay;
-      when load        => next_pc <= load_pc                   after gate_delay;
-      when stack       => next_pc <= stack_pc                  after gate_delay;
-      when interrupt   => next_pc <= intr_pc                   after gate_delay;
-    end case;
   end process;
 
 end syn;
