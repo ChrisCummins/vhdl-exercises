@@ -108,6 +108,17 @@ architecture syn of execution_unit is
   constant SEI:  opcode := "00001001";
   constant CLI:  opcode := "00001010";
 
+  constant MTR:  opcode := "00001011";
+  constant RTM:  opcode := "00001100";
+  constant IMTR: opcode := "00001101";
+  constant RTIM: opcode := "00001110";
+  constant PSHR: opcode := "00001111";
+  constant POPR: opcode := "00010000";
+  constant RTIO: opcode := "00010001";
+  constant IOTR: opcode := "00010010";
+  constant LDLR: opcode := "00010011";
+  constant LDUR: opcode := "00010100";
+
   -- The status register flags
   constant INTR_EN:         integer := 0;   -- Interrupts enabled
   constant TST_FLAG:        integer := 1;   -- Test flag
@@ -278,6 +289,36 @@ begin
 
         when CLI =>   -- Clear Interrupts flag
           next_sr(INTR_EN)     <= '0'                          after gate_delay;
+
+        when MTR =>   -- Memory to register
+          -- TODO: Implement
+
+        when RTM =>   -- Register to memory
+          -- TODO: Implement
+
+        when IMTR =>  -- Indexed memory to register
+          -- TODO: Implement
+
+        when RTIM =>  -- Register to indexed memory
+          -- TODO: Implement
+
+        when PSHR =>  -- Stack push
+          -- TODO: Implement
+
+        when POPR =>  -- Stack pop
+          -- TODO: Implement
+
+        when RTIO =>  -- Register to IO port
+          -- TODO: Implement
+
+        when IOTR =>  -- IO port to register
+          -- TODO: Implement
+
+        when LDLR =>  -- Load lower register immediate
+          -- TODO: Implement
+
+        when LDUR =>  -- Load upper register immediate
+          -- TODO: Implement
 
         when others => -- Undefined operation
       end case;
