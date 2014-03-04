@@ -159,7 +159,6 @@ begin
 
   rom_en    <= '1'                                             after gate_delay;
   rom_addr  <= std_logic_vector(next_pc)                       after gate_delay;
-  ram_rd    <= '1'                                             after gate_delay;
   io_out    <= next_io_out                                     after gate_delay;
 
 
@@ -211,9 +210,12 @@ begin
     next_sr                    <= current_sr                   after gate_delay;
     next_io_out                <= current_io_out               after gate_delay;
     next_ram_addr              <= current_ram_addr             after gate_delay;
+    ram_rd                     <= '0'                          after gate_delay;
     ram_wr                     <= '0'                          after gate_delay;
     ram_addr                   <= current_ram_addr             after gate_delay;
     ram_wdata                  <= (others => '0')              after gate_delay;
+
+    reg_a_di                   <= (others => '0')              after gate_delay;
 
     if current_intr /= byte_null and current_sr(INTR_EN) = '1' then
 
