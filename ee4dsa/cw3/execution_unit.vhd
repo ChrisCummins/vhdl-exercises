@@ -80,6 +80,7 @@ architecture syn of execution_unit is
   subtype ram_sr           is std_logic_vector(word_size - 1        downto word_size - 16);
   subtype ram_pc           is std_logic_vector(rom_word'length - 1  downto 0);
   subtype program_counter  is unsigned(rom_word'length - 1          downto 0);
+  subtype instruction_counter is unsigned(icc_size downto 0);
   subtype stack_pointer    is unsigned(ram_word'length - 1          downto 0);
   subtype status_register  is word;
 
@@ -135,6 +136,10 @@ architecture syn of execution_unit is
   signal current_pc:        program_counter  := pc_start;
   signal next_pc:           program_counter  := pc_start;
 
+  -- The instruction cycle counter
+  signal current_icc:       instruction_counter := (others => '0');
+  signal next_icc:          instruction_counter := (others => '0');
+
   -- The stack pointer
   signal current_sp:        stack_pointer    := sp_start;
   signal next_sp:           stack_pointer    := sp_start;
@@ -170,6 +175,7 @@ begin
   begin
     if rst = '1' then
       current_pc               <= pc_start                     after gate_delay;
+      current_icc              <= (others => '0')              after gate_delay;
       current_sp               <= sp_start                     after gate_delay;
       current_sr               <= sr_start                     after gate_delay;
       current_io_out           <= (others => byte_null)        after gate_delay;
@@ -177,6 +183,7 @@ begin
       current_intr             <= (others => '0')              after gate_delay;
     elsif clk'event and clk = '1' then
       current_pc               <= next_pc                      after gate_delay;
+      current_icc              <= next_icc                     after gate_delay;
       current_sp               <= next_sp                      after gate_delay;
       current_sr               <= next_sr                      after gate_delay;
       current_io_out           <= next_io_out                  after gate_delay;
@@ -187,8 +194,8 @@ begin
 
 
   -- The instruction set implementation.
-  process(rst, rom_data, current_pc, current_sr, current_io_out, current_sp,
-          current_ram_addr, current_intr, ram_rdata, io_in) is
+  process(rst, rom_data, current_pc, current_icc, current_sr, current_io_out,
+          current_sp, current_ram_addr, current_intr, ram_rdata, io_in) is
 
     variable load_pc:  program_counter;
     variable stack_pc: program_counter;
@@ -209,6 +216,7 @@ begin
     intr_pc  := (others => '0');
 
     next_pc                    <= current_pc                   after gate_delay;
+    next_icc <= (others => '0') after gate_delay;
     next_sp                    <= current_sp                   after gate_delay;
     next_sr                    <= current_sr                   after gate_delay;
     next_io_out                <= current_io_out               after gate_delay;
@@ -328,7 +336,20 @@ begin
           -- TODO: Implement
 
         when LDLR =>  -- Load lower register immediate
-          -- TODO: Implement
+
+          if current_icc = 0 then
+            reg_b_addr <= rom_data_byte1 after gate_delay;
+            reg_b_rd <= '1' after gate_delay;
+
+            -- Halt execution
+            next_pc <= current_pc after gate_delay;
+            next_icc <= current_icc + 1 after gate_delay;
+          else -- Second clock cycle
+            reg_b_rd <= '0' after gate_delay;
+            reg_a_addr <= rom_data_byte1 after gate_delay;
+            reg_a_wr <= '1' after gate_delay;
+            reg_a_di <= byte_null & byte_null & rom_data_byte2 & rom_data_byte3 after gate_delay;
+          end if;
 
         when LDUR =>  -- Load upper register immediate
           -- TODO: Implement
