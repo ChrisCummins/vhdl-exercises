@@ -218,7 +218,15 @@ begin
     ram_addr                   <= current_ram_addr             after gate_delay;
     ram_wdata                  <= (others => '0')              after gate_delay;
 
-    reg_a_di                   <= (others => '0')              after gate_delay;
+    reg_a_addr <= (others => '0') after gate_delay;
+    reg_a_wr <= '0' after gate_delay;
+    reg_a_di <= (others => '0') after gate_delay;
+
+    reg_b_addr <= (others => '0') after gate_delay;
+    reg_b_rd <= '0' after gate_delay;
+
+    reg_c_addr <= (others => '0') after gate_delay;
+    reg_c_rd <= '0' after gate_delay;
 
     if current_intr /= byte_null and current_sr(INTR_EN) = '1' then
 
