@@ -330,100 +330,225 @@ begin
     end process;
 
     process
+      variable errors: integer := 0;
     begin
         wait for 0.5 * clk_period;
 
-        while end_flag = '0' loop
+        while end_flag = '0' and (errors = 0) loop
+
+            if (comp_pc /= test_pc) then
+              errors := errors + 1;
+            end if;
             assert comp_pc             = test_pc
             report "pc = "             & to_string(std_logic_vector(test_pc)) &
                    ", but should be "  & to_string(std_logic_vector(comp_pc)) severity error;
+
+            if (comp_sp /= test_sp) then
+              errors := errors + 1;
+            end if;
             assert comp_sp             = test_sp
             report "sp = "             & to_string(std_logic_vector(test_sp)) &
                    ", but should be "  & to_string(std_logic_vector(comp_sp)) severity error;
+
+            if (comp_sr /= test_sr) then
+              errors := errors + 1;
+            end if;
             assert comp_sr             = test_sr
             report "sr = "             & to_string(test_sr)                   &
                    ", but should be "  & to_string(comp_sr)                   severity error;
+
+            if (comp_reg_a_addr /= test_reg_a_addr) then
+              errors := errors + 1;
+            end if;
             assert comp_reg_a_addr     = test_reg_a_addr
             report "reg_a_addr = "     & to_string(test_reg_a_addr)           &
                    ", but should be "  & to_string(comp_reg_a_addr)           severity error;
+
+            if (comp_reg_a_wr /= test_reg_a_wr) then
+              errors := errors + 1;
+            end if;
             assert comp_reg_a_wr       = test_reg_a_wr
             report "reg_a_wr = "       & std_logic'image(test_reg_a_wr)       &
                    ", but should be "  & std_logic'image(comp_reg_a_wr)       severity error;
+
+            if (comp_reg_a_di /= test_reg_a_di) then
+              errors := errors + 1;
+            end if;
             assert comp_reg_a_di       = test_reg_a_di
             report "reg_a_di = "       & to_string(test_reg_a_di)             &
                    ", but should be "  & to_string(comp_reg_a_di)             severity error;
+
+            if (comp_reg_b_addr /= test_reg_b_addr) then
+              errors := errors + 1;
+            end if;
             assert comp_reg_b_addr     = test_reg_b_addr
             report "reg_b_addr = "     & to_string(test_reg_b_addr)           &
                    ", but should be "  & to_string(comp_reg_b_addr)           severity error;
+
+            if (comp_reg_b_rd /= test_reg_b_rd) then
+              errors := errors + 1;
+            end if;
             assert comp_reg_b_rd       = test_reg_b_rd
             report "reg_b_rd = "       & std_logic'image(test_reg_b_rd)       &
                    ", but should be "  & std_logic'image(comp_reg_b_rd)       severity error;
+
+            if (comp_reg_b_do /= test_reg_b_do) then
+              errors := errors + 1;
+            end if;
             assert comp_reg_b_do       = test_reg_b_do
             report "reg_b_do = "       & to_string(test_reg_b_do)             &
                    ", but should be "  & to_string(comp_reg_b_do)             severity error;
+
+            if (comp_reg_c_addr /= test_reg_c_addr) then
+              errors := errors + 1;
+            end if;
             assert comp_reg_c_addr     = test_reg_c_addr
             report "reg_c_addr = "     & to_string(test_reg_c_addr)           &
                    ", but should be "  & to_string(comp_reg_c_addr)           severity error;
+
+            if (comp_reg_c_rd /= test_reg_c_rd) then
+              errors := errors + 1;
+            end if;
             assert comp_reg_c_rd       = test_reg_c_rd
             report "reg_c_rd = "       & std_logic'image(test_reg_c_rd)       &
                    ", but should be "  & std_logic'image(comp_reg_c_rd)       severity error;
+
+            if (comp_reg_c_do /= test_reg_c_do) then
+              errors := errors + 1;
+            end if;
             assert comp_reg_c_do       = test_reg_c_do
             report "reg_c_do = "       & to_string(test_reg_c_do)             &
                    ", but should be "  & to_string(comp_reg_c_do)             severity error;
+
+            if (comp_rom_addr /= test_rom_addr) then
+              errors := errors + 1;
+            end if;
             assert comp_rom_addr       = test_rom_addr
             report "rom_addr = "       & to_string(test_rom_addr)             &
                    ", but should be "  & to_string(comp_rom_addr)             severity error;
-            assert comp_rom_en         = test_rom_en 
-            report "rom_en = "         & std_logic'image(test_rom_en)         & 
+
+            if (comp_rom_en /= test_rom_en) then
+              errors := errors + 1;
+            end if;
+            assert comp_rom_en         = test_rom_en
+            report "rom_en = "         & std_logic'image(test_rom_en)         &
                    ", but should be "  & std_logic'image(comp_rom_en)         severity error;
+
+            if (comp_rom_data /= test_rom_data) then
+              errors := errors + 1;
+            end if;
             assert comp_rom_data       = test_rom_data
             report "rom_data = "       & to_string(test_rom_data)             &
                    ", but should be "  & to_string(comp_rom_data)             severity error;
+
+            if (comp_ram_addr /= test_ram_addr) then
+              errors := errors + 1;
+            end if;
             assert comp_ram_addr       = test_ram_addr
             report "ram_addr = "       & to_string(test_ram_addr)             &
                    ", but should be "  & to_string(comp_ram_addr)             severity error;
+
+            if (comp_ram_rd /= test_ram_rd) then
+              errors := errors + 1;
+            end if;
             assert comp_ram_rd         = test_ram_rd
             report "ram_rd = "         & std_logic'image(test_ram_rd)         &
                    ", but should be "  & std_logic'image(comp_ram_rd)         severity error;
-            assert comp_ram_rdata      = test_ram_rdata
-            report "ram_rdata = "      & to_string(test_ram_rdata)            & 
+
+            if (comp_rom_data /= test_rom_data) then
+              errors := errors + 1;
+            end if;
+            assert comp_rom_data      = test_rom_data
+            report "ram_rdata = "      & to_string(test_ram_rdata)            &
                    ", but should be "  & to_string(comp_ram_rdata)            severity error;
+
+            if (comp_ram_wr /= test_ram_wr) then
+              errors := errors + 1;
+            end if;
             assert comp_ram_wr         = test_ram_wr
             report "ram_wr = "         & std_logic'image(test_ram_wr)         &
                    ", but should be "  & std_logic'image(comp_ram_wr)         severity error;
+
+            if (comp_ram_wdata /= test_ram_wdata) then
+              errors := errors + 1;
+            end if;
             assert comp_ram_wdata      = test_ram_wdata
             report "ram_wdata = "      & to_string(test_ram_wdata)            &
                    ", but should be "  & to_string(comp_ram_wdata)            severity error;
+
+            if (comp_ld /= test_ld) then
+              errors := errors + 1;
+            end if;
             assert comp_ld             = test_ld
             report "ld = "             & to_string(test_ld)                   &
                   ", but should be "   & to_string(comp_ld)                   severity error;
+
+            if (comp_an /= test_an) then
+              errors := errors + 1;
+            end if;
             assert comp_an             = test_an
             report "an = "             & to_string(test_an)                   &
                   ", but should be "   & to_string(comp_an)                   severity error;
+
+            if (comp_ka /= test_ka) then
+              errors := errors + 1;
+            end if;
             assert comp_ka             = test_ka
             report "ka = "             & to_string(test_ka)                   &
                   ", but should be "   & to_string(comp_ka)                   severity error;
+
+            if (comp_alu_si /= test_alu_si) then
+              errors := errors + 1;
+            end if;
             assert comp_alu_si         = test_alu_si
             report "alu_si = "         & std_logic'image(test_alu_si)         &
                    ", but should be "  & std_logic'image(comp_alu_si)         severity error;
+
+            if (comp_alu_a_c /= test_alu_a_c) then
+              errors := errors + 1;
+            end if;
             assert comp_alu_a_c        = test_alu_a_c
             report "alu_a_c = "        & std_logic'image(test_alu_a_c)        &
                    ", but should be "  & std_logic'image(comp_alu_a_c)        severity error;
+
+            if (comp_alu_a_di /= test_alu_a_di) then
+              errors := errors + 1;
+            end if;
             assert comp_alu_a_di       = test_alu_a_di
             report "alu_a_di = "       & to_string(test_alu_a_di)             &
                   ", but should be "   & to_string(comp_alu_a_di)             severity error;
+
+            if (comp_alu_b_c /= test_alu_b_c) then
+              errors := errors + 1;
+            end if;
             assert comp_alu_b_c        = test_alu_b_c
             report "alu_b_c = "        & std_logic'image(test_alu_b_c)        &
                    ", but should be "  & std_logic'image(comp_alu_b_c)        severity error;
+
+            if (comp_alu_b_di /= test_alu_b_di) then
+              errors := errors + 1;
+            end if;
             assert comp_alu_b_di       = test_alu_b_di
             report "alu_b_di = "       & to_string(test_alu_b_di)             &
                   ", but should be "   & to_string(comp_alu_b_di)             severity error;
+
+            if (comp_alu_c_in /= test_alu_c_in) then
+              errors := errors + 1;
+            end if;
             assert comp_alu_c_in       = test_alu_c_in
             report "alu_c_in = "       & std_logic'image(test_alu_c_in)       &
                    ", but should be "  & std_logic'image(comp_alu_c_in)       severity error;
+
+            if (comp_alu_s_do /= test_alu_s_do) then
+              errors := errors + 1;
+            end if;
             assert comp_alu_s_do       = test_alu_s_do
             report "alu_s_do = "       & to_string(test_alu_s_do)             &
                   ", but should be "   & to_string(comp_alu_s_do)             severity error;
+
+            if (comp_alu_c_out /= test_alu_c_out) then
+              errors := errors + 1;
+            end if;
             assert comp_alu_c_out      = test_alu_c_out
             report "alu_c_out = "      & std_logic'image(test_alu_c_out)      &
                    ", but should be "  & std_logic'image(comp_alu_c_out)      severity error;
