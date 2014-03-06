@@ -315,7 +315,20 @@ begin
           -- TODO: Implement
 
         when RTM =>   -- Register to memory
-          -- TODO: Implement
+
+          if current_icc = 0 then
+            reg_b_addr <= rom_data_byte1 after gate_delay;
+            reg_b_rd <= '1' after gate_delay;
+
+            -- Halt execution
+            next_pc <= current_pc after gate_delay;
+            next_icc <= current_icc + 1 after gate_delay;
+          else -- Second clock cycle
+            reg_b_rd <= '0' after gate_delay;
+            ram_addr <= rom_data(n_bits(ram_size) - 1 downto 0) after gate_delay;
+            ram_wr <= '1' after gate_delay;
+            ram_wdata <= reg_b_do after gate_delay;
+          end if;
 
         when IMTR =>  -- Indexed memory to register
           -- TODO: Implement
