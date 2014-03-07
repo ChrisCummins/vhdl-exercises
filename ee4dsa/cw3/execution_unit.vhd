@@ -97,31 +97,6 @@ architecture syn of execution_unit is
   alias ram_rdata_sr:    ram_sr is ram_rdata(word_size - 1          downto word_size - 16);
   alias ram_rdata_pc:    ram_pc is ram_rdata(rom_word'length - 1    downto 0);
 
-  -- The instruction set
-  constant IUC:  byte := "00000000";
-  constant HUC:  byte := "00000001";
-  constant BUC:  byte := "00000010";
-  constant BIC:  byte := "00000011";
-  constant SETO: byte := "00000100";
-  constant TSTI: byte := "00000101";
-
-  constant BSR:  byte := "00000110";
-  constant RSR:  byte := "00000111";
-  constant RIR:  byte := "00001000";
-  constant SEI:  byte := "00001001";
-  constant CLI:  byte := "00001010";
-
-  constant MTR:  byte := "00001011";
-  constant RTM:  byte := "00001100";
-  constant IMTR: byte := "00001101";
-  constant RTIM: byte := "00001110";
-  constant PSHR: byte := "00001111";
-  constant POPR: byte := "00010000";
-  constant RTIO: byte := "00010001";
-  constant IOTR: byte := "00010010";
-  constant LDLR: byte := "00010011";
-  constant LDUR: byte := "00010100";
-
   -- The status register flags
   constant INTR_EN:         integer := 0;   -- Interrupts enabled
   constant TST_FLAG:        integer := 1;   -- Test flag
@@ -261,30 +236,30 @@ begin
       next_pc                  <= current_pc + 1               after gate_delay;
 
       case rom_data_opcode is
-        when HUC =>   -- Halt unconditional
+        when X"01" =>   -- HUC Halt unconditional
           next_pc              <= current_pc                   after gate_delay;
 
-        when BUC =>   -- Branch unconditional
+        when X"02" =>   -- BUC Branch unconditional
           next_pc              <= load_pc                      after gate_delay;
 
-        when BIC =>   -- Branch conditional
+        when X"03" =>   -- BIC Branch conditional
           if current_sr(TST_FLAG) = '1' then
             next_pc            <= load_pc                      after gate_delay;
           end if;
 
-        when SETO =>  -- Set outputs
+        when X"04" =>   -- SETO Set outputs
           next_io_out(to_integer(unsigned(rom_data_port)))
             <= get_port(current_io_out, rom_data_port, rom_data_and, rom_data_xor)
                                                                after gate_delay;
 
-        when TSTI =>  -- Test Inputs
+        when X"05" =>   -- TSTI Test Inputs
           if get_port(io_in, rom_data_port, rom_data_and, rom_data_xor) = byte_null then
             next_sr(TST_FLAG)  <= '1'                          after gate_delay;
           else
             next_sr(TST_FLAG)  <= '0'                          after gate_delay;
           end if;
 
-        when BSR =>   -- Branch to Subroutine
+        when X"06" =>   -- BSR Branch to Subroutine
           ram_wr               <= '1'                          after gate_delay;
           ram_addr             <= ram_word(current_sp)         after gate_delay;
           ram_wdata_pc         <= rom_word(current_pc + 1)     after gate_delay;
@@ -292,28 +267,28 @@ begin
           next_sp              <= current_sp - 1               after gate_delay;
           next_pc              <= load_pc                      after gate_delay;
 
-        when RSR =>   -- Return from Subroutine
+        when X"07" =>   -- RSR Return from Subroutine
           next_ram_addr        <= ram_word(current_sp + 2)     after gate_delay;
           next_sp              <= current_sp + 1               after gate_delay;
           next_pc              <= stack_pc                     after gate_delay;
 
-        when RIR =>   -- Return from Interrupt:
+        when X"08" =>   -- RIR Return from Interrupt:
           next_ram_addr        <= ram_word(current_sp + 2)     after gate_delay;
           next_sp              <= current_sp + 1               after gate_delay;
           next_pc              <= stack_pc                     after gate_delay;
 
           next_sr(15 downto 0) <= ram_rdata_sr                 after gate_delay;
 
-        when SEI =>   -- Set Enable Interrupts
+        when X"09" =>   -- SEI Set Enable Interrupts
           next_sr(INTR_EN)     <= '1'                          after gate_delay;
 
-        when CLI =>   -- Clear Interrupts flag
+        when X"0A" =>   -- CLI Clear Interrupts flag
           next_sr(INTR_EN)     <= '0'                          after gate_delay;
 
-        when MTR =>   -- Memory to register
+        when X"0B" =>   -- MTR Memory to register
           -- TODO: Implement
 
-        when RTM =>   -- Register to memory
+        when X"0C" =>   -- RTM Register to memory
 
           if current_icc = 0 then
             reg_b_addr <= rom_data_byte1 after gate_delay;
@@ -329,25 +304,25 @@ begin
             ram_wdata <= reg_b_do after gate_delay;
           end if;
 
-        when IMTR =>  -- Indexed memory to register
+        when X"0D" =>   -- IMTR Indexed memory to register
           -- TODO: Implement
 
-        when RTIM =>  -- Register to indexed memory
+        when X"0E" =>   -- RTIM Register to indexed memory
           -- TODO: Implement
 
-        when PSHR =>  -- Stack push
+        when X"0F" =>   -- PSHR Stack push
           -- TODO: Implement
 
-        when POPR =>  -- Stack pop
+        when X"10" =>   -- POPR Stack pop
           -- TODO: Implement
 
-        when RTIO =>  -- Register to IO port
+        when X"11" =>   -- RTIO Register to IO port
           -- TODO: Implement
 
-        when IOTR =>  -- IO port to register
+        when X"12" =>   -- IOTR IO port to register
           -- TODO: Implement
 
-        when LDLR =>  -- Load lower register immediate
+        when X"13" =>   -- LDLR Load lower register immediate
 
           if current_icc = 0 then
             reg_b_addr <= rom_data_byte1 after gate_delay;
@@ -363,10 +338,10 @@ begin
             reg_a_di <= byte_null & byte_null & rom_data_byte2 & rom_data_byte3 after gate_delay;
           end if;
 
-        when LDUR =>  -- Load upper register immediate
+        when X"14" =>   -- LDUR Load upper register immediate
           -- TODO: Implement
 
-        when others => -- Undefined operation
+        when others =>  -- Undefined operation
       end case;
     end if;
 
