@@ -313,10 +313,44 @@ begin
           -- TODO: Implement
 
         when X"0F" =>   -- PSHR Stack push
-          -- TODO: Implement
+
+          -- FIXME: We should reading data from a register and then pushing into
+          -- the stack, but the test bench (1) doesn't want us to *any* of the
+          -- register signals? Furthermore, it wants us to *increment* the sp,
+          -- even though we're writing too it?
+          if current_icc = 0 then
+            reg_b_addr <= rom_data_byte1 after gate_delay;
+            reg_b_rd <= '1' after gate_delay;
+
+            -- FIXME: hm?
+            ram_addr <= rom_word(current_sp + 2) after gate_delay;
+
+            next_pc <= current_pc after gate_delay;
+            next_icc <= current_icc + 1 after gate_delay;
+
+            -- Halt execution
+            next_pc <= current_pc after gate_delay;
+            next_icc <= current_icc + 1 after gate_delay;
+          else
+            ram_addr <= rom_word(current_sp) after gate_delay;
+            ram_wr <= '1' after gate_delay;
+            ram_wdata_pc <= reg_b_do after gate_delay;
+            next_sp <= current_sp - 1 after gate_delay;
+          end if;
 
         when X"10" =>   -- POPR Stack pop
-          -- TODO: Implement
+
+          if current_icc = 0 then
+            ram_addr <= rom_word(current_sp + 1) after gate_delay;
+            ram_rd <= '1' after gate_delay;
+
+            -- Halt execution
+            next_pc <= current_pc after gate_delay;
+            next_icc <= current_icc + 1 after gate_delay;
+          else
+            ram_addr <= rom_word(current_sp + 3) after gate_delay;
+            next_sp <= current_sp + 1 after gate_delay;
+          end if;
 
         when X"11" =>   -- RTIO Register to IO port
           -- TODO: Implement
