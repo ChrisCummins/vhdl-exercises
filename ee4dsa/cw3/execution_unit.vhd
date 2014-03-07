@@ -147,22 +147,24 @@ begin
   -- Our clock process. Performs house keeping on registers.
   process (clk, rst) is
   begin
-    if rst = '1' then
-      current_pc               <= pc_start                     after gate_delay;
-      current_icc              <= (others => '0')              after gate_delay;
-      current_sp               <= sp_start                     after gate_delay;
-      current_sr               <= sr_start                     after gate_delay;
-      current_io_out           <= (others => byte_null)        after gate_delay;
-      current_ram_addr         <= (others => '0')              after gate_delay;
-      current_intr             <= (others => '0')              after gate_delay;
-    elsif clk'event and clk = '1' then
-      current_pc               <= next_pc                      after gate_delay;
-      current_icc              <= next_icc                     after gate_delay;
-      current_sp               <= next_sp                      after gate_delay;
-      current_sr               <= next_sr                      after gate_delay;
-      current_io_out           <= next_io_out                  after gate_delay;
-      current_ram_addr         <= next_ram_addr                after gate_delay;
-      current_intr             <= intr                         after gate_delay;
+    if clk'event and clk = '1' then
+      if rst = '1' then
+        current_pc               <= pc_start                   after gate_delay;
+        current_icc              <= (others => '0')            after gate_delay;
+        current_sp               <= sp_start                   after gate_delay;
+        current_sr               <= sr_start                   after gate_delay;
+        current_io_out           <= (others => byte_null)      after gate_delay;
+        current_ram_addr         <= (others => '0')            after gate_delay;
+        current_intr             <= (others => '0')            after gate_delay;
+      elsif en = '1' then
+        current_pc               <= next_pc                    after gate_delay;
+        current_icc              <= next_icc                   after gate_delay;
+        current_sp               <= next_sp                    after gate_delay;
+        current_sr               <= next_sr                    after gate_delay;
+        current_io_out           <= next_io_out                after gate_delay;
+        current_ram_addr         <= next_ram_addr              after gate_delay;
+        current_intr             <= intr                       after gate_delay;
+      end if;
     end if;
   end process;
 
