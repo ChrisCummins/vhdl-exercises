@@ -101,6 +101,12 @@ architecture syn of execution_unit is
   constant INTR_EN:         integer := 0;   -- Interrupts enabled
   constant TST_FLAG:        integer := 1;   -- Test flag
 
+  -- Special register indexes
+  constant REG_NULL: byte := X"00";
+  constant REG_PC:   byte := X"01";
+  constant REG_SP:   byte := x"02";
+  constant REG_SR:   byte := x"03";
+
   -- Initial values
   constant pc_start:        program_counter  := (3 => '1', others => '0'); -- 0x08
   constant sp_start:        stack_pointer    := (others => '1');
