@@ -73,6 +73,7 @@ architecture syn of execution_unit is
 
   subtype ports            is byte_vector(ports_out - 1             downto 0);
   subtype port_index       is unsigned(byte'length - 1              downto 0);
+  subtype reg_index        is std_logic_vector(n_bits(reg_high) - 1 downto 0);
   subtype word             is std_logic_vector(word_size - 1        downto 0);
   subtype rom_word         is std_logic_vector(n_bits(ram_size) - 1 downto 0);
   subtype ram_word         is std_logic_vector(n_bits(ram_size) - 1 downto 0);
@@ -136,6 +137,11 @@ architecture syn of execution_unit is
   -- RAM address register
   signal current_ram_addr:  ram_word         := (others => '0');
   signal next_ram_addr:     ram_word         := (others => '0');
+
+  -- Register interface
+  signal next_reg_b_addr: reg_index := (others => '0');
+  signal next_reg_b_rd: std_logic := '0';
+  signal next_reg_b_do: word := (others => 'X');
 
 begin
 
