@@ -71,7 +71,6 @@ end execution_unit;
 
 architecture syn of execution_unit is
 
-  subtype opcode           is byte;
   subtype ports            is byte_vector(ports_out - 1             downto 0);
   subtype port_index       is unsigned(byte'length - 1              downto 0);
   subtype word             is std_logic_vector(word_size - 1        downto 0);
@@ -85,7 +84,7 @@ architecture syn of execution_unit is
   subtype status_register  is word;
 
   -- Word components
-  alias rom_data_opcode: opcode is rom_data(word_size - 1           downto word_size - 8);
+  alias rom_data_opcode: byte   is rom_data(word_size - 1           downto word_size - 8);
   alias rom_data_byte1:  byte   is rom_data(word_size - 9           downto word_size - 16);
   alias rom_data_byte2:  byte   is rom_data(word_size - 17          downto word_size - 24);
   alias rom_data_byte3:  byte   is rom_data(word_size - 25          downto 0);
@@ -99,29 +98,29 @@ architecture syn of execution_unit is
   alias ram_rdata_pc:    ram_pc is ram_rdata(rom_word'length - 1    downto 0);
 
   -- The instruction set
-  constant IUC:  opcode := "00000000";
-  constant HUC:  opcode := "00000001";
-  constant BUC:  opcode := "00000010";
-  constant BIC:  opcode := "00000011";
-  constant SETO: opcode := "00000100";
-  constant TSTI: opcode := "00000101";
+  constant IUC:  byte := "00000000";
+  constant HUC:  byte := "00000001";
+  constant BUC:  byte := "00000010";
+  constant BIC:  byte := "00000011";
+  constant SETO: byte := "00000100";
+  constant TSTI: byte := "00000101";
 
-  constant BSR:  opcode := "00000110";
-  constant RSR:  opcode := "00000111";
-  constant RIR:  opcode := "00001000";
-  constant SEI:  opcode := "00001001";
-  constant CLI:  opcode := "00001010";
+  constant BSR:  byte := "00000110";
+  constant RSR:  byte := "00000111";
+  constant RIR:  byte := "00001000";
+  constant SEI:  byte := "00001001";
+  constant CLI:  byte := "00001010";
 
-  constant MTR:  opcode := "00001011";
-  constant RTM:  opcode := "00001100";
-  constant IMTR: opcode := "00001101";
-  constant RTIM: opcode := "00001110";
-  constant PSHR: opcode := "00001111";
-  constant POPR: opcode := "00010000";
-  constant RTIO: opcode := "00010001";
-  constant IOTR: opcode := "00010010";
-  constant LDLR: opcode := "00010011";
-  constant LDUR: opcode := "00010100";
+  constant MTR:  byte := "00001011";
+  constant RTM:  byte := "00001100";
+  constant IMTR: byte := "00001101";
+  constant RTIM: byte := "00001110";
+  constant PSHR: byte := "00001111";
+  constant POPR: byte := "00010000";
+  constant RTIO: byte := "00010001";
+  constant IOTR: byte := "00010010";
+  constant LDLR: byte := "00010011";
+  constant LDUR: byte := "00010100";
 
   -- The status register flags
   constant INTR_EN:         integer := 0;   -- Interrupts enabled
