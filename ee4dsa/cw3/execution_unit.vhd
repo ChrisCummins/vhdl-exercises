@@ -108,6 +108,10 @@ architecture syn of execution_unit is
   constant REG_SP:   integer := 2;
   constant REG_SR:   integer := 3;
 
+  -- Register word padding
+  constant reg_pc_pad: std_logic_vector(word_size - program_counter'length - 1 downto 0) := (others => '0');
+  constant reg_sp_pad: std_logic_vector(word_size - stack_pointer'length - 1 downto 0) := (others => '0');
+
   -- Initial values
   constant pc_start:        program_counter  := (3 => '1', others => '0'); -- 0x08
   constant sp_start:        stack_pointer    := (others => '1');
@@ -286,6 +290,7 @@ begin
           next_ram_addr        <= ram_word(current_sp + 2)     after gate_delay;
           next_sp              <= current_sp + 1               after gate_delay;
           next_pc              <= stack_pc                     after gate_delay;
+          ram_rd <= '1' after gate_delay;
 
         when X"08" =>   -- RIR Return from Interrupt:
           next_ram_addr        <= ram_word(current_sp + 2)     after gate_delay;
@@ -397,7 +402,8 @@ begin
   end process;
 
   -- Register interface
-  process (current_icc, next_reg_b_addr, next_reg_b_rd) is
+  process (current_icc, next_reg_b_addr, next_reg_b_rd, reg_b_do,
+           current_pc, current_sp, current_sr) is
   begin
 
     case to_integer(unsigned(next_reg_b_addr)) is
@@ -409,8 +415,20 @@ begin
         reg_b_rd <= next_reg_b_rd after gate_delay;
     end case;
 
-    if current_icc /= 0 then
-      next_reg_b_do <= reg_b_do after gate_delay;
+    -- READ OPERATION
+    if next_reg_b_rd = '1' then
+      case to_integer(unsigned(next_reg_b_addr)) is
+        when REG_NULL =>
+          next_reg_b_do <= (others => '0') after gate_delay;
+        when REG_PC =>
+          next_reg_b_do <= reg_pc_pad & std_logic_vector(current_pc) after gate_delay;
+        when REG_SP =>
+          next_reg_b_do <= reg_sp_pad & std_logic_vector(current_sp) after gate_delay;
+        when REG_SR =>
+          next_reg_b_do <= current_sr after gate_delay;
+        when others =>
+          next_reg_b_do <= reg_b_do after gate_delay;
+      end case;
     end if;
 
   end process;
