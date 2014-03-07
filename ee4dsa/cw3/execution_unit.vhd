@@ -73,7 +73,6 @@ architecture syn of execution_unit is
 
   subtype ports            is byte_vector(ports_out - 1             downto 0);
   subtype port_index       is unsigned(byte'length - 1              downto 0);
-  subtype reg_index        is std_logic_vector(n_bits(reg_high) - 1 downto 0);
   subtype word             is std_logic_vector(word_size - 1        downto 0);
   subtype rom_word         is std_logic_vector(n_bits(ram_size) - 1 downto 0);
   subtype ram_word         is std_logic_vector(n_bits(ram_size) - 1 downto 0);
@@ -83,6 +82,7 @@ architecture syn of execution_unit is
   subtype instruction_counter is unsigned(icc_size downto 0);
   subtype stack_pointer    is unsigned(ram_word'length - 1          downto 0);
   subtype status_register  is word;
+  subtype reg_index        is byte;
 
   -- Word components
   alias rom_data_opcode: byte   is rom_data(word_size - 1           downto word_size - 8);
@@ -103,10 +103,10 @@ architecture syn of execution_unit is
   constant TST_FLAG:        integer := 1;   -- Test flag
 
   -- Special register indexes
-  constant REG_NULL: byte := X"00";
-  constant REG_PC:   byte := X"01";
-  constant REG_SP:   byte := x"02";
-  constant REG_SR:   byte := x"03";
+  constant REG_NULL: integer := 0;
+  constant REG_PC:   integer := 1;
+  constant REG_SP:   integer := 2;
+  constant REG_SR:   integer := 3;
 
   -- Initial values
   constant pc_start:        program_counter  := (3 => '1', others => '0'); -- 0x08
@@ -141,7 +141,7 @@ architecture syn of execution_unit is
   -- Register interface
   signal next_reg_b_addr: reg_index := (others => '0');
   signal next_reg_b_rd: std_logic := '0';
-  signal next_reg_b_do: word := (others => 'X');
+  signal next_reg_b_do: word := (others => '0');
 
 begin
 
@@ -183,7 +183,8 @@ begin
 
   -- The instruction set implementation.
   process(rst, rom_data, current_pc, current_icc, current_sr, current_io_out,
-          current_sp, current_ram_addr, current_intr, ram_rdata, io_in) is
+          current_sp, current_ram_addr, current_intr, ram_rdata, io_in,
+          next_reg_b_do) is
 
     variable load_pc:  program_counter;
     variable stack_pc: program_counter;
@@ -218,8 +219,8 @@ begin
     reg_a_wr <= '0' after gate_delay;
     reg_a_di <= (others => '0') after gate_delay;
 
-    reg_b_addr <= (others => '0') after gate_delay;
-    reg_b_rd <= '0' after gate_delay;
+    next_reg_b_addr <= (others => '0') after gate_delay;
+    next_reg_b_rd <= '0' after gate_delay;
 
     reg_c_addr <= (others => '0') after gate_delay;
     reg_c_rd <= '0' after gate_delay;
@@ -305,17 +306,17 @@ begin
         when X"0C" =>   -- RTM Register to memory
 
           if current_icc = 0 then
-            reg_b_addr <= rom_data_byte1 after gate_delay;
-            reg_b_rd <= '1' after gate_delay;
+            next_reg_b_addr <= rom_data_byte1 after gate_delay;
+            next_reg_b_rd <= '1' after gate_delay;
 
             -- Halt execution
             next_pc <= current_pc after gate_delay;
             next_icc <= current_icc + 1 after gate_delay;
           else -- Second clock cycle
-            reg_b_rd <= '0' after gate_delay;
+            next_reg_b_rd <= '0' after gate_delay;
             ram_addr <= rom_data(n_bits(ram_size) - 1 downto 0) after gate_delay;
             ram_wr <= '1' after gate_delay;
-            ram_wdata <= reg_b_do after gate_delay;
+            ram_wdata <= next_reg_b_do after gate_delay;
           end if;
 
         when X"0D" =>   -- IMTR Indexed memory to register
@@ -331,8 +332,8 @@ begin
           -- register signals? Furthermore, it wants us to *increment* the sp,
           -- even though we're writing too it?
           if current_icc = 0 then
-            reg_b_addr <= rom_data_byte1 after gate_delay;
-            reg_b_rd <= '1' after gate_delay;
+            next_reg_b_addr <= rom_data_byte1 after gate_delay;
+            next_reg_b_rd <= '1' after gate_delay;
 
             -- FIXME: hm?
             ram_addr <= rom_word(current_sp + 2) after gate_delay;
@@ -346,7 +347,7 @@ begin
           else
             ram_addr <= rom_word(current_sp) after gate_delay;
             ram_wr <= '1' after gate_delay;
-            ram_wdata_pc <= reg_b_do after gate_delay;
+            ram_wdata <= next_reg_b_do after gate_delay;
             next_sp <= current_sp - 1 after gate_delay;
           end if;
 
@@ -373,14 +374,14 @@ begin
         when X"13" =>   -- LDLR Load lower register immediate
 
           if current_icc = 0 then
-            reg_b_addr <= rom_data_byte1 after gate_delay;
-            reg_b_rd <= '1' after gate_delay;
+            next_reg_b_addr <= rom_data_byte1 after gate_delay;
+            next_reg_b_rd <= '1' after gate_delay;
 
             -- Halt execution
             next_pc <= current_pc after gate_delay;
             next_icc <= current_icc + 1 after gate_delay;
           else -- Second clock cycle
-            reg_b_rd <= '0' after gate_delay;
+            next_reg_b_rd <= '0' after gate_delay;
             reg_a_addr <= rom_data_byte1 after gate_delay;
             reg_a_wr <= '1' after gate_delay;
             reg_a_di <= byte_null & byte_null & rom_data_byte2 & rom_data_byte3 after gate_delay;
@@ -391,6 +392,25 @@ begin
 
         when others =>  -- Undefined operation
       end case;
+    end if;
+
+  end process;
+
+  -- Register interface
+  process (current_icc, next_reg_b_addr, next_reg_b_rd) is
+  begin
+
+    case to_integer(unsigned(next_reg_b_addr)) is
+      when REG_NULL to REG_SR =>
+        reg_b_addr <= (others => '0') after gate_delay;
+        reg_b_rd <= '0' after gate_delay;
+      when others =>
+        reg_b_addr <= next_reg_b_addr after gate_delay;
+        reg_b_rd <= next_reg_b_rd after gate_delay;
+    end case;
+
+    if current_icc /= 0 then
+      next_reg_b_do <= reg_b_do after gate_delay;
     end if;
 
   end process;
