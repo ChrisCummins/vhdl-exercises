@@ -515,7 +515,20 @@ begin
           end case;
 
         when X"14" =>   -- LDUR Load upper register immediate
-          -- TODO: Implement
+
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              next_reg_b_addr <= rom_data_byte1 after gate_delay;
+              next_reg_b_rd <= '1' after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              reg_a_addr <= rom_data_byte1 after gate_delay;
+              reg_a_wr <= '1' after gate_delay;
+              reg_a_di <= rom_data_byte2 & rom_data_byte3 & byte_null & byte_null after gate_delay;
+          end case;
 
         -- TODO: Implement instructions 15 - 17
 
