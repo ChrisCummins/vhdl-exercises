@@ -470,7 +470,6 @@ begin
               next_pc <= current_pc after gate_delay;
               next_icc <= current_icc + 1 after gate_delay;
             when others =>
-              next_reg_b_rd <= '0' after gate_delay;
               reg_a_addr <= rom_data_byte1 after gate_delay;
               reg_a_wr <= '1' after gate_delay;
               reg_a_di <= byte_null & byte_null & rom_data_byte2 & rom_data_byte3 after gate_delay;
