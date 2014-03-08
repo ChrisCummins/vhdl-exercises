@@ -156,6 +156,8 @@ architecture syn of execution_unit is
   -- Register components
   alias reg_b_do_addr:   ram_word is next_reg_b_do(ram_word'length - 1 downto 0);
   alias reg_c_do_addr:   ram_word is next_reg_c_do(ram_word'length - 1 downto 0);
+  alias reg_b_do_byte:   byte     is next_reg_b_do(byte'length - 1 downto 0);
+  alias reg_c_do_byte:   byte     is next_reg_b_do(byte'length - 1 downto 0);
 
   -- Shift register
   signal current_shift: word := (others => '0');
@@ -465,7 +467,18 @@ begin
           end case;
 
         when X"11" =>   -- RTIO Register to IO port
-          -- TODO: Implement
+
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              next_reg_b_addr <= rom_data_byte2 after gate_delay;
+              next_reg_b_rd <= '1' after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              next_io_out(to_integer(unsigned(rom_data_byte1))) <= reg_b_do_byte after gate_delay;
+          end case;
 
         when X"12" =>   -- IOTR IO port to register
 
