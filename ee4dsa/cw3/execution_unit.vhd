@@ -73,6 +73,7 @@ architecture syn of execution_unit is
 
   subtype ports            is byte_vector(ports_out - 1             downto 0);
   subtype port_index       is unsigned(byte'length - 1              downto 0);
+  subtype intr_line        is std_logic_vector(intr_size - 1        downto 0);
   subtype word             is std_logic_vector(word_size - 1        downto 0);
   subtype rom_word         is std_logic_vector(n_bits(ram_size) - 1 downto 0);
   subtype ram_word         is std_logic_vector(n_bits(ram_size) - 1 downto 0);
@@ -137,9 +138,13 @@ architecture syn of execution_unit is
   signal next_sr:           status_register  := sr_start;
 
   -- Port registers
-  signal current_intr:      byte             := (others => '0');
   signal current_io_out:    ports            := (others => byte_null);
   signal next_io_out:       ports            := (others => byte_null);
+
+  -- Interrupts
+  constant intr_null:       intr_line        := (others => '0');
+  signal current_intr:      intr_line        := intr_null;
+  signal intr_reset:        intr_line        := intr_null;
 
   -- Register interface
   signal next_reg_b_addr: reg_index := (others => '0');
@@ -184,7 +189,15 @@ begin
         current_sp               <= next_sp                    after gate_delay;
         current_sr               <= next_sr                    after gate_delay;
         current_io_out           <= next_io_out                after gate_delay;
-        current_intr             <= intr                       after gate_delay;
+
+        for i in intr'range loop
+          if intr_reset(i) = '1' then
+            current_intr(i) <= '0' after gate_delay;
+          elsif intr(i) = '1' then
+            current_intr(i) <= '1' after gate_delay;
+          end if;
+        end loop;
+
       end if;
     end if;
   end process;
@@ -197,7 +210,6 @@ begin
 
     variable load_pc:  program_counter;
     variable stack_pc: program_counter;
-    variable intr_pc:  program_counter;
 
     -- Resolve an active port with the AND and XOR masks
     function get_port(ports: byte_vector; active_port: byte; and_mask: byte; xor_mask: byte)
@@ -211,7 +223,6 @@ begin
     -- Program counter variables
     load_pc  := unsigned(rom_data_pc);
     stack_pc := unsigned(ram_rdata_pc);
-    intr_pc  := (others => '0');
 
     next_pc                    <= current_pc                   after gate_delay;
     next_icc <= (others => '0') after gate_delay;
@@ -222,6 +233,7 @@ begin
     ram_wr                     <= '0'                          after gate_delay;
     ram_wdata                  <= (others => '0')              after gate_delay;
     ram_addr <= (others => '0') after gate_delay;
+    intr_reset <= intr_null after gate_delay;
 
     reg_a_addr <= (others => '0') after gate_delay;
     reg_a_wr <= '0' after gate_delay;
@@ -233,17 +245,17 @@ begin
     next_reg_c_addr <= (others => '0') after gate_delay;
     next_reg_c_rd <= '0' after gate_delay;
 
-    if current_intr /= byte_null and current_sr(INTR_EN) = '1' then
+    if current_intr /= intr_null and current_sr(INTR_EN) = '1' then
 
-      -- Set the interrupt handler address
-      for i in 0 to intr_size - 1 loop
-        if (current_intr(i) = '1') then
-          intr_pc := to_unsigned(i, program_counter'length);
+      for i in intr'reverse_range loop
+        if current_intr(i) = '1' then
+          intr_reset(i) <= '1' after gate_delay;
+          next_pc <= to_unsigned(i, program_counter'length) after gate_delay;
+          exit;
         end if;
       end loop;
 
       -- Execute interrupt routine
-      next_pc                  <= intr_pc                      after gate_delay;
       next_sp                  <= current_sp - 1               after gate_delay;
       next_sr(INTR_EN)         <= '0'                          after gate_delay;
 
