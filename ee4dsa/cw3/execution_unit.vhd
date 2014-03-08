@@ -84,19 +84,22 @@ architecture syn of execution_unit is
   subtype status_register  is word;
   subtype reg_index        is byte;
 
-  -- Word components
-  alias rom_data_opcode: byte   is rom_data(word_size - 1           downto word_size - 8);
-  alias rom_data_byte1:  byte   is rom_data(word_size - 9           downto word_size - 16);
-  alias rom_data_byte2:  byte   is rom_data(word_size - 17          downto word_size - 24);
-  alias rom_data_byte3:  byte   is rom_data(word_size - 25          downto 0);
-  alias rom_data_port:   byte   is rom_data_byte1;
-  alias rom_data_and:    byte   is rom_data_byte2;
-  alias rom_data_xor:    byte   is rom_data_byte3;
-  alias rom_data_pc:     ram_pc is rom_data(rom_word'length - 1     downto 0);
-  alias ram_wdata_sr:    ram_sr is ram_wdata(word_size - 1          downto word_size - 16);
-  alias ram_wdata_pc:    ram_pc is ram_wdata(rom_word'length - 1    downto 0);
-  alias ram_rdata_sr:    ram_sr is ram_rdata(word_size - 1          downto word_size - 16);
-  alias ram_rdata_pc:    ram_pc is ram_rdata(rom_word'length - 1    downto 0);
+  -- ROM data components
+  alias rom_data_opcode: byte     is rom_data(word_size - 1         downto word_size - 8);
+  alias rom_data_byte1:  byte     is rom_data(word_size - 9         downto word_size - 16);
+  alias rom_data_byte2:  byte     is rom_data(word_size - 17        downto word_size - 24);
+  alias rom_data_byte3:  byte     is rom_data(word_size - 25        downto 0);
+  alias rom_data_addr:   ram_word is rom_data(ram_word'length - 1   downto 0);
+  alias rom_data_port:   byte     is rom_data_byte1;
+  alias rom_data_and:    byte     is rom_data_byte2;
+  alias rom_data_xor:    byte     is rom_data_byte3;
+  alias rom_data_pc:     ram_pc   is rom_data(rom_word'length - 1   downto 0);
+
+  -- RAM data components
+  alias ram_wdata_sr:    ram_sr   is ram_wdata(word_size - 1        downto word_size - 16);
+  alias ram_wdata_pc:    ram_pc   is ram_wdata(rom_word'length - 1  downto 0);
+  alias ram_rdata_sr:    ram_sr   is ram_rdata(word_size - 1        downto word_size - 16);
+  alias ram_rdata_pc:    ram_pc   is ram_rdata(rom_word'length - 1  downto 0);
 
   -- The status register flags
   constant INTR_EN:         integer := 0;   -- Interrupts enabled
@@ -314,7 +317,20 @@ begin
           next_sr(INTR_EN)     <= '0'                          after gate_delay;
 
         when X"0B" =>   -- MTR Memory to register
-          -- TODO: Implement
+
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              ram_addr <= rom_data_addr after gate_delay;
+              ram_rd <= '1' after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              reg_a_addr <= rom_data_byte1 after gate_delay;
+              reg_a_wr <= '1' after gate_delay;
+              reg_a_di <= ram_rdata after gate_delay;
+          end case;
 
         when X"0C" =>   -- RTM Register to memory
 
