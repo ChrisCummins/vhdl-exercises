@@ -233,7 +233,6 @@ begin
 
       -- Execute interrupt routine
       next_pc                  <= intr_pc                      after gate_delay;
-      ram_addr                 <= ram_word(current_sp)         after gate_delay;
       next_sp                  <= current_sp - 1               after gate_delay;
       next_sr(INTR_EN)         <= '0'                          after gate_delay;
 
@@ -275,7 +274,6 @@ begin
           ram_wr               <= '1'                          after gate_delay;
           ram_addr             <= ram_word(current_sp)         after gate_delay;
           ram_wdata_pc         <= rom_word(current_pc + 1)     after gate_delay;
-          ram_addr             <= ram_word(current_sp)         after gate_delay;
           next_sp              <= current_sp - 1               after gate_delay;
           next_pc              <= load_pc                      after gate_delay;
 
@@ -341,9 +339,6 @@ begin
             next_reg_b_addr <= rom_data_byte1 after gate_delay;
             next_reg_b_rd <= '1' after gate_delay;
 
-            -- FIXME: hm?
-            ram_addr <= rom_word(current_sp + 2) after gate_delay;
-
             next_pc <= current_pc after gate_delay;
             next_icc <= current_icc + 1 after gate_delay;
 
@@ -367,7 +362,6 @@ begin
             next_pc <= current_pc after gate_delay;
             next_icc <= current_icc + 1 after gate_delay;
           else
-            ram_addr <= rom_word(current_sp + 3) after gate_delay;
             next_sp <= current_sp + 1 after gate_delay;
           end if;
 
