@@ -160,6 +160,10 @@ architecture syn of execution_unit is
   alias reg_b_do_addr:   ram_word is next_reg_b_do(ram_word'length - 1 downto 0);
   alias reg_c_do_addr:   ram_word is next_reg_c_do(ram_word'length - 1 downto 0);
 
+  -- Shift register
+  signal current_shift: word := (others => '0');
+  signal next_shift: word := (others => '0');
+
 begin
 
 --synopsys synthesis_off
@@ -184,12 +188,14 @@ begin
         current_sr               <= sr_start                   after gate_delay;
         current_io_out           <= (others => byte_null)      after gate_delay;
         current_intr             <= (others => '0')            after gate_delay;
+        current_shift            <= (others => '0')            after gate_delay;
       elsif en = '1' then
         current_pc               <= next_pc                    after gate_delay;
         current_icc              <= next_icc                   after gate_delay;
         current_sp               <= next_sp                    after gate_delay;
         current_sr               <= next_sr                    after gate_delay;
         current_io_out           <= next_io_out                after gate_delay;
+        current_shift            <= next_shift                 after gate_delay;
 
         for i in intr'range loop
           if intr_reset(i) = '1' then
@@ -472,6 +478,72 @@ begin
 
         when X"14" =>   -- LDUR Load upper register immediate
           -- TODO: Implement
+
+        -- TODO: Implement instructions 15 - 17
+
+        when X"18" =>   -- SRLR Right shift register
+
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              next_reg_b_addr <= rom_data_byte2 after gate_delay;
+              next_reg_b_rd <= '1' after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when 1 =>
+              next_shift <= word(shift_right(unsigned(next_reg_b_do), to_integer(unsigned(rom_data_byte3)))) after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              case to_integer(unsigned(rom_data_byte1)) is
+                when REG_NULL =>
+                when REG_PC =>
+                  next_pc <= program_counter(current_shift) after gate_delay;
+                when REG_SP =>
+                  next_sp <= stack_pointer(current_shift) after gate_delay;
+                when REG_SR =>
+                  next_sr <= status_register(current_shift) after gate_delay;
+                when others =>
+                  reg_a_addr <= rom_data_byte1 after gate_delay;
+                  reg_a_wr <= '1' after gate_delay;
+                  reg_a_di <= current_shift after gate_delay;
+              end case;
+          end case;
+
+        when X"19" =>   -- SLLR Left shift register
+
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              next_reg_b_addr <= rom_data_byte2 after gate_delay;
+              next_reg_b_rd <= '1' after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when 1 =>
+              next_shift <= word(shift_left(unsigned(next_reg_b_do), to_integer(unsigned(rom_data_byte3)))) after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              case to_integer(unsigned(rom_data_byte1)) is
+                when REG_NULL =>
+                when REG_PC =>
+                  next_pc <= program_counter(current_shift) after gate_delay;
+                when REG_SP =>
+                  next_sp <= stack_pointer(current_shift) after gate_delay;
+                when REG_SR =>
+                  next_sr <= status_register(current_shift) after gate_delay;
+                when others =>
+                  reg_a_addr <= rom_data_byte1 after gate_delay;
+                  reg_a_wr <= '1' after gate_delay;
+                  reg_a_di <= current_shift after gate_delay;
+              end case;
+          end case;
 
         when others =>  -- Undefined operation
       end case;
