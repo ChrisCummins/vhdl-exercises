@@ -292,11 +292,20 @@ begin
           end case;
 
         when X"08" =>   -- RIR Return from Interrupt:
-          ram_addr             <= ram_word(current_sp + 2)     after gate_delay;
-          next_sp              <= current_sp + 1               after gate_delay;
-          next_pc              <= stack_pc                     after gate_delay;
 
-          next_sr(15 downto 0) <= ram_rdata_sr                 after gate_delay;
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              ram_addr <= ram_word(current_sp + 1) after gate_delay;
+              ram_rd <= '1' after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              next_pc              <= stack_pc                     after gate_delay;
+              next_sp              <= current_sp + 1               after gate_delay;
+              next_sr(15 downto 0) <= ram_rdata_sr                 after gate_delay;
+          end case;
 
         when X"09" =>   -- SEI Set Enable Interrupts
           next_sr(INTR_EN)     <= '1'                          after gate_delay;
