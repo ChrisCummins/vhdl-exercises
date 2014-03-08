@@ -210,13 +210,7 @@ begin
 
     variable load_pc:  program_counter;
     variable stack_pc: program_counter;
-
-    -- Resolve an active port with the AND and XOR masks
-    function get_port(ports: byte_vector; active_port: byte; and_mask: byte; xor_mask: byte)
-      return byte is
-    begin
-      return (ports(to_integer(unsigned(active_port))) and and_mask) xor xor_mask;
-    end get_port;
+    variable port_val: byte;
 
   begin
 
@@ -282,12 +276,17 @@ begin
           end if;
 
         when X"04" =>   -- SETO Set outputs
-          next_io_out(to_integer(unsigned(rom_data_port)))
-            <= get_port(current_io_out, rom_data_port, rom_data_and, rom_data_xor)
+          port_val := current_io_out(to_integer(unsigned(rom_data_port)));
+          port_val := (port_val and rom_data_and) xor rom_data_xor;
+
+          next_io_out(to_integer(unsigned(rom_data_port))) <= port_val
                                                                after gate_delay;
 
         when X"05" =>   -- TSTI Test Inputs
-          if get_port(io_in, rom_data_port, rom_data_and, rom_data_xor) = byte_null then
+          port_val := io_in(to_integer(unsigned(rom_data_port)));
+          port_val := (port_val and rom_data_and) xor rom_data_xor;
+
+          if port_val = byte_null then
             next_sr(TST_FLAG)  <= '1'                          after gate_delay;
           else
             next_sr(TST_FLAG)  <= '0'                          after gate_delay;
