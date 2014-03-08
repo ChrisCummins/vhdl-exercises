@@ -150,6 +150,10 @@ architecture syn of execution_unit is
   signal next_reg_c_rd: std_logic := '0';
   signal next_reg_c_do: word := (others => '0');
 
+  -- Register components
+  alias reg_b_do_addr:   ram_word is next_reg_b_do(ram_word'length - 1 downto 0);
+  alias reg_c_do_addr:   ram_word is next_reg_c_do(ram_word'length - 1 downto 0);
+
 begin
 
 --synopsys synthesis_off
@@ -355,7 +359,29 @@ begin
           end case;
 
         when X"0D" =>   -- IMTR Indexed memory to register
-          -- TODO: Implement
+
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              next_reg_b_addr <= rom_data_byte2 after gate_delay;
+              next_reg_b_rd <= '1' after gate_delay;
+              next_reg_c_addr <= rom_data_byte3 after gate_delay;
+              next_reg_c_rd <= '1' after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when 1 =>
+              ram_rd <= '1' after gate_delay;
+              ram_addr <= ram_word(unsigned(reg_b_do_addr) + unsigned(reg_c_do_addr)) after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              reg_a_wr <= '1' after gate_delay;
+              reg_a_addr <= rom_data_byte1 after gate_delay;
+              reg_a_di <= ram_rdata after gate_delay;
+          end case;
 
         when X"0E" =>   -- RTIM Register to indexed memory
           -- TODO: Implement
