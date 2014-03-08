@@ -437,9 +437,21 @@ begin
 
         when X"12" =>   -- IOTR IO port to register
 
-          reg_a_addr <= rom_data_byte1 after gate_delay;
-          reg_a_wr <= '1' after gate_delay;
-          reg_a_di <= byte_null & byte_null & byte_null & io_in(to_integer(unsigned(rom_data_byte2))) after gate_delay;
+          port_val := io_in(to_integer(unsigned(rom_data_byte2)));
+
+          case to_integer(unsigned(rom_data_byte1)) is
+            when REG_NULL =>
+            when REG_PC =>
+              next_pc <= program_counter(port_val) after gate_delay;
+            when REG_SP =>
+              next_sp <= stack_pointer(port_val) after gate_delay;
+            when REG_SR =>
+              next_sr <= status_register(port_val) after gate_delay;
+            when others =>
+              reg_a_addr <= rom_data_byte1 after gate_delay;
+              reg_a_wr <= '1' after gate_delay;
+              reg_a_di <= byte_null & byte_null & byte_null & port_val after gate_delay;
+          end case;
 
         when X"13" =>   -- LDLR Load lower register immediate
 
