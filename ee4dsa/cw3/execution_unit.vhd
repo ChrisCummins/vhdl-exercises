@@ -81,7 +81,6 @@ architecture syn of execution_unit is
   subtype program_counter  is unsigned(ram_word'length - 1          downto 0);
   subtype instruction_counter is unsigned(icc_size downto 0);
   subtype stack_pointer    is unsigned(ram_word'length - 1          downto 0);
-  subtype status_register  is word;
   subtype reg_index        is byte;
 
   -- ROM data components
@@ -119,7 +118,7 @@ architecture syn of execution_unit is
   -- Initial values
   constant pc_start:        program_counter  := (3 => '1', others => '0'); -- 0x08
   constant sp_start:        stack_pointer    := (others => '1');
-  constant sr_start:        status_register  := (others => '0');
+  constant sr_start:        word             := (others => '0');
 
   -- The program counter
   signal current_pc:        program_counter  := pc_start;
@@ -134,8 +133,8 @@ architecture syn of execution_unit is
   signal next_sp:           stack_pointer    := sp_start;
 
   -- The status register
-  signal current_sr:        status_register  := sr_start;
-  signal next_sr:           status_register  := sr_start;
+  signal current_sr:        word             := sr_start;
+  signal next_sr:           word             := sr_start;
 
   -- Port registers
   signal current_io_out:    ports            := (others => byte_null);
@@ -451,7 +450,7 @@ begin
             when REG_SP =>
               next_sp <= stack_pointer(port_val) after gate_delay;
             when REG_SR =>
-              next_sr <= status_register(port_val) after gate_delay;
+              next_sr <= word(port_val) after gate_delay;
             when others =>
               reg_a_addr <= rom_data_byte1 after gate_delay;
               reg_a_wr <= '1' after gate_delay;
@@ -503,7 +502,7 @@ begin
                 when REG_SP =>
                   next_sp <= stack_pointer(current_shift) after gate_delay;
                 when REG_SR =>
-                  next_sr <= status_register(current_shift) after gate_delay;
+                  next_sr <= word(current_shift) after gate_delay;
                 when others =>
                   reg_a_addr <= rom_data_byte1 after gate_delay;
                   reg_a_wr <= '1' after gate_delay;
@@ -535,7 +534,7 @@ begin
                 when REG_SP =>
                   next_sp <= stack_pointer(current_shift) after gate_delay;
                 when REG_SR =>
-                  next_sr <= status_register(current_shift) after gate_delay;
+                  next_sr <= word(current_shift) after gate_delay;
                 when others =>
                   reg_a_addr <= rom_data_byte1 after gate_delay;
                   reg_a_wr <= '1' after gate_delay;
