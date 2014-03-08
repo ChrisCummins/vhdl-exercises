@@ -161,6 +161,10 @@ architecture syn of execution_unit is
   signal current_shift: word := (others => '0');
   signal next_shift: word := (others => '0');
 
+  -- Indexed memory register
+  signal current_ram_index_addr: ram_word := (others => '0');
+  signal next_ram_index_addr: ram_word := (others => '0');
+
 begin
 
 --synopsys synthesis_off
@@ -186,6 +190,7 @@ begin
         current_io_out           <= (others => byte_null)      after gate_delay;
         current_intr             <= (others => '0')            after gate_delay;
         current_shift            <= (others => '0')            after gate_delay;
+        current_ram_index_addr   <= (others => '0')            after gate_delay;
       elsif en = '1' then
         current_pc               <= next_pc                    after gate_delay;
         current_icc              <= next_icc                   after gate_delay;
@@ -193,6 +198,7 @@ begin
         current_sr               <= next_sr                    after gate_delay;
         current_io_out           <= next_io_out                after gate_delay;
         current_shift            <= next_shift                 after gate_delay;
+        current_ram_index_addr   <= next_ram_index_addr        after gate_delay;
 
         for i in intr'range loop
           if intr_reset(i) = '1' then
@@ -227,6 +233,7 @@ begin
     next_sp                    <= current_sp                   after gate_delay;
     next_sr                    <= current_sr                   after gate_delay;
     next_io_out                <= current_io_out               after gate_delay;
+    next_ram_index_addr        <= ram_word(unsigned(reg_b_do_addr) + unsigned(reg_c_do_addr)) after gate_delay;
     ram_rd                     <= '0'                          after gate_delay;
     ram_wr                     <= '0'                          after gate_delay;
     ram_wdata                  <= (others => '0')              after gate_delay;
@@ -399,7 +406,29 @@ begin
           end case;
 
         when X"0E" =>   -- RTIM Register to indexed memory
-          -- TODO: Implement
+
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              next_reg_b_addr <= rom_data_byte1 after gate_delay;
+              next_reg_b_rd <= '1' after gate_delay;
+              next_reg_c_addr <= rom_data_byte2 after gate_delay;
+              next_reg_c_rd <= '1' after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when 1 =>
+              next_reg_b_addr <= rom_data_byte3 after gate_delay;
+              next_reg_b_rd <= '1' after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              ram_addr <= current_ram_index_addr after gate_delay;
+              ram_wr <= '1' after gate_delay;
+              ram_wdata <= next_reg_b_do after gate_delay;
+          end case;
 
         when X"0F" =>   -- PSHR Stack push
 
