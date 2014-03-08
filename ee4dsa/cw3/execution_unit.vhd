@@ -75,11 +75,10 @@ architecture syn of execution_unit is
   subtype port_index       is unsigned(byte'length - 1              downto 0);
   subtype intr_line        is std_logic_vector(intr_size - 1        downto 0);
   subtype word             is std_logic_vector(word_size - 1        downto 0);
-  subtype rom_word         is std_logic_vector(n_bits(ram_size) - 1 downto 0);
   subtype ram_word         is std_logic_vector(n_bits(ram_size) - 1 downto 0);
   subtype ram_sr           is std_logic_vector(word_size - 1        downto word_size - 16);
-  subtype ram_pc           is std_logic_vector(rom_word'length - 1  downto 0);
-  subtype program_counter  is unsigned(rom_word'length - 1          downto 0);
+  subtype ram_pc           is std_logic_vector(ram_word'length - 1  downto 0);
+  subtype program_counter  is unsigned(ram_word'length - 1          downto 0);
   subtype instruction_counter is unsigned(icc_size downto 0);
   subtype stack_pointer    is unsigned(ram_word'length - 1          downto 0);
   subtype status_register  is word;
@@ -94,13 +93,13 @@ architecture syn of execution_unit is
   alias rom_data_port:   byte     is rom_data_byte1;
   alias rom_data_and:    byte     is rom_data_byte2;
   alias rom_data_xor:    byte     is rom_data_byte3;
-  alias rom_data_pc:     ram_pc   is rom_data(rom_word'length - 1   downto 0);
+  alias rom_data_pc:     ram_pc   is rom_data(ram_word'length - 1   downto 0);
 
   -- RAM data components
   alias ram_wdata_sr:    ram_sr   is ram_wdata(word_size - 1        downto word_size - 16);
-  alias ram_wdata_pc:    ram_pc   is ram_wdata(rom_word'length - 1  downto 0);
+  alias ram_wdata_pc:    ram_pc   is ram_wdata(ram_word'length - 1  downto 0);
   alias ram_rdata_sr:    ram_sr   is ram_rdata(word_size - 1        downto word_size - 16);
-  alias ram_rdata_pc:    ram_pc   is ram_rdata(rom_word'length - 1  downto 0);
+  alias ram_rdata_pc:    ram_pc   is ram_rdata(ram_word'length - 1  downto 0);
 
   -- The status register flags
   constant INTR_EN:         integer := 0;   -- Interrupts enabled
@@ -115,7 +114,7 @@ architecture syn of execution_unit is
   -- Register word padding
   constant pc_word_pad: std_logic_vector(word_size - program_counter'length - 1 downto 0) := (others => '0');
   constant sp_word_pad: std_logic_vector(word_size - stack_pointer'length - 1 downto 0) := (others => '0');
-  constant byte_pc_pad: std_logic_vector(byte'length - program_counter'length - 1 downto 0) := (others => '0');
+  constant byte_pc_pad: std_logic_vector(program_counter'length - byte'length - 1 downto 0) := (others => '0');
 
   -- Initial values
   constant pc_start:        program_counter  := (3 => '1', others => '0'); -- 0x08
@@ -263,7 +262,7 @@ begin
       -- Push the return address and status register to stack
       ram_wr                   <= '1'                          after gate_delay;
       ram_addr                 <= ram_word(current_sp)         after gate_delay;
-      ram_wdata_pc             <= rom_word(current_pc)         after gate_delay;
+      ram_wdata_pc             <= ram_word(current_pc)         after gate_delay;
       ram_wdata_sr             <= current_sr(15 downto 0)      after gate_delay;
 
     elsif rst /= '1' then
@@ -302,7 +301,7 @@ begin
         when X"06" =>   -- BSR Branch to Subroutine
           ram_wr               <= '1'                          after gate_delay;
           ram_addr             <= ram_word(current_sp)         after gate_delay;
-          ram_wdata_pc         <= rom_word(current_pc + 1)     after gate_delay;
+          ram_wdata_pc         <= ram_word(current_pc + 1)     after gate_delay;
           next_sp              <= current_sp - 1               after gate_delay;
           next_pc              <= load_pc                      after gate_delay;
 
@@ -418,7 +417,7 @@ begin
               next_pc <= current_pc after gate_delay;
               next_icc <= current_icc + 1 after gate_delay;
             when others =>
-              ram_addr <= rom_word(current_sp) after gate_delay;
+              ram_addr <= ram_word(current_sp) after gate_delay;
               ram_wr <= '1' after gate_delay;
               ram_wdata <= next_reg_b_do after gate_delay;
               next_sp <= current_sp - 1 after gate_delay;
@@ -428,7 +427,7 @@ begin
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
-              ram_addr <= rom_word(current_sp + 1) after gate_delay;
+              ram_addr <= ram_word(current_sp + 1) after gate_delay;
               ram_rd <= '1' after gate_delay;
 
               -- Halt execution
@@ -448,7 +447,7 @@ begin
           case to_integer(unsigned(rom_data_byte1)) is
             when REG_NULL =>
             when REG_PC =>
-              next_pc <= program_counter(port_val) after gate_delay;
+              next_pc <= unsigned(byte_pc_pad) & program_counter(port_val) after gate_delay;
             when REG_SP =>
               next_sp <= stack_pointer(port_val) after gate_delay;
             when REG_SR =>
