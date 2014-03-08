@@ -146,6 +146,10 @@ architecture syn of execution_unit is
   signal next_reg_b_rd: std_logic := '0';
   signal next_reg_b_do: word := (others => '0');
 
+  signal next_reg_c_addr: reg_index := (others => '0');
+  signal next_reg_c_rd: std_logic := '0';
+  signal next_reg_c_do: word := (others => '0');
+
 begin
 
 --synopsys synthesis_off
@@ -185,7 +189,7 @@ begin
   -- The instruction set implementation.
   process(rst, rom_data, current_pc, current_icc, current_sr, current_io_out,
           current_sp, current_intr, ram_rdata, io_in,
-          next_reg_b_do) is
+          next_reg_b_do, next_reg_c_do) is
 
     variable load_pc:  program_counter;
     variable stack_pc: program_counter;
@@ -222,8 +226,8 @@ begin
     next_reg_b_addr <= (others => '0') after gate_delay;
     next_reg_b_rd <= '0' after gate_delay;
 
-    reg_c_addr <= (others => '0') after gate_delay;
-    reg_c_rd <= '0' after gate_delay;
+    next_reg_c_addr <= (others => '0') after gate_delay;
+    next_reg_c_rd <= '0' after gate_delay;
 
     if current_intr /= byte_null and current_sr(INTR_EN) = '1' then
 
@@ -422,7 +426,7 @@ begin
 
   end process;
 
-  -- Register interface
+  -- Register B interface
   process (current_icc, next_reg_b_addr, next_reg_b_rd, reg_b_do,
            current_pc, current_sp, current_sr) is
   begin
@@ -436,7 +440,7 @@ begin
         reg_b_rd <= next_reg_b_rd after gate_delay;
     end case;
 
-    -- READ OPERATION
+    -- Read operation
     if next_reg_b_rd = '1' then
       case to_integer(unsigned(next_reg_b_addr)) is
         when REG_NULL =>
@@ -449,6 +453,38 @@ begin
           next_reg_b_do <= current_sr after gate_delay;
         when others =>
           next_reg_b_do <= reg_b_do after gate_delay;
+      end case;
+    end if;
+
+  end process;
+
+  -- Register C interface
+  process (current_icc, next_reg_c_addr, next_reg_c_rd, reg_c_do,
+           current_pc, current_sp, current_sr) is
+  begin
+
+    case to_integer(unsigned(next_reg_c_addr)) is
+      when REG_NULL to REG_SR =>
+        reg_c_addr <= (others => '0') after gate_delay;
+        reg_c_rd <= '0' after gate_delay;
+      when others =>
+        reg_c_addr <= next_reg_c_addr after gate_delay;
+        reg_c_rd <= next_reg_c_rd after gate_delay;
+    end case;
+
+    -- Read operation
+    if next_reg_c_rd = '1' then
+      case to_integer(unsigned(next_reg_c_addr)) is
+        when REG_NULL =>
+          next_reg_c_do <= (others => '0') after gate_delay;
+        when REG_PC =>
+          next_reg_c_do <= reg_pc_pad & std_logic_vector(current_pc) after gate_delay;
+        when REG_SP =>
+          next_reg_c_do <= reg_sp_pad & std_logic_vector(current_sp) after gate_delay;
+        when REG_SR =>
+          next_reg_c_do <= current_sr after gate_delay;
+        when others =>
+          next_reg_c_do <= reg_c_do after gate_delay;
       end case;
     end if;
 
