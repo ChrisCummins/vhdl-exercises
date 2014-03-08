@@ -138,10 +138,6 @@ architecture syn of execution_unit is
   signal current_io_out:    ports            := (others => byte_null);
   signal next_io_out:       ports            := (others => byte_null);
 
-  -- RAM address register
-  signal current_ram_addr:  ram_word         := (others => '0');
-  signal next_ram_addr:     ram_word         := (others => '0');
-
   -- Register interface
   signal next_reg_b_addr: reg_index := (others => '0');
   signal next_reg_b_rd: std_logic := '0';
@@ -170,7 +166,6 @@ begin
         current_sp               <= sp_start                   after gate_delay;
         current_sr               <= sr_start                   after gate_delay;
         current_io_out           <= (others => byte_null)      after gate_delay;
-        current_ram_addr         <= (others => '0')            after gate_delay;
         current_intr             <= (others => '0')            after gate_delay;
       elsif en = '1' then
         current_pc               <= next_pc                    after gate_delay;
@@ -178,7 +173,6 @@ begin
         current_sp               <= next_sp                    after gate_delay;
         current_sr               <= next_sr                    after gate_delay;
         current_io_out           <= next_io_out                after gate_delay;
-        current_ram_addr         <= next_ram_addr              after gate_delay;
         current_intr             <= intr                       after gate_delay;
       end if;
     end if;
@@ -187,7 +181,7 @@ begin
 
   -- The instruction set implementation.
   process(rst, rom_data, current_pc, current_icc, current_sr, current_io_out,
-          current_sp, current_ram_addr, current_intr, ram_rdata, io_in,
+          current_sp, current_intr, ram_rdata, io_in,
           next_reg_b_do) is
 
     variable load_pc:  program_counter;
@@ -213,11 +207,10 @@ begin
     next_sp                    <= current_sp                   after gate_delay;
     next_sr                    <= current_sr                   after gate_delay;
     next_io_out                <= current_io_out               after gate_delay;
-    next_ram_addr              <= current_ram_addr             after gate_delay;
     ram_rd                     <= '0'                          after gate_delay;
     ram_wr                     <= '0'                          after gate_delay;
-    ram_addr                   <= current_ram_addr             after gate_delay;
     ram_wdata                  <= (others => '0')              after gate_delay;
+    ram_addr <= (others => '0') after gate_delay;
 
     reg_a_addr <= (others => '0') after gate_delay;
     reg_a_wr <= '0' after gate_delay;
@@ -240,7 +233,7 @@ begin
 
       -- Execute interrupt routine
       next_pc                  <= intr_pc                      after gate_delay;
-      next_ram_addr            <= ram_word(current_sp)         after gate_delay;
+      ram_addr                 <= ram_word(current_sp)         after gate_delay;
       next_sp                  <= current_sp - 1               after gate_delay;
       next_sr(INTR_EN)         <= '0'                          after gate_delay;
 
@@ -282,18 +275,26 @@ begin
           ram_wr               <= '1'                          after gate_delay;
           ram_addr             <= ram_word(current_sp)         after gate_delay;
           ram_wdata_pc         <= rom_word(current_pc + 1)     after gate_delay;
-          next_ram_addr        <= ram_word(current_sp)         after gate_delay;
+          ram_addr             <= ram_word(current_sp)         after gate_delay;
           next_sp              <= current_sp - 1               after gate_delay;
           next_pc              <= load_pc                      after gate_delay;
 
         when X"07" =>   -- RSR Return from Subroutine
-          next_ram_addr        <= ram_word(current_sp + 2)     after gate_delay;
-          next_sp              <= current_sp + 1               after gate_delay;
-          next_pc              <= stack_pc                     after gate_delay;
-          ram_rd <= '1' after gate_delay;
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              ram_addr <= ram_word(current_sp + 1) after gate_delay;
+              ram_rd <= '1' after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              next_pc              <= stack_pc                     after gate_delay;
+              next_sp              <= current_sp + 1               after gate_delay;
+          end case;
 
         when X"08" =>   -- RIR Return from Interrupt:
-          next_ram_addr        <= ram_word(current_sp + 2)     after gate_delay;
+          ram_addr             <= ram_word(current_sp + 2)     after gate_delay;
           next_sp              <= current_sp + 1               after gate_delay;
           next_pc              <= stack_pc                     after gate_delay;
 
