@@ -276,26 +276,26 @@ begin
       -- Increment program counter by default
       next_pc                  <= current_pc + 1               after gate_delay;
 
-      case rom_data_opcode is
-        when X"01" =>   -- HUC Halt unconditional
+      case to_integer(unsigned(rom_data_opcode)) is
+        when 16#01# =>   -- HUC Halt unconditional
           next_pc              <= current_pc                   after gate_delay;
 
-        when X"02" =>   -- BUC Branch unconditional
+        when 16#02# =>   -- BUC Branch unconditional
           next_pc              <= load_pc                      after gate_delay;
 
-        when X"03" =>   -- BIC Branch conditional
+        when 16#03# =>   -- BIC Branch conditional
           if current_sr(TST_FLAG) = '1' then
             next_pc            <= load_pc                      after gate_delay;
           end if;
 
-        when X"04" =>   -- SETO Set outputs
+        when 16#04# =>   -- SETO Set outputs
           port_val := current_io_out(to_integer(unsigned(rom_data_port)));
           port_val := (port_val and rom_data_and) xor rom_data_xor;
 
           next_io_out(to_integer(unsigned(rom_data_port))) <= port_val
                                                                after gate_delay;
 
-        when X"05" =>   -- TSTI Test Inputs
+        when 16#05# =>   -- TSTI Test Inputs
           port_val := io_in(to_integer(unsigned(rom_data_port)));
           port_val := (port_val and rom_data_and) xor rom_data_xor;
 
@@ -305,14 +305,14 @@ begin
             next_sr(TST_FLAG)  <= '0'                          after gate_delay;
           end if;
 
-        when X"06" =>   -- BSR Branch to Subroutine
+        when 16#06# =>   -- BSR Branch to Subroutine
           ram_wr               <= '1'                          after gate_delay;
           ram_addr             <= ram_word(current_sp)         after gate_delay;
           ram_wdata_pc         <= ram_word(current_pc + 1)     after gate_delay;
           next_sp              <= current_sp - 1               after gate_delay;
           next_pc              <= load_pc                      after gate_delay;
 
-        when X"07" =>   -- RSR Return from Subroutine
+        when 16#07# =>   -- RSR Return from Subroutine
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
@@ -327,7 +327,7 @@ begin
               next_sp              <= current_sp + 1               after gate_delay;
           end case;
 
-        when X"08" =>   -- RIR Return from Interrupt:
+        when 16#08# =>   -- RIR Return from Interrupt:
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
@@ -343,13 +343,13 @@ begin
               next_sr(15 downto 0) <= ram_rdata_sr                 after gate_delay;
           end case;
 
-        when X"09" =>   -- SEI Set Enable Interrupts
+        when 16#09# =>   -- SEI Set Enable Interrupts
           next_sr(INTR_EN)     <= '1'                          after gate_delay;
 
-        when X"0A" =>   -- CLI Clear Interrupts flag
+        when 16#0A# =>   -- CLI Clear Interrupts flag
           next_sr(INTR_EN)     <= '0'                          after gate_delay;
 
-        when X"0B" =>   -- MTR Memory to register
+        when 16#0B# =>   -- MTR Memory to register
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
@@ -365,7 +365,7 @@ begin
               reg_a_di <= ram_rdata after gate_delay;
           end case;
 
-        when X"0C" =>   -- RTM Register to memory
+        when 16#0C# =>   -- RTM Register to memory
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
@@ -382,7 +382,7 @@ begin
               ram_wdata <= next_reg_b_do after gate_delay;
           end case;
 
-        when X"0D" =>   -- IMTR Indexed memory to register
+        when 16#0D# =>   -- IMTR Indexed memory to register
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
@@ -407,7 +407,7 @@ begin
               reg_a_di <= ram_rdata after gate_delay;
           end case;
 
-        when X"0E" =>   -- RTIM Register to indexed memory
+        when 16#0E# =>   -- RTIM Register to indexed memory
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
@@ -432,7 +432,7 @@ begin
               ram_wdata <= next_reg_b_do after gate_delay;
           end case;
 
-        when X"0F" =>   -- PSHR Stack push
+        when 16#0F# =>   -- PSHR Stack push
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
@@ -452,7 +452,7 @@ begin
               next_sp <= current_sp - 1 after gate_delay;
           end case;
 
-        when X"10" =>   -- POPR Stack pop
+        when 16#10# =>   -- POPR Stack pop
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
@@ -466,7 +466,7 @@ begin
               next_sp <= current_sp + 1 after gate_delay;
           end case;
 
-        when X"11" =>   -- RTIO Register to IO port
+        when 16#11# =>   -- RTIO Register to IO port
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
@@ -480,7 +480,7 @@ begin
               next_io_out(to_integer(unsigned(rom_data_byte1))) <= reg_b_do_byte after gate_delay;
           end case;
 
-        when X"12" =>   -- IOTR IO port to register
+        when 16#12# =>   -- IOTR IO port to register
 
           port_val := io_in(to_integer(unsigned(rom_data_byte2)));
 
@@ -498,7 +498,7 @@ begin
               reg_a_di <= byte_null & byte_null & byte_null & port_val after gate_delay;
           end case;
 
-        when X"13" =>   -- LDLR Load lower register immediate
+        when 16#13# =>   -- LDLR Load lower register immediate
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
@@ -514,7 +514,7 @@ begin
               reg_a_di <= byte_null & byte_null & rom_data_byte2 & rom_data_byte3 after gate_delay;
           end case;
 
-        when X"14" =>   -- LDUR Load upper register immediate
+        when 16#14# =>   -- LDUR Load upper register immediate
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
@@ -532,7 +532,7 @@ begin
 
         -- TODO: Implement instructions 15 - 17
 
-        when X"18" =>   -- SRLR Right shift register
+        when 16#18# =>   -- SRLR Right shift register
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
@@ -564,7 +564,7 @@ begin
               end case;
           end case;
 
-        when X"19" =>   -- SLLR Left shift register
+        when 16#19# =>   -- SLLR Left shift register
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
