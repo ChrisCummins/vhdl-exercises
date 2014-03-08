@@ -281,6 +281,7 @@ begin
           next_pc              <= load_pc                      after gate_delay;
 
         when X"07" =>   -- RSR Return from Subroutine
+
           case to_integer(unsigned(current_icc)) is
             when 0 =>
               ram_addr <= ram_word(current_sp + 1) after gate_delay;
@@ -334,19 +335,20 @@ begin
 
         when X"0C" =>   -- RTM Register to memory
 
-          if current_icc = 0 then
-            next_reg_b_addr <= rom_data_byte1 after gate_delay;
-            next_reg_b_rd <= '1' after gate_delay;
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              next_reg_b_addr <= rom_data_byte1 after gate_delay;
+              next_reg_b_rd <= '1' after gate_delay;
 
-            -- Halt execution
-            next_pc <= current_pc after gate_delay;
-            next_icc <= current_icc + 1 after gate_delay;
-          else -- Second clock cycle
-            next_reg_b_rd <= '0' after gate_delay;
-            ram_addr <= rom_data(n_bits(ram_size) - 1 downto 0) after gate_delay;
-            ram_wr <= '1' after gate_delay;
-            ram_wdata <= next_reg_b_do after gate_delay;
-          end if;
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              next_reg_b_rd <= '0' after gate_delay;
+              ram_addr <= rom_data(n_bits(ram_size) - 1 downto 0) after gate_delay;
+              ram_wr <= '1' after gate_delay;
+              ram_wdata <= next_reg_b_do after gate_delay;
+          end case;
 
         when X"0D" =>   -- IMTR Indexed memory to register
           -- TODO: Implement
@@ -356,39 +358,37 @@ begin
 
         when X"0F" =>   -- PSHR Stack push
 
-          -- FIXME: We should reading data from a register and then pushing into
-          -- the stack, but the test bench (1) doesn't want us to *any* of the
-          -- register signals? Furthermore, it wants us to *increment* the sp,
-          -- even though we're writing too it?
-          if current_icc = 0 then
-            next_reg_b_addr <= rom_data_byte1 after gate_delay;
-            next_reg_b_rd <= '1' after gate_delay;
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              next_reg_b_addr <= rom_data_byte1 after gate_delay;
+              next_reg_b_rd <= '1' after gate_delay;
 
-            next_pc <= current_pc after gate_delay;
-            next_icc <= current_icc + 1 after gate_delay;
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
 
-            -- Halt execution
-            next_pc <= current_pc after gate_delay;
-            next_icc <= current_icc + 1 after gate_delay;
-          else
-            ram_addr <= rom_word(current_sp) after gate_delay;
-            ram_wr <= '1' after gate_delay;
-            ram_wdata <= next_reg_b_do after gate_delay;
-            next_sp <= current_sp - 1 after gate_delay;
-          end if;
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              ram_addr <= rom_word(current_sp) after gate_delay;
+              ram_wr <= '1' after gate_delay;
+              ram_wdata <= next_reg_b_do after gate_delay;
+              next_sp <= current_sp - 1 after gate_delay;
+          end case;
 
         when X"10" =>   -- POPR Stack pop
 
-          if current_icc = 0 then
-            ram_addr <= rom_word(current_sp + 1) after gate_delay;
-            ram_rd <= '1' after gate_delay;
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              ram_addr <= rom_word(current_sp + 1) after gate_delay;
+              ram_rd <= '1' after gate_delay;
 
-            -- Halt execution
-            next_pc <= current_pc after gate_delay;
-            next_icc <= current_icc + 1 after gate_delay;
-          else
-            next_sp <= current_sp + 1 after gate_delay;
-          end if;
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              next_sp <= current_sp + 1 after gate_delay;
+          end case;
 
         when X"11" =>   -- RTIO Register to IO port
           -- TODO: Implement
@@ -398,19 +398,20 @@ begin
 
         when X"13" =>   -- LDLR Load lower register immediate
 
-          if current_icc = 0 then
-            next_reg_b_addr <= rom_data_byte1 after gate_delay;
-            next_reg_b_rd <= '1' after gate_delay;
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              next_reg_b_addr <= rom_data_byte1 after gate_delay;
+              next_reg_b_rd <= '1' after gate_delay;
 
-            -- Halt execution
-            next_pc <= current_pc after gate_delay;
-            next_icc <= current_icc + 1 after gate_delay;
-          else -- Second clock cycle
-            next_reg_b_rd <= '0' after gate_delay;
-            reg_a_addr <= rom_data_byte1 after gate_delay;
-            reg_a_wr <= '1' after gate_delay;
-            reg_a_di <= byte_null & byte_null & rom_data_byte2 & rom_data_byte3 after gate_delay;
-          end if;
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              next_reg_b_rd <= '0' after gate_delay;
+              reg_a_addr <= rom_data_byte1 after gate_delay;
+              reg_a_wr <= '1' after gate_delay;
+              reg_a_di <= byte_null & byte_null & rom_data_byte2 & rom_data_byte3 after gate_delay;
+          end case;
 
         when X"14" =>   -- LDUR Load upper register immediate
           -- TODO: Implement
