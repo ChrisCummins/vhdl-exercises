@@ -252,7 +252,7 @@ begin
     next_reg_c_addr <= (others => '0') after gate_delay;
     next_reg_c_rd <= '0' after gate_delay;
 
-    if current_intr /= intr_null and current_sr(INTR_EN) = '1' then
+    if current_intr /= intr_null and current_icc = 0 and current_sr(INTR_EN) = '1' then
 
       for i in intr'reverse_range loop
         if current_intr(i) = '1' then
