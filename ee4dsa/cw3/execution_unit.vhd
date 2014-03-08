@@ -81,7 +81,6 @@ architecture syn of execution_unit is
   subtype program_counter  is unsigned(ram_word'length - 1          downto 0);
   subtype instruction_counter is unsigned(icc_size downto 0);
   subtype stack_pointer    is unsigned(ram_word'length - 1          downto 0);
-  subtype reg_index        is byte;
 
   -- ROM data components
   alias rom_data_opcode: byte     is rom_data(word_size - 1         downto word_size - 8);
@@ -146,11 +145,11 @@ architecture syn of execution_unit is
   signal intr_reset:        intr_line        := intr_null;
 
   -- Register interface
-  signal next_reg_b_addr: reg_index := (others => '0');
+  signal next_reg_b_addr: byte := (others => '0');
   signal next_reg_b_rd: std_logic := '0';
   signal next_reg_b_do: word := (others => '0');
 
-  signal next_reg_c_addr: reg_index := (others => '0');
+  signal next_reg_c_addr: byte := (others => '0');
   signal next_reg_c_rd: std_logic := '0';
   signal next_reg_c_do: word := (others => '0');
 
