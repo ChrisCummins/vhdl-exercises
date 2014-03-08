@@ -83,14 +83,11 @@ architecture syn of execution_unit is
   subtype stack_pointer    is unsigned(ram_word'length - 1          downto 0);
 
   -- ROM data components
-  alias rom_data_opcode: byte     is rom_data(word_size - 1         downto word_size - 8);
+  alias rom_data_byte0:  byte     is rom_data(word_size - 1         downto word_size - 8);
   alias rom_data_byte1:  byte     is rom_data(word_size - 9         downto word_size - 16);
   alias rom_data_byte2:  byte     is rom_data(word_size - 17        downto word_size - 24);
   alias rom_data_byte3:  byte     is rom_data(word_size - 25        downto 0);
   alias rom_data_addr:   ram_word is rom_data(ram_word'length - 1   downto 0);
-  alias rom_data_port:   byte     is rom_data_byte1;
-  alias rom_data_and:    byte     is rom_data_byte2;
-  alias rom_data_xor:    byte     is rom_data_byte3;
   alias rom_data_pc:     ram_pc   is rom_data(ram_word'length - 1   downto 0);
 
   -- RAM data components
@@ -276,7 +273,7 @@ begin
       -- Increment program counter by default
       next_pc                  <= current_pc + 1               after gate_delay;
 
-      case to_integer(unsigned(rom_data_opcode)) is
+      case to_integer(unsigned(rom_data_byte0)) is
         when 16#01# =>   -- HUC Halt unconditional
           next_pc              <= current_pc                   after gate_delay;
 
@@ -289,15 +286,15 @@ begin
           end if;
 
         when 16#04# =>   -- SETO Set outputs
-          port_val := current_io_out(to_integer(unsigned(rom_data_port)));
-          port_val := (port_val and rom_data_and) xor rom_data_xor;
+          port_val := current_io_out(to_integer(unsigned(rom_data_byte1)));
+          port_val := (port_val and rom_data_byte2) xor rom_data_byte3;
 
-          next_io_out(to_integer(unsigned(rom_data_port))) <= port_val
+          next_io_out(to_integer(unsigned(rom_data_byte1))) <= port_val
                                                                after gate_delay;
 
         when 16#05# =>   -- TSTI Test Inputs
-          port_val := io_in(to_integer(unsigned(rom_data_port)));
-          port_val := (port_val and rom_data_and) xor rom_data_xor;
+          port_val := io_in(to_integer(unsigned(rom_data_byte1)));
+          port_val := (port_val and rom_data_byte2) xor rom_data_byte3;
 
           if port_val = byte_null then
             next_sr(TST_FLAG)  <= '1'                          after gate_delay;
