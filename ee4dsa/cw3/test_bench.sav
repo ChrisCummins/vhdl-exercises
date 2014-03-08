@@ -1,15 +1,15 @@
 [*]
-[*] GTKWave Analyzer v3.3.54 (w)1999-2014 BSI
-[*] Sat Mar  8 02:09:43 2014
+[*] GTKWave Analyzer v3.3.37 (w)1999-2012 BSI
+[*] Sat Mar  8 23:41:31 2014
 [*]
 [dumpfile] "/home/chris/src/vhdl-exercises/ee4dsa/cw3/test_bench.ghw"
-[dumpfile_mtime] "Sat Mar  8 01:40:57 2014"
-[dumpfile_size] 650445
+[dumpfile_mtime] "Sat Mar  8 23:40:39 2014"
+[dumpfile_size] 653897
 [savefile] "/home/chris/src/vhdl-exercises/ee4dsa/cw3/test_bench.sav"
-[timestart] 196290000000
-[size] 1920 951
+[timestart] 0
+[size] 1366 715
 [pos] -1 -1
-*-31.727745 209002000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-33.727745 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.test_bench.
 [treeopen] top.test_bench.top_level_uut.
@@ -57,7 +57,7 @@ top.test_bench.top_level_uut.dcf
 @200
 -
 -Interrupt Line
-@c00023
+@c00022
 #{top.test_bench.top_level_uut.execution_unit.intr[7:0]} top.test_bench.top_level_uut.execution_unit.intr[7] top.test_bench.top_level_uut.execution_unit.intr[6] top.test_bench.top_level_uut.execution_unit.intr[5] top.test_bench.top_level_uut.execution_unit.intr[4] top.test_bench.top_level_uut.execution_unit.intr[3] top.test_bench.top_level_uut.execution_unit.intr[2] top.test_bench.top_level_uut.execution_unit.intr[1] top.test_bench.top_level_uut.execution_unit.intr[0]
 @28
 top.test_bench.top_level_uut.execution_unit.intr[7]
@@ -68,7 +68,7 @@ top.test_bench.top_level_uut.execution_unit.intr[3]
 top.test_bench.top_level_uut.execution_unit.intr[2]
 top.test_bench.top_level_uut.execution_unit.intr[1]
 top.test_bench.top_level_uut.execution_unit.intr[0]
-@1401201
+@1401200
 -group_end
 @c00022
 [color] 2
@@ -92,7 +92,7 @@ top.test_bench.top_level_uut.execution_unit.current_intr[1]
 top.test_bench.top_level_uut.execution_unit.current_intr[0]
 @1401200
 -group_end
-@800022
+@c00023
 [color] 2
 #{top.test_bench.top_level_uut.execution_unit.intr_reset[7:0]} top.test_bench.top_level_uut.execution_unit.intr_reset[7] top.test_bench.top_level_uut.execution_unit.intr_reset[6] top.test_bench.top_level_uut.execution_unit.intr_reset[5] top.test_bench.top_level_uut.execution_unit.intr_reset[4] top.test_bench.top_level_uut.execution_unit.intr_reset[3] top.test_bench.top_level_uut.execution_unit.intr_reset[2] top.test_bench.top_level_uut.execution_unit.intr_reset[1] top.test_bench.top_level_uut.execution_unit.intr_reset[0]
 @28
@@ -112,7 +112,7 @@ top.test_bench.top_level_uut.execution_unit.intr_reset[2]
 top.test_bench.top_level_uut.execution_unit.intr_reset[1]
 [color] 2
 top.test_bench.top_level_uut.execution_unit.intr_reset[0]
-@1001200
+@1401201
 -group_end
 @200
 -
