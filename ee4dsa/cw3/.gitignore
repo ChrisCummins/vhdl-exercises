@@ -1,4 +1,5 @@
 *.ghw
+/_xmsgs
 /design.bit
 /reports/
 /test_bench
