@@ -436,7 +436,10 @@ begin
           -- TODO: Implement
 
         when X"12" =>   -- IOTR IO port to register
-          -- TODO: Implement
+
+          reg_a_addr <= rom_data_byte1 after gate_delay;
+          reg_a_wr <= '1' after gate_delay;
+          reg_a_di <= byte_null & byte_null & byte_null & io_in(to_integer(unsigned(rom_data_byte2))) after gate_delay;
 
         when X"13" =>   -- LDLR Load lower register immediate
 
