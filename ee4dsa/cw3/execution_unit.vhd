@@ -113,8 +113,9 @@ architecture syn of execution_unit is
   constant REG_SR:   integer := 3;
 
   -- Register word padding
-  constant reg_pc_pad: std_logic_vector(word_size - program_counter'length - 1 downto 0) := (others => '0');
-  constant reg_sp_pad: std_logic_vector(word_size - stack_pointer'length - 1 downto 0) := (others => '0');
+  constant pc_word_pad: std_logic_vector(word_size - program_counter'length - 1 downto 0) := (others => '0');
+  constant sp_word_pad: std_logic_vector(word_size - stack_pointer'length - 1 downto 0) := (others => '0');
+  constant byte_pc_pad: std_logic_vector(byte'length - program_counter'length - 1 downto 0) := (others => '0');
 
   -- Initial values
   constant pc_start:        program_counter  := (3 => '1', others => '0'); -- 0x08
@@ -486,9 +487,9 @@ begin
         when REG_NULL =>
           next_reg_b_do <= (others => '0') after gate_delay;
         when REG_PC =>
-          next_reg_b_do <= reg_pc_pad & std_logic_vector(current_pc) after gate_delay;
+          next_reg_b_do <= pc_word_pad & std_logic_vector(current_pc) after gate_delay;
         when REG_SP =>
-          next_reg_b_do <= reg_sp_pad & std_logic_vector(current_sp) after gate_delay;
+          next_reg_b_do <= sp_word_pad & std_logic_vector(current_sp) after gate_delay;
         when REG_SR =>
           next_reg_b_do <= current_sr after gate_delay;
         when others =>
@@ -518,9 +519,9 @@ begin
         when REG_NULL =>
           next_reg_c_do <= (others => '0') after gate_delay;
         when REG_PC =>
-          next_reg_c_do <= reg_pc_pad & std_logic_vector(current_pc) after gate_delay;
+          next_reg_c_do <= pc_word_pad & std_logic_vector(current_pc) after gate_delay;
         when REG_SP =>
-          next_reg_c_do <= reg_sp_pad & std_logic_vector(current_sp) after gate_delay;
+          next_reg_c_do <= sp_word_pad & std_logic_vector(current_sp) after gate_delay;
         when REG_SR =>
           next_reg_c_do <= current_sr after gate_delay;
         when others =>
