@@ -159,6 +159,9 @@ architecture syn of execution_unit is
   signal current_shift: word := (others => '0');
   signal next_shift: word := (others => '0');
 
+  alias current_shift_pc: std_logic_vector(program_counter'length - 1 downto 0)
+    is current_shift(program_counter'length - 1 downto 0);
+
   -- Indexed memory register
   signal current_ram_index_addr: ram_word := (others => '0');
   signal next_ram_index_addr: ram_word := (others => '0');
@@ -560,11 +563,11 @@ begin
               case to_integer(unsigned(rom_data_byte1)) is
                 when REG_NULL =>
                 when REG_PC =>
-                  next_pc <= program_counter(current_shift) after gate_delay;
+                  next_pc <= unsigned(current_shift_pc) after gate_delay;
                 when REG_SP =>
-                  next_sp <= stack_pointer(current_shift) after gate_delay;
+                  next_sp <= unsigned(current_shift_pc) after gate_delay;
                 when REG_SR =>
-                  next_sr <= word(current_shift) after gate_delay;
+                  next_sr <= current_shift after gate_delay;
                 when others =>
                   reg_a_addr <= rom_data_byte1 after gate_delay;
                   reg_a_wr <= '1' after gate_delay;
@@ -592,11 +595,11 @@ begin
               case to_integer(unsigned(rom_data_byte1)) is
                 when REG_NULL =>
                 when REG_PC =>
-                  next_pc <= program_counter(current_shift) after gate_delay;
+                  next_pc <= unsigned(current_shift_pc) after gate_delay;
                 when REG_SP =>
-                  next_sp <= stack_pointer(current_shift) after gate_delay;
+                  next_sp <= unsigned(current_shift_pc) after gate_delay;
                 when REG_SR =>
-                  next_sr <= word(current_shift) after gate_delay;
+                  next_sr <= current_shift after gate_delay;
                 when others =>
                   reg_a_addr <= rom_data_byte1 after gate_delay;
                   reg_a_wr <= '1' after gate_delay;
