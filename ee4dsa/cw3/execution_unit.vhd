@@ -168,6 +168,21 @@ architecture syn of execution_unit is
   signal current_ram_index_addr: ram_word := (others => '0');
   signal next_ram_index_addr: ram_word := (others => '0');
 
+  -- ALU opcode components
+  alias op_alu_complement_b: std_logic is rom_data_byte0(2);
+  alias op_alu_complement_c: std_logic is rom_data_byte0(1);
+  alias op_alu_carry_in:     std_logic is rom_data_byte0(0);
+
+  -- ALU registers
+  signal current_alu_a_di: word := (others => '0');
+  signal next_alu_a_di: word := (others => '0');
+
+  signal current_alu_b_di: word := (others => '0');
+  signal next_alu_b_di: word := (others => '0');
+
+  alias alu_s_do_pc: std_logic_vector(program_counter'length - 1 downto 0)
+    is alu_s_do(program_counter'length - 1 downto 0);
+
 begin
 
 --synopsys synthesis_off
@@ -197,6 +212,9 @@ begin
         current_intr             <= (others => '0')            after gate_delay;
         current_shift            <= (others => '0')            after gate_delay;
         current_ram_index_addr   <= (others => '0')            after gate_delay;
+        current_alu_a_di         <= (others => '0')            after gate_delay;
+        current_alu_b_di         <= (others => '0')            after gate_delay;
+
       elsif en = '1' then
         current_pc               <= next_pc                    after gate_delay;
         current_icc              <= next_icc                   after gate_delay;
@@ -205,6 +223,8 @@ begin
         current_io_out           <= next_io_out                after gate_delay;
         current_shift            <= next_shift                 after gate_delay;
         current_ram_index_addr   <= next_ram_index_addr        after gate_delay;
+        current_alu_a_di         <= next_alu_a_di              after gate_delay;
+        current_alu_b_di         <= next_alu_b_di              after gate_delay;
 
         for i in intr'range loop
           if intr_reset(i) = '1' then
@@ -259,6 +279,14 @@ begin
 
     next_reg_c_addr            <= (others => '0')              after gate_delay;
     next_reg_c_rd              <= '0'                          after gate_delay;
+
+    -- ALU
+    alu_si <= '0' after gate_delay;
+    alu_a_c <= '0' after gate_delay;
+    alu_b_c <= '0' after gate_delay;
+    next_alu_a_di <= (others => '0') after gate_delay;
+    next_alu_b_di <= (others => '0') after gate_delay;
+    alu_c_in <= '0' after gate_delay;
 
     if current_intr /= intr_null and current_icc = 0 and current_sr(INTR_EN) = '1' then
 
@@ -619,11 +647,48 @@ begin
         when 16#1B# =>   -- CMPS
           -- TODO: Implementation
 
-        when 16#20# to 16#27# =>   --
-          -- TODO: Implementation
+        when 16#20# to 16#2F# => -- ALUU to ALUS
 
-        when 16#28# to 16#2F# =>   --
-          -- TODO: Implementation
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              next_reg_b_addr <= rom_data_byte2 after gate_delay;
+              next_reg_b_rd <= '1' after gate_delay;
+              next_reg_c_addr <= rom_data_byte3 after gate_delay;
+              next_reg_c_rd <= '1' after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when 1 =>
+              next_alu_a_di <= next_reg_b_do after gate_delay;
+              next_alu_b_di <= next_reg_c_do after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              alu_a_di <= current_alu_a_di after gate_delay;
+              alu_b_di <= current_alu_b_di after gate_delay;
+              alu_a_c  <= op_alu_complement_b after gate_delay;
+              alu_b_c  <= op_alu_complement_c after gate_delay;
+              alu_si   <= op_alu_carry_in after gate_delay;
+
+              case to_integer(unsigned(rom_data_byte1)) is
+                when REG_NULL =>
+                when REG_PC =>
+                  next_pc <= unsigned(alu_s_do_pc) after gate_delay;
+                when REG_SP =>
+                  next_sp <= unsigned(alu_s_do_pc) after gate_delay;
+                when REG_SR =>
+                  next_sr <= alu_s_do after gate_delay;
+                when others =>
+                  reg_a_addr <= rom_data_byte1 after gate_delay;
+                  reg_a_wr <= '1' after gate_delay;
+                  reg_a_di <= alu_s_do after gate_delay;
+                  reg_a_di <= byte_null & byte_null & byte_null & port_val after gate_delay;
+              end case;
+
+          end case;
 
         when others =>  -- Undefined operation
       end case;
