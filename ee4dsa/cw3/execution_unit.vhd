@@ -169,6 +169,7 @@ architecture syn of execution_unit is
   signal next_ram_index_addr: ram_word := (others => '0');
 
   -- ALU opcode components
+  alias op_alu_signed:       std_logic is rom_data_byte0(3);
   alias op_alu_complement_b: std_logic is rom_data_byte0(2);
   alias op_alu_complement_c: std_logic is rom_data_byte0(1);
   alias op_alu_carry_in:     std_logic is rom_data_byte0(0);
@@ -194,6 +195,9 @@ begin
   rom_en    <= '1'                                             after gate_delay;
   rom_addr  <= std_logic_vector(next_pc)                       after gate_delay;
   io_out    <= next_io_out                                     after gate_delay;
+
+  alu_a_di  <= current_alu_a_di                                after gate_delay;
+  alu_b_di  <= current_alu_b_di                                after gate_delay;
 
   current_reg_b_do         <= next_reg_b_do              after gate_delay;
   current_reg_c_do         <= next_reg_c_do              after gate_delay;
@@ -667,11 +671,10 @@ begin
               next_pc <= current_pc after gate_delay;
               next_icc <= current_icc + 1 after gate_delay;
             when others =>
-              alu_a_di <= current_alu_a_di after gate_delay;
-              alu_b_di <= current_alu_b_di after gate_delay;
               alu_a_c  <= op_alu_complement_b after gate_delay;
               alu_b_c  <= op_alu_complement_c after gate_delay;
-              alu_si   <= op_alu_carry_in after gate_delay;
+              alu_c_in <= op_alu_carry_in     after gate_delay;
+              alu_si   <= op_alu_signed       after gate_delay;
 
               case to_integer(unsigned(rom_data_byte1)) is
                 when REG_NULL =>
