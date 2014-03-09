@@ -601,8 +601,8 @@ begin
 
           case current_icc_int is
             when 0 =>
-              next_reg_b_addr <= rom_data_byte2 after gate_delay;
-              next_reg_b_rd <= '1' after gate_delay;
+              next_reg_b_addr  <= rom_data_byte2 after gate_delay;
+              next_reg_b_rd    <= '1' after gate_delay;
 
               -- Halt execution
               next_pc          <= current_pc                   after gate_delay;
@@ -623,15 +623,15 @@ begin
               case rom_data_byte1_int is
                 when REG_NULL =>
                 when REG_PC =>
-                  next_pc <= unsigned(current_shift_pc) after gate_delay;
+                  next_pc      <= unsigned(current_shift_pc)   after gate_delay;
                 when REG_SP =>
-                  next_sp <= unsigned(current_shift_pc) after gate_delay;
+                  next_sp      <= unsigned(current_shift_pc)   after gate_delay;
                 when REG_SR =>
-                  next_sr <= current_shift after gate_delay;
+                  next_sr      <= current_shift                after gate_delay;
                 when others =>
-                  reg_a_addr <= rom_data_byte1 after gate_delay;
-                  reg_a_wr <= '1' after gate_delay;
-                  reg_a_di <= current_shift after gate_delay;
+                  reg_a_addr   <= rom_data_byte1               after gate_delay;
+                  reg_a_di     <= current_shift                after gate_delay;
+                  reg_a_wr     <= '1'                          after gate_delay;
               end case;
           end case;
 
@@ -639,17 +639,17 @@ begin
 
           case current_icc_int is
             when 0 =>
-              next_reg_b_addr <= rom_data_byte2 after gate_delay;
-              next_reg_b_rd <= '1' after gate_delay;
-              next_reg_c_addr <= rom_data_byte3 after gate_delay;
-              next_reg_c_rd <= '1' after gate_delay;
+              next_reg_b_addr  <= rom_data_byte2               after gate_delay;
+              next_reg_b_rd    <= '1'                          after gate_delay;
+              next_reg_c_addr  <= rom_data_byte3               after gate_delay;
+              next_reg_c_rd    <= '1'                          after gate_delay;
 
               -- Halt execution
               next_pc          <= current_pc                   after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when 1 =>
-              next_alu_a_di <= next_reg_b_do after gate_delay;
-              next_alu_b_di <= next_reg_c_do after gate_delay;
+              next_alu_a_di    <= next_reg_b_do                after gate_delay;
+              next_alu_b_di    <= next_reg_c_do                after gate_delay;
 
               -- Halt execution
               next_pc          <= current_pc                   after gate_delay;
@@ -658,15 +658,15 @@ begin
               test_flag := '0';
 
               case rom_data_byte1 is
-                when EQ =>
+                when EQ => -- Equal to.
                   if current_alu_a_di = current_alu_b_di then
                     test_flag := '1';
                   end if;
-                when NE =>
+                when NE => -- Not equal to.
                   if current_alu_a_di /= current_alu_b_di then
                     test_flag := '1';
                   end if;
-                when LT =>
+                when LT => -- Less than.
                   if op_signed_comparison = '1' then
                     if signed(current_alu_a_di) < signed(current_alu_b_di) then
                       test_flag := '1';
@@ -676,7 +676,7 @@ begin
                       test_flag := '1';
                     end if;
                   end if;
-                when LE =>
+                when LE => -- Less than or equal to.
                   if op_signed_comparison = '1' then
                     if signed(current_alu_a_di) <= signed(current_alu_b_di) then
                       test_flag := '1';
@@ -686,7 +686,7 @@ begin
                       test_flag := '1';
                     end if;
                   end if;
-                when GT =>
+                when GT => -- Greater than.
                   if op_signed_comparison = '1' then
                     if signed(current_alu_a_di) > signed(current_alu_b_di) then
                       test_flag := '1';
@@ -696,7 +696,7 @@ begin
                       test_flag := '1';
                     end if;
                   end if;
-                when GE =>
+                when GE => -- Great than or equal to.
                   if op_signed_comparison = '1' then
                     if signed(current_alu_a_di) >= signed(current_alu_b_di) then
                       test_flag := '1';
@@ -706,60 +706,60 @@ begin
                       test_flag := '1';
                     end if;
                   end if;
-                when Z =>
+                when Z =>  -- Equal to zero.
                   if unsigned(current_alu_a_di) = 0 then
                     test_flag := '1';
                   end if;
-                when N =>
+                when N =>  -- Not equal to zero.
                   if unsigned(current_alu_a_di) /= 0 then
                     test_flag := '1';
                   end if;
                 when others => -- Invalid comparison
               end case;
 
-              next_sr(TST_FLAG) <= test_flag after gate_delay;
+              next_sr(TST_FLAG) <= test_flag                   after gate_delay;
           end case;
 
         when 16#20# to 16#2F# => -- ALUU to ALUS
 
           case current_icc_int is
             when 0 =>
-              next_reg_b_addr <= rom_data_byte2 after gate_delay;
-              next_reg_b_rd <= '1' after gate_delay;
-              next_reg_c_addr <= rom_data_byte3 after gate_delay;
-              next_reg_c_rd <= '1' after gate_delay;
+              next_reg_b_addr  <= rom_data_byte2               after gate_delay;
+              next_reg_b_rd    <= '1'                          after gate_delay;
+              next_reg_c_addr  <= rom_data_byte3               after gate_delay;
+              next_reg_c_rd    <= '1'                          after gate_delay;
 
               -- Halt execution
               next_pc          <= current_pc                   after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when 1 =>
-              next_alu_a_di <= next_reg_b_do after gate_delay;
-              next_alu_b_di <= next_reg_c_do after gate_delay;
+              next_alu_a_di    <= next_reg_b_do                after gate_delay;
+              next_alu_b_di    <= next_reg_c_do                after gate_delay;
 
               -- Halt execution
               next_pc          <= current_pc                   after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
-              alu_a_di <= current_alu_a_di    after gate_delay;
-              alu_b_di <= current_alu_b_di    after gate_delay;
-              alu_a_c  <= op_alu_complement_b after gate_delay;
-              alu_b_c  <= op_alu_complement_c after gate_delay;
-              alu_c_in <= op_alu_carry_in     after gate_delay;
-              alu_si   <= op_alu_signed       after gate_delay;
-              next_sr(CARRY) <= alu_c_out     after gate_delay;
+              alu_a_di         <= current_alu_a_di             after gate_delay;
+              alu_b_di         <= current_alu_b_di             after gate_delay;
+              alu_a_c          <= op_alu_complement_b          after gate_delay;
+              alu_b_c          <= op_alu_complement_c          after gate_delay;
+              alu_c_in         <= op_alu_carry_in              after gate_delay;
+              alu_si           <= op_alu_signed                after gate_delay;
+              next_sr(CARRY)   <= alu_c_out                    after gate_delay;
 
               case rom_data_byte1_int is
                 when REG_NULL =>
                 when REG_PC =>
-                  next_pc <= unsigned(alu_s_do_pc) after gate_delay;
+                  next_pc      <= unsigned(alu_s_do_pc)        after gate_delay;
                 when REG_SP =>
-                  next_sp <= unsigned(alu_s_do_pc) after gate_delay;
+                  next_sp      <= unsigned(alu_s_do_pc)        after gate_delay;
                 when REG_SR =>
-                  next_sr <= alu_s_do after gate_delay;
+                  next_sr      <= alu_s_do                     after gate_delay;
                 when others =>
-                  reg_a_addr <= rom_data_byte1 after gate_delay;
-                  reg_a_wr <= '1' after gate_delay;
-                  reg_a_di <= alu_s_do after gate_delay;
+                  reg_a_addr   <= rom_data_byte1               after gate_delay;
+                  reg_a_wr     <= '1'                          after gate_delay;
+                  reg_a_di     <= alu_s_do                     after gate_delay;
               end case;
           end case;
 
@@ -769,65 +769,77 @@ begin
 
   end process;
 
+
   -- Register B interface
   process (next_reg_b_addr, next_reg_b_rd, current_reg_b_do,
            current_pc, current_sp, current_sr, reg_b_do) is
+    variable pc_word:             word;
+    variable sp_word:             word;
   begin
+
+    pc_word := pc_word_pad & std_logic_vector(current_pc);
+    sp_word := pc_word_pad & std_logic_vector(current_sp);
 
     case to_integer(unsigned(next_reg_b_addr)) is
       when REG_NULL to REG_SR =>
-        reg_b_addr <= (others => '0') after gate_delay;
-        reg_b_rd <= '0' after gate_delay;
+        reg_b_addr             <= (others => '0')              after gate_delay;
+        reg_b_rd               <= '0'                          after gate_delay;
       when others =>
-        reg_b_addr <= next_reg_b_addr after gate_delay;
-        reg_b_rd <= next_reg_b_rd after gate_delay;
+        reg_b_addr             <= next_reg_b_addr              after gate_delay;
+        reg_b_rd               <= next_reg_b_rd                after gate_delay;
     end case;
 
     -- Read operation
     if next_reg_b_rd = '1' then
       case to_integer(unsigned(next_reg_b_addr)) is
         when REG_NULL =>
-          next_reg_b_do <= (others => '0') after gate_delay;
+          next_reg_b_do        <= (others => '0')              after gate_delay;
         when REG_PC =>
-          next_reg_b_do <= pc_word_pad & std_logic_vector(current_pc) after gate_delay;
+          next_reg_b_do        <= pc_word                      after gate_delay;
         when REG_SP =>
-          next_reg_b_do <= pc_word_pad & std_logic_vector(current_sp) after gate_delay;
+          next_reg_b_do        <= sp_word                      after gate_delay;
         when REG_SR =>
-          next_reg_b_do <= current_sr after gate_delay;
+          next_reg_b_do        <= current_sr                   after gate_delay;
         when others =>
-          next_reg_b_do <= reg_b_do after gate_delay;
+          next_reg_b_do        <= reg_b_do                     after gate_delay;
       end case;
     end if;
 
   end process;
 
+
   -- Register C interface
   process (next_reg_c_addr, next_reg_c_rd, current_reg_c_do,
            current_pc, current_sp, current_sr, reg_c_do) is
+    variable pc_word: word;
+    variable sp_word: word;
   begin
+
+    pc_word := pc_word_pad & std_logic_vector(current_pc);
+    sp_word := pc_word_pad & std_logic_vector(current_sp);
 
     case to_integer(unsigned(next_reg_c_addr)) is
       when REG_NULL to REG_SR =>
-        reg_c_addr <= (others => '0') after gate_delay;
-        reg_c_rd <= '0' after gate_delay;
+        reg_c_addr             <= (others => '0')              after gate_delay;
+        reg_c_rd               <= '0'                          after gate_delay;
       when others =>
-        reg_c_addr <= next_reg_c_addr after gate_delay;
-        reg_c_rd <= next_reg_c_rd after gate_delay;
+        reg_c_addr             <= next_reg_c_addr              after gate_delay;
+        reg_c_rd               <= next_reg_c_rd                after gate_delay;
     end case;
 
     -- Read operation
     if next_reg_c_rd = '1' then
       case to_integer(unsigned(next_reg_c_addr)) is
         when REG_NULL =>
-          next_reg_c_do <= (others => '0') after gate_delay;
+          next_reg_c_do        <= (others => '0')              after gate_delay;
         when REG_PC =>
-          next_reg_c_do <= pc_word_pad & std_logic_vector(current_pc) after gate_delay;
+          next_reg_c_do        <= pc_word                      after gate_delay;
         when REG_SP =>
-          next_reg_c_do <= pc_word_pad & std_logic_vector(current_sp) after gate_delay;
+          next_reg_c_do        <= sp_word                      after gate_delay;
         when REG_SR =>
-          next_reg_c_do <= current_sr after gate_delay;
+          next_reg_c_do        <= current_sr                   after gate_delay;
         when others =>
-          next_reg_c_do <= reg_c_do after gate_delay;
+          next_reg_c_do        <= reg_c_do                     after gate_delay;
       end case;
     end if;
 
