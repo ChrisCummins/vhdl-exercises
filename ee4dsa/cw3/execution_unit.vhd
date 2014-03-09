@@ -208,9 +208,6 @@ begin
   rom_addr  <= std_logic_vector(next_pc)                       after gate_delay;
   io_out    <= next_io_out                                     after gate_delay;
 
-  current_reg_b_do         <= next_reg_b_do              after gate_delay;
-  current_reg_c_do         <= next_reg_c_do              after gate_delay;
-
 
   -- Our clock process. Performs house keeping on registers.
   process (clk, rst) is
@@ -238,6 +235,8 @@ begin
         current_ram_index_addr   <= next_ram_index_addr        after gate_delay;
         current_alu_a_di         <= next_alu_a_di              after gate_delay;
         current_alu_b_di         <= next_alu_b_di              after gate_delay;
+        current_reg_b_do         <= next_reg_b_do              after gate_delay;
+        current_reg_c_do         <= next_reg_c_do              after gate_delay;
 
         for i in intr'range loop
           if intr_reset(i) = '1' then
