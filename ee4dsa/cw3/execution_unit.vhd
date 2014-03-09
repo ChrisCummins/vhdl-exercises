@@ -237,6 +237,7 @@ begin
     next_ram_index_addr        <= ram_word(unsigned(reg_b_do_addr) +
                                            unsigned(reg_c_do_addr))
                                   after gate_delay;
+    next_shift                 <= current_shift                after gate_delay;
     intr_reset                 <= intr_null                    after gate_delay;
 
     ram_rd                     <= '0'                          after gate_delay;
