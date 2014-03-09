@@ -80,7 +80,6 @@ architecture syn of execution_unit is
   subtype ram_pc           is std_logic_vector(ram_word'length - 1  downto 0);
   subtype program_counter  is unsigned(ram_word'length - 1          downto 0);
   subtype instruction_counter is unsigned(icc_size downto 0);
-  subtype stack_pointer    is unsigned(ram_word'length - 1          downto 0);
 
   -- ROM data components
   alias rom_data_byte0:  byte     is rom_data(word_size - 1         downto word_size - 8);
@@ -108,12 +107,12 @@ architecture syn of execution_unit is
 
   -- Register word padding
   constant pc_word_pad: std_logic_vector(word_size - program_counter'length - 1 downto 0) := (others => '0');
-  constant sp_word_pad: std_logic_vector(word_size - stack_pointer'length - 1 downto 0) := (others => '0');
   constant byte_pc_pad: std_logic_vector(program_counter'length - byte'length - 1 downto 0) := (others => '0');
+  constant byte_word_pad: std_logic_vector(word_size - byte'length - 1 downto 0) := (others => '0');
 
   -- Initial values
   constant pc_start:        program_counter  := (3 => '1', others => '0'); -- 0x08
-  constant sp_start:        stack_pointer    := (others => '1');
+  constant sp_start:        program_counter    := (others => '1');
   constant sr_start:        word             := (others => '0');
 
   -- The program counter
@@ -125,8 +124,8 @@ architecture syn of execution_unit is
   signal next_icc:          instruction_counter := (others => '0');
 
   -- The stack pointer
-  signal current_sp:        stack_pointer    := sp_start;
-  signal next_sp:           stack_pointer    := sp_start;
+  signal current_sp:        program_counter    := sp_start;
+  signal next_sp:           program_counter    := sp_start;
 
   -- The status register
   signal current_sr:        word             := sr_start;
@@ -489,11 +488,11 @@ begin
           case to_integer(unsigned(rom_data_byte1)) is
             when REG_NULL =>
             when REG_PC =>
-              next_pc <= unsigned(byte_pc_pad) & program_counter(port_val) after gate_delay;
+              next_pc <= unsigned(byte_pc_pad) & unsigned(port_val) after gate_delay;
             when REG_SP =>
-              next_sp <= stack_pointer(port_val) after gate_delay;
+              next_sp <= unsigned(byte_pc_pad) & unsigned(port_val) after gate_delay;
             when REG_SR =>
-              next_sr <= word(port_val) after gate_delay;
+              next_sr <= byte_word_pad & port_val after gate_delay;
             when others =>
               reg_a_addr <= rom_data_byte1 after gate_delay;
               reg_a_wr <= '1' after gate_delay;
@@ -645,7 +644,7 @@ begin
         when REG_PC =>
           next_reg_b_do <= pc_word_pad & std_logic_vector(current_pc) after gate_delay;
         when REG_SP =>
-          next_reg_b_do <= sp_word_pad & std_logic_vector(current_sp) after gate_delay;
+          next_reg_b_do <= pc_word_pad & std_logic_vector(current_sp) after gate_delay;
         when REG_SR =>
           next_reg_b_do <= current_sr after gate_delay;
         when others =>
@@ -677,7 +676,7 @@ begin
         when REG_PC =>
           next_reg_c_do <= pc_word_pad & std_logic_vector(current_pc) after gate_delay;
         when REG_SP =>
-          next_reg_c_do <= sp_word_pad & std_logic_vector(current_sp) after gate_delay;
+          next_reg_c_do <= pc_word_pad & std_logic_vector(current_sp) after gate_delay;
         when REG_SR =>
           next_reg_c_do <= current_sr after gate_delay;
         when others =>
