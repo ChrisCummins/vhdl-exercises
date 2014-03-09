@@ -532,7 +532,14 @@ begin
               reg_a_di <= rom_data_byte2 & rom_data_byte3 & byte_null & byte_null after gate_delay;
           end case;
 
-        -- TODO: Implement instructions 15 - 17
+        when 16#15# =>   -- ANDR
+          -- TODO: Implementation
+
+        when 16#16# =>   -- ORR
+          -- TODO: Implementation
+
+        when 16#17# =>   -- XORR
+          -- TODO: Implementation
 
         when 16#18# =>   -- SRLR Right shift register
 
@@ -597,6 +604,18 @@ begin
                   reg_a_di <= current_shift after gate_delay;
               end case;
           end case;
+
+        when 16#1A# =>   -- CMPU
+          -- TODO: Implementation
+
+        when 16#1B# =>   -- CMPS
+          -- TODO: Implementation
+
+        when 16#20# to 16#27# =>   --
+          -- TODO: Implementation
+
+        when 16#28# to 16#2F# =>   --
+          -- TODO: Implementation
 
         when others =>  -- Undefined operation
       end case;
