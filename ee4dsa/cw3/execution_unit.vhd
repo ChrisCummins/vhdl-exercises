@@ -158,8 +158,8 @@ architecture syn of execution_unit is
   alias reg_c_do_byte:   byte     is next_reg_b_do(byte'length - 1 downto 0);
 
   -- Shift register
-  signal current_shift: word := (others => '0');
-  signal next_shift: word := (others => '0');
+  signal current_shift:  word := (others => '0');
+  signal next_shift:     word := (others => '0');
 
   alias current_shift_pc: std_logic_vector(program_counter'length - 1 downto 0)
     is current_shift(program_counter'length - 1 downto 0);
@@ -174,6 +174,8 @@ architecture syn of execution_unit is
   alias op_alu_complement_c:  std_logic is rom_data_byte0(1);
   alias op_alu_carry_in:      std_logic is rom_data_byte0(0);
   alias op_signed_comparison: std_logic is rom_data_byte0(0);
+  alias op_load_upper:        std_logic is rom_data_byte0(3);
+  alias op_shift_left:        std_logic is rom_data_byte0(0);
 
   -- Comparison instructions
   constant EQ: byte := X"00"; -- A == B
@@ -267,8 +269,10 @@ begin
     variable ram_index_addr:     ram_word;
 
     -- Working variables
-    variable port_val:           byte;
-    variable test_flag:          std_logic;
+    variable port_val:           byte;      -- IO port bits
+    variable test_flag:          std_logic; -- Register test comparisons result
+    variable ldi:                word;      -- Load immediate value
+    variable shift:              word;      -- Logical shift result
 
   begin
 
@@ -563,7 +567,7 @@ begin
               reg_a_wr         <= '1'                          after gate_delay;
           end case;
 
-        when 16#13# =>   -- LDLR Load lower register immediate
+        when 16#13# to 16#14# =>   -- LDLR and LDUR Load immediate
 
           case current_icc_int is
             when 0 =>
@@ -574,26 +578,14 @@ begin
               next_pc          <= current_pc                   after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
+              if op_load_upper = '1' then -- Pad bits out to fill word
+                ldi := rom_data_byte2 & rom_data_byte3 & byte_null & byte_null;
+              else
+                ldi := byte_null & byte_null & rom_data_byte2 & rom_data_byte3;
+              end if;
               reg_a_addr       <= rom_data_byte1               after gate_delay;
+              reg_a_di         <= ldi                          after gate_delay;
               reg_a_wr         <= '1'                          after gate_delay;
-              reg_a_di <= byte_null & byte_null & rom_data_byte2 & rom_data_byte3
-                                                               after gate_delay;
-          end case;
-
-        when 16#14# =>   -- LDUR Load upper register immediate
-
-          case current_icc_int is
-            when 0 =>
-              next_reg_b_addr  <= rom_data_byte1               after gate_delay;
-              next_reg_b_rd    <= '1'                          after gate_delay;
-
-              -- Halt execution
-              next_pc          <= current_pc                   after gate_delay;
-              next_icc         <= current_icc + 1              after gate_delay;
-            when others =>
-              reg_a_addr <= rom_data_byte1 after gate_delay;
-              reg_a_wr <= '1' after gate_delay;
-              reg_a_di <= rom_data_byte2 & rom_data_byte3 & byte_null & byte_null after gate_delay;
           end case;
 
         when 16#15# =>   -- ANDR
@@ -605,7 +597,7 @@ begin
         when 16#17# =>   -- XORR
           -- TODO: Implementation
 
-        when 16#18# =>   -- SRLR Right shift register
+        when 16#18# to 16#19# =>   -- SRLR Right shift register
 
           case current_icc_int is
             when 0 =>
@@ -616,39 +608,13 @@ begin
               next_pc          <= current_pc                   after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when 1 =>
-              next_shift <= word(shift_right(unsigned(next_reg_b_do), rom_data_byte3_int)) after gate_delay;
+              if op_shift_left = '1' then
+                shift := word(shift_left( unsigned(next_reg_b_do), rom_data_byte3_int));
+              else
+                shift := word(shift_right(unsigned(next_reg_b_do), rom_data_byte3_int));
+              end if;
 
-              -- Halt execution
-              next_pc          <= current_pc                   after gate_delay;
-              next_icc         <= current_icc + 1              after gate_delay;
-            when others =>
-              case rom_data_byte1_int is
-                when REG_NULL =>
-                when REG_PC =>
-                  next_pc <= unsigned(current_shift_pc) after gate_delay;
-                when REG_SP =>
-                  next_sp <= unsigned(current_shift_pc) after gate_delay;
-                when REG_SR =>
-                  next_sr <= current_shift after gate_delay;
-                when others =>
-                  reg_a_addr <= rom_data_byte1 after gate_delay;
-                  reg_a_wr <= '1' after gate_delay;
-                  reg_a_di <= current_shift after gate_delay;
-              end case;
-          end case;
-
-        when 16#19# =>   -- SLLR Left shift register
-
-          case current_icc_int is
-            when 0 =>
-              next_reg_b_addr <= rom_data_byte2 after gate_delay;
-              next_reg_b_rd <= '1' after gate_delay;
-
-              -- Halt execution
-              next_pc          <= current_pc                   after gate_delay;
-              next_icc         <= current_icc + 1              after gate_delay;
-            when 1 =>
-              next_shift <= word(shift_left(unsigned(next_reg_b_do), rom_data_byte3_int)) after gate_delay;
+              next_shift       <= shift                        after gate_delay;
 
               -- Halt execution
               next_pc          <= current_pc                   after gate_delay;
