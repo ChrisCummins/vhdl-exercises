@@ -51,7 +51,7 @@ begin
     end if;
 
     -- B input
-    b   := unsigned('0' & a_di);
+    b   := unsigned('0' & b_di);
     if b_c = '1' then
       b := not b;
     end if;
