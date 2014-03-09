@@ -685,7 +685,6 @@ begin
                   reg_a_addr <= rom_data_byte1 after gate_delay;
                   reg_a_wr <= '1' after gate_delay;
                   reg_a_di <= alu_s_do after gate_delay;
-                  reg_a_di <= byte_null & byte_null & byte_null & port_val after gate_delay;
               end case;
 
           end case;
