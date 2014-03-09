@@ -144,10 +144,12 @@ architecture syn of execution_unit is
   signal next_reg_b_addr: byte := (others => '0');
   signal next_reg_b_rd: std_logic := '0';
   signal next_reg_b_do: word := (others => '0');
+  signal current_reg_b_do: word := (others => '0');
 
   signal next_reg_c_addr: byte := (others => '0');
   signal next_reg_c_rd: std_logic := '0';
   signal next_reg_c_do: word := (others => '0');
+  signal current_reg_c_do: word := (others => '0');
 
   -- Register components
   alias reg_b_do_addr:   ram_word is next_reg_b_do(ram_word'length - 1 downto 0);
@@ -177,6 +179,9 @@ begin
   rom_en    <= '1'                                             after gate_delay;
   rom_addr  <= std_logic_vector(next_pc)                       after gate_delay;
   io_out    <= next_io_out                                     after gate_delay;
+
+  current_reg_b_do         <= next_reg_b_do              after gate_delay;
+  current_reg_c_do         <= next_reg_c_do              after gate_delay;
 
 
   -- Our clock process. Performs house keeping on registers.
@@ -627,8 +632,8 @@ begin
   end process;
 
   -- Register B interface
-  process (current_icc, next_reg_b_addr, next_reg_b_rd, reg_b_do,
-           current_pc, current_sp, current_sr) is
+  process (next_reg_b_addr, next_reg_b_rd, current_reg_b_do,
+           current_pc, current_sp, current_sr, reg_b_do) is
   begin
 
     case to_integer(unsigned(next_reg_b_addr)) is
@@ -659,8 +664,8 @@ begin
   end process;
 
   -- Register C interface
-  process (current_icc, next_reg_c_addr, next_reg_c_rd, reg_c_do,
-           current_pc, current_sp, current_sr) is
+  process (next_reg_c_addr, next_reg_c_rd, current_reg_c_do,
+           current_pc, current_sp, current_sr, reg_c_do) is
   begin
 
     case to_integer(unsigned(next_reg_c_addr)) is
