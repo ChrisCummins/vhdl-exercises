@@ -152,7 +152,6 @@ architecture syn of execution_unit is
   signal next_reg_c_do: word := (others => '0');
   signal current_reg_c_do: word := (others => '0');
 
-  -- Register components
   alias reg_b_do_addr:   ram_word is next_reg_b_do(ram_word'length - 1 downto 0);
   alias reg_c_do_addr:   ram_word is next_reg_c_do(ram_word'length - 1 downto 0);
   alias reg_b_do_byte:   byte     is next_reg_b_do(byte'length - 1 downto 0);
@@ -167,7 +166,7 @@ architecture syn of execution_unit is
 
   -- Indexed memory register
   signal current_ram_index_addr: ram_word := (others => '0');
-  signal next_ram_index_addr: ram_word := (others => '0');
+  signal next_ram_index_addr:    ram_word := (others => '0');
 
   -- Opcode components
   alias op_alu_signed:        std_logic is rom_data_byte0(3);
@@ -252,30 +251,52 @@ begin
 
 
   -- The instruction set implementation.
-  process(rst, rom_data, current_pc, current_icc, current_sr, current_io_out,
-          current_sp, current_intr, current_shift, current_ram_index_addr,
-          ram_rdata, io_in, alu_s_do, alu_c_out, next_reg_b_do, next_reg_c_do) is
+  process(rst, io_in, rom_data, ram_rdata, alu_c_out, alu_s_do,
+          current_icc, current_pc, current_sp, current_sr, current_intr,
+          current_io_out, current_ram_index_addr, current_shift,
+          current_alu_a_di, current_alu_b_di, next_reg_b_do, next_reg_c_do) is
 
-    variable load_pc:   program_counter;
-    variable stack_pc:  program_counter;
-    variable port_val:  byte;
-    variable test_flag: std_logic;
+    -- Convenience variables
+    variable current_icc_int:    integer;
+    variable rom_data_byte0_int: integer;
+    variable rom_data_byte1_int: integer;
+    variable rom_data_byte2_int: integer;
+    variable rom_data_byte3_int: integer;
+    variable load_pc:            program_counter;
+    variable stack_pc:           program_counter;
+    variable ram_index_addr:     ram_word;
+
+    -- Working variables
+    variable port_val:           byte;
+    variable test_flag:          std_logic;
 
   begin
 
-    -- Program counter variables
-    load_pc  := unsigned(rom_data_pc);
-    stack_pc := unsigned(ram_rdata_pc);
+    current_icc_int    := to_integer(unsigned(current_icc));
+    rom_data_byte0_int := to_integer(unsigned(rom_data_byte0));
+    rom_data_byte1_int := to_integer(unsigned(rom_data_byte1));
+    rom_data_byte2_int := to_integer(unsigned(rom_data_byte2));
+    rom_data_byte3_int := to_integer(unsigned(rom_data_byte3));
+    load_pc            := unsigned(rom_data_pc);
+    stack_pc           := unsigned(ram_rdata_pc);
+    ram_index_addr     := ram_word(unsigned(reg_b_do_addr) +
+                                   unsigned(reg_c_do_addr));
 
     next_pc                    <= current_pc                   after gate_delay;
-    next_icc <= (others => '0') after gate_delay;
+    next_icc                   <= (others => '0')              after gate_delay;
     next_sp                    <= current_sp                   after gate_delay;
     next_sr                    <= current_sr                   after gate_delay;
     next_io_out                <= current_io_out               after gate_delay;
-    next_ram_index_addr        <= ram_word(unsigned(reg_b_do_addr) +
-                                           unsigned(reg_c_do_addr))
-                                  after gate_delay;
+    next_ram_index_addr        <= ram_index_addr               after gate_delay;
     next_shift                 <= current_shift                after gate_delay;
+
+    next_reg_b_addr            <= (others => '0')              after gate_delay;
+    next_reg_b_rd              <= '0'                          after gate_delay;
+
+    next_reg_c_addr            <= (others => '0')              after gate_delay;
+    next_reg_c_rd              <= '0'                          after gate_delay;
+
+
     intr_reset                 <= intr_null                    after gate_delay;
 
     ram_rd                     <= '0'                          after gate_delay;
@@ -287,33 +308,17 @@ begin
     reg_a_wr                   <= '0'                          after gate_delay;
     reg_a_di                   <= (others => '0')              after gate_delay;
 
-    next_reg_b_addr            <= (others => '0')              after gate_delay;
-    next_reg_b_rd              <= '0'                          after gate_delay;
-
-    next_reg_c_addr            <= (others => '0')              after gate_delay;
-    next_reg_c_rd              <= '0'                          after gate_delay;
-
     -- ALU
-    alu_si <= '0' after gate_delay;
-    alu_a_c <= '0' after gate_delay;
-    alu_b_c <= '0' after gate_delay;
-    alu_c_in <= '0' after gate_delay;
-    alu_a_di <= (others => '0') after gate_delay;
-    alu_b_di <= (others => '0') after gate_delay;
-    next_alu_a_di <= current_alu_a_di after gate_delay;
-    next_alu_b_di <= current_alu_b_di after gate_delay;
+    alu_si                     <= '0'                          after gate_delay;
+    alu_a_c                    <= '0'                          after gate_delay;
+    alu_b_c                    <= '0'                          after gate_delay;
+    alu_c_in                   <= '0'                          after gate_delay;
+    alu_a_di                   <= (others => '0')              after gate_delay;
+    alu_b_di                   <= (others => '0')              after gate_delay;
+    next_alu_a_di              <= current_alu_a_di             after gate_delay;
+    next_alu_b_di              <= current_alu_b_di             after gate_delay;
 
     if current_intr /= intr_null and current_icc = 0 and current_sr(INTR_EN) = '1' then
-
-      for i in intr'reverse_range loop
-        if current_intr(i) = '1' then
-          intr_reset(i)        <= '1'                          after gate_delay;
-          next_pc              <= to_unsigned(i, program_counter'length)
-                                                               after gate_delay;
-          exit;
-        end if;
-      end loop;
-
       -- Execute interrupt routine
       next_sp                  <= current_sp - 1               after gate_delay;
       next_sr(INTR_EN)         <= '0'                          after gate_delay;
@@ -324,11 +329,20 @@ begin
       ram_wdata_pc             <= ram_word(current_pc)         after gate_delay;
       ram_wdata_sr             <= current_sr(15 downto 0)      after gate_delay;
 
+      for i in intr'reverse_range loop
+        if current_intr(i) = '1' then
+          intr_reset(i)        <= '1'                          after gate_delay;
+          next_pc              <= to_unsigned(i, program_counter'length)
+                                                               after gate_delay;
+          exit;
+        end if;
+      end loop;
+
     elsif rst /= '1' then
       -- Increment program counter by default
       next_pc                  <= current_pc + 1               after gate_delay;
 
-      case to_integer(unsigned(rom_data_byte0)) is
+      case rom_data_byte0_int is
         when 16#01# =>   -- HUC Halt unconditional
           next_pc              <= current_pc                   after gate_delay;
 
@@ -341,14 +355,13 @@ begin
           end if;
 
         when 16#04# =>   -- SETO Set outputs
-          port_val := current_io_out(to_integer(unsigned(rom_data_byte1)));
+          port_val := current_io_out(rom_data_byte1_int);
           port_val := (port_val and rom_data_byte2) xor rom_data_byte3;
 
-          next_io_out(to_integer(unsigned(rom_data_byte1)))
-                               <= port_val                     after gate_delay;
+          next_io_out(rom_data_byte1_int) <= port_val          after gate_delay;
 
         when 16#05# =>   -- TSTI Test Inputs
-          port_val := io_in(to_integer(unsigned(rom_data_byte1)));
+          port_val := io_in(rom_data_byte1_int);
           port_val := (port_val and rom_data_byte2) xor rom_data_byte3;
 
           if port_val = byte_null then
@@ -366,7 +379,7 @@ begin
 
         when 16#07# =>   -- RSR Return from Subroutine
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
               ram_addr         <= ram_word(current_sp + 1)     after gate_delay;
               ram_rd           <= '1'                          after gate_delay;
@@ -381,7 +394,7 @@ begin
 
         when 16#08# =>   -- RIR Return from Interrupt:
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
               ram_addr         <= ram_word(current_sp + 1)     after gate_delay;
               ram_rd           <= '1'                          after gate_delay;
@@ -403,7 +416,7 @@ begin
 
         when 16#0B# =>   -- MTR Memory to register
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
               ram_addr         <= rom_data_addr                after gate_delay;
               ram_rd           <= '1'                          after gate_delay;
@@ -419,7 +432,7 @@ begin
 
         when 16#0C# =>   -- RTM Register to memory
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
               next_reg_b_addr  <= rom_data_byte1               after gate_delay;
               next_reg_b_rd    <= '1'                          after gate_delay;
@@ -436,146 +449,147 @@ begin
 
         when 16#0D# =>   -- IMTR Indexed memory to register
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
-              next_reg_b_addr <= rom_data_byte2 after gate_delay;
-              next_reg_b_rd <= '1' after gate_delay;
-              next_reg_c_addr <= rom_data_byte3 after gate_delay;
-              next_reg_c_rd <= '1' after gate_delay;
+              next_reg_b_addr  <= rom_data_byte2               after gate_delay;
+              next_reg_b_rd    <= '1'                          after gate_delay;
+              next_reg_c_addr  <= rom_data_byte3               after gate_delay;
+              next_reg_c_rd    <= '1'                          after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when 1 =>
-              ram_rd <= '1' after gate_delay;
-              ram_addr <= ram_word(unsigned(reg_b_do_addr) + unsigned(reg_c_do_addr)) after gate_delay;
+              ram_addr         <= ram_index_addr               after gate_delay;
+              ram_rd           <= '1'                          after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when others =>
-              reg_a_wr <= '1' after gate_delay;
-              reg_a_addr <= rom_data_byte1 after gate_delay;
-              reg_a_di <= ram_rdata after gate_delay;
+              reg_a_addr       <= rom_data_byte1               after gate_delay;
+              reg_a_di         <= ram_rdata                    after gate_delay;
+              reg_a_wr         <= '1'                          after gate_delay;
           end case;
 
         when 16#0E# =>   -- RTIM Register to indexed memory
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
-              next_reg_b_addr <= rom_data_byte1 after gate_delay;
-              next_reg_b_rd <= '1' after gate_delay;
-              next_reg_c_addr <= rom_data_byte2 after gate_delay;
-              next_reg_c_rd <= '1' after gate_delay;
+              next_reg_b_addr  <= rom_data_byte1               after gate_delay;
+              next_reg_b_rd    <= '1'                          after gate_delay;
+              next_reg_c_addr  <= rom_data_byte2               after gate_delay;
+              next_reg_c_rd    <= '1'                          after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when 1 =>
-              next_reg_b_addr <= rom_data_byte3 after gate_delay;
-              next_reg_b_rd <= '1' after gate_delay;
+              next_reg_b_addr  <= rom_data_byte3               after gate_delay;
+              next_reg_b_rd    <= '1'                          after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when others =>
-              ram_addr <= current_ram_index_addr after gate_delay;
-              ram_wr <= '1' after gate_delay;
-              ram_wdata <= next_reg_b_do after gate_delay;
+              ram_addr         <= current_ram_index_addr       after gate_delay;
+              ram_wdata        <= next_reg_b_do                after gate_delay;
+              ram_wr           <= '1'                          after gate_delay;
           end case;
 
         when 16#0F# =>   -- PSHR Stack push
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
-              next_reg_b_addr <= rom_data_byte1 after gate_delay;
-              next_reg_b_rd <= '1' after gate_delay;
-
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_reg_b_addr  <= rom_data_byte1               after gate_delay;
+              next_reg_b_rd    <= '1'                          after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when others =>
-              ram_addr <= ram_word(current_sp) after gate_delay;
-              ram_wr <= '1' after gate_delay;
-              ram_wdata <= next_reg_b_do after gate_delay;
-              next_sp <= current_sp - 1 after gate_delay;
+              ram_addr         <= ram_word(current_sp)         after gate_delay;
+              ram_wdata        <= next_reg_b_do                after gate_delay;
+              ram_wr           <= '1'                          after gate_delay;
+              next_sp          <= current_sp - 1               after gate_delay;
           end case;
 
         when 16#10# =>   -- POPR Stack pop
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
-              ram_addr <= ram_word(current_sp + 1) after gate_delay;
-              ram_rd <= '1' after gate_delay;
+              ram_addr         <= ram_word(current_sp + 1)     after gate_delay;
+              ram_rd           <= '1'                          after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when others =>
-              next_sp <= current_sp + 1 after gate_delay;
+              next_sp          <= current_sp + 1               after gate_delay;
           end case;
 
         when 16#11# =>   -- RTIO Register to IO port
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
-              next_reg_b_addr <= rom_data_byte2 after gate_delay;
-              next_reg_b_rd <= '1' after gate_delay;
+              next_reg_b_addr  <= rom_data_byte2               after gate_delay;
+              next_reg_b_rd    <= '1'                          after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when others =>
-              next_io_out(to_integer(unsigned(rom_data_byte1))) <= reg_b_do_byte after gate_delay;
+              next_io_out(rom_data_byte1_int) <= reg_b_do_byte after gate_delay;
           end case;
 
         when 16#12# =>   -- IOTR IO port to register
 
-          port_val := io_in(to_integer(unsigned(rom_data_byte2)));
+          port_val := io_in(rom_data_byte2_int);
 
-          case to_integer(unsigned(rom_data_byte1)) is
+          case rom_data_byte1_int is
             when REG_NULL =>
             when REG_PC =>
-              next_pc <= unsigned(byte_pc_pad) & unsigned(port_val) after gate_delay;
+              next_pc          <= unsigned(byte_pc_pad) & unsigned(port_val)
+                                                               after gate_delay;
             when REG_SP =>
-              next_sp <= unsigned(byte_pc_pad) & unsigned(port_val) after gate_delay;
+              next_sp          <= unsigned(byte_pc_pad) & unsigned(port_val)
+                                                               after gate_delay;
             when REG_SR =>
-              next_sr <= byte_word_pad & port_val after gate_delay;
+              next_sr          <= byte_word_pad & port_val     after gate_delay;
             when others =>
-              reg_a_addr <= rom_data_byte1 after gate_delay;
-              reg_a_wr <= '1' after gate_delay;
-              reg_a_di <= byte_null & byte_null & byte_null & port_val after gate_delay;
+              reg_a_addr       <= rom_data_byte1               after gate_delay;
+              reg_a_di         <= byte_null & byte_null & byte_null & port_val
+                                                               after gate_delay;
+              reg_a_wr         <= '1'                          after gate_delay;
           end case;
 
         when 16#13# =>   -- LDLR Load lower register immediate
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
-              next_reg_b_addr <= rom_data_byte1 after gate_delay;
-              next_reg_b_rd <= '1' after gate_delay;
+              next_reg_b_addr  <= rom_data_byte1               after gate_delay;
+              next_reg_b_rd    <= '1'                          after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when others =>
-              reg_a_addr <= rom_data_byte1 after gate_delay;
-              reg_a_wr <= '1' after gate_delay;
-              reg_a_di <= byte_null & byte_null & rom_data_byte2 & rom_data_byte3 after gate_delay;
+              reg_a_addr       <= rom_data_byte1               after gate_delay;
+              reg_a_wr         <= '1'                          after gate_delay;
+              reg_a_di <= byte_null & byte_null & rom_data_byte2 & rom_data_byte3
+                                                               after gate_delay;
           end case;
 
         when 16#14# =>   -- LDUR Load upper register immediate
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
-              next_reg_b_addr <= rom_data_byte1 after gate_delay;
-              next_reg_b_rd <= '1' after gate_delay;
+              next_reg_b_addr  <= rom_data_byte1               after gate_delay;
+              next_reg_b_rd    <= '1'                          after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when others =>
               reg_a_addr <= rom_data_byte1 after gate_delay;
               reg_a_wr <= '1' after gate_delay;
@@ -593,22 +607,22 @@ begin
 
         when 16#18# =>   -- SRLR Right shift register
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
               next_reg_b_addr <= rom_data_byte2 after gate_delay;
               next_reg_b_rd <= '1' after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when 1 =>
-              next_shift <= word(shift_right(unsigned(next_reg_b_do), to_integer(unsigned(rom_data_byte3)))) after gate_delay;
+              next_shift <= word(shift_right(unsigned(next_reg_b_do), rom_data_byte3_int)) after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when others =>
-              case to_integer(unsigned(rom_data_byte1)) is
+              case rom_data_byte1_int is
                 when REG_NULL =>
                 when REG_PC =>
                   next_pc <= unsigned(current_shift_pc) after gate_delay;
@@ -625,22 +639,22 @@ begin
 
         when 16#19# =>   -- SLLR Left shift register
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
               next_reg_b_addr <= rom_data_byte2 after gate_delay;
               next_reg_b_rd <= '1' after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when 1 =>
-              next_shift <= word(shift_left(unsigned(next_reg_b_do), to_integer(unsigned(rom_data_byte3)))) after gate_delay;
+              next_shift <= word(shift_left(unsigned(next_reg_b_do), rom_data_byte3_int)) after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when others =>
-              case to_integer(unsigned(rom_data_byte1)) is
+              case rom_data_byte1_int is
                 when REG_NULL =>
                 when REG_PC =>
                   next_pc <= unsigned(current_shift_pc) after gate_delay;
@@ -657,7 +671,7 @@ begin
 
         when 16#1A# to 16#1B# => -- CMPU and CMPS
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
               next_reg_b_addr <= rom_data_byte2 after gate_delay;
               next_reg_b_rd <= '1' after gate_delay;
@@ -665,15 +679,15 @@ begin
               next_reg_c_rd <= '1' after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when 1 =>
               next_alu_a_di <= next_reg_b_do after gate_delay;
               next_alu_b_di <= next_reg_c_do after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when others =>
               test_flag := '0';
 
@@ -742,7 +756,7 @@ begin
 
         when 16#20# to 16#2F# => -- ALUU to ALUS
 
-          case to_integer(unsigned(current_icc)) is
+          case current_icc_int is
             when 0 =>
               next_reg_b_addr <= rom_data_byte2 after gate_delay;
               next_reg_b_rd <= '1' after gate_delay;
@@ -750,15 +764,15 @@ begin
               next_reg_c_rd <= '1' after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when 1 =>
               next_alu_a_di <= next_reg_b_do after gate_delay;
               next_alu_b_di <= next_reg_c_do after gate_delay;
 
               -- Halt execution
-              next_pc <= current_pc after gate_delay;
-              next_icc <= current_icc + 1 after gate_delay;
+              next_pc          <= current_pc                   after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
             when others =>
               alu_a_di <= current_alu_a_di    after gate_delay;
               alu_b_di <= current_alu_b_di    after gate_delay;
@@ -768,7 +782,7 @@ begin
               alu_si   <= op_alu_signed       after gate_delay;
               next_sr(CARRY) <= alu_c_out     after gate_delay;
 
-              case to_integer(unsigned(rom_data_byte1)) is
+              case rom_data_byte1_int is
                 when REG_NULL =>
                 when REG_PC =>
                   next_pc <= unsigned(alu_s_do_pc) after gate_delay;
