@@ -175,6 +175,16 @@ architecture syn of execution_unit is
   alias op_alu_complement_c: std_logic is rom_data_byte0(1);
   alias op_alu_carry_in:     std_logic is rom_data_byte0(0);
 
+  -- Comparison instructions
+  constant EQ: byte := X"00"; -- A == B
+  constant NE: byte := X"01"; -- A != B
+  constant LT: byte := X"02"; -- A <  B
+  constant LE: byte := X"03"; -- A <= B
+  constant GT: byte := X"04"; -- A >  B
+  constant GE: byte := X"05"; -- A >= B
+  constant Z:  byte := X"06"; -- A == 0
+  constant N:  byte := X"07"; -- A != 0
+
   -- ALU registers
   signal current_alu_a_di: word := (others => '0');
   signal next_alu_a_di: word := (others => '0');
@@ -246,9 +256,10 @@ begin
           current_sp, current_intr, current_shift, current_ram_index_addr,
           ram_rdata, io_in, alu_s_do, alu_c_out, next_reg_b_do, next_reg_c_do) is
 
-    variable load_pc:  program_counter;
-    variable stack_pc: program_counter;
-    variable port_val: byte;
+    variable load_pc:   program_counter;
+    variable stack_pc:  program_counter;
+    variable port_val:  byte;
+    variable test_flag: std_logic := '0';
 
   begin
 
@@ -646,7 +657,63 @@ begin
           end case;
 
         when 16#1A# =>   -- CMPU
-          -- TODO: Implementation
+
+          case to_integer(unsigned(current_icc)) is
+            when 0 =>
+              next_reg_b_addr <= rom_data_byte2 after gate_delay;
+              next_reg_b_rd <= '1' after gate_delay;
+              next_reg_c_addr <= rom_data_byte3 after gate_delay;
+              next_reg_c_rd <= '1' after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when 1 =>
+              next_alu_a_di <= next_reg_b_do after gate_delay;
+              next_alu_b_di <= next_reg_c_do after gate_delay;
+
+              -- Halt execution
+              next_pc <= current_pc after gate_delay;
+              next_icc <= current_icc + 1 after gate_delay;
+            when others =>
+              case rom_data_byte1 is
+                when EQ =>
+                  if current_alu_a_di = current_alu_b_di then
+                    test_flag := '1';
+                  end if;
+                when NE =>
+                  if current_alu_a_di /= current_alu_b_di then
+                    test_flag := '1';
+                  end if;
+                when LT =>
+                  if unsigned(current_alu_a_di) < unsigned(current_alu_b_di) then
+                    test_flag := '1';
+                  end if;
+                when LE =>
+                  if unsigned(current_alu_a_di) <= unsigned(current_alu_b_di) then
+                    test_flag := '1';
+                  end if;
+                when GT =>
+                  if unsigned(current_alu_a_di) > unsigned(current_alu_b_di) then
+                    test_flag := '1';
+                  end if;
+                when GE =>
+                  if unsigned(current_alu_a_di) >= unsigned(current_alu_b_di) then
+                    test_flag := '1';
+                  end if;
+                when Z =>
+                  if unsigned(current_alu_a_di) = 0 then
+                    test_flag := '1';
+                  end if;
+                when N =>
+                  if unsigned(current_alu_a_di) /= 0 then
+                    test_flag := '1';
+                  end if;
+                when others => -- Invalid comparison
+              end case;
+
+              next_sr(TST_FLAG) <= test_flag after gate_delay;
+          end case;
 
         when 16#1B# =>   -- CMPS
           -- TODO: Implementation
