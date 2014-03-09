@@ -98,6 +98,7 @@ architecture syn of execution_unit is
   -- The status register flags
   constant INTR_EN:         integer := 0;   -- Interrupts enabled
   constant TST_FLAG:        integer := 1;   -- Test flag
+  constant CARRY:           integer := 2;   -- ALU carry out flag
 
   -- Special register indexes
   constant REG_NULL: integer := 0;
@@ -246,7 +247,7 @@ begin
   -- The instruction set implementation.
   process(rst, rom_data, current_pc, current_icc, current_sr, current_io_out,
           current_sp, current_intr, current_shift, current_ram_index_addr,
-          ram_rdata, io_in, alu_s_do, next_reg_b_do, next_reg_c_do) is
+          ram_rdata, io_in, alu_s_do, alu_c_out, next_reg_b_do, next_reg_c_do) is
 
     variable load_pc:  program_counter;
     variable stack_pc: program_counter;
@@ -288,9 +289,9 @@ begin
     alu_si <= '0' after gate_delay;
     alu_a_c <= '0' after gate_delay;
     alu_b_c <= '0' after gate_delay;
+    alu_c_in <= '0' after gate_delay;
     next_alu_a_di <= (others => '0') after gate_delay;
     next_alu_b_di <= (others => '0') after gate_delay;
-    alu_c_in <= '0' after gate_delay;
 
     if current_intr /= intr_null and current_icc = 0 and current_sr(INTR_EN) = '1' then
 
@@ -675,6 +676,7 @@ begin
               alu_b_c  <= op_alu_complement_c after gate_delay;
               alu_c_in <= op_alu_carry_in     after gate_delay;
               alu_si   <= op_alu_signed       after gate_delay;
+              next_sr(CARRY) <= alu_c_out     after gate_delay;
 
               case to_integer(unsigned(rom_data_byte1)) is
                 when REG_NULL =>
