@@ -169,11 +169,12 @@ architecture syn of execution_unit is
   signal current_ram_index_addr: ram_word := (others => '0');
   signal next_ram_index_addr: ram_word := (others => '0');
 
-  -- ALU opcode components
-  alias op_alu_signed:       std_logic is rom_data_byte0(3);
-  alias op_alu_complement_b: std_logic is rom_data_byte0(2);
-  alias op_alu_complement_c: std_logic is rom_data_byte0(1);
-  alias op_alu_carry_in:     std_logic is rom_data_byte0(0);
+  -- Opcode components
+  alias op_alu_signed:        std_logic is rom_data_byte0(3);
+  alias op_alu_complement_b:  std_logic is rom_data_byte0(2);
+  alias op_alu_complement_c:  std_logic is rom_data_byte0(1);
+  alias op_alu_carry_in:      std_logic is rom_data_byte0(0);
+  alias op_signed_comparison: std_logic is rom_data_byte0(0);
 
   -- Comparison instructions
   constant EQ: byte := X"00"; -- A == B
@@ -259,7 +260,7 @@ begin
     variable load_pc:   program_counter;
     variable stack_pc:  program_counter;
     variable port_val:  byte;
-    variable test_flag: std_logic := '0';
+    variable test_flag: std_logic;
 
   begin
 
@@ -300,8 +301,8 @@ begin
     alu_c_in <= '0' after gate_delay;
     alu_a_di <= (others => '0') after gate_delay;
     alu_b_di <= (others => '0') after gate_delay;
-    next_alu_a_di <= (others => '0') after gate_delay;
-    next_alu_b_di <= (others => '0') after gate_delay;
+    next_alu_a_di <= current_alu_a_di after gate_delay;
+    next_alu_b_di <= current_alu_b_di after gate_delay;
 
     if current_intr /= intr_null and current_icc = 0 and current_sr(INTR_EN) = '1' then
 
@@ -656,7 +657,7 @@ begin
               end case;
           end case;
 
-        when 16#1A# =>   -- CMPU
+        when 16#1A# to 16#1B# => -- CMPU and CMPS
 
           case to_integer(unsigned(current_icc)) is
             when 0 =>
@@ -676,6 +677,8 @@ begin
               next_pc <= current_pc after gate_delay;
               next_icc <= current_icc + 1 after gate_delay;
             when others =>
+              test_flag := '0';
+
               case rom_data_byte1 is
                 when EQ =>
                   if current_alu_a_di = current_alu_b_di then
@@ -686,20 +689,44 @@ begin
                     test_flag := '1';
                   end if;
                 when LT =>
-                  if unsigned(current_alu_a_di) < unsigned(current_alu_b_di) then
-                    test_flag := '1';
+                  if op_signed_comparison = '1' then
+                    if signed(current_alu_a_di) < signed(current_alu_b_di) then
+                      test_flag := '1';
+                    end if;
+                  else
+                    if unsigned(current_alu_a_di) < unsigned(current_alu_b_di) then
+                      test_flag := '1';
+                    end if;
                   end if;
                 when LE =>
-                  if unsigned(current_alu_a_di) <= unsigned(current_alu_b_di) then
-                    test_flag := '1';
+                  if op_signed_comparison = '1' then
+                    if signed(current_alu_a_di) <= signed(current_alu_b_di) then
+                      test_flag := '1';
+                    end if;
+                  else
+                    if unsigned(current_alu_a_di) <= unsigned(current_alu_b_di) then
+                      test_flag := '1';
+                    end if;
                   end if;
                 when GT =>
-                  if unsigned(current_alu_a_di) > unsigned(current_alu_b_di) then
-                    test_flag := '1';
+                  if op_signed_comparison = '1' then
+                    if signed(current_alu_a_di) > signed(current_alu_b_di) then
+                      test_flag := '1';
+                    end if;
+                  else
+                    if unsigned(current_alu_a_di) > unsigned(current_alu_b_di) then
+                      test_flag := '1';
+                    end if;
                   end if;
                 when GE =>
-                  if unsigned(current_alu_a_di) >= unsigned(current_alu_b_di) then
-                    test_flag := '1';
+                  if op_signed_comparison = '1' then
+                    if signed(current_alu_a_di) >= signed(current_alu_b_di) then
+                      test_flag := '1';
+                    end if;
+                  else
+                    if unsigned(current_alu_a_di) >= unsigned(current_alu_b_di) then
+                      test_flag := '1';
+                    end if;
                   end if;
                 when Z =>
                   if unsigned(current_alu_a_di) = 0 then
@@ -714,9 +741,6 @@ begin
 
               next_sr(TST_FLAG) <= test_flag after gate_delay;
           end case;
-
-        when 16#1B# =>   -- CMPS
-          -- TODO: Implementation
 
         when 16#20# to 16#2F# => -- ALUU to ALUS
 
