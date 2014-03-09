@@ -197,9 +197,6 @@ begin
   rom_addr  <= std_logic_vector(next_pc)                       after gate_delay;
   io_out    <= next_io_out                                     after gate_delay;
 
-  alu_a_di  <= current_alu_a_di                                after gate_delay;
-  alu_b_di  <= current_alu_b_di                                after gate_delay;
-
   current_reg_b_do         <= next_reg_b_do              after gate_delay;
   current_reg_c_do         <= next_reg_c_do              after gate_delay;
 
@@ -290,6 +287,8 @@ begin
     alu_a_c <= '0' after gate_delay;
     alu_b_c <= '0' after gate_delay;
     alu_c_in <= '0' after gate_delay;
+    alu_a_di <= (others => '0') after gate_delay;
+    alu_b_di <= (others => '0') after gate_delay;
     next_alu_a_di <= (others => '0') after gate_delay;
     next_alu_b_di <= (others => '0') after gate_delay;
 
@@ -672,6 +671,8 @@ begin
               next_pc <= current_pc after gate_delay;
               next_icc <= current_icc + 1 after gate_delay;
             when others =>
+              alu_a_di <= current_alu_a_di    after gate_delay;
+              alu_b_di <= current_alu_b_di    after gate_delay;
               alu_a_c  <= op_alu_complement_b after gate_delay;
               alu_b_c  <= op_alu_complement_c after gate_delay;
               alu_c_in <= op_alu_carry_in     after gate_delay;
@@ -691,7 +692,6 @@ begin
                   reg_a_wr <= '1' after gate_delay;
                   reg_a_di <= alu_s_do after gate_delay;
               end case;
-
           end case;
 
         when others =>  -- Undefined operation
