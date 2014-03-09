@@ -32,48 +32,51 @@ architecture rtl of alu is
 
 begin
 
+  -- Perform ALU operations on numbers A and B, outputting value Q:
   process (si, a_c, a_di, b_c, b_di, c_in)
 
     variable a: number_with_carry;
     variable b: number_with_carry;
     variable c: number_with_carry;
-    variable q: std_logic_vector(number_with_carry'length - 1 downto 0);
+    variable q: number_with_carry;
 
     alias a_msb:   std_logic is a(word_size);
     alias b_msb:   std_logic is b(word_size);
     alias q_msb:   std_logic is q(word_size);
-    alias q_word:  word      is q(word_size - 1 downto 0);
+    alias q_word:  number    is q(word_size - 1 downto 0);
+
+    -- Convenience constants for converting the carry in bit into a number
+    -- which can be summed along with the normal A and B inputs.
+    constant zero: number_with_carry := (          others => '0');
+    constant one:  number_with_carry := (0 => '1', others => '0');
 
   begin
 
-    -- A input
-    a   := unsigned('0' & a_di);
-    if a_c = '1' then
-      a := not a;
-    end if;
+    -- First we read the input ports into our internal numerical representation,
+    -- padding the number with a leading carry bit:
+    a := unsigned('0' & a_di);
+    b := unsigned('0' & b_di);
 
-    -- B input
-    b   := unsigned('0' & b_di);
-    if b_c = '1' then
-      b := not b;
-    end if;
+    -- We then create a third number "C" which contains the carry value, if
+    -- required:
+    if c_in = '1' then c := one; else c := zero; end if;
 
-    -- Carry input
-    if c_in = '1' then
-      c := (0 => '1', others => '0');
-    else
-      c := (others => '0');
-    end if;
+    -- Then we apply the complement flags, inverting the bits if needed:
+    if a_c = '1' then a := not a; end if;
+    if b_c = '1' then b := not b; end if;
 
     if si = '1' then
-      q := std_logic_vector(signed(a) + signed(b) + signed(c));
-      c_out <= a_msb xor b_msb after gate_delay;
+      -- Signed arithmetic operation:
+      q := unsigned(signed(a) + signed(b) + signed(c));
+      c_out <= a_msb xor b_msb                                 after gate_delay;
     else
-      q := std_logic_vector(a + b + c);
-      c_out <= q_msb after gate_delay;
+      -- Unsigned arithmetic:
+      q := a + b + c;
+      c_out <= q_msb                                           after gate_delay;
     end if;
 
-    s_do  <= std_logic_vector(q_word) after gate_delay;
+    -- Finally, write the result (sans carry bit):
+    s_do <= std_logic_vector(q_word)                           after gate_delay;
 
   end process;
 
