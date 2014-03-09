@@ -216,8 +216,8 @@ begin
 
   -- The instruction set implementation.
   process(rst, rom_data, current_pc, current_icc, current_sr, current_io_out,
-          current_sp, current_intr, ram_rdata, io_in,
-          next_reg_b_do, next_reg_c_do) is
+          current_sp, current_intr, current_shift, current_ram_index_addr,
+          ram_rdata, io_in, next_reg_b_do, next_reg_c_do) is
 
     variable load_pc:  program_counter;
     variable stack_pc: program_counter;
