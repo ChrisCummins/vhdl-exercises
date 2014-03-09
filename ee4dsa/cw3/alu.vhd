@@ -26,10 +26,52 @@ end alu;
 
 architecture rtl of alu is
 
-  -- Your declarations go here --
+  subtype word              is std_logic_vector(word_size - 1 downto 0);
+  subtype number            is unsigned(word_size - 1         downto 0);
+  subtype number_with_carry is unsigned(word_size             downto 0);
 
 begin
 
-  -- Your implementation goes here --
+  process (si, a_c, a_di, b_c, b_di, c_in)
+
+    variable a: number_with_carry;
+    variable b: number_with_carry;
+    variable c: number_with_carry;
+    variable q: number_with_carry;
+
+    alias q_carry: std_logic is q(word_size);
+    alias q_word:  number    is q(word_size - 1 downto 0);
+
+  begin
+
+    -- A input
+    a   := unsigned('0' & a_di);
+    if a_c = '1' then
+      a := not a;
+    end if;
+
+    -- B input
+    b   := unsigned('0' & a_di);
+    if b_c = '1' then
+      b := not b;
+    end if;
+
+    -- Carry input
+    if c_in = '1' then
+      c := (0 => '1', others => '0');
+    else
+      c := (others => '0');
+    end if;
+
+    if si = '1' then
+      q := unsigned(signed(a) + signed(b) + signed(c));
+    else
+      q := a + b + c;
+    end if;
+
+    s_do  <= std_logic_vector(q_word) after gate_delay;
+    c_out <= q_carry                  after gate_delay;
+
+  end process;
 
 end rtl;
