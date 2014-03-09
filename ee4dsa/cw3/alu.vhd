@@ -37,10 +37,12 @@ begin
     variable a: number_with_carry;
     variable b: number_with_carry;
     variable c: number_with_carry;
-    variable q: number_with_carry;
+    variable q: std_logic_vector(number_with_carry'length - 1 downto 0);
 
-    alias q_carry: std_logic is q(word_size);
-    alias q_word:  number    is q(word_size - 1 downto 0);
+    alias a_msb:   std_logic is a(word_size);
+    alias b_msb:   std_logic is b(word_size);
+    alias q_msb:   std_logic is q(word_size);
+    alias q_word:  word      is q(word_size - 1 downto 0);
 
   begin
 
@@ -64,13 +66,14 @@ begin
     end if;
 
     if si = '1' then
-      q := unsigned(signed(a) + signed(b) + signed(c));
+      q := std_logic_vector(signed(a) + signed(b) + signed(c));
+      c_out <= a_msb xor b_msb after gate_delay;
     else
-      q := a + b + c;
+      q := std_logic_vector(a + b + c);
+      c_out <= q_msb after gate_delay;
     end if;
 
     s_do  <= std_logic_vector(q_word) after gate_delay;
-    c_out <= q_carry                  after gate_delay;
 
   end process;
 
