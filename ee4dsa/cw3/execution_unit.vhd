@@ -428,7 +428,6 @@ begin
               next_pc          <= current_pc                   after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
-              next_reg_b_rd    <= '0'                          after gate_delay;
               ram_addr         <= rom_data(n_bits(ram_size) - 1 downto 0)
                                                                after gate_delay;
               ram_wr           <= '1'                          after gate_delay;
