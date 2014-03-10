@@ -82,97 +82,97 @@ architecture syn of execution_unit is
   subtype instruction_counter is unsigned(icc_size                     downto 0);
 
   -- ROM data components
-  alias rom_data_byte0:      byte     is rom_data(word_size - 1         downto word_size - 8);
-  alias rom_data_byte1:      byte     is rom_data(word_size - 9         downto word_size - 16);
-  alias rom_data_byte2:      byte     is rom_data(word_size - 17        downto word_size - 24);
-  alias rom_data_byte3:      byte     is rom_data(word_size - 25        downto 0);
-  alias rom_data_addr:       ram_word is rom_data(ram_word'length - 1   downto 0);
-  alias rom_data_pc:         ram_pc   is rom_data(ram_word'length - 1   downto 0);
+  alias rom_data_byte0: byte     is rom_data(word_size - 1         downto word_size - 8);
+  alias rom_data_byte1: byte     is rom_data(word_size - 9         downto word_size - 16);
+  alias rom_data_byte2: byte     is rom_data(word_size - 17        downto word_size - 24);
+  alias rom_data_byte3: byte     is rom_data(word_size - 25        downto 0);
+  alias rom_data_addr:  ram_word is rom_data(ram_word'length - 1   downto 0);
+  alias rom_data_pc:    ram_pc   is rom_data(ram_word'length - 1   downto 0);
 
   -- RAM data components
-  alias ram_wdata_sr:        ram_sr   is ram_wdata(word_size - 1        downto word_size - 16);
-  alias ram_wdata_pc:        ram_pc   is ram_wdata(ram_word'length - 1  downto 0);
-  alias ram_rdata_sr:        ram_sr   is ram_rdata(word_size - 1        downto word_size - 16);
-  alias ram_rdata_pc:        ram_pc   is ram_rdata(ram_word'length - 1  downto 0);
+  alias ram_wdata_sr:   ram_sr   is ram_wdata(word_size - 1        downto word_size - 16);
+  alias ram_wdata_pc:   ram_pc   is ram_wdata(ram_word'length - 1  downto 0);
+  alias ram_rdata_sr:   ram_sr   is ram_rdata(word_size - 1        downto word_size - 16);
+  alias ram_rdata_pc:   ram_pc   is ram_rdata(ram_word'length - 1  downto 0);
 
   -- The status register flags
-  constant INTR_EN:          integer := 0;   -- Interrupts enabled
-  constant TST_FLAG:         integer := 1;   -- Test flag
-  constant CARRY:            integer := 2;   -- ALU carry out flag
+  constant INTR_EN:     integer  := 0;     -- Interrupts enabled
+  constant TST_FLAG:    integer  := 1;     -- Test flag
+  constant CARRY:       integer  := 2;     -- ALU carry out flag
 
   -- Special register indexes
-  constant REG_NULL:         integer := 0;
-  constant REG_PC:           integer := 1;
-  constant REG_SP:           integer := 2;
-  constant REG_SR:           integer := 3;
+  constant REG_NULL:    integer  := 0;     -- Zero register
+  constant REG_PC:      integer  := 1;     -- Program counter
+  constant REG_SP:      integer  := 2;     -- Stack pointer
+  constant REG_SR:      integer  := 3;     -- Status register
 
   -- Comparison instructions
-  constant EQ:               byte    := X"00"; -- A == B
-  constant NE:               byte    := X"01"; -- A != B
-  constant LT:               byte    := X"02"; -- A <  B
-  constant LE:               byte    := X"03"; -- A <= B
-  constant GT:               byte    := X"04"; -- A >  B
-  constant GE:               byte    := X"05"; -- A >= B
-  constant Z:                byte    := X"06"; -- A == 0
-  constant N:                byte    := X"07"; -- A != 0
+  constant EQ:          byte     := X"00"; -- A == B
+  constant NE:          byte     := X"01"; -- A != B
+  constant LT:          byte     := X"02"; -- A <  B
+  constant LE:          byte     := X"03"; -- A <= B
+  constant GT:          byte     := X"04"; -- A >  B
+  constant GE:          byte     := X"05"; -- A >= B
+  constant Z:           byte     := X"06"; -- A == 0
+  constant N:           byte     := X"07"; -- A != 0
 
-  -- Zero padding constants
-  constant pc_word_pad:      std_logic_vector(word_size - program_counter'length - 1   downto 0) := (others => '0');
-  constant byte_pc_pad:      std_logic_vector(program_counter'length - byte'length - 1 downto 0) := (others => '0');
-  constant byte_word_pad:    std_logic_vector(word_size - byte'length - 1              downto 0) := (others => '0');
+  -- Zero padding constants for type conversions
+  constant pc_word_pad:   std_logic_vector(word_size - program_counter'length - 1   downto 0) := (others => '0');
+  constant byte_pc_pad:   std_logic_vector(program_counter'length - byte'length - 1 downto 0) := (others => '0');
+  constant byte_word_pad: std_logic_vector(word_size - byte'length - 1              downto 0) := (others => '0');
 
   -- Initial values
-  constant pc_start:         program_counter     := (3 => '1', others => '0'); -- 0x08
-  constant sp_start:         program_counter     := (others => '1');
-  constant sr_start:         word                := (others => '0');
+  constant pc_start:             program_counter     := (3 => '1', others => '0');
+  constant sp_start:             program_counter     := (others => '1');
+  constant sr_start:             word                := (others => '0');
 
   -- The program counter
-  signal current_pc:         program_counter     := pc_start;
-  signal next_pc:            program_counter     := pc_start;
+  signal current_pc:             program_counter     := pc_start;
+  signal next_pc:                program_counter     := pc_start;
 
   -- The instruction cycle counter
-  signal current_icc:        instruction_counter := (others => '0');
-  signal next_icc:           instruction_counter := (others => '0');
+  signal current_icc:            instruction_counter := (others => '0');
+  signal next_icc:               instruction_counter := (others => '0');
 
   -- The stack pointer
-  signal current_sp:         program_counter    := sp_start;
-  signal next_sp:            program_counter    := sp_start;
+  signal current_sp:             program_counter    := sp_start;
+  signal next_sp:                program_counter    := sp_start;
 
   -- The status register
-  signal current_sr:         word                := sr_start;
-  signal next_sr:            word                := sr_start;
+  signal current_sr:             word                := sr_start;
+  signal next_sr:                word                := sr_start;
 
   -- Port registers
-  signal current_io_out:     ports               := (others => byte_null);
-  signal next_io_out:        ports               := (others => byte_null);
+  signal current_io_out:         ports               := (others => byte_null);
+  signal next_io_out:            ports               := (others => byte_null);
 
-  -- Interrupts
-  constant intr_null:        intr_line           := (others => '0');
-  signal current_intr:       intr_line           := intr_null;
-  signal intr_reset:         intr_line           := intr_null;
+  -- Interrupt registers
+  constant intr_null:            intr_line           := (others => '0');
+  signal current_intr:           intr_line           := intr_null;
+  signal intr_reset:             intr_line           := intr_null;
 
   -- Register interface
-  signal next_reg_b_addr:    byte                := (others => '0');
-  signal next_reg_c_addr:    byte                := (others => '0');
-  signal current_reg_b_addr: byte               := (others => '0');
-  signal current_reg_c_addr: byte               := (others => '0');
-  signal next_reg_b_rd:      std_logic           := '0';
-  signal next_reg_c_rd:      std_logic           := '0';
-  signal current_reg_b_rd:   std_logic           := '0';
-  signal current_reg_c_rd:   std_logic           := '0';
-  signal next_reg_b_do:      word                := (others => '0');
-  signal next_reg_c_do:      word                := (others => '0');
-  signal current_reg_b_do:   word                := (others => '0');
-  signal current_reg_c_do:   word                := (others => '0');
-  alias  reg_b_do_addr:      ram_word is next_reg_b_do(ram_word'length - 1 downto 0);
-  alias  reg_c_do_addr:      ram_word is next_reg_c_do(ram_word'length - 1 downto 0);
-  alias  reg_b_do_byte:      byte     is next_reg_b_do(byte'length - 1     downto 0);
-  alias  reg_c_do_byte:      byte     is next_reg_b_do(byte'length - 1     downto 0);
+  signal next_reg_b_addr:        byte                := (others => '0');
+  signal next_reg_c_addr:        byte                := (others => '0');
+  signal current_reg_b_addr:     byte                := (others => '0');
+  signal current_reg_c_addr:     byte                := (others => '0');
+  signal next_reg_b_rd:          std_logic           := '0';
+  signal next_reg_c_rd:          std_logic           := '0';
+  signal current_reg_b_rd:       std_logic           := '0';
+  signal current_reg_c_rd:       std_logic           := '0';
+  signal next_reg_b_do:          word                := (others => '0');
+  signal next_reg_c_do:          word                := (others => '0');
+  signal current_reg_b_do:       word                := (others => '0');
+  signal current_reg_c_do:       word                := (others => '0');
+  alias  reg_b_do_addr:          ram_word is next_reg_b_do(ram_word'length - 1 downto 0);
+  alias  reg_c_do_addr:          ram_word is next_reg_c_do(ram_word'length - 1 downto 0);
+  alias  reg_b_do_byte:          byte     is next_reg_b_do(byte'length - 1     downto 0);
+  alias  reg_c_do_byte:          byte     is next_reg_b_do(byte'length - 1     downto 0);
 
   -- Shift register
-  signal current_shift:      word                := (others => '0');
-  signal next_shift:         word                := (others => '0');
-  alias  current_shift_pc:   std_logic_vector(program_counter'length - 1 downto 0)
+  signal current_shift:          word                := (others => '0');
+  signal next_shift:             word                := (others => '0');
+  alias  current_shift_pc:       std_logic_vector(program_counter'length - 1 downto 0)
     is current_shift(program_counter'length - 1 downto 0);
 
   -- Indexed memory register
@@ -219,7 +219,7 @@ begin
         current_sp               <= sp_start                   after gate_delay;
         current_sr               <= sr_start                   after gate_delay;
         current_io_out           <= (others => byte_null)      after gate_delay;
-        current_intr             <= (others => '0')            after gate_delay;
+        current_intr             <= intr_null                  after gate_delay;
         current_shift            <= (others => '0')            after gate_delay;
         current_ram_index_addr   <= (others => '0')            after gate_delay;
         current_alu_a_di         <= (others => '0')            after gate_delay;
@@ -275,6 +275,7 @@ begin
     variable rom_data_byte3_int: integer;
     variable load_pc:            program_counter;
     variable stack_pc:           program_counter;
+    variable port_pc:            program_counter;
     variable ram_index_addr:     ram_word;
 
     -- Working variables
@@ -292,36 +293,18 @@ begin
     rom_data_byte3_int := to_integer(unsigned(rom_data_byte3));
     load_pc            := unsigned(rom_data_pc);
     stack_pc           := unsigned(ram_rdata_pc);
+    port_pc            := unsigned(byte_pc_pad) & unsigned(port_val);
     ram_index_addr     := ram_word(unsigned(reg_b_do_addr) +
                                    unsigned(reg_c_do_addr));
 
-    next_pc                    <= current_pc                   after gate_delay;
-    next_icc                   <= (others => '0')              after gate_delay;
-    next_sp                    <= current_sp                   after gate_delay;
-    next_sr                    <= current_sr                   after gate_delay;
-    next_io_out                <= current_io_out               after gate_delay;
-    next_ram_index_addr        <= ram_index_addr               after gate_delay;
-    next_shift                 <= current_shift                after gate_delay;
-
-    next_reg_b_addr            <= (others => '0')              after gate_delay;
-    next_reg_b_rd              <= '0'                          after gate_delay;
-
-    next_reg_c_addr            <= (others => '0')              after gate_delay;
-    next_reg_c_rd              <= '0'                          after gate_delay;
-
-
     intr_reset                 <= intr_null                    after gate_delay;
-
     ram_rd                     <= '0'                          after gate_delay;
     ram_wr                     <= '0'                          after gate_delay;
     ram_wdata                  <= (others => '0')              after gate_delay;
     ram_addr                   <= (others => '0')              after gate_delay;
-
     reg_a_addr                 <= (others => '0')              after gate_delay;
     reg_a_wr                   <= '0'                          after gate_delay;
     reg_a_di                   <= (others => '0')              after gate_delay;
-
-    -- ALU
     alu_si                     <= '0'                          after gate_delay;
     alu_a_c                    <= '0'                          after gate_delay;
     alu_b_c                    <= '0'                          after gate_delay;
@@ -330,6 +313,18 @@ begin
     alu_b_di                   <= (others => '0')              after gate_delay;
     next_alu_a_di              <= current_alu_a_di             after gate_delay;
     next_alu_b_di              <= current_alu_b_di             after gate_delay;
+    next_pc                    <= current_pc                   after gate_delay;
+    next_icc                   <= (others => '0')              after gate_delay;
+    next_sp                    <= current_sp                   after gate_delay;
+    next_sr                    <= current_sr                   after gate_delay;
+    next_io_out                <= current_io_out               after gate_delay;
+    next_ram_index_addr        <= ram_index_addr               after gate_delay;
+    next_shift                 <= current_shift                after gate_delay;
+    next_reg_b_addr            <= (others => '0')              after gate_delay;
+    next_reg_b_rd              <= '0'                          after gate_delay;
+    next_reg_c_addr            <= (others => '0')              after gate_delay;
+    next_reg_c_rd              <= '0'                          after gate_delay;
+
 
     if current_intr /= intr_null and current_icc = 0 and current_sr(INTR_EN) = '1' then
       -- Execute interrupt routine
@@ -391,7 +386,6 @@ begin
           next_pc              <= load_pc                      after gate_delay;
 
         when 16#07# =>   -- RSR Return from Subroutine
-
           case current_icc_int is
             when 0 =>
               ram_addr         <= ram_word(current_sp + 1)     after gate_delay;
@@ -406,7 +400,6 @@ begin
           end case;
 
         when 16#08# =>   -- RIR Return from Interrupt:
-
           case current_icc_int is
             when 0 =>
               ram_addr         <= ram_word(current_sp + 1)     after gate_delay;
@@ -428,7 +421,6 @@ begin
           next_sr(INTR_EN)     <= '0'                          after gate_delay;
 
         when 16#0B# =>   -- MTR Memory to register
-
           case current_icc_int is
             when 0 =>
               ram_addr         <= rom_data_addr                after gate_delay;
@@ -444,7 +436,6 @@ begin
           end case;
 
         when 16#0C# =>   -- RTM Register to memory
-
           case current_icc_int is
             when 0 =>
               next_reg_b_addr  <= rom_data_byte1               after gate_delay;
@@ -461,7 +452,6 @@ begin
           end case;
 
         when 16#0D# =>   -- IMTR Indexed memory to register
-
           case current_icc_int is
             when 0 =>
               next_reg_b_addr  <= rom_data_byte2               after gate_delay;
@@ -486,7 +476,6 @@ begin
           end case;
 
         when 16#0E# =>   -- RTIM Register to indexed memory
-
           case current_icc_int is
             when 0 =>
               next_reg_b_addr  <= rom_data_byte1               after gate_delay;
@@ -511,7 +500,6 @@ begin
           end case;
 
         when 16#0F# =>   -- PSHR Stack push
-
           case current_icc_int is
             when 0 =>
               next_reg_b_addr  <= rom_data_byte1               after gate_delay;
@@ -528,7 +516,6 @@ begin
           end case;
 
         when 16#10# =>   -- POPR Stack pop
-
           case current_icc_int is
             when 0 =>
               ram_addr         <= ram_word(current_sp + 1)     after gate_delay;
@@ -542,7 +529,6 @@ begin
           end case;
 
         when 16#11# =>   -- RTIO Register to IO port
-
           case current_icc_int is
             when 0 =>
               next_reg_b_addr  <= rom_data_byte2               after gate_delay;
@@ -556,17 +542,14 @@ begin
           end case;
 
         when 16#12# =>   -- IOTR IO port to register
-
           port_val := io_in(rom_data_byte2_int);
 
           case rom_data_byte1_int is
             when REG_NULL =>
             when REG_PC =>
-              next_pc          <= unsigned(byte_pc_pad) & unsigned(port_val)
-                                                               after gate_delay;
+              next_pc          <= port_pc                      after gate_delay;
             when REG_SP =>
-              next_sp          <= unsigned(byte_pc_pad) & unsigned(port_val)
-                                                               after gate_delay;
+              next_sp          <= port_pc                      after gate_delay;
             when REG_SR =>
               next_sr          <= byte_word_pad & port_val     after gate_delay;
             when others =>
@@ -577,7 +560,6 @@ begin
           end case;
 
         when 16#13# to 16#14# =>   -- LDLR and LDUR Load immediate
-
           case current_icc_int is
             when 0 =>
               next_reg_b_addr  <= rom_data_byte1               after gate_delay;
@@ -607,7 +589,6 @@ begin
           -- TODO: Implementation
 
         when 16#18# to 16#19# =>   -- SRLR Right shift register
-
           case current_icc_int is
             when 0 =>
               next_reg_b_addr  <= rom_data_byte2 after gate_delay;
@@ -645,7 +626,6 @@ begin
           end case;
 
         when 16#1A# to 16#1B# => -- CMPU and CMPS
-
           case current_icc_int is
             when 0 =>
               next_reg_b_addr  <= rom_data_byte2               after gate_delay;
@@ -665,7 +645,6 @@ begin
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
               test_flag := '0';
-
               case rom_data_byte1 is
                 when EQ => -- Equal to.
                   if current_alu_a_di = current_alu_b_di then
@@ -730,7 +709,6 @@ begin
           end case;
 
         when 16#20# to 16#2F# => -- ALUU to ALUS
-
           case current_icc_int is
             when 0 =>
               next_reg_b_addr  <= rom_data_byte2               after gate_delay;
