@@ -154,8 +154,12 @@ architecture syn of execution_unit is
   -- Register interface
   signal next_reg_b_addr:   byte                := (others => '0');
   signal next_reg_c_addr:   byte                := (others => '0');
+  signal current_reg_b_addr: byte               := (others => '0');
+  signal current_reg_c_addr: byte               := (others => '0');
   signal next_reg_b_rd:     std_logic           := '0';
   signal next_reg_c_rd:     std_logic           := '0';
+  signal current_reg_b_rd:  std_logic           := '0';
+  signal current_reg_c_rd:  std_logic           := '0';
   signal next_reg_b_do:     word                := (others => '0');
   signal next_reg_c_do:     word                := (others => '0');
   signal current_reg_b_do:  word                := (others => '0');
@@ -220,7 +224,13 @@ begin
         current_ram_index_addr   <= (others => '0')            after gate_delay;
         current_alu_a_di         <= (others => '0')            after gate_delay;
         current_alu_b_di         <= (others => '0')            after gate_delay;
-
+        current_reg_b_addr       <= (others => '0')            after gate_delay;
+        current_reg_c_addr       <= (others => '0')            after gate_delay;
+        current_reg_b_rd         <= '0'                        after gate_delay;
+        current_reg_c_rd         <= '0'                        after gate_delay;
+        current_reg_b_do         <= (others => '0')            after gate_delay;
+        current_reg_c_do         <= (others => '0')            after gate_delay;
+        current_intr             <= (others => '0')            after gate_delay;
       elsif en = '1' then
         current_pc               <= next_pc                    after gate_delay;
         current_icc              <= next_icc                   after gate_delay;
@@ -231,6 +241,10 @@ begin
         current_ram_index_addr   <= next_ram_index_addr        after gate_delay;
         current_alu_a_di         <= next_alu_a_di              after gate_delay;
         current_alu_b_di         <= next_alu_b_di              after gate_delay;
+        current_reg_b_addr       <= next_reg_b_addr            after gate_delay;
+        current_reg_c_addr       <= next_reg_c_addr            after gate_delay;
+        current_reg_b_rd         <= next_reg_b_rd              after gate_delay;
+        current_reg_c_rd         <= next_reg_c_rd              after gate_delay;
         current_reg_b_do         <= next_reg_b_do              after gate_delay;
         current_reg_c_do         <= next_reg_c_do              after gate_delay;
 
@@ -766,8 +780,9 @@ begin
 
 
   -- Register B interface
-  process (next_reg_b_addr, next_reg_b_rd, current_reg_b_do,
-           current_pc, current_sp, current_sr, reg_b_do) is
+  process (reg_b_do, next_reg_b_addr, current_reg_b_addr,
+           next_reg_b_rd, current_reg_b_rd, current_reg_b_do,
+           current_pc, current_sp, current_sr) is
     variable pc_word:             word;
     variable sp_word:             word;
   begin
@@ -784,9 +799,11 @@ begin
         reg_b_rd               <= next_reg_b_rd                after gate_delay;
     end case;
 
+    next_reg_b_do <= current_reg_b_do after gate_delay;
+
     -- Read operation
-    if next_reg_b_rd = '1' then
-      case to_integer(unsigned(next_reg_b_addr)) is
+    if current_reg_b_rd = '1' then
+      case to_integer(unsigned(current_reg_b_addr)) is
         when REG_NULL =>
           next_reg_b_do        <= (others => '0')              after gate_delay;
         when REG_PC =>
@@ -804,10 +821,11 @@ begin
 
 
   -- Register C interface
-  process (next_reg_c_addr, next_reg_c_rd, current_reg_c_do,
-           current_pc, current_sp, current_sr, reg_c_do) is
-    variable pc_word: word;
-    variable sp_word: word;
+  process (reg_c_do, next_reg_c_addr, current_reg_c_addr,
+           next_reg_c_rd, current_reg_c_rd, current_reg_c_do,
+           current_pc, current_sp, current_sr) is
+    variable pc_word:             word;
+    variable sp_word:             word;
   begin
 
     pc_word := pc_word_pad & std_logic_vector(current_pc);
@@ -822,9 +840,11 @@ begin
         reg_c_rd               <= next_reg_c_rd                after gate_delay;
     end case;
 
+    next_reg_c_do <= current_reg_c_do after gate_delay;
+
     -- Read operation
-    if next_reg_c_rd = '1' then
-      case to_integer(unsigned(next_reg_c_addr)) is
+    if current_reg_c_rd = '1' then
+      case to_integer(unsigned(current_reg_c_addr)) is
         when REG_NULL =>
           next_reg_c_do        <= (others => '0')              after gate_delay;
         when REG_PC =>
