@@ -82,97 +82,97 @@ architecture syn of execution_unit is
   subtype instruction_counter is unsigned(icc_size                     downto 0);
 
   -- ROM data components
-  alias rom_data_byte0:     byte     is rom_data(word_size - 1         downto word_size - 8);
-  alias rom_data_byte1:     byte     is rom_data(word_size - 9         downto word_size - 16);
-  alias rom_data_byte2:     byte     is rom_data(word_size - 17        downto word_size - 24);
-  alias rom_data_byte3:     byte     is rom_data(word_size - 25        downto 0);
-  alias rom_data_addr:      ram_word is rom_data(ram_word'length - 1   downto 0);
-  alias rom_data_pc:        ram_pc   is rom_data(ram_word'length - 1   downto 0);
+  alias rom_data_byte0:      byte     is rom_data(word_size - 1         downto word_size - 8);
+  alias rom_data_byte1:      byte     is rom_data(word_size - 9         downto word_size - 16);
+  alias rom_data_byte2:      byte     is rom_data(word_size - 17        downto word_size - 24);
+  alias rom_data_byte3:      byte     is rom_data(word_size - 25        downto 0);
+  alias rom_data_addr:       ram_word is rom_data(ram_word'length - 1   downto 0);
+  alias rom_data_pc:         ram_pc   is rom_data(ram_word'length - 1   downto 0);
 
   -- RAM data components
-  alias ram_wdata_sr:       ram_sr   is ram_wdata(word_size - 1        downto word_size - 16);
-  alias ram_wdata_pc:       ram_pc   is ram_wdata(ram_word'length - 1  downto 0);
-  alias ram_rdata_sr:       ram_sr   is ram_rdata(word_size - 1        downto word_size - 16);
-  alias ram_rdata_pc:       ram_pc   is ram_rdata(ram_word'length - 1  downto 0);
+  alias ram_wdata_sr:        ram_sr   is ram_wdata(word_size - 1        downto word_size - 16);
+  alias ram_wdata_pc:        ram_pc   is ram_wdata(ram_word'length - 1  downto 0);
+  alias ram_rdata_sr:        ram_sr   is ram_rdata(word_size - 1        downto word_size - 16);
+  alias ram_rdata_pc:        ram_pc   is ram_rdata(ram_word'length - 1  downto 0);
 
   -- The status register flags
-  constant INTR_EN:         integer := 0;   -- Interrupts enabled
-  constant TST_FLAG:        integer := 1;   -- Test flag
-  constant CARRY:           integer := 2;   -- ALU carry out flag
+  constant INTR_EN:          integer := 0;   -- Interrupts enabled
+  constant TST_FLAG:         integer := 1;   -- Test flag
+  constant CARRY:            integer := 2;   -- ALU carry out flag
 
   -- Special register indexes
-  constant REG_NULL:        integer := 0;
-  constant REG_PC:          integer := 1;
-  constant REG_SP:          integer := 2;
-  constant REG_SR:          integer := 3;
+  constant REG_NULL:         integer := 0;
+  constant REG_PC:           integer := 1;
+  constant REG_SP:           integer := 2;
+  constant REG_SR:           integer := 3;
 
   -- Comparison instructions
-  constant EQ:              byte    := X"00"; -- A == B
-  constant NE:              byte    := X"01"; -- A != B
-  constant LT:              byte    := X"02"; -- A <  B
-  constant LE:              byte    := X"03"; -- A <= B
-  constant GT:              byte    := X"04"; -- A >  B
-  constant GE:              byte    := X"05"; -- A >= B
-  constant Z:               byte    := X"06"; -- A == 0
-  constant N:               byte    := X"07"; -- A != 0
+  constant EQ:               byte    := X"00"; -- A == B
+  constant NE:               byte    := X"01"; -- A != B
+  constant LT:               byte    := X"02"; -- A <  B
+  constant LE:               byte    := X"03"; -- A <= B
+  constant GT:               byte    := X"04"; -- A >  B
+  constant GE:               byte    := X"05"; -- A >= B
+  constant Z:                byte    := X"06"; -- A == 0
+  constant N:                byte    := X"07"; -- A != 0
 
   -- Zero padding constants
-  constant pc_word_pad:     std_logic_vector(word_size - program_counter'length - 1   downto 0) := (others => '0');
-  constant byte_pc_pad:     std_logic_vector(program_counter'length - byte'length - 1 downto 0) := (others => '0');
-  constant byte_word_pad:   std_logic_vector(word_size - byte'length - 1              downto 0) := (others => '0');
+  constant pc_word_pad:      std_logic_vector(word_size - program_counter'length - 1   downto 0) := (others => '0');
+  constant byte_pc_pad:      std_logic_vector(program_counter'length - byte'length - 1 downto 0) := (others => '0');
+  constant byte_word_pad:    std_logic_vector(word_size - byte'length - 1              downto 0) := (others => '0');
 
   -- Initial values
-  constant pc_start:        program_counter     := (3 => '1', others => '0'); -- 0x08
-  constant sp_start:        program_counter     := (others => '1');
-  constant sr_start:        word                := (others => '0');
+  constant pc_start:         program_counter     := (3 => '1', others => '0'); -- 0x08
+  constant sp_start:         program_counter     := (others => '1');
+  constant sr_start:         word                := (others => '0');
 
   -- The program counter
-  signal current_pc:        program_counter     := pc_start;
-  signal next_pc:           program_counter     := pc_start;
+  signal current_pc:         program_counter     := pc_start;
+  signal next_pc:            program_counter     := pc_start;
 
   -- The instruction cycle counter
-  signal current_icc:       instruction_counter := (others => '0');
-  signal next_icc:          instruction_counter := (others => '0');
+  signal current_icc:        instruction_counter := (others => '0');
+  signal next_icc:           instruction_counter := (others => '0');
 
   -- The stack pointer
-  signal current_sp:        program_counter    := sp_start;
-  signal next_sp:           program_counter    := sp_start;
+  signal current_sp:         program_counter    := sp_start;
+  signal next_sp:            program_counter    := sp_start;
 
   -- The status register
-  signal current_sr:        word                := sr_start;
-  signal next_sr:           word                := sr_start;
+  signal current_sr:         word                := sr_start;
+  signal next_sr:            word                := sr_start;
 
   -- Port registers
-  signal current_io_out:    ports               := (others => byte_null);
-  signal next_io_out:       ports               := (others => byte_null);
+  signal current_io_out:     ports               := (others => byte_null);
+  signal next_io_out:        ports               := (others => byte_null);
 
   -- Interrupts
-  constant intr_null:       intr_line           := (others => '0');
-  signal current_intr:      intr_line           := intr_null;
-  signal intr_reset:        intr_line           := intr_null;
+  constant intr_null:        intr_line           := (others => '0');
+  signal current_intr:       intr_line           := intr_null;
+  signal intr_reset:         intr_line           := intr_null;
 
   -- Register interface
-  signal next_reg_b_addr:   byte                := (others => '0');
-  signal next_reg_c_addr:   byte                := (others => '0');
+  signal next_reg_b_addr:    byte                := (others => '0');
+  signal next_reg_c_addr:    byte                := (others => '0');
   signal current_reg_b_addr: byte               := (others => '0');
   signal current_reg_c_addr: byte               := (others => '0');
-  signal next_reg_b_rd:     std_logic           := '0';
-  signal next_reg_c_rd:     std_logic           := '0';
-  signal current_reg_b_rd:  std_logic           := '0';
-  signal current_reg_c_rd:  std_logic           := '0';
-  signal next_reg_b_do:     word                := (others => '0');
-  signal next_reg_c_do:     word                := (others => '0');
-  signal current_reg_b_do:  word                := (others => '0');
-  signal current_reg_c_do:  word                := (others => '0');
-  alias  reg_b_do_addr:     ram_word is next_reg_b_do(ram_word'length - 1 downto 0);
-  alias  reg_c_do_addr:     ram_word is next_reg_c_do(ram_word'length - 1 downto 0);
-  alias  reg_b_do_byte:     byte     is next_reg_b_do(byte'length - 1     downto 0);
-  alias  reg_c_do_byte:     byte     is next_reg_b_do(byte'length - 1     downto 0);
+  signal next_reg_b_rd:      std_logic           := '0';
+  signal next_reg_c_rd:      std_logic           := '0';
+  signal current_reg_b_rd:   std_logic           := '0';
+  signal current_reg_c_rd:   std_logic           := '0';
+  signal next_reg_b_do:      word                := (others => '0');
+  signal next_reg_c_do:      word                := (others => '0');
+  signal current_reg_b_do:   word                := (others => '0');
+  signal current_reg_c_do:   word                := (others => '0');
+  alias  reg_b_do_addr:      ram_word is next_reg_b_do(ram_word'length - 1 downto 0);
+  alias  reg_c_do_addr:      ram_word is next_reg_c_do(ram_word'length - 1 downto 0);
+  alias  reg_b_do_byte:      byte     is next_reg_b_do(byte'length - 1     downto 0);
+  alias  reg_c_do_byte:      byte     is next_reg_b_do(byte'length - 1     downto 0);
 
   -- Shift register
-  signal current_shift:     word                := (others => '0');
-  signal next_shift:        word                := (others => '0');
-  alias  current_shift_pc: std_logic_vector(program_counter'length - 1 downto 0)
+  signal current_shift:      word                := (others => '0');
+  signal next_shift:         word                := (others => '0');
+  alias  current_shift_pc:   std_logic_vector(program_counter'length - 1 downto 0)
     is current_shift(program_counter'length - 1 downto 0);
 
   -- Indexed memory register
