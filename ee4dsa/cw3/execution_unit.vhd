@@ -133,15 +133,15 @@ architecture syn of execution_unit is
   signal next_pc_src:            pc_mux_src          := current;
   signal current_pc:             program_counter     := pc_start;
   signal next_pc:                program_counter     := pc_start;
-  signal interrupt_pc:           program_counter     := pc_start;
+  signal interrupt_vector_pc:    program_counter     := pc_start;
 
   -- The instruction cycle counter
   signal current_icc:            instruction_counter := (others => '0');
   signal next_icc:               instruction_counter := (others => '0');
 
   -- The stack pointer
-  signal current_sp:             program_counter    := sp_start;
-  signal next_sp:                program_counter    := sp_start;
+  signal current_sp:             program_counter     := sp_start;
+  signal next_sp:                program_counter     := sp_start;
 
   -- The status register
   signal current_sr:             word                := sr_start;
@@ -181,8 +181,8 @@ architecture syn of execution_unit is
     is current_shift(program_counter'length - 1 downto 0);
 
   -- Indexed memory register
-  signal current_ram_index_addr: ram_word       := (others => '0');
-  signal next_ram_index_addr:    ram_word       := (others => '0');
+  signal current_ram_index_addr: ram_word            := (others => '0');
+  signal next_ram_index_addr:    ram_word            := (others => '0');
 
   -- Opcode components
   alias op_alu_signed:           std_logic is rom_data_byte0(3);
@@ -194,10 +194,10 @@ architecture syn of execution_unit is
   alias op_shift_left:           std_logic is rom_data_byte0(0);
 
   -- ALU registers
-  signal next_alu_a_di:          word        := (others => '0');
-  signal next_alu_b_di:          word        := (others => '0');
-  signal current_alu_a_di:       word        := (others => '0');
-  signal current_alu_b_di:       word        := (others => '0');
+  signal next_alu_a_di:          word                := (others => '0');
+  signal next_alu_b_di:          word                := (others => '0');
+  signal current_alu_a_di:       word                := (others => '0');
+  signal current_alu_b_di:       word                := (others => '0');
   alias  alu_s_do_pc: std_logic_vector(program_counter'length - 1 downto 0)
     is alu_s_do(program_counter'length - 1 downto 0);
 
@@ -300,7 +300,7 @@ begin
                                    unsigned(reg_c_do_addr));
 
     intr_reset                 <= intr_null                    after gate_delay;
-    interrupt_pc               <= (others => '0')              after gate_delay;
+    interrupt_vector_pc        <= (others => '0')              after gate_delay;
     ram_rd                     <= '0'                          after gate_delay;
     ram_wr                     <= '0'                          after gate_delay;
     ram_wdata                  <= (others => '0')              after gate_delay;
@@ -344,7 +344,7 @@ begin
         if current_intr(i) = '1' then
           intr_reset(i)        <= '1'                          after gate_delay;
           next_pc_src          <= interrupt                    after gate_delay;
-          interrupt_pc         <= to_unsigned(i, program_counter'length)
+          interrupt_vector_pc  <= to_unsigned(i, program_counter'length)
                                                                after gate_delay;
           exit;
         end if;
@@ -726,7 +726,8 @@ begin
 
 
   -- Next program counter multiplexer
-  process (next_pc_src, current_pc, interrupt_pc, ram_rdata, rom_data_pc, io_in, current_shift_pc, alu_s_do) is
+  process (interrupt_vector_pc, ram_rdata, rom_data_pc, io_in, alu_s_do,
+           next_pc_src, current_pc, current_shift_pc) is
     variable port_index: integer;
   begin
 
@@ -740,7 +741,7 @@ begin
       when immediate =>
         next_pc <= unsigned(rom_data_pc)                       after gate_delay;
       when interrupt =>
-        next_pc <= interrupt_pc                                after gate_delay;
+        next_pc <= interrupt_vector_pc                         after gate_delay;
       when stack =>
         next_pc <= unsigned(ram_rdata_pc)                      after gate_delay;
       when port_in =>
@@ -773,7 +774,7 @@ begin
         reg_b_rd               <= next_reg_b_rd                after gate_delay;
     end case;
 
-    next_reg_b_do <= current_reg_b_do after gate_delay;
+    next_reg_b_do              <= current_reg_b_do             after gate_delay;
 
     -- Read operation
     if current_reg_b_rd = '1' then
@@ -814,7 +815,7 @@ begin
         reg_c_rd               <= next_reg_c_rd                after gate_delay;
     end case;
 
-    next_reg_c_do <= current_reg_c_do after gate_delay;
+    next_reg_c_do              <= current_reg_c_do             after gate_delay;
 
     -- Read operation
     if current_reg_c_rd = '1' then
