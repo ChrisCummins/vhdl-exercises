@@ -559,20 +559,49 @@ begin
               reg_a_wr         <= '1'                          after gate_delay;
           end case;
 
-        when 16#15# =>   -- ANDR
-          -- TODO: Implementation
+        when 16#15# to 16#17# => -- Bitwise operations AND, OR, XORR
+          case current_icc_int is
+            when 0 =>
+              next_reg_b_addr  <= rom_data_byte2               after gate_delay;
+              next_reg_b_rd    <= '1'                          after gate_delay;
+              next_reg_b_addr  <= rom_data_byte3               after gate_delay;
+              next_reg_c_rd    <= '1'                          after gate_delay;
+              next_pc_src      <= current                      after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
+            when 1 =>
+              case rom_data_byte0_int is
+                when 16#15# => -- ANDR
+                  shift := next_reg_b_do and next_reg_c_do;
+                when 16#16# => -- ORR
+                  shift := next_reg_b_do or  next_reg_c_do;
+                when others => -- XORR
+                  shift := next_reg_b_do xor next_reg_c_do;
+              end case;
 
-        when 16#16# =>   -- ORR
-          -- TODO: Implementation
-
-        when 16#17# =>   -- XORR
-          -- TODO: Implementation
+              next_shift       <= shift                        after gate_delay;
+              next_pc_src      <= current                      after gate_delay;
+              next_icc         <= current_icc + 1              after gate_delay;
+            when others =>
+              case rom_data_byte1_int is
+                when REG_NULL =>
+                when REG_PC =>
+                  next_pc_src  <= shift_reg                    after gate_delay;
+                when REG_SP =>
+                  next_sp      <= unsigned(current_shift_pc)   after gate_delay;
+                when REG_SR =>
+                  next_sr      <= current_shift                after gate_delay;
+                when others =>
+                  reg_a_addr   <= rom_data_byte1               after gate_delay;
+                  reg_a_di     <= current_shift                after gate_delay;
+                  reg_a_wr     <= '1'                          after gate_delay;
+              end case;
+          end case;
 
         when 16#18# to 16#19# =>   -- SRLR Right shift register
           case current_icc_int is
             when 0 =>
-              next_reg_b_addr  <= rom_data_byte2 after gate_delay;
-              next_reg_b_rd    <= '1' after gate_delay;
+              next_reg_b_addr  <= rom_data_byte2               after gate_delay;
+              next_reg_b_rd    <= '1'                          after gate_delay;
               next_pc_src      <= current                      after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when 1 =>
