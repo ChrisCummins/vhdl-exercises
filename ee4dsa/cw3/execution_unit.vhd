@@ -72,7 +72,7 @@ end execution_unit;
 architecture syn of execution_unit is
 
   -- Program counter multiplexer inputs
-  type    pc_mux_src is (current, increment, immediate, interrupt, stack, port_in, shift_reg, alu);
+  type    pc_mux_src is (current, increment, immediate, interrupt, stack, port_in, bitwise_op, alu);
 
   subtype ports               is byte_vector(ports_out - 1             downto 0);
   subtype port_index          is unsigned(byte'length - 1              downto 0);
@@ -174,11 +174,11 @@ architecture syn of execution_unit is
   alias  reg_b_do_byte:          byte     is next_reg_b_do(byte'length - 1     downto 0);
   alias  reg_c_do_byte:          byte     is next_reg_b_do(byte'length - 1     downto 0);
 
-  -- Shift register
-  signal current_shift:          word                := (others => '0');
-  signal next_shift:             word                := (others => '0');
-  alias  current_shift_pc:       std_logic_vector(program_counter'length - 1 downto 0)
-    is current_shift(program_counter'length - 1 downto 0);
+  -- Register for storing the result of bitwise operations
+  signal current_bitwise:        word                := (others => '0');
+  signal next_bitwise:           word                := (others => '0');
+  alias  current_bitwise_pc:     std_logic_vector(program_counter'length - 1 downto 0)
+    is current_bitwise(program_counter'length - 1 downto 0);
 
   -- Indexed memory register
   signal current_ram_index_addr: ram_word            := (others => '0');
@@ -225,7 +225,7 @@ begin
         current_sr               <= sr_start                   after gate_delay;
         current_io_out           <= (others => byte_null)      after gate_delay;
         current_intr             <= intr_null                  after gate_delay;
-        current_shift            <= (others => '0')            after gate_delay;
+        current_bitwise          <= (others => '0')            after gate_delay;
         current_ram_index_addr   <= (others => '0')            after gate_delay;
         current_alu_a_di         <= (others => '0')            after gate_delay;
         current_alu_b_di         <= (others => '0')            after gate_delay;
@@ -242,7 +242,7 @@ begin
         current_sp               <= next_sp                    after gate_delay;
         current_sr               <= next_sr                    after gate_delay;
         current_io_out           <= next_io_out                after gate_delay;
-        current_shift            <= next_shift                 after gate_delay;
+        current_bitwise          <= next_bitwise               after gate_delay;
         current_ram_index_addr   <= next_ram_index_addr        after gate_delay;
         current_alu_a_di         <= next_alu_a_di              after gate_delay;
         current_alu_b_di         <= next_alu_b_di              after gate_delay;
@@ -269,7 +269,7 @@ begin
   -- The instruction set implementation.
   process(rst, io_in, rom_data, ram_rdata, alu_c_out, alu_s_do,
           current_icc, current_pc, current_sp, current_sr, current_intr,
-          current_io_out, current_ram_index_addr, current_shift,
+          current_io_out, current_ram_index_addr, current_bitwise,
           current_alu_a_di, current_alu_b_di, next_reg_b_do, next_reg_c_do) is
 
     -- Convenience variables
@@ -285,7 +285,7 @@ begin
     variable port_pc:            program_counter; -- IO port -> program counter
     variable test_flag:          std_logic;       -- Test comparisons result
     variable ldi:                word;            -- Load immediate value
-    variable shift:              word;            -- Logical shift result
+    variable bitwise:            word;            -- Bitwise operation result
 
   begin
 
@@ -322,7 +322,7 @@ begin
     next_sr                    <= current_sr                   after gate_delay;
     next_io_out                <= current_io_out               after gate_delay;
     next_ram_index_addr        <= ram_index_addr               after gate_delay;
-    next_shift                 <= current_shift                after gate_delay;
+    next_bitwise               <= current_bitwise              after gate_delay;
     next_reg_b_addr            <= (others => '0')              after gate_delay;
     next_reg_b_rd              <= '0'                          after gate_delay;
     next_reg_c_addr            <= (others => '0')              after gate_delay;
@@ -571,33 +571,33 @@ begin
             when 1 =>
               case rom_data_byte0_int is
                 when 16#15# => -- ANDR
-                  shift := next_reg_b_do and next_reg_c_do;
+                  bitwise := next_reg_b_do and next_reg_c_do;
                 when 16#16# => -- ORR
-                  shift := next_reg_b_do or  next_reg_c_do;
+                  bitwise := next_reg_b_do or  next_reg_c_do;
                 when others => -- XORR
-                  shift := next_reg_b_do xor next_reg_c_do;
+                  bitwise := next_reg_b_do xor next_reg_c_do;
               end case;
 
-              next_shift       <= shift                        after gate_delay;
+              next_bitwise     <= bitwise                      after gate_delay;
               next_pc_src      <= current                      after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
               case rom_data_byte1_int is
                 when REG_NULL =>
                 when REG_PC =>
-                  next_pc_src  <= shift_reg                    after gate_delay;
+                  next_pc_src  <= bitwise_op                   after gate_delay;
                 when REG_SP =>
-                  next_sp      <= unsigned(current_shift_pc)   after gate_delay;
+                  next_sp      <= unsigned(current_bitwise_pc) after gate_delay;
                 when REG_SR =>
-                  next_sr      <= current_shift                after gate_delay;
+                  next_sr      <= current_bitwise              after gate_delay;
                 when others =>
                   reg_a_addr   <= rom_data_byte1               after gate_delay;
-                  reg_a_di     <= current_shift                after gate_delay;
+                  reg_a_di     <= current_bitwise              after gate_delay;
                   reg_a_wr     <= '1'                          after gate_delay;
               end case;
           end case;
 
-        when 16#18# to 16#19# =>   -- SRLR Right shift register
+        when 16#18# to 16#19# =>   -- Bitwise shift operations
           case current_icc_int is
             when 0 =>
               next_reg_b_addr  <= rom_data_byte2               after gate_delay;
@@ -606,26 +606,26 @@ begin
               next_icc         <= current_icc + 1              after gate_delay;
             when 1 =>
               if op_shift_left = '1' then
-                shift := word(shift_left( unsigned(next_reg_b_do), rom_data_byte3_int));
+                bitwise := word(shift_left( unsigned(next_reg_b_do), rom_data_byte3_int));
               else
-                shift := word(shift_right(unsigned(next_reg_b_do), rom_data_byte3_int));
+                bitwise := word(shift_right(unsigned(next_reg_b_do), rom_data_byte3_int));
               end if;
 
-              next_shift       <= shift                        after gate_delay;
+              next_bitwise     <= bitwise                      after gate_delay;
               next_pc_src      <= current                      after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
               case rom_data_byte1_int is
                 when REG_NULL =>
                 when REG_PC =>
-                  next_pc_src  <= shift_reg                    after gate_delay;
+                  next_pc_src  <= bitwise_op                   after gate_delay;
                 when REG_SP =>
-                  next_sp      <= unsigned(current_shift_pc)   after gate_delay;
+                  next_sp      <= unsigned(current_bitwise_pc) after gate_delay;
                 when REG_SR =>
-                  next_sr      <= current_shift                after gate_delay;
+                  next_sr      <= current_bitwise              after gate_delay;
                 when others =>
                   reg_a_addr   <= rom_data_byte1               after gate_delay;
-                  reg_a_di     <= current_shift                after gate_delay;
+                  reg_a_di     <= current_bitwise              after gate_delay;
                   reg_a_wr     <= '1'                          after gate_delay;
               end case;
           end case;
@@ -756,28 +756,28 @@ begin
 
   -- Next program counter multiplexer
   process (interrupt_vector_pc, ram_rdata, rom_data_pc, io_in, alu_s_do,
-           next_pc_src, current_pc, current_shift_pc) is
+           next_pc_src, current_pc, current_bitwise_pc) is
     variable port_index: integer;
   begin
 
     port_index := to_integer(unsigned(rom_data_byte2));
 
     case next_pc_src is
-      when current =>
+      when current =>    -- Hold current counter
         next_pc <= current_pc                                  after gate_delay;
-      when increment =>
+      when increment =>  -- Increment program counter
         next_pc <= current_pc + 1                              after gate_delay;
-      when immediate =>
+      when immediate =>  -- Load program counter from immediate constant
         next_pc <= unsigned(rom_data_pc)                       after gate_delay;
-      when interrupt =>
+      when interrupt =>  -- Set program counter to interrupt vector
         next_pc <= interrupt_vector_pc                         after gate_delay;
-      when stack =>
+      when stack =>      -- Read program counter from RAM
         next_pc <= unsigned(ram_rdata_pc)                      after gate_delay;
-      when port_in =>
+      when port_in =>    -- Read program counter from IO port
         next_pc <= unsigned(byte_pc_pad) & unsigned(io_in(port_index)) after gate_delay;
-      when shift_reg =>
-        next_pc <= unsigned(current_shift_pc)                  after gate_delay;
-      when alu =>
+      when bitwise_op => -- Set program counter to result of bitwise operation
+        next_pc <= unsigned(current_bitwise_pc)                after gate_delay;
+      when alu =>        -- Set program counter to ALU result
         next_pc <= unsigned(alu_s_do_pc)                       after gate_delay;
     end case;
   end process;
