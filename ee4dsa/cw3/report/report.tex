@@ -31,45 +31,40 @@
 
 \section{Disassembling the program ROM}
 
-The file \texttt{extra/rom.asm} contains a heavily annotated
+The file \texttt{extra/ram.asm} contains a heavily annotated
 disassembled version of the safe unlocking program in a style inspired
-by the AVR Assembler Syntax. The program tests for the safe code 4D5A.
+by the AVR Assembler Syntax. The program tests for the safe code 2013.
 
 The assembly code was generated automatically using a disassembler
 developed for this purpose, available at
 \url{http://chriscummins.cc/disassembler}. Based off of the
-implementation of the first coursework disassembler, the functionality
-has been extended to support the subroutine and interrupt
-instructions, and development effort has been focused on making the
-output easier to understand.
-
-Generated label names now distinguish between subroutines, interrupt
-handlers and sections, and the UI now supports syntax highlighting,
-automatic comment generation, line highlighting and jumping to
-sections (clicking on a branch or jump instruction will now take the
-user to the specific address). Backwards compatibility with the first
-coursework instruction set is ensured by allowing the user to select
-between an initial program counter of either 0x00 or 0x08.
+implementation of the second coursework disassembler, the
+functionality has been extended to support ALU and register file
+instructions.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=6.4in]{assets/disassembler.png}
+  \includegraphics[width=6.7in]{assets/disassembler.png}
 \end{figure}
 
-The disassembler is implemented in 479 lines of JavaScript, with the
-source code available at\\*
-\url{http://chriscummins.cc/js/disassembler.js}.
+A standalone version is available in \texttt{extra/disassembler}, and
+contains the following files:
 
-\section{Modifying the ROM program}
+\begin{itemize}
+\item \texttt{ee4dsa-util.js} - Utility functions for working with
+  JavaScript types and performing numerical base conversions.
+\item \texttt{ee4dsa-asm.js} - Contains objects used to render parts
+  of assembly programs, such as instructions, comments, directives
+  etc.
+\item \texttt{ee4dsa-disassembler.js} - Provides functions to decode
+  RAM dumps into sets of assembly components, and to produce
+  representations of programs. Implements the actual instruction set
+  and machine code parser.
+\item \texttt{index.html} - Markup and JavaScript to implement the
+  disassembler.
+\end{itemize}
 
-The file \texttt{rom.dat} contains a modified ROM program which uses
-the last four digits of my SUN number (5189) as the code to the
-safe. The only modifications required were to the \texttt{AND}
-components of the four \texttt{TSTI} instructions. The
-\texttt{test\_bench\_inputs.dat} file was then modified so as to test
-this new safe unlocking code.
-
-\section{Implementing the Execution Unit}
+\section{Implementing the EU \& ALU}
 
 The file \texttt{execution\_unit.vhd} contains my implementation of
 the execution unit. The first step upon importing the coursework 2
@@ -79,80 +74,67 @@ program counter directly. While slightly obfuscating the code (the
 \texttt{next\_pc} signal is now assigned in multiple places), this did
 provide a 10 MHz increase in the maximum operating frequency,
 providing the required performance needed to implement the register
-file and ALU instructions.
+file and ALU instructions. Since the ALU has no internal states, the
+ALU required only a single level of immediate logic.
+
+\section{Synthesising the design}
 
 The directory \texttt{reports/} contains a copy of the synthesis
-reports. Note that there are unused bit warnings due to the fact that
-we don't use all of the available in every register, for example the
-status register, which only implements the test and interrupt flags.
+reports. The design synthesis without pertinent warnings:
 
 \begin{verbatim}
 $ make synthesis
 Synthesis running...
-WARNING:HDLCompiler:634 - "/home/chris/src/vhdl-exercises/ee4dsa/cw2/       \
-  top_level.vhd" Line 88: Net <eu_intr[7]> does not have a driver.
-WARNING:Xst:2935 - Signal 'eu_intr<7:1>', unconnected in block 'top_level', \
-  is tied to its initial value (0000000).
-WARNING:Xst:647 - Input <rom_data<23:17>> is never used. This port will be  \
-  preserved and left unconnected if it belongs to a top-level block or it   \
-  belongs to a sub-block and the hierarchy of this sub-block is preserved.
-WARNING:Xst:647 - Input <ram_rdata<15:6>> is never used. This port will be  \
-  preserved and left unconnected if it belongs to a top-level block or it   \
-  belongs to a sub-block and the hierarchy of this sub-block is preserved.
-WARNING:Xst:647 - Input <en> is never used. This port will be preserved and \
-  left unconnected if it belongs to a top-level block or it belongs to a    \
-  sub-block and the hierarchy of this sub-block is preserved.
-WARNING:Xst:2404 -  FFs/Latches <current_sr<31:16>> (without init value)    \
-  have a constant value of 0 in block <execution_unit>.
+WARNING:HDLCompiler:634 - "/home/chris/src/vhdl-exercises/ee4dsa/cw3/top_level.vhd" \
+  Line 112: Net <eu_intr[7]> does not have a driver.
+WARNING:Xst:2935 - Signal 'eu_intr<7:2>', unconnected in block 'top_level', is tied \
+  to its initial value (000000).
 \end{verbatim}
 
 Analysing the log \texttt{reports/xst.log} shows that the maximum
-achievable frequency of the design is 170.837 MHz. The bottleneck in
-this performance is the logic involved in the \texttt{next\_pc} input
-multiplexer. The EU implementation could be refactored so as to remove
-this third process, which would result in an increase to this maximum
-achievable frequency; however, the benefit in readability and
-abstraction that an explicit program counter multiplexer offers
-outweighs the advantages of increase performance at this stage,
-especially since we are well within the safe operating minimum of 125
-MHz.
+achievable frequency of the design is 105.029 MHz. The bottlenecks in
+this performance are the large fanout involved in the
+\texttt{next\_pc\_srrc} multiplexer, and the number of different
+assignments to the \texttt{next\_[bc]\_reg\_addr} registers.
 
-As we add further features in later courseworks such as the register
-file and ALU, it may be necessary to refactor this logic into a two
-process application. Other candidates for performance optimising
-include the for loop used to set the interrupt handler address, and
-removing some of the intermediate signals used to store register
-data. This would reduce in shorter paths and fewer gate delays.
+The fact that 66.2\% of the longest data path is in the route and not
+logic shows that it is the delay in transmission speed which is
+preventing higher performance, and this could be increased by reducing
+the number of different places in which registers are assigned,
+leading to fewer input multiplexers and shorter paths between
+components.
 
 \newpage
 \begin{verbatim}
-Delay:               5.854ns (Levels of Logic = 5)
-  Source:            reset_unit/cnt_6 (FF)
-  Destination:       rom_unit/do_27 (FF)
+=========================================================================
+Timing constraint: Default period analysis for Clock 'clk'
+  Clock period: 9.521ns (frequency: 105.029MHz)
+  Total number of paths / destination ports: 458963 / 1903
+-------------------------------------------------------------------------
+Delay:               9.521ns (Levels of Logic = 5)
+  Source:            ram_unit/Mram_data7 (RAM)
+  Destination:       ram_unit/Mram_data1 (RAM)
   Source Clock:      clk rising
   Destination Clock: clk rising
 
-  Data Path: reset_unit/cnt_6 to rom_unit/do_27
+  Data Path: ram_unit/Mram_data7 to ram_unit/Mram_data1
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDE:C->Q              3   0.447   1.015  reset_unit/cnt_6 (reset_unit/cnt_6)
-     LUT6:I0->O           11   0.203   0.883  rst_SW0 (N4)
-     LUT6:I5->O            3   0.205   0.651  rst_1 (rst1)
-     LUT5:I4->O            1   0.205   0.684  execution_unit/Mmux_next_pc6_SW3 (N36)
-     LUT6:I4->O           18   0.203   1.050  execution_unit/Mmux_next_pc6 (eu_rom_addr<5>)
-     LUT6:I5->O            1   0.205   0.000  rom_unit_Mram_addr[5]_GND_16_o_wide_mux_0_OUT41 (rom_unit/addr[5]_GND_16_o_wide_mux_0_OUT<4>)
-     FDE:D                     0.102          rom_unit/do_4
+     RAMB16BWER:CLKB->DOB0  137   1.850   2.222  ram_unit/Mram_data7 (eu_rom_data<24>)
+     LUT6:I2->O            4   0.203   0.684  execution_unit/_n4252<29>1              \
+       (execution_unit/_n4252)
+     LUT3:I2->O           11   0.205   0.883  execution_unit/Mmux_next_pc_src<0>341   \
+       (execution_unit/Mmux_next_pc_src<0>34)
+     LUT6:I5->O           11   0.205   0.883  execution_unit/Mmux_next_pc_src<0>343_2 \
+       (execution_unit/Mmux_next_pc_src<0>343_1)
+     LUT3:I2->O            1   0.205   0.827  execution_unit/Mmux_next_pc33_SW0 (N290)
+     LUT6:I2->O            8   0.203   0.802  execution_unit/Mmux_next_pc33           \
+       (eu_rom_addr<3>)
+     RAMB16BWER:ADDRB5         0.350          ram_unit/Mram_data1
     ----------------------------------------
-    Total                      5.854ns (1.570ns logic, 4.284ns route)
-                                       (26.8% logic, 73.2% route)
+    Total                      9.521ns (3.221ns logic, 6.300ns route)
+                                       (33.8% logic, 66.2% route)
 \end{verbatim}
-
-\section{Testing the Execution Unit}
-
-A video demonstration of the program can be found at
-\url{http://youtu.be/VDQkSEcJUaA}, showing how the program behaves when
-inputting a correct code, invalid code, and interrupting normal
-program behaviour by resetting the board.
 
 \end{document}
