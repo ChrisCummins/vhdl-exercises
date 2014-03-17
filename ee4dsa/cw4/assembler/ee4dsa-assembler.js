@@ -68,7 +68,7 @@ var assemble = function(data, options, callback) {
         case 'org':
           memoryCounter = requireUint(tokens[0]);
           break;
-        case 'macro':
+        case 'def':
           prog.macros[requireString(tokens[0])] = requireString(tokens[1]);
           break;
         default:
