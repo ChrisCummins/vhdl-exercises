@@ -39,6 +39,12 @@ fs.readFile(argv.input, function (err, data) {
       process.exit(2);
     }
 
-    console.log(data);
+    /* Write assembled output to file */
+    fs.writeFile(argv.output, data, function(err) {
+      if(err) {
+        process.stderr.write('Unable to write file "' + argv.output + '"\n');
+        process.exit(3);
+      }
+    });
   });
 });
