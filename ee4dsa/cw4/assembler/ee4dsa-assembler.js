@@ -78,6 +78,11 @@ var assemble = function(data, options, callback) {
           throw 'Unrecognised directive "' + directive + '"';
         }
 
+        // Exit directive. This can't be in the switch since 'break'
+        // has special meaning within switches.
+        if (directive === 'exit')
+          break;
+
       } else {
 
         if (currentSegment === 'cseg') {
