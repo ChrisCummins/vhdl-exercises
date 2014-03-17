@@ -171,7 +171,7 @@ var assemble = function(data, options, callback) {
           case 'rtio': return '11' + requireByte(t[1]) + requireReg(t[2]) + '00';
           case 'iotr': return '12' + requireReg(t[1]) + requireByte(t[2]) + '00';
           case 'ldil': return '13' + requireReg(t[1]) + require16Address(t[2]);
-          case 'ldiu': return '14' + requireReg(t[1]) + require16Address(t[2]);
+          case 'ldih': return '14' + requireReg(t[1]) + require16Address(t[2]);
           case 'and':  return '15' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
           case 'or':   return '16' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
           case 'xor':  return '17' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
