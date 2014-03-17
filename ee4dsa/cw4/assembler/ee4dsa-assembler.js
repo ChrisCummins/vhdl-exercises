@@ -217,7 +217,7 @@ var assemble = function(data, options, callback) {
           case 'mov':  return '20' + requireReg(t[1]) + requireReg(t[2]) + '00';
           case 'clr':  return '20' + requireReg(t[1]) + '0000';
           case 'inc':  return '21' + requireReg(t[1]) + requireReg(t[1]) + '00';
-          case 'inc':  return '29' + requireReg(t[1]) + requireReg(t[1]) + '00';
+          case 'incs': return '29' + requireReg(t[1]) + requireReg(t[1]) + '00';
           case 'dec':  return '22' + requireReg(t[1]) + requireReg(t[1]) + requireReg(t[1]);
           case 'decs': return '2A' + requireReg(t[1]) + requireReg(t[1]) + requireReg(t[1]);
           case 'add':  return '20' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
