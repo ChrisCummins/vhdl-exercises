@@ -38,7 +38,10 @@ fs.readFile(argv.input, function (err, data) {
     process.exit(2);
   }
 
-  assemble(data.toString(), {}, function(err, data) {
+  assemble(data.toString(), {
+    size: argv.size,
+    idtSize: argv.idt
+  }, function(err, data) {
     if (err) {
       process.stderr.write('fatal: ' + err + '\n');
       process.exit(2);
