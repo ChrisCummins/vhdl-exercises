@@ -36,14 +36,28 @@ var argv = require('optimist')
 eval(fs.readFileSync('ee4dsa-util.js') + '');
 eval(fs.readFileSync('ee4dsa-assembler.js') + '');
 
-/* Open and read input file */
-fs.readFile(argv.asm, function (err, data) {
-  if (err) {
-    process.stderr.write('Unable to read file "' + argv.asm + '"\n');
-    process.exit(2);
+/*
+ * Open and read an input file, returning its contents. Operates
+ * recursively on .input directives.
+ */
+var readAsmFile = function(file) {
+  var lines = fs.readFileSync(file).toString().split('\n');
+
+  /* Nest '.include' directives */
+  for (var i in lines) {
+    var match = lines[i].match(/^([ 	]+)?\.include "(.*)"([ 	]+)?$/);
+
+    if (match) {
+      lines[i] = readAsmFile(match[2]);
+    }
   }
 
-  assemble(data.toString(), {
+  return flatten(lines).join('\n');
+};
+
+try {
+  /* Assemble input file(s) */
+  assemble(readAsmFile(argv.asm), {
     size: argv.size,
     idtSize: argv.idt,
     listOn: argv.list
@@ -55,10 +69,13 @@ fs.readFile(argv.asm, function (err, data) {
 
     /* Write assembled output to file */
     fs.writeFile(argv.output, data, function(err) {
-      if(err) {
+      if (err) {
         process.stderr.write('Unable to write file "' + argv.output + '"\n');
         process.exit(3);
       }
     });
   });
-});
+} catch (err) {
+  process.stderr.write(err);
+  process.exit(2);
+}

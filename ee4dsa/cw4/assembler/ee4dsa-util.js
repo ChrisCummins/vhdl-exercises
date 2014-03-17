@@ -131,3 +131,12 @@ var requireReg = function(word) {
 
   throw 'Failed to parse reg "' + word + '"';
 };
+
+/* Flatten an array */
+var flatten = function(array) {
+  var result = [], self = arguments.callee;
+  array.forEach(function(item) {
+    Array.prototype.push.apply(result, Array.isArray(item) ? self(item) : [item]);
+  });
+  return result;
+};
