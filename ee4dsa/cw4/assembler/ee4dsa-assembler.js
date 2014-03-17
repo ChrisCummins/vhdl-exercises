@@ -79,6 +79,9 @@ var assemble = function(data, options, callback) {
         case 'org':
           memoryCounter = requireUint(tokens[0]);
           break;
+        case 'isr':
+          prog.instructions[requireUint(tokens[0])] = ['jmp', tokens[1]];
+          break;
         case 'def':
           prog.macros[requireString(tokens[0])] = requireString(tokens[1]);
           break;
