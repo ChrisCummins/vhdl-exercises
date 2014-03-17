@@ -27,10 +27,14 @@ var assemble = function(data, options, callback) {
     prog.macros['prog_start'] = prog.idtSize;
 
     // Keep track of where we are in the memory
-    var memoryCounter = 0;
+    var memoryCounter = prog.idtSize;
 
     // Keep track of whether we're dealing with code or data
     var currentSegment = 'cseg';
+
+    // Populate empty interrupt descriptor table
+    for (var i = 0; i < prog.idtSize; i++)
+      prog.instructions[i] = ['reti'];
 
     // Iterate over lines
     for (var i in lines) {
