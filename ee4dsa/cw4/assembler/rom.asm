@@ -16,33 +16,7 @@
 ;; with clearer comments, labels, and data segment. Assembly mnemonics
 ;; based upon AVR instruction set http://www.atmel.com/images/doc0856.pdf.
 
-
-;; Program data
-.dseg
-.org 0x00000042
-
-        foobar:         .BYTE 4         ; RAM[0x42]
-        _pad:           .BYTE 20        ; Offset 20 bytes to 0x48
-        alice:          .BYTE 4         ; RAM[0x48]
-        bob:            .BYTE 4         ; RAM[0x49]
-        cat:            .BYTE 4         ; RAM[0x4A]
-        dave:           .BYTE 4         ; RAM[0x4B]
-
 ;; Start of program code
-.cseg
-.org 0x00000000
-
-interrupt_vectors:
-        jmp     irq0                    ; Interrupt vector 0
-        jmp     irq1                    ; Interrupt vector 1
-        reti                            ; Interrupt vector 2
-        reti                            ; Interrupt vector 3
-        reti                            ; Interrupt vector 4
-        reti                            ; Interrupt vector 5
-        reti                            ; Interrupt vector 6
-        reti                            ; Interrupt vector 7
-
-.org 0x00000008
 
 _main:
         jmp     init
@@ -114,16 +88,20 @@ c_button_release:
         rtm     r34, foobar             ; foobar = r34
         ret
 
-.org 0x00000040
 
-;; Interrupt 0 - toggle LEDs 1 & 2.
+;;; Interrupt 0 - toggle LEDs 1 & 2.
+
+        .isr 0 irq0
+        .org 0x00000040
+
 irq0:
         seto    0x00, 0xFF, 0x0C        ; OUT[0] = (OUT[0] & 0xFF) ^ 0x0C
         reti
 
-.org 0x00000054
 
-;; Initialisation routine:
+        ;; Initialisation routine:
+        .org 0x00000054
+
 init:
         sei                             ; Global interrupt enable
         ldil    r32, 0x0048             ; r32L = 0x0048
@@ -136,7 +114,8 @@ init:
         call    test_stack              ; Call 0x000081
         jmp     a_digit                 ; Jump to 0x000009
 
-.org 0x00000081
+
+        .org 0x00000081
 
 test_stack:
         pshr    SP                      ; Push register SP to stack
@@ -149,9 +128,10 @@ test_stack:
         popr    NULL                    ; Pop stack to register NULL
         ret
 
-.org 0x00000090
+        ;; Interrupt 1 - thrashes the register file a bit and writes a couple of ports
+        .isr    1 irq1
+        .org    0x90
 
-;; Interrupt 1 - thrashes the register file a bit and writes a couple of ports
 irq1:
         mtr     r16, 0x000043           ; r16 = RAM[0x000043]
         ldil    r17, 0x0004             ; r17L = 0x0004
@@ -169,4 +149,13 @@ irq1:
         imtr    r20, r16, NULL          ; r20 = RAM[r16 + NULL]
         rtm     r20, 0x000043           ; RAM[0x000043] = r20
 
-;; End of program code
+;;; Program data
+        .dseg
+        .org 0x42
+
+foobar: .byte 4                         ; RAM[0x42]
+_pad:   .byte 20                        ; Offset 20 bytes to 0x48
+alice:  .word 1                         ; RAM[0x48]
+bob:    .word 1                         ; RAM[0x49]
+cat:    .word 1                         ; RAM[0x4A]
+dave:   .word 1                         ; RAM[0x4B]
