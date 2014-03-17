@@ -71,6 +71,9 @@ var assemble = function(data, options, callback) {
         case 'def':
           prog.macros[requireString(tokens[0])] = requireString(tokens[1]);
           break;
+        case 'undef':
+          delete prog.macros[requireString(tokens[0])];
+          break;
         default:
           callback('Unrecognised directive "' + directive + '"');
         }
