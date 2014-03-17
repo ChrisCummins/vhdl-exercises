@@ -20,10 +20,6 @@ var assemble = function(data, options, callback) {
     };
 
     // Populate useful values into macro table
-    prog.macros['null'] = 'r0';
-    prog.macros['pc'] = 'r1';
-    prog.macros['sp'] = 'r2';
-    prog.macros['sreg'] = 'r3';
     prog.macros['ram_size'] = prog.size;
     prog.macros['idt_size'] = prog.idtSize;
     prog.macros['idt_start'] = 0;
