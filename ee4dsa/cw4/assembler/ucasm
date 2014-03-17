@@ -20,6 +20,11 @@ var argv = require('optimist')
       alias: 's',
       default: 4096,
       desc: 'Set the size of the output RAM'
+    })
+    .option('idt', {
+      alias: 'd',
+      default: 8,
+      desc: 'Set the size of the interrupt descriptor table'
     }).argv;
 
 /* Import the assembly routines */
