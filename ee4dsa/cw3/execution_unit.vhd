@@ -428,6 +428,7 @@ begin
               next_pc_src      <= current                      after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
+              -- FIXME: Switch!
               reg_a_addr       <= rom_data_byte1               after gate_delay;
               reg_a_wr         <= '1'                          after gate_delay;
               reg_a_di         <= ram_rdata                    after gate_delay;
@@ -462,6 +463,7 @@ begin
               next_pc_src      <= current                      after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
+              -- FIXME: Switch!
               reg_a_addr       <= rom_data_byte1               after gate_delay;
               reg_a_di         <= ram_rdata                    after gate_delay;
               reg_a_wr         <= '1'                          after gate_delay;
@@ -510,6 +512,7 @@ begin
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
               next_sp          <= current_sp + 1               after gate_delay;
+              -- TODO: Write!
           end case;
 
         when 16#11# =>   -- RTIO Register to IO port
@@ -535,6 +538,7 @@ begin
             when REG_SR =>
               next_sr          <= byte_word_pad & port_val     after gate_delay;
             when others =>
+              -- FIXME: Switch!
               reg_a_addr       <= rom_data_byte1               after gate_delay;
               reg_a_di         <= byte_null & byte_null & byte_null & port_val
                                                                after gate_delay;
@@ -554,6 +558,7 @@ begin
               else
                 ldi := byte_null & byte_null & rom_data_byte2 & rom_data_byte3;
               end if;
+              -- FIXME: Shift!
               reg_a_addr       <= rom_data_byte1               after gate_delay;
               reg_a_di         <= ldi                          after gate_delay;
               reg_a_wr         <= '1'                          after gate_delay;
