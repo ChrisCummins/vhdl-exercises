@@ -9,6 +9,7 @@ var assemble = function(data, options, callback) {
   var asm2prog = function(lines) {
     var prog = {
       size: options.size || 4096,
+      idtSize: options.idtSize || 8,
       instructions: {},
       memory: {},
       labels: [],
