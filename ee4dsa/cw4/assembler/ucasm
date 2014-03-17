@@ -23,12 +23,8 @@ var argv = require('optimist')
     }).argv;
 
 /* Import the assembly routines */
-try {
-  eval(fs.readFileSync('ee4dsa-assembler.js') + '');
-} catch (err) {
-  process.stderr.write('Failed to load library "ee4dsa-assembler.js"\n');
-  process.exit(127);
-}
+eval(fs.readFileSync('ee4dsa-util.js') + '');
+eval(fs.readFileSync('ee4dsa-assembler.js') + '');
 
 /* Open and read input file */
 fs.readFile(argv.input, function (err, data) {
