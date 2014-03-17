@@ -21,7 +21,10 @@ function pad(n, width, z, prefix) {
  * Casts a decimal integer to a hexadecimal string.
  */
 var int2hex = function(n) {
-  return n !== undefined ? new Number(n).toString(16).toUpperCase() : '';
+  if (n !== undefined && !isNaN(n))
+      return new Number(n).toString(16).toUpperCase();
+
+  throw 'Failed to convert number "' + n + '"';
 };
 
 /*
@@ -46,7 +49,12 @@ var int2hex16 = function(n) {
 };
 
 var hex2int = function(n) {
-  return parseInt(n.replace(/^0x/, ''), 16);
+  var h = parseInt(n.replace(/^0x/, ''), 16);
+
+  if (isNaN(h))
+    throw 'Failed to parse integer "' + n + '"';
+
+  return h;
 };
 
 /*
