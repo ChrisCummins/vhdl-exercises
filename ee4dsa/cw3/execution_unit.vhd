@@ -72,7 +72,7 @@ end execution_unit;
 architecture syn of execution_unit is
 
   -- Program counter multiplexer inputs
-  type    pc_mux_src is (current, increment, immediate, interrupt, stack, port_in, bitwise_op, alu);
+  type    pc_mux_src is (current, increment, immediate, interrupt, ram, port_in, bitwise_op, alu);
 
   subtype ports               is byte_vector(ports_out - 1             downto 0);
   subtype port_index          is unsigned(byte'length - 1              downto 0);
@@ -397,7 +397,7 @@ begin
               next_pc_src      <= current                      after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
-              next_pc_src      <= stack                        after gate_delay;
+              next_pc_src      <= ram                          after gate_delay;
               next_sp          <= current_sp + 1               after gate_delay;
           end case;
 
@@ -409,7 +409,7 @@ begin
               next_pc_src      <= current                      after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
-              next_pc_src      <= stack                        after gate_delay;
+              next_pc_src      <= ram                          after gate_delay;
               next_sp          <= current_sp + 1               after gate_delay;
               next_sr(15 downto 0) <= ram_rdata_sr             after gate_delay;
           end case;
@@ -428,10 +428,19 @@ begin
               next_pc_src      <= current                      after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
-              -- FIXME: Switch!
-              reg_a_addr       <= rom_data_byte1               after gate_delay;
-              reg_a_wr         <= '1'                          after gate_delay;
-              reg_a_di         <= ram_rdata                    after gate_delay;
+              case rom_data_byte1_int is
+                when REG_NULL =>
+                when REG_PC =>
+                  next_pc_src  <= ram                          after gate_delay;
+                when REG_SP =>
+                  next_sp      <= unsigned(ram_rdata_pc)       after gate_delay;
+                when REG_SR =>
+                  next_sr      <= ram_rdata                    after gate_delay;
+                when others =>
+                  reg_a_addr   <= rom_data_byte1               after gate_delay;
+                  reg_a_di     <= ram_rdata                    after gate_delay;
+                  reg_a_wr     <= '1'                          after gate_delay;
+              end case;
           end case;
 
         when 16#0C# =>   -- RTM Register to memory
@@ -463,10 +472,19 @@ begin
               next_pc_src      <= current                      after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
-              -- FIXME: Switch!
-              reg_a_addr       <= rom_data_byte1               after gate_delay;
-              reg_a_di         <= ram_rdata                    after gate_delay;
-              reg_a_wr         <= '1'                          after gate_delay;
+              case rom_data_byte1_int is
+                when REG_NULL =>
+                when REG_PC =>
+                  next_pc_src  <= ram                          after gate_delay;
+                when REG_SP =>
+                  next_sp      <= unsigned(ram_rdata_pc)       after gate_delay;
+                when REG_SR =>
+                  next_sr      <= ram_rdata                    after gate_delay;
+                when others =>
+                  reg_a_addr   <= rom_data_byte1               after gate_delay;
+                  reg_a_di     <= ram_rdata                    after gate_delay;
+                  reg_a_wr     <= '1'                          after gate_delay;
+              end case;
           end case;
 
         when 16#0E# =>   -- RTIM Register to indexed memory
@@ -512,7 +530,19 @@ begin
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
               next_sp          <= current_sp + 1               after gate_delay;
-              -- TODO: Write!
+              case rom_data_byte1_int is
+                when REG_NULL =>
+                when REG_PC =>
+                  next_pc_src  <= ram                          after gate_delay;
+                when REG_SP =>
+                  next_sp      <= unsigned(ram_rdata_pc)       after gate_delay;
+                when REG_SR =>
+                  next_sr      <= ram_rdata                    after gate_delay;
+                when others =>
+                  reg_a_addr   <= rom_data_byte1               after gate_delay;
+                  reg_a_di     <= ram_rdata                    after gate_delay;
+                  reg_a_wr     <= '1'                          after gate_delay;
+              end case;
           end case;
 
         when 16#11# =>   -- RTIO Register to IO port
@@ -538,7 +568,6 @@ begin
             when REG_SR =>
               next_sr          <= byte_word_pad & port_val     after gate_delay;
             when others =>
-              -- FIXME: Switch!
               reg_a_addr       <= rom_data_byte1               after gate_delay;
               reg_a_di         <= byte_null & byte_null & byte_null & port_val
                                                                after gate_delay;
@@ -558,10 +587,23 @@ begin
               else
                 ldi := byte_null & byte_null & rom_data_byte2 & rom_data_byte3;
               end if;
-              -- FIXME: Shift!
-              reg_a_addr       <= rom_data_byte1               after gate_delay;
-              reg_a_di         <= ldi                          after gate_delay;
-              reg_a_wr         <= '1'                          after gate_delay;
+
+              next_bitwise     <= ldi                          after gate_delay;
+
+              case rom_data_byte1_int is
+                when REG_NULL =>
+                when REG_PC =>
+                  next_pc_src  <= bitwise_op                   after gate_delay;
+                when REG_SP =>
+                  next_sp      <= unsigned(ldi(program_counter'length - 1 downto 0))
+                                                               after gate_delay;
+                when REG_SR =>
+                  next_sr      <= ldi                          after gate_delay;
+                when others =>
+                  reg_a_addr   <= rom_data_byte1               after gate_delay;
+                  reg_a_di     <= ldi                          after gate_delay;
+                  reg_a_wr     <= '1'                          after gate_delay;
+              end case;
           end case;
 
         when 16#15# to 16#17# => -- Bitwise operations AND, OR, XORR
@@ -776,7 +818,7 @@ begin
         next_pc <= unsigned(rom_data_pc)                       after gate_delay;
       when interrupt =>  -- Set program counter to interrupt vector
         next_pc <= interrupt_vector_pc                         after gate_delay;
-      when stack =>      -- Read program counter from RAM
+      when ram =>        -- Read program counter from RAM
         next_pc <= unsigned(ram_rdata_pc)                      after gate_delay;
       when port_in =>    -- Read program counter from IO port
         next_pc <= unsigned(byte_pc_pad) & unsigned(io_in(port_index)) after gate_delay;
