@@ -1,0 +1,22 @@
+{
+  "name": "ucasm",
+  "description": "Aston University EE4DSA assembler",
+  "version": "0.0.1",
+  "author": {
+    "name": "Chris Cummins",
+    "email": "chrisc.101@gmail.com"
+  },
+  "license": "GPL v3",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ChrisCummins/vhdl-exercises"
+  },
+  "dependencies": {
+    "optimist" : ">=0.2.6 <0.3",
+    "lazy": "~1.0.11"
+  }
+}

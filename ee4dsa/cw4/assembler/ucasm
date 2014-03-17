@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+var lazy = require('lazy');
+var fs  = require('fs');
+
+var argv = require('optimist')
+    .usage('Usage: $0 <assembly source>')
+    .wrap(80)
+    .demand('input')
+    .option('input', {
+      alias: 'i',
+      desc: 'Input source path'
+    })
+    .option('output', {
+      alias: 'o',
+      default: 'a.out',
+      desc: 'Set the destination path'
+    })
+    .option('size', {
+      alias: 's',
+      default: 4096,
+      desc: 'Set the size of the output RAM'
+    }).argv;
+
+/* Import the assembly routines */
+try {
+  eval(fs.readFileSync('ee4dsa-assembler.js') + '');
+} catch (err) {
+  process.stderr.write('Failed to load library "ee4dsa-assembler.js"\n');
+  process.exit(127);
+}
+
+/* Open and read input file */
+fs.readFile(argv.input, function (err, data) {
+  if (err) {
+    process.stderr.write('Unable to read file "' + argv.input + '"\n');
+    process.exit(2);
+  }
+
+  assemble(data.toString(), {}, function(err, data) {
+    if (err) {
+      process.stderr.write('fatal: ' + err + '\n');
+      process.exit(2);
+    }
+
+    console.log(data);
+  });
+});
