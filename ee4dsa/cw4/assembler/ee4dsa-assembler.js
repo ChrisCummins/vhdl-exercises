@@ -185,6 +185,28 @@ var assemble = function(data, options, callback) {
           case 'xor':  return '17' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
           case 'lsr':  return '18' + requireReg(t[1]) + requireReg(t[2]) + requireByte(t[3]);
           case 'lsl':  return '19' + requireReg(t[1]) + requireReg(t[2]) + requireByte(t[3]);
+          case 'equ':  return '1A00' + requireReg(t[1]) + requireReg(t[2]);
+          case 'neq':  return '1A01' + requireReg(t[1]) + requireReg(t[2]);
+          case 'lt':   return '1A02' + requireReg(t[1]) + requireReg(t[2]);
+          case 'lts':  return '1B02' + requireReg(t[1]) + requireReg(t[2]);
+          case 'lte':  return '1A03' + requireReg(t[1]) + requireReg(t[2]);
+          case 'ltes': return '1B03' + requireReg(t[1]) + requireReg(t[2]);
+          case 'gt':   return '1A04' + requireReg(t[1]) + requireReg(t[2]);
+          case 'gts':  return '1B04' + requireReg(t[1]) + requireReg(t[2]);
+          case 'gte':  return '1A05' + requireReg(t[1]) + requireReg(t[2]);
+          case 'gtes': return '1B05' + requireReg(t[1]) + requireReg(t[2]);
+          case 'eqz':  return '1A06' + requireReg(t[1]) + '00';
+          case 'nez':  return '1A07' + requireReg(t[1]) + '00';
+          case 'mov':  return '20' + requireReg(t[1]) + requireReg(t[2]) + '00';
+          case 'clr':  return '20' + requireReg(t[1]) + '0000';
+          case 'inc':  return '21' + requireReg(t[1]) + requireReg(t[1]) + '00';
+          case 'inc':  return '29' + requireReg(t[1]) + requireReg(t[1]) + '00';
+          case 'dec':  return '22' + requireReg(t[1]) + requireReg(t[1]) + requireReg(t[1]);
+          case 'decs': return '2A' + requireReg(t[1]) + requireReg(t[1]) + requireReg(t[1]);
+          case 'add':  return '20' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
+          case 'ads':  return '28' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
+          case 'sub':  return '24' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
+          case 'subs': return '2B' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
 
           default:     throw 'Unrecognised mnemonic "' + t[0] + '"';
           }
