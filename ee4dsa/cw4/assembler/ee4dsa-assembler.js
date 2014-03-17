@@ -75,7 +75,7 @@ var assemble = function(data, options, callback) {
           delete prog.macros[requireString(tokens[0])];
           break;
         default:
-          callback('Unrecognised directive "' + directive + '"');
+          throw 'Unrecognised directive "' + directive + '"';
         }
 
       } else {
@@ -109,7 +109,7 @@ var assemble = function(data, options, callback) {
               case '.word':
                 return 1;
               default:
-                callback('Unrecognised data type "' + type + '"');
+                throw 'Unrecognised data type "' + type + '"';
               }
             })(tokens[1]);
             var length = requireUint(tokens[2]);
@@ -122,7 +122,7 @@ var assemble = function(data, options, callback) {
             if (tokens.length < 1)
               continue;
           } else
-            callback('Failed to parse data segment token "' + tokens[0] + '"');
+            throw 'Failed to parse data segment token "' + tokens[0] + '"';
 
         }
       }
