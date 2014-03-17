@@ -109,7 +109,7 @@ c_button_release:
         tsti    0x01, 0x20, 0x00        ; Wait until centre button released
         brts    c_button_release
         mtr     r32, foobar             ; r32 = foobar
-        ldl     r33, 0x0008             ; r33L = 0x0008
+        ldil    r33, 0x0008             ; r33L = 0x0008
         imtr    r34, r32, r33           ; r34 = RAM[r32 + r33]
         rtm     r34, foobar             ; foobar = r34
         ret
@@ -126,9 +126,9 @@ irq0:
 ;; Initialisation routine:
 init:
         sei                             ; Global interrupt enable
-        ldl     r32, 0x0048             ; r32L = 0x0048
+        ldil    r32, 0x0048             ; r32L = 0x0048
         rtm     r32, foobar             ; foobar = r32
-        ldl     r32, 0x0020             ; r32L = 0x0020
+        ldil    r32, 0x0020             ; r32L = 0x0020
         rtm     r32, alice              ; alice = r32
         rtm     r32, bob                ; bob = r32
         rtm     r32, cat                ; cat = r32
@@ -154,14 +154,14 @@ test_stack:
 ;; Interrupt 1 - thrashes the register file a bit and writes a couple of ports
 irq1:
         mtr     r16, 0x000043           ; r16 = RAM[0x000043]
-        ldl     r17, 0x0004             ; r17L = 0x0004
-        ldl     r18, 0x0008             ; r18L = 0x0008
+        ldil    r17, 0x0004             ; r17L = 0x0004
+        ldil    r18, 0x0008             ; r18L = 0x0008
         imtr    r19, r16, r17           ; r19 = RAM[r16 + r17]
         imtr    r20, r16, r18           ; r20 = RAM[r16 + r18]
-        ldl     r21, 0x0060             ; r21L = 0x0060
+        ldil    r21, 0x0060             ; r21L = 0x0060
         imtr    r22, r21, r19           ; r22 = RAM[r21 + r19]
         iotr    r23, 0x00               ; r23 = OUT[0]
-        srlr    r24, r23, r4            ; r24 = r23 >> r4
+        lsr     r24, r23, 4             ; r24 = r23 >> 4
         mtr     r25, foobar             ; r25 = foobar
         rtim    r25, NULL, r24          ; RAM[NULL + r24] = r25
         rtio    0x01, r20               ; OUT[1] = r20
