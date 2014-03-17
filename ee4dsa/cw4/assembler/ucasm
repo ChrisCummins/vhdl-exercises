@@ -6,9 +6,9 @@ var fs  = require('fs');
 var argv = require('optimist')
     .usage('Usage: $0 <assembly source>')
     .wrap(80)
-    .demand('input')
-    .option('input', {
-      alias: 'i',
+    .demand('asm')
+    .option('asm', {
+      alias: 'a',
       desc: 'Input source path'
     })
     .option('output', {
@@ -22,9 +22,14 @@ var argv = require('optimist')
       desc: 'Set the size of the output RAM'
     })
     .option('idt', {
-      alias: 'd',
+      alias: 'i',
       default: 8,
       desc: 'Set the size of the interrupt descriptor table'
+    })
+    .option('list', {
+      alias: 'l',
+      default: false,
+      desc: 'Generate annotated list output'
     }).argv;
 
 /* Import the assembly routines */
@@ -32,15 +37,16 @@ eval(fs.readFileSync('ee4dsa-util.js') + '');
 eval(fs.readFileSync('ee4dsa-assembler.js') + '');
 
 /* Open and read input file */
-fs.readFile(argv.input, function (err, data) {
+fs.readFile(argv.asm, function (err, data) {
   if (err) {
-    process.stderr.write('Unable to read file "' + argv.input + '"\n');
+    process.stderr.write('Unable to read file "' + argv.asm + '"\n');
     process.exit(2);
   }
 
   assemble(data.toString(), {
     size: argv.size,
-    idtSize: argv.idt
+    idtSize: argv.idt,
+    listOn: argv.list
   }, function(err, data) {
     if (err) {
       process.stderr.write('fatal: ' + err + '\n');
