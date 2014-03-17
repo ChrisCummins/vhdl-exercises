@@ -1,13 +1,16 @@
 /*
  * data - String
  * options - Object
+ *    listOn - Boolean, whether to generate annotated list
  *    size - Number
+ *    idtSize - Number
  * callback - Function(err, data)
  */
 var assemble = function(data, options, callback) {
 
   var asm2prog = function(lines) {
     var prog = {
+      listOn: options.listOn || false,
       size: options.size || 4096,
       idtSize: options.idtSize || 8,
       instructions: {},
@@ -228,6 +231,13 @@ var assemble = function(data, options, callback) {
       } else {
         // Insert blank data
         ram[i] = int2hex32(0);
+      }
+
+      // Annotate the listing if required
+      if (prog.listOn) {
+        ram[i] += ' -- ' + int2hex32(i);
+        if (prog.instructions[i])
+          ram[i] += ' ' + prog.instructions[i].join(' ');
       }
     }
 
