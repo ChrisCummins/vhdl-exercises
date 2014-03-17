@@ -26,14 +26,14 @@ var assemble = function(data, options, callback) {
     var currentSegment = 'cseg';
 
     // Iterate over lines
-    lines.forEach(function(line) {
+    for (var i in lines) {
 
       // Pre-process: trim comments & white space, lower case the text
-      line = line.replace(/;.*/, '').trim().toLowerCase();
+      var line = lines[i].replace(/;.*/, '').trim().toLowerCase();
 
       // Skip empty lines
       if (line === '')
-        return;
+        continue;
 
       // Tokenize each line
       var tokens = (function(line) {
@@ -87,7 +87,7 @@ var assemble = function(data, options, callback) {
 
             // Continue processing only if there are tokens remaining
             if (tokens.length < 1)
-              return;
+              continue;
           }
 
           // Add instruction to instructions map
@@ -117,13 +117,13 @@ var assemble = function(data, options, callback) {
 
             // Continue processing only if there are tokens remaining
             if (tokens.length < 1)
-              return;
+              continue;
           } else
             callback('Failed to parse data segment token "' + tokens[0] + '"');
 
         }
       }
-    });
+    }
 
     // Second pass, resolving memory and label names
     for (var i in prog.instructions) {
