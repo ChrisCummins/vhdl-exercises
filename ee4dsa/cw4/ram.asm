@@ -1,1 +1,1 @@
-fib.s
+fib.asm

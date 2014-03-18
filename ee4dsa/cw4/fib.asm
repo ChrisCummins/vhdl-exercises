@@ -8,7 +8,7 @@
 ;;; ========================================================
 ;;; Begin code:
 
-        .include "stdlib.s"
+        .include "stdlib.asm"
 
         .cseg
 
