@@ -164,7 +164,7 @@ module.exports = function(data, options, callback) {
     return prog;
   };
 
-  var prog2ram = function(prog, size) {
+  var prog2ram = function(prog) {
 
     var ram = new Array(prog.size);
 
