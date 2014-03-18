@@ -70,7 +70,7 @@ module.exports.hex2int = hex2int;
  *   macros - a map of macros -> expanded text
  */
 var unMacrofy = function(word, macros) {
-  return macros[word] !== undefined ? unMacrofy(macros[word], macros) : word;
+  return macros[word] !== undefined ? unMacrofy(macros[word], macros) : '' + word;
 };
 module.exports.unMacrofy = unMacrofy;
 
