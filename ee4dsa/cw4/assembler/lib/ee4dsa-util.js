@@ -173,6 +173,59 @@ var perc = function(n) {
 };
 module.exports.perc = perc;
 
+/* Resolve numerical expressions with a set of tokens */
+var resolveExpressions = function(tokens) {
+  var t = [], token, opA = '', operator = '', opB = '';
+
+  // Iterate over every token
+  for (var i = 0; i < tokens.length; i++) {
+    token = tokens[i];
+
+    // Convert Hex digits to numbers
+    if (token.match(/^0x[0-9a-f]+$/)) {
+      var n = parseInt(token.replace(/^0x/, ''), 16);
+
+      if (!isNaN(n))
+        token = n;
+    } else if (token.match(/^[-+]?[0-9]+$/)) {
+      // Convert numbers to numbers
+      var n = parseInt(token);
+
+      if (!isNaN(n))
+        token = n;
+    }
+
+    // Hunt for the first numerical token
+    if (opA === '' && typeof token === 'number' && i < tokens.length - 2)
+      opA = token;
+    else if (opA !== '' && operator === '') {
+      if (token.toString().match(/^[\+\-\*^\/]$/))
+        operator = token
+      else {
+        t.push('' + opA);
+        t.push(token);
+        opA = '';
+      }
+    } else if (opA !== '' && operator !== '') {
+      if (typeof token === 'number') {
+        opB = token;
+        t.push('' + eval(opA + operator + opB));
+      } else {
+        t.push('' + opA);
+        t.push(operator);
+        t.push('' + opB);
+        opA = '';
+        operator = '';
+      }
+    } else {
+      t.push('' + token);
+    }
+  }
+
+  return t;
+};
+module.exports.resolveExpressions = resolveExpressions;
+
 /* Tokenize a row */
 var tokenize = function(str, macros) {
   macros = macros || [];
@@ -206,6 +259,9 @@ var tokenize = function(str, macros) {
     if (token !== '')
       tokens.push(token);
   });
+
+  // Resolve numerical expressions
+  tokens = resolveExpressions(tokens);
 
   return tokens;
 };
