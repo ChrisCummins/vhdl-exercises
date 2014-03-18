@@ -162,7 +162,7 @@ module.exports = function(data, options, callback) {
       }
     }
 
-    // Second pass, resolving memory and label names
+    // Resolve memory and label names in instructions
     for (var i in prog.instructions) {
       var instruction = prog.instructions[i];
 
