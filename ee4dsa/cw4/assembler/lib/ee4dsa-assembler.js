@@ -13,28 +13,28 @@ module.exports = function(data, options, callback) {
   var asm2prog = function(lines) {
     var prog = {
       size: options.size || 4096,
-      idtSize: options.idtSize || 8,
-      instructions: {},
-      memory: {},
+      idt_size: options.idtSize || 8,
+      cseg: {},
+      dseg: {},
       labels: [],
       macros: {}
     };
 
     // Populate useful values into macro table
     prog.macros['ram_size'] = prog.size;
-    prog.macros['idt_size'] = prog.idtSize;
+    prog.macros['idt_size'] = prog.idt_size;
     prog.macros['idt_start'] = 0;
-    prog.macros['prog_start'] = prog.idtSize;
+    prog.macros['prog_start'] = prog.idt_size;
 
     // Keep track of where we are in the memory
-    var memoryCounter = prog.idtSize;
+    var memoryCounter = prog.idt_size;
 
     // Keep track of whether we're dealing with code or data
     var currentSegment = 'cseg';
 
     // Populate empty interrupt descriptor table
-    for (var i = 0; i < prog.idtSize; i++)
-      prog.instructions[i] = ['reti'];
+    for (var i = 0; i < prog.idt_size; i++)
+      prog.cseg[i] = ['reti'];
 
     // Iterate over lines
     for (var i in lines) {
@@ -95,7 +95,7 @@ module.exports = function(data, options, callback) {
           memoryCounter = u.requireUint(tokens[0]);
           break;
         case 'isr':
-          prog.instructions[requireUint(tokens[0])] = ['jmp', tokens[1]];
+          prog.cseg[requireUint(tokens[0])] = ['jmp', tokens[1]];
           break;
         case 'def':
           prog.macros[u.requireString(tokens[0])] = u.requireString(tokens[1]);
@@ -128,7 +128,7 @@ module.exports = function(data, options, callback) {
           }
 
           // Add instruction to instructions map
-          prog.instructions[memoryCounter] = tokens;
+          prog.cseg[memoryCounter] = tokens;
           memoryCounter++;
         } else if (currentSegment === 'dseg') {
           // DATA
@@ -149,7 +149,7 @@ module.exports = function(data, options, callback) {
             var length = u.requireUint(tokens[2]);
 
             // Add reference in memory table
-            prog.memory[tokens.shift().replace(/:$/, '')] = memoryCounter;
+            prog.dseg[tokens.shift().replace(/:$/, '')] = memoryCounter;
             memoryCounter += Math.ceil(size * length);
 
             // Continue processing only if there are tokens remaining
@@ -163,23 +163,25 @@ module.exports = function(data, options, callback) {
     }
 
     // Resolve memory and label names in instructions
-    for (var i in prog.instructions) {
-      var instruction = prog.instructions[i];
+    for (var i in prog.cseg) {
+      var instruction = prog.cseg[i];
 
       for (var j in instruction) {
         var token = instruction[j];
 
-        if (prog.memory[token] !== undefined)      // Memory
-          instruction[j] = prog.memory[token];
+        if (prog.dseg[token] !== undefined)      // Memory
+          instruction[j] = prog.dseg[token];
         else if (prog.labels[token] !== undefined) // Label
           instruction[j] = prog.labels[token];
       }
     }
 
     // Write metadata
-    prog.cseg_size = u.len(prog.instructions);
-    prog.dseg_size = u.len(prog.memory);
-    prog.util = (prog.cseg_size + prog.dseg_size) / prog.size;
+    prog.cseg_size = u.len(prog.cseg);
+    prog.cseg_util = prog.cseg_size / prog.size;
+    prog.dseg_size = u.len(prog.dseg);
+    prog.dseg_util = prog.dseg_size / prog.size;
+    prog.util = prog.cseg_util + prog.dseg_util;
 
     return prog;
   };
@@ -215,7 +217,7 @@ module.exports = function(data, options, callback) {
 
     for (var i = 0; i < ram.length; i++) {
       // Lookup memory address in program
-      if (prog.instructions[i] !== undefined) {
+      if (prog.cseg[i] !== undefined) {
         ram[i] = (function(t) {
           switch (t[0]) {
           case 'nop':  return '00000000';
@@ -269,7 +271,7 @@ module.exports = function(data, options, callback) {
 
           default:     throw 'Unrecognised mnemonic "' + t[0] + '"';
           }
-        })(prog.instructions[i]);
+        })(prog.cseg[i]);
       } else {
         // Insert blank data
         ram[i] = u.int2hex32(0);
@@ -278,8 +280,8 @@ module.exports = function(data, options, callback) {
       // Annotate the listing if required
       if (options.annotate) {
         ram[i] += ' -- ' + int2hex32(i);
-        if (prog.instructions[i])
-          ram[i] += ' ' + prog.instructions[i].join(' ');
+        if (prog.cseg[i])
+          ram[i] += ' ' + prog.cseg[i].join(' ');
       }
     }
 
