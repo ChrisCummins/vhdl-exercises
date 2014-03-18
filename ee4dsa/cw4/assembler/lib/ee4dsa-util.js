@@ -172,3 +172,41 @@ var perc = function(n) {
   return new Number(n) * 100 + '%';
 };
 module.exports.perc = perc;
+
+/* Tokenize a row */
+var tokenize = function(str, macros) {
+  macros = macros || [];
+  var tokens = [];
+
+  /*
+   * The expandToken flag is used to determine whether to lookup
+   * the current token in the macro table or to skip it. This is
+   * needed for the .UNDEF directive, which requires the
+   * argument token to be interpreted literally so as to be
+   * removed from the macro table.
+   */
+  var expandToken = true;
+
+  // Split str into words
+  str.split(/[ 	]+/).forEach(function(token) {
+
+    // Remove commas
+    token = token.replace(/,$/, '');
+
+    // Expand macro
+    if (expandToken)
+      token = unMacrofy(token, macros);
+    else
+      expandToken = true;
+
+    // Don't expand the token after .UNDEF directive
+    if (token === '.undef')
+      expandToken = false;
+
+    if (token !== '')
+      tokens.push(token);
+  });
+
+  return tokens;
+};
+module.exports.tokenize = tokenize;

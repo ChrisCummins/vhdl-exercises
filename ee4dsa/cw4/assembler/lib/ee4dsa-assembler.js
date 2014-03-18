@@ -48,39 +48,7 @@ module.exports = function(data, options, callback) {
         continue;
 
       // Tokenize each line
-      var tokens = (function(line) {
-        var tokens = [];
-        /*
-         * The expandToken flag is used to determine whether to lookup
-         * the current token in the macro table or to skip it. This is
-         * needed for the .UNDEF directive, which requires the
-         * argument token to be interpreted literally so as to be
-         * removed from the macro table.
-         */
-        var expandToken = true;
-
-        // Split line into words
-        line.split(/[ 	]+/).forEach(function(token) {
-
-          // Remove commas
-          token = token.replace(/,$/, '');
-
-          // Expand macro
-          if (expandToken)
-            token = u.unMacrofy(token, prog.macros);
-          else
-            expandToken = true;
-
-          // Don't expand the token after .UNDEF directive
-          if (token === '.undef')
-            expandToken = false;
-
-          if (token !== '')
-            tokens.push(token);
-        });
-
-        return tokens;
-      })(line);
+      var tokens = u.tokenize(line, prog.macros);
 
       if (tokens[0].match(/^\./)) {
         // DIRECTIVE
