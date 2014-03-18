@@ -59,19 +59,19 @@ _stdlib_init:
 
         ;; Press and release the up button.
 btnu_press:
-        tsti    BUTTONS, BTNC, BTNC
+        tsti    BUTTONS, BTNU, BTNU
         brts    btnu_press
 _btnu_press_2:
-        tsti    BUTTONS, BTNC, BTNC
+        tsti    BUTTONS, BTNU, 0x00
         brts    _btnu_press_2
         ret
 
         ;; Press and release the down button.
 btnd_press:
-        tsti    BUTTONS, BTNC, BTNC
+        tsti    BUTTONS, BTND, BTND
         brts    btnd_press
 _btnd_press_2:
-        tsti    BUTTONS, BTNC, BTNC
+        tsti    BUTTONS, BTND, 0x00
         brts    _btnd_press_2
         ret
 
@@ -80,25 +80,25 @@ btnc_press:
         tsti    BUTTONS, BTNC, BTNC
         brts    btnc_press
 _btnc_press_2:
-        tsti    BUTTONS, BTNC, BTNC
+        tsti    BUTTONS, BTNC, 0x00
         brts    _btnc_press_2
         ret
 
         ;; Press and release the left button.
 btnl_press:
-        tsti    BUTTONS, BTNC, BTNC
+        tsti    BUTTONS, BTNL, BTNL
         brts    btnl_press
 _btnl_press_2:
-        tsti    BUTTONS, BTNC, BTNC
+        tsti    BUTTONS, BTNL, 0x00
         brts    _btnl_press_2
         ret
 
         ;; Press and release the right button.
 btnr_press:
-        tsti    BUTTONS, BTNC, BTNC
+        tsti    BUTTONS, BTNR, BTNR
         brts    btnr_press
 _btnr_press_2:
-        tsti    BUTTONS, BTNC, BTNC
+        tsti    BUTTONS, BTNR, 0x00
         brts    _btnr_press_2
         ret
 
