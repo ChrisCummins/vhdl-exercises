@@ -166,3 +166,7 @@ _div_3:
         pshr    r19             ; Push result
         pshr    r16             ; Push return address
         ret
+
+;;; Fall-through in case the including library doesn't implement it's
+;;; own entry point:
+_MAIN_ENTRY_POINT:
