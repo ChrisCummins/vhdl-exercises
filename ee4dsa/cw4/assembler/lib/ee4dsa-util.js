@@ -155,3 +155,14 @@ var flatten = function(array) {
   return result;
 };
 module.exports.flatten = flatten;
+
+/* Count the number of items in object */
+var len = function(obj) {
+  counter = 0;
+
+  for (var i in obj)
+    counter++;
+
+  return counter;
+};
+module.exports.len = len;

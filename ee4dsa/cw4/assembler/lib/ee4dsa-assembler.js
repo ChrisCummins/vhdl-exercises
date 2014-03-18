@@ -176,6 +176,11 @@ module.exports = function(data, options, callback) {
       }
     }
 
+    // Write metadata
+    prog.cseg_size = u.len(prog.instructions);
+    prog.dseg_size = u.len(prog.memory);
+    prog.util = (prog.cseg_size + prog.dseg_size) / prog.size;
+
     return prog;
   };
 
