@@ -293,7 +293,7 @@ module.exports = function(data, options, callback) {
     var prog = asm2prog(data.split('\n'));
 
     // Second pass:
-    callback(0, { list: prog2list(prog), ram: prog2ram(prog) });
+    callback(0, { prog: prog, ram: prog2ram(prog), list: prog2list(prog) });
   } catch (err) {
     callback(err);
   }

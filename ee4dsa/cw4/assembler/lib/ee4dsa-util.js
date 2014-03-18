@@ -166,3 +166,9 @@ var len = function(obj) {
   return counter;
 };
 module.exports.len = len;
+
+/* Convert ratio to percentage */
+var perc = function(n) {
+  return new Number(n) * 100 + '%';
+};
+module.exports.perc = perc;

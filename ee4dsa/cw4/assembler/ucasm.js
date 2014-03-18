@@ -7,7 +7,7 @@ var u = require('./lib/ee4dsa-util');
 var assemble = require('./lib/ee4dsa-assembler');
 
 var argv = require('optimist')
-    .usage('Usage: $0 --source <path> [options]')
+    .usage('Usage: $0 -s <path> [options]')
     .wrap(80)
     .demand('source')
     .option('source', {
@@ -16,8 +16,13 @@ var argv = require('optimist')
     })
     .option('output', {
       alias: 'o',
-      default: 'a.out',
-      desc: 'Output RAM file'
+      default: '<source>.o',
+      desc: 'Output RAM file path'
+    })
+    .option('list', {
+      alias: 'l',
+      default: '<source>.l',
+      desc: 'Output listing file path'
     })
     .option('ram-size', {
       alias: 'r',
@@ -32,12 +37,7 @@ var argv = require('optimist')
     .option('annotate', {
       alias: 'a',
       default: false,
-      desc: 'Annotate the generated RAM'
-    })
-    .option('list', {
-      alias: 'l',
-      default: false,
-      desc: 'Print program listing'
+      desc: 'Annotate the generated RAM file'
     }).argv;
 
 /*
@@ -60,30 +60,36 @@ var readAsmFile = function(file) {
 };
 
 try {
+  if (!argv.source.match(/\.s$/i))
+    throw 'Source must have ".s" extension'
+
+  /* Generate default paths for output files */
+  if (argv.output === '<source>.o')
+    argv.output = argv.source.replace(/\.s$/, '.o');
+  if (argv.list === '<source>.l')
+    argv.list = argv.source.replace(/\.s$/, '.l');
+
   /* Assemble input file(s) */
   assemble(readAsmFile(argv.source), {
     size: argv['ram-size'],
     idtSize: argv['idt-size'],
     annotate: argv.annotate
   }, function(err, data) {
-    if (err) {
-      process.stderr.write('fatal: ' + err + '\n');
-      process.exit(2);
-    }
+    if (err)
+      throw err;
 
-    /* Write program list to stdout */
-    if (argv.list)
-      console.log(data.list);
+    /* Write output files */
+    fs.writeFile(argv.output, data.ram);
+    fs.writeFile(argv.list, data.list);
 
-    /* Write assembled output to file */
-    fs.writeFile(argv.output, data.ram, function(err) {
-      if (err) {
-        process.stderr.write('Unable to write file "' + argv.output + '"\n');
-        process.exit(3);
-      }
-    });
+    /* Print summary */
+    console.log(path.basename(argv.source) +
+                ': ' + (data.prog.cseg_size + data.prog.dseg_size) + ' words, ' +
+                u.perc(data.prog.util) + ' util ' +
+                '(cseg: ' + u.perc(data.prog.cseg_util / data.prog.util) +
+                ' dseg: ' + u.perc(data.prog.dseg_util / data.prog.util) + ')');
   });
 } catch (err) {
-  process.stderr.write(err.toString() + '\n');
+  process.stderr.write('fatal: ' + err.toString() + '\n');
   process.exit(2);
 }
