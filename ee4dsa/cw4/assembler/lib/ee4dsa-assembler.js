@@ -266,7 +266,7 @@ module.exports = function(data, options, callback) {
           case 'decs': return '2A' + u.requireReg(t[1]) + u.requireReg(t[1]) + u.requireReg(t[1]);
           case 'add':  return '20' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
           case 'ads':  return '28' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
-          case 'sub':  return '24' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
+          case 'sub':  return '23' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
           case 'subs': return '2B' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
 
           default:     throw 'Unrecognised mnemonic "' + t[0] + '"';
