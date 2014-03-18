@@ -6,7 +6,7 @@
  * Pad the number 'n' to with padding character 'z' to width
  * 'width'. If 'prefix' is true, pad the leading edge.
  */
-function pad(n, width, z, prefix) {
+var pad = function(n, width, z, prefix) {
   z = z || '0';
   n = n + '';
   // Pop out any html tags when calculating length
@@ -15,7 +15,8 @@ function pad(n, width, z, prefix) {
   return length >= width ? n : prefix ?
     n + new Array(width - length + 1).join(z) :
     new Array(width - length + 1).join(z) + n;
-}
+};
+module.exports.pad = pad;
 
 /*
  * Casts a decimal integer to a hexadecimal string.
@@ -26,6 +27,7 @@ var int2hex = function(n) {
 
   throw 'Failed to convert number "' + n + '"';
 };
+module.exports.int2hex = int2hex;
 
 /*
  * Casts a decimal integer to a 32 bit hexadecimal string (0 padded).
@@ -33,6 +35,7 @@ var int2hex = function(n) {
 var int2hex32 = function(n) {
   return n !== undefined ? pad(int2hex(n), 8) : '';
 };
+module.exports.int2hex32 = int2hex32;
 
 /*
  * Casts a decimal integer to a 24 bit hexadecimal string (0 padded).
@@ -40,6 +43,7 @@ var int2hex32 = function(n) {
 var int2hex24 = function(n) {
   return n !== undefined ? pad(int2hex(n), 6) : '';
 };
+module.exports.int2hex24 = int2hex24;
 
 /*
  * Casts a decimal integer to a 16 bit hexadecimal string (0 padded).
@@ -47,6 +51,7 @@ var int2hex24 = function(n) {
 var int2hex16 = function(n) {
   return n !== undefined ? pad(int2hex(n), 4) : '';
 };
+module.exports.int2hex16 = int2hex16;
 
 var hex2int = function(n) {
   var h = parseInt(n.replace(/^0x/, ''), 16);
@@ -56,6 +61,7 @@ var hex2int = function(n) {
 
   return h;
 };
+module.exports.hex2int = hex2int;
 
 /*
  * Recursively expand macro from table
@@ -66,6 +72,7 @@ var hex2int = function(n) {
 var unMacrofy = function(word, macros) {
   return macros[word] !== undefined ? unMacrofy(macros[word], macros) : word;
 };
+module.exports.unMacrofy = unMacrofy;
 
 /*
  * Convert a string into an unsigned integer.
@@ -82,6 +89,7 @@ var requireUint = function(word) {
 
   throw 'Failed to parse integer "' + word + '"';
 };
+module.exports.requireUint = requireUint;
 
 /*
  * Convert a string into a signed integer.
@@ -98,6 +106,7 @@ var requireint = function(word) {
 
   throw 'Failed to parse integer "' + word + '"';
 };
+module.exports.requireint = requireint;
 
 var requireString = function(word) {
   if (word === undefined)
@@ -105,14 +114,17 @@ var requireString = function(word) {
 
   return new String(word);
 };
+module.exports.requireString = requireString;
 
 var requireAddress = function(word) {
   return int2hex24(requireUint(word));
 };
+module.exports.requireAddress = requireAddress;
 
 var require16Address = function(word) {
   return int2hex16(requireUint(word));
 };
+module.exports.require16Address = require16Address;
 
 var requireByte = function(word) {
   if (word !== undefined) {
@@ -124,6 +136,7 @@ var requireByte = function(word) {
 
   throw 'Failed to parse byte "' + word + '"';
 };
+module.exports.requireByte = requireByte;
 
 var requireReg = function(word) {
   if (word !== undefined)
@@ -131,6 +144,7 @@ var requireReg = function(word) {
 
   throw 'Failed to parse reg "' + word + '"';
 };
+module.exports.requireReg = requireReg;
 
 /* Flatten an array */
 var flatten = function(array) {
@@ -140,3 +154,4 @@ var flatten = function(array) {
   });
   return result;
 };
+module.exports.flatten = flatten;

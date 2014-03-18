@@ -2,39 +2,37 @@
 
 var lazy = require('lazy');
 var fs  = require('fs');
+var u = require('./lib/ee4dsa-util');
+var assemble = require('./lib/ee4dsa-assembler');
 
 var argv = require('optimist')
     .usage('Usage: $0 <assembly source>')
     .wrap(80)
-    .demand('asm')
-    .option('asm', {
-      alias: 'a',
-      desc: 'Input source path'
+    .demand('source')
+    .option('source', {
+      alias: 's',
+      desc: 'Input source file'
     })
     .option('output', {
       alias: 'o',
       default: 'a.out',
-      desc: 'Set the destination path'
+      desc: 'Output RAM file'
     })
-    .option('size', {
-      alias: 's',
+    .option('ram-size', {
+      alias: 'r',
       default: 4096,
       desc: 'Set the size of the output RAM'
     })
-    .option('idt', {
+    .option('idt-size', {
       alias: 'i',
       default: 8,
-      desc: 'Set the size of the interrupt descriptor table'
+      desc: 'Set the size of the IDT'
     })
-    .option('list', {
-      alias: 'l',
+    .option('annotate', {
+      alias: 'a',
       default: false,
-      desc: 'Generate annotated list output'
+      desc: 'Annotate the generated RAM'
     }).argv;
-
-/* Import the assembly routines */
-eval(fs.readFileSync('ee4dsa-util.js') + '');
-eval(fs.readFileSync('ee4dsa-assembler.js') + '');
 
 /*
  * Open and read an input file, returning its contents. Operates
@@ -52,7 +50,7 @@ var readAsmFile = function(file) {
     }
   }
 
-  return flatten(lines).join('\n');
+  return u.flatten(lines).join('\n');
 };
 
 try {
@@ -76,6 +74,6 @@ try {
     });
   });
 } catch (err) {
-  process.stderr.write(err);
+  process.stderr.write(err.toString() + '\n');
   process.exit(2);
 }

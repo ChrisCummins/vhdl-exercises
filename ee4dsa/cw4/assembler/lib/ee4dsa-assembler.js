@@ -6,7 +6,9 @@
  *    idtSize - Number
  * callback - Function(err, data)
  */
-var assemble = function(data, options, callback) {
+module.exports = function(data, options, callback) {
+
+  var u = require('./ee4dsa-util');
 
   var asm2prog = function(lines) {
     var prog = {
@@ -56,7 +58,7 @@ var assemble = function(data, options, callback) {
           token = token.replace(/,$/, '');
 
           // Expand macro
-          token = unMacrofy(token, prog.macros);
+          token = u.unMacrofy(token, prog.macros);
 
           if (token !== '')
             tokens.push(token);
@@ -76,16 +78,16 @@ var assemble = function(data, options, callback) {
           currentSegment = directive;
           break;
         case 'org':
-          memoryCounter = requireUint(tokens[0]);
+          memoryCounter = u.requireUint(tokens[0]);
           break;
         case 'isr':
           prog.instructions[requireUint(tokens[0])] = ['jmp', tokens[1]];
           break;
         case 'def':
-          prog.macros[requireString(tokens[0])] = requireString(tokens[1]);
+          prog.macros[u.requireString(tokens[0])] = u.requireString(tokens[1]);
           break;
         case 'undef':
-          delete prog.macros[requireString(tokens[0])];
+          delete prog.macros[u.requireString(tokens[0])];
           break;
         default:
           throw 'Unrecognised directive "' + directive + '"';
@@ -130,7 +132,7 @@ var assemble = function(data, options, callback) {
                 throw 'Unrecognised data type "' + type + '"';
               }
             })(tokens[1]);
-            var length = requireUint(tokens[2]);
+            var length = u.requireUint(tokens[2]);
 
             // Add reference in memory table
             prog.memory[tokens.shift().replace(/:$/, '')] = memoryCounter;
@@ -174,59 +176,59 @@ var assemble = function(data, options, callback) {
           switch (t[0]) {
           case 'nop':  return '00000000';
           case 'halt': return '01000000';
-          case 'jmp':  return '02' + requireAddress(t[1]);
-          case 'brts': return '03' + requireAddress(t[1]);
-          case 'seto': return '04' + requireByte(t[1]) + requireByte(t[2]) + requireByte(t[3]);
-          case 'tsti': return '05' + requireByte(t[1]) + requireByte(t[2]) + requireByte(t[3]);
-          case 'call': return '06' + requireAddress(t[1]);
+          case 'jmp':  return '02' + u.requireAddress(t[1]);
+          case 'brts': return '03' + u.requireAddress(t[1]);
+          case 'seto': return '04' + u.requireByte(t[1]) + u.requireByte(t[2]) + u.requireByte(t[3]);
+          case 'tsti': return '05' + u.requireByte(t[1]) + u.requireByte(t[2]) + u.requireByte(t[3]);
+          case 'call': return '06' + u.requireAddress(t[1]);
           case 'ret':  return '07000000';
           case 'reti': return '08000000';
           case 'sei':  return '09000000';
           case 'cli':  return '0A000000';
-          case 'mtr':  return '0B' + requireReg(t[1]) + require16Address(t[2]);
-          case 'rtm':  return '0C' + requireReg(t[1]) + require16Address(t[2]);
-          case 'imtr': return '0D' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
-          case 'rtim': return '0E' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
-          case 'pshr': return '0F' + requireReg(t[1]) + '0000';
-          case 'popr': return '10' + requireReg(t[1]) + '0000';
-          case 'rtio': return '11' + requireByte(t[1]) + requireReg(t[2]) + '00';
-          case 'iotr': return '12' + requireReg(t[1]) + requireByte(t[2]) + '00';
-          case 'ldil': return '13' + requireReg(t[1]) + require16Address(t[2]);
-          case 'ldih': return '14' + requireReg(t[1]) + require16Address(t[2]);
-          case 'and':  return '15' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
-          case 'or':   return '16' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
-          case 'xor':  return '17' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
-          case 'lsr':  return '18' + requireReg(t[1]) + requireReg(t[2]) + requireByte(t[3]);
-          case 'lsl':  return '19' + requireReg(t[1]) + requireReg(t[2]) + requireByte(t[3]);
-          case 'equ':  return '1A00' + requireReg(t[1]) + requireReg(t[2]);
-          case 'neq':  return '1A01' + requireReg(t[1]) + requireReg(t[2]);
-          case 'lt':   return '1A02' + requireReg(t[1]) + requireReg(t[2]);
-          case 'lts':  return '1B02' + requireReg(t[1]) + requireReg(t[2]);
-          case 'lte':  return '1A03' + requireReg(t[1]) + requireReg(t[2]);
-          case 'ltes': return '1B03' + requireReg(t[1]) + requireReg(t[2]);
-          case 'gt':   return '1A04' + requireReg(t[1]) + requireReg(t[2]);
-          case 'gts':  return '1B04' + requireReg(t[1]) + requireReg(t[2]);
-          case 'gte':  return '1A05' + requireReg(t[1]) + requireReg(t[2]);
-          case 'gtes': return '1B05' + requireReg(t[1]) + requireReg(t[2]);
-          case 'eqz':  return '1A06' + requireReg(t[1]) + '00';
-          case 'nez':  return '1A07' + requireReg(t[1]) + '00';
-          case 'mov':  return '20' + requireReg(t[1]) + requireReg(t[2]) + '00';
-          case 'clr':  return '20' + requireReg(t[1]) + '0000';
-          case 'inc':  return '21' + requireReg(t[1]) + requireReg(t[1]) + '00';
-          case 'incs': return '29' + requireReg(t[1]) + requireReg(t[1]) + '00';
-          case 'dec':  return '22' + requireReg(t[1]) + requireReg(t[1]) + requireReg(t[1]);
-          case 'decs': return '2A' + requireReg(t[1]) + requireReg(t[1]) + requireReg(t[1]);
-          case 'add':  return '20' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
-          case 'ads':  return '28' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
-          case 'sub':  return '24' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
-          case 'subs': return '2B' + requireReg(t[1]) + requireReg(t[2]) + requireReg(t[3]);
+          case 'mtr':  return '0B' + u.requireReg(t[1]) + u.require16Address(t[2]);
+          case 'rtm':  return '0C' + u.requireReg(t[1]) + u.require16Address(t[2]);
+          case 'imtr': return '0D' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
+          case 'rtim': return '0E' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
+          case 'pshr': return '0F' + u.requireReg(t[1]) + '0000';
+          case 'popr': return '10' + u.requireReg(t[1]) + '0000';
+          case 'rtio': return '11' + u.requireByte(t[1]) + u.requireReg(t[2]) + '00';
+          case 'iotr': return '12' + u.requireReg(t[1]) + u.requireByte(t[2]) + '00';
+          case 'ldil': return '13' + u.requireReg(t[1]) + u.require16Address(t[2]);
+          case 'ldih': return '14' + u.requireReg(t[1]) + u.require16Address(t[2]);
+          case 'and':  return '15' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
+          case 'or':   return '16' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
+          case 'xor':  return '17' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
+          case 'lsr':  return '18' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireByte(t[3]);
+          case 'lsl':  return '19' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireByte(t[3]);
+          case 'equ':  return '1A00' + u.requireReg(t[1]) + u.requireReg(t[2]);
+          case 'neq':  return '1A01' + u.requireReg(t[1]) + u.requireReg(t[2]);
+          case 'lt':   return '1A02' + u.requireReg(t[1]) + u.requireReg(t[2]);
+          case 'lts':  return '1B02' + u.requireReg(t[1]) + u.requireReg(t[2]);
+          case 'lte':  return '1A03' + u.requireReg(t[1]) + u.requireReg(t[2]);
+          case 'ltes': return '1B03' + u.requireReg(t[1]) + u.requireReg(t[2]);
+          case 'gt':   return '1A04' + u.requireReg(t[1]) + u.requireReg(t[2]);
+          case 'gts':  return '1B04' + u.requireReg(t[1]) + u.requireReg(t[2]);
+          case 'gte':  return '1A05' + u.requireReg(t[1]) + u.requireReg(t[2]);
+          case 'gtes': return '1B05' + u.requireReg(t[1]) + u.requireReg(t[2]);
+          case 'eqz':  return '1A06' + u.requireReg(t[1]) + '00';
+          case 'nez':  return '1A07' + u.requireReg(t[1]) + '00';
+          case 'mov':  return '20' + u.requireReg(t[1]) + u.requireReg(t[2]) + '00';
+          case 'clr':  return '20' + u.requireReg(t[1]) + '0000';
+          case 'inc':  return '21' + u.requireReg(t[1]) + u.requireReg(t[1]) + '00';
+          case 'incs': return '29' + u.requireReg(t[1]) + u.requireReg(t[1]) + '00';
+          case 'dec':  return '22' + u.requireReg(t[1]) + u.requireReg(t[1]) + u.requireReg(t[1]);
+          case 'decs': return '2A' + u.requireReg(t[1]) + u.requireReg(t[1]) + u.requireReg(t[1]);
+          case 'add':  return '20' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
+          case 'ads':  return '28' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
+          case 'sub':  return '24' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
+          case 'subs': return '2B' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
 
           default:     throw 'Unrecognised mnemonic "' + t[0] + '"';
           }
         })(prog.instructions[i]);
       } else {
         // Insert blank data
-        ram[i] = int2hex32(0);
+        ram[i] = u.int2hex32(0);
       }
 
       // Annotate the listing if required
