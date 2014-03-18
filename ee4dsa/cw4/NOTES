@@ -1,0 +1,99 @@
+USAGE
+=====
+
+ TODO
+
+FEATURES
+========
+
+ * 2 pass assembler
+ * Inspired by AVR syntax / instruction set
+ * Recursive macro lookups
+ * Resursive file imports
+
+WEAKNESSES
+==========
+
+ * Entirely case insensitive
+ * No address management of DSEG
+ * Single global namespace for all lookups
+ * Line orientated
+ * Uninformative error messages
+
+DIRECTIVES
+==========
+
+.def    name value              Define a symbolic name
+.undef  name                    Undeclare a symbolic name
+.cseg                           Declares code segment
+.dseg                           Declares data segment
+.org    address                 Set program origin
+.isr    number address          Define an ISR for interrupt number
+.input  file                    Import an assembly source
+
+INSTRUCTION SET
+===============
+
+nop                             No operation
+halt                            Halt process
+jmp     address                 Jump
+brts    address                 Branch if T flag set
+seto    port and xor            Set output port
+tsti    port and xor            Read input port
+call    address                 Call subroutine
+ret                             Return from subroutine
+reti                            Return from interrupt
+sei                             Global enable interrupts
+cli                             Global disable interrupts
+mtr     reg address             Memorty to register
+rtm     reg address             Register to memory
+imtr    reg reg reg             Indexed memory to register
+rtim    reg reg reg             Register to indexed memory
+pshr    reg                     Push
+popr    reg                     Pop
+rtio    port reg                Register to IO
+iotr    reg port                IO to register
+ldil    reg immediate           Load immediate lower
+ldiu    reg immediate           Load immediate upper
+and     reg reg reg             Bitwise AND
+or      reg reg reg             Bitwise OR
+xor     reg reg reg             Bitwise XOR
+lsr     reg reg immediate       Logical shift right
+lsl     reg reg immediate       Logical shift left
+equ     reg reg                 Equals
+neq     reg reg                 Not equals
+lt      reg reg                 Less than
+lts     reg reg                 Less than Signed
+lte     reg reg                 Less than or equal
+ltes    reg reg                 Less than or Equal Signed
+gt      reg reg                 Greater than
+gts     reg reg                 Greater Than Signed
+gte     reg reg                 Greater than or equal
+gtes    reg reg                 Greather Than or Equal Signed
+eqz     reg                     Equal zero
+nez     reg                     Not equal zero
+cpy     reg reg                 Copy source to dest
+clr     reg                     Clear bits in register
+inc     reg                     Increment
+incs    reg                     Increment Signed
+dec     reg                     Decrement
+decs    reg                     Decrement Signed
+add     reg reg reg             Add
+adds    reg reg reg             Add Signed
+sub     reg reg reg             Subtract
+subs    reg reg reg             Subtract Signed
+
+DATA SEGMENT
+============
+
+MACROS
+======
+
+NULL            r0
+PC              r1
+SP              r2
+SREG            r3
+RAM_SIZE        Size of output RAM
+IDT_SIZE        Size of interrupt descriptor table
+IDT_START       Absolute address of IDT
+PROG_START      Absolute address of start of code
