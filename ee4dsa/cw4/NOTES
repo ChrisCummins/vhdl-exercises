@@ -86,6 +86,21 @@ subs    reg reg reg             Subtract Signed
 DATA SEGMENT
 ============
 
+Syntax:
+
+  <label>: <type> <size>
+
+Where <type>:
+
+      .BYTE
+      .WORD
+
+Examples:
+
+  foobar: .BYTE 3
+
+ * Data is aligned to word size
+
 MACROS
 ======
 
