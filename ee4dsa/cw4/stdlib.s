@@ -144,3 +144,25 @@ mults:
         pshr    r18             ; Push b
         call    mult
         ret
+
+        ;; Unsigned integer division.
+        ;;
+        ;;   @param  numerator
+        ;;   @param  denominator
+        ;;   @return result
+div:
+        popr    r16             ; Return address
+        popr    r17             ; a
+        popr    r18             ; b
+        clr     r19             ; i = 0
+_div_2:
+        lt      r17, r18        ; IF a < b
+        brts    _div_3          ; RETURN
+        sub     r17, r17, r18   ; ELSE a -= b
+        inc     r19             ; i++
+        jmp     _div_2
+_div_3:
+        pshr    r17             ; Push remainder
+        pshr    r19             ; Push result
+        pshr    r16             ; Push return address
+        ret
