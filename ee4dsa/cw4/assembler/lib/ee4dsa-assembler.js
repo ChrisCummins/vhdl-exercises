@@ -16,6 +16,7 @@ module.exports = function(data, options, callback) {
       idt_size: options.idtSize || 8,
       cseg: {},
       dseg: {},
+      memory: {},
       labels: [],
       macros: {}
     };
@@ -59,7 +60,7 @@ module.exports = function(data, options, callback) {
         var expandToken = true;
 
         // Split line into words
-        line.split(/[ \t]+/).forEach(function(token) {
+        line.split(/[ 	]+/).forEach(function(token) {
 
           // Remove commas
           token = token.replace(/,$/, '');
