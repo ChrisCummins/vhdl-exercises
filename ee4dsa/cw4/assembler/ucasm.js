@@ -7,7 +7,7 @@ var u = require('./lib/ee4dsa-util');
 var assemble = require('./lib/ee4dsa-assembler');
 
 var argv = require('optimist')
-    .usage('Usage: $0 <assembly source>')
+    .usage('Usage: $0 --source <path> [options]')
     .wrap(80)
     .demand('source')
     .option('source', {
