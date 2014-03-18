@@ -102,7 +102,7 @@ _btnr_press_2:
         brts    _btnr_press_2
         ret
 
-        ;; Arithmetic.
+        ;; Software arithmetic.
         ;; =================================================
 
         ;; Multiply two unsigned numbers.
@@ -110,17 +110,17 @@ _btnr_press_2:
         ;;   @param  operand A
         ;;   @param  operand B
         ;;   @return result
-multu:
+mult:
         popr    r16             ; Return address
         popr    r17             ; a
         popr    r18             ; b
         clr     r19             ; y = 0
         dec     r18             ; i = b - 1
-_multu_2:
+_mult_2:
         add     r19, r19, r17   ; y += a
         dec     r18             ; i--
         nez     r18             ; Repeat while i > 0
-        brts    _multu_2
+        brts    _mult_2
         pshr    r19             ; Push result
         pshr    r16             ; Push return address
         ret
@@ -130,7 +130,7 @@ _multu_2:
         ;; @param  operand A
         ;; @param  operand B
         ;; @return result
-mult:
+mults:
         popr    r16             ; Return address
         popr    r17             ; a
         popr    r18             ; b
@@ -142,5 +142,5 @@ mult:
 
         pshr    r17             ; Push a
         pshr    r18             ; Push b
-        call    multu
+        call    mult
         ret
