@@ -28,8 +28,7 @@ init:
         inc     b               ; b = 1
         ldil    10reg, 10
         ldil    100reg, 100
-        ldil    1000reg, 255
-        ldih    1000reg, 745
+        ldil    1000reg, 1000
 next_fib:
         add     sum, a, b       ; sum = a + b
         mov     a, b            ; a = b
