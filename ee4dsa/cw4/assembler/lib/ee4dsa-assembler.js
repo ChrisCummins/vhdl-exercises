@@ -279,7 +279,7 @@ module.exports = function(data, options, callback) {
 
       // Annotate the listing if required
       if (options.annotate) {
-        ram[i] += ' -- ' + int2hex32(i);
+        ram[i] += ' -- ' + u.int2hex32(i);
         if (prog.cseg[i])
           ram[i] += ' ' + prog.cseg[i].join(' ');
       }
