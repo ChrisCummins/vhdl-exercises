@@ -148,10 +148,20 @@ module.exports = function(data, options, callback) {
               }
             })(tokens[1]);
             var length = u.requireUint(tokens[2]);
+            var label = tokens.shift().replace(/:$/, '');
+            var dstart = memoryCounter, dend = dstart + Math.ceil(size * length);
 
-            // Add reference in memory table
-            prog.dseg[tokens.shift().replace(/:$/, '')] = memoryCounter;
-            memoryCounter += Math.ceil(size * length);
+            // Add reference in memory table and populate dseg
+            prog.memory[label] = dstart;
+            for (var i = dstart; i < dend; i++) {
+              prog.dseg[i] = label;
+
+              if (dend - dstart > 1)
+                prog.dseg[i] += '[' + (i - dstart) + ']';
+            }
+
+            // Update memory counter
+            memoryCounter = dend;
 
             // Continue processing only if there are tokens remaining
             if (tokens.length < 1)
@@ -170,8 +180,8 @@ module.exports = function(data, options, callback) {
       for (var j in instruction) {
         var token = instruction[j];
 
-        if (prog.dseg[token] !== undefined)      // Memory
-          instruction[j] = prog.dseg[token];
+        if (prog.memory[token] !== undefined)      // Memory
+          instruction[j] = prog.memory[token];
         else if (prog.labels[token] !== undefined) // Label
           instruction[j] = prog.labels[token];
       }
@@ -201,7 +211,7 @@ module.exports = function(data, options, callback) {
         var p = []
         s += '\n';
         for (var j in prog[i])
-          p.push('\t' + j + ' = ' + prog[i][j]);
+          p.push('        ' + j + ' = ' + prog[i][j]);
         s += p.join('\n');
       } else                            // Property value
         s += ' = ' + prog[i];
@@ -283,6 +293,8 @@ module.exports = function(data, options, callback) {
         ram[i] += ' -- ' + i;
         if (prog.cseg[i])
           ram[i] += ' ' + prog.cseg[i].join(' ');
+        if (prog.dseg[i])
+          ram[i] += ' DATA: ' + prog.dseg[i];
       }
     }
 
