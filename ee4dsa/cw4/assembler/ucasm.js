@@ -60,14 +60,11 @@ var readAsmFile = function(file) {
 };
 
 try {
-  if (!argv.source.match(/\.s$/i))
-    throw 'Source must have ".s" extension'
-
   /* Generate default paths for output files */
   if (argv.output === '<source>.o')
-    argv.output = argv.source.replace(/\.s$/, '.o');
+    argv.output = argv.source.replace(/\.[a-z0-9]+$/i, '') + '.o';
   if (argv.list === '<source>.l')
-    argv.list = argv.source.replace(/\.s$/, '.l');
+    argv.list = argv.source.replace(/\.[a-z0-9]+$/i, '') + '.l';
 
   /* Assemble input file(s) */
   assemble(readAsmFile(argv.source), {
