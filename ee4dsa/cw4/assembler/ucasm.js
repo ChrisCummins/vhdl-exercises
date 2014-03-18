@@ -2,6 +2,7 @@
 
 var lazy = require('lazy');
 var fs  = require('fs');
+var path = require('path');
 var u = require('./lib/ee4dsa-util');
 var assemble = require('./lib/ee4dsa-assembler');
 
@@ -46,7 +47,7 @@ var readAsmFile = function(file) {
     var match = lines[i].match(/^([ 	]+)?\.include "(.*)"([ 	]+)?$/);
 
     if (match) {
-      lines[i] = readAsmFile(match[2]);
+      lines[i] = readAsmFile(path.dirname(file) + '/' + match[2]);
     }
   }
 
