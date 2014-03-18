@@ -55,10 +55,10 @@ var readAsmFile = function(file) {
 
 try {
   /* Assemble input file(s) */
-  assemble(readAsmFile(argv.asm), {
-    size: argv.size,
-    idtSize: argv.idt,
-    listOn: argv.list
+  assemble(readAsmFile(argv.source), {
+    size: argv['ram-size'],
+    idtSize: argv['idt-size'],
+    annotate: argv.annotate
   }, function(err, data) {
     if (err) {
       process.stderr.write('fatal: ' + err + '\n');

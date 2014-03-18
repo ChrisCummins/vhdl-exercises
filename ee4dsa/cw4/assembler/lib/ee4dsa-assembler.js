@@ -1,7 +1,7 @@
 /*
  * data - String
  * options - Object
- *    listOn - Boolean, whether to generate annotated list
+ *    annotate - Boolean, whether to generate annotated list
  *    size - Number
  *    idtSize - Number
  * callback - Function(err, data)
@@ -12,7 +12,6 @@ module.exports = function(data, options, callback) {
 
   var asm2prog = function(lines) {
     var prog = {
-      listOn: options.listOn || false,
       size: options.size || 4096,
       idtSize: options.idtSize || 8,
       instructions: {},
@@ -232,7 +231,7 @@ module.exports = function(data, options, callback) {
       }
 
       // Annotate the listing if required
-      if (prog.listOn) {
+      if (options.annotate) {
         ram[i] += ' -- ' + int2hex32(i);
         if (prog.instructions[i])
           ram[i] += ' ' + prog.instructions[i].join(' ');
