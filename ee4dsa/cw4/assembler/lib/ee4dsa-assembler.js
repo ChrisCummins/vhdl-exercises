@@ -179,6 +179,31 @@ module.exports = function(data, options, callback) {
     return prog;
   };
 
+  /*
+   * Generate a program listing
+   */
+  var prog2list = function(prog) {
+    var list = [];
+
+    // Iterate over objects in prog
+    for (var i in prog) {
+      var s = '.' + i.toUpperCase();    // Begin with property name
+
+      if (typeof prog[i] == 'object') { // Property array value
+        var p = []
+        s += '\n';
+        for (var j in prog[i])
+          p.push('\t' + j + ' = ' + prog[i][j]);
+        s += p.join('\n');
+      } else                            // Property value
+        s += ' = ' + prog[i];
+
+      list.push(s + '\n');              // Add property string to list
+    };
+
+    return list.join('\n');
+  };
+
   var prog2ram = function(prog) {
 
     var ram = new Array(prog.size);
@@ -257,7 +282,11 @@ module.exports = function(data, options, callback) {
   };
 
   try {
-    callback(0, prog2ram(asm2prog(data.split('\n'))));
+    // First pass:
+    var prog = asm2prog(data.split('\n'));
+
+    // Second pass:
+    callback(0, { list: prog2list(prog), ram: prog2ram(prog) });
   } catch (err) {
     callback(err);
   }

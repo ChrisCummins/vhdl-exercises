@@ -33,6 +33,11 @@ var argv = require('optimist')
       alias: 'a',
       default: false,
       desc: 'Annotate the generated RAM'
+    })
+    .option('list', {
+      alias: 'l',
+      default: false,
+      desc: 'Print program listing'
     }).argv;
 
 /*
@@ -66,8 +71,12 @@ try {
       process.exit(2);
     }
 
+    /* Write program list to stdout */
+    if (argv.list)
+      console.log(data.list);
+
     /* Write assembled output to file */
-    fs.writeFile(argv.output, data, function(err) {
+    fs.writeFile(argv.output, data.ram, function(err) {
       if (err) {
         process.stderr.write('Unable to write file "' + argv.output + '"\n');
         process.exit(3);
