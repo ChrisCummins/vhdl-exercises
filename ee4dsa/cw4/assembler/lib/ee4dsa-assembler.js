@@ -95,7 +95,7 @@ module.exports = function(data, options, callback) {
           memoryCounter = u.requireUint(tokens[0]);
           break;
         case 'isr':
-          prog.cseg[requireUint(tokens[0])] = ['jmp', tokens[1]];
+          prog.cseg[u.requireUint(tokens[0])] = ['jmp', tokens[1]];
           break;
         case 'def':
           prog.macros[u.requireString(tokens[0])] = u.requireString(tokens[1]);
