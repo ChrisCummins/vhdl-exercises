@@ -17,6 +17,9 @@
         .def sum        r34
 
 _main:
+        cli                     ; Disable interrupts
+
+init:
         clr     b
         clr     a               ; a = 0
         inc     b               ; b = 1
