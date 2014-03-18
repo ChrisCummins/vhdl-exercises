@@ -36,6 +36,7 @@ all help:
 	@echo ""
 
 simulation sim:
+	./assembler/ucasm.js -s ram.asm -o ram.dat --annotate
 	@for f in $(SOURCES); do \
 	    echo "ghdl -a $$f"; \
 	    ghdl -a $$f; \
