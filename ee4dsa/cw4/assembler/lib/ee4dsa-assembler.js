@@ -48,7 +48,7 @@ module.exports = function(data, options, callback) {
         continue;
 
       // Tokenize each line
-      var tokens = u.tokenize(line, prog.macros);
+      var tokens = u.tokenize(line, [prog.macros, prog.labels, prog.memory]);
 
       if (tokens[0].match(/^\./)) {
         // DIRECTIVE

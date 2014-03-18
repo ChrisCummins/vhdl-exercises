@@ -67,10 +67,14 @@ module.exports.hex2int = hex2int;
  * Recursively expand macro from table
  *
  *   word - a string
- *   macros - a map of macros -> expanded text
+ *   tables - an array of maps of macros -> expanded text
  */
-var unMacrofy = function(word, macros) {
-  return macros[word] !== undefined ? unMacrofy(macros[word], macros) : '' + word;
+var unMacrofy = function(word, tables) {
+  for (var i in tables)
+    if (tables[i][word] !== undefined)
+      return unMacrofy(tables[i][word], tables);
+
+  return '' + word;
 };
 module.exports.unMacrofy = unMacrofy;
 
@@ -228,7 +232,7 @@ module.exports.resolveExpressions = resolveExpressions;
 
 /* Tokenize a row */
 var tokenize = function(str, macros) {
-  macros = macros || [];
+  macros = macros || [[]];
   var tokens = [];
 
   /*
