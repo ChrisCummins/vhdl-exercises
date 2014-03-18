@@ -203,6 +203,7 @@ var resolveExpressions = function(tokens) {
     if (opA === '' && typeof token === 'number' && i < tokens.length - 2)
       opA = token;
     else if (opA !== '' && operator === '') {
+      // If we have the first operand, then hunt for the operator
       if (token.toString().match(/^[\+\-\*^\/]$/))
         operator = token
       else {
@@ -211,6 +212,7 @@ var resolveExpressions = function(tokens) {
         opA = '';
       }
     } else if (opA !== '' && operator !== '') {
+      // If we have the first operand and operator, then hunt for the last operand
       if (typeof token === 'number') {
         opB = token;
         t.push('' + eval(opA + operator + opB));
