@@ -46,6 +46,15 @@ _main:
         rtm     NULL, sseg_an_t + 2
         rtm     NULL, sseg_an_t + 3
 
+        ;; Prepare interrupt registers
+        clr     r10
+        clr     r11
+        clr     r12
+        clr     r14
+        ldil    r11, 4          ; r11 = 4
+        ldil    r12, sseg_an_t  ; r12 = an_t
+        ldil    r14, sseg_ka_t  ; r14 = ka_t
+
         clr     b
         clr     a               ; a = 0
         ldil    b, 1            ; b = 1
@@ -65,14 +74,12 @@ next_fib:
         call    div
         popr    1digit          ; Thousand digit
         popr    r35
-        rtio    LEDS, 1digit
 
         pshr    100reg
         pshr    r35
         call    div
         popr    10digit         ; Hundreds digit
         popr    r35
-        rtio    LEDS, 10digit
 
         pshr    10reg
         pshr    r35
@@ -104,36 +111,15 @@ next_fib:
         ;; SSG Driver.
         ;; =================================================
 
-        .isr 0 irq1
-irq1:
-        pshr    r10             ; Preserve register states
-        pshr    r11
-        pshr    r12
-        pshr    r13
-        pshr    r14
-
-        clr     r11
-        clr     r12
-        clr     r14
-        ldil    r11, 4          ; r11 = 4
-        mtr     r10, sseg_idx   ; r10 = i
-        ldil    r12, sseg_an_t  ; r12 = an_t
-        ldil    r14, sseg_ka_t  ; r14 = ka_t
-
+        .isr 0 irq0
+irq0:
         imtr    r13, r12, r10   ; r13 = an_t[i]
-        rtio    SSEG_AN, r13    ; WRITE sseg_an
+        rtio    SSEG_AN, r13    ; Set SSEG anodes
         imtr    r13, r14, r10   ; r13 = ka_t[i]
-        rtio    SSEG_KA, r13    ; WRITE sseg_ka
+        rtio    SSEG_KA, r13    ; Set SSEG cathodes
         inc     r10             ; i++
         lt      r10, r11        ; IF i < 4
-        brts    irq1_2          ; THEN RETURN
-        clr     r10             ; ELSE i = 0
-irq1_2:
-        rtm     r10, sseg_idx
-
-        popr    r14             ; Restore register states
-        popr    r13
-        popr    r12
-        popr    r11
-        popr    r10
+        brts    irq0_ret        ; THEN RETURN
+        ldil    r10, 0          ; ELSE i = 0
+irq0_ret:
         reti
