@@ -82,9 +82,9 @@ try {
     /* Print summary */
     console.log(path.basename(argv.source) +
                 ': ' + (data.prog.cseg_size + data.prog.dseg_size) + ' words, ' +
-                u.perc(data.prog.util) + ' util ' +
-                '(cseg: ' + u.perc(data.prog.cseg_util / data.prog.util) +
-                ' dseg: ' + u.perc(data.prog.dseg_util / data.prog.util) + ')');
+                u.perc(data.prog.util, 3) + ' util ' +
+                '(cseg: ' + u.perc(data.prog.cseg_util / data.prog.util, 0) +
+                ' dseg: ' + u.perc(data.prog.dseg_util / data.prog.util, 0) + ')');
   });
 } catch (err) {
   process.stderr.write('fatal: ' + err.toString() + '\n');

@@ -172,8 +172,13 @@ var len = function(obj) {
 module.exports.len = len;
 
 /* Convert ratio to percentage */
-var perc = function(n) {
-  return new Number(n) * 100 + '%';
+var perc = function(n, precision) {
+  var n = new Number(n) * 100;
+
+  if (precision !== undefined)
+    n = +n.toFixed(precision);
+
+  return n + '%';
 };
 module.exports.perc = perc;
 
