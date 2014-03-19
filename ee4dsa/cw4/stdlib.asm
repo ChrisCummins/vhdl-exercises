@@ -1,4 +1,4 @@
-;;; stdlib.s - Standard library of utilities and functions
+;;; stdlib.asm - Standard library of utilities and functions
 ;;;
 ;;;    Chris Cummins
 ;;;    17 March 2014

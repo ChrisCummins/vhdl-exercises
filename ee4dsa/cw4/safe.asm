@@ -1,4 +1,4 @@
-;;; rom.asm - Safe unlocking program
+;;; safe.asm - Safe unlocking program
 ;;
 ;; The program requires the user to enter a 4 digit PIN code by
 ;; setting the switches to the appropriate digit and then pressing

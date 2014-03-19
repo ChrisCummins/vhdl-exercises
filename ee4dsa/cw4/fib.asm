@@ -1,4 +1,4 @@
-;;; fib.s - Fibonacci calculator
+;;; fib.asm - Fibonacci calculator
 ;;;
 ;;;    Chris Cummins
 ;;;    17 March 2014
