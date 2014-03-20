@@ -197,6 +197,12 @@ var resolveExpressions = function(tokens) {
 
       if (!isNaN(n))
         token = n;
+    } else if ((match = token.match(/^(~)(.+)/))) {
+      // Calculate bitwise complements
+      var n = new Number(match[2]);
+
+      if (!isNaN(n))
+        token = eval(match[1] + n);
     }
 
     // Hunt for the first numerical token
@@ -243,10 +249,15 @@ var tokenize = function(str, symbols) {
     // Remove commas
     token = token.replace(/,$/, '');
 
-    // Expand macro
-    if (expandToken)
-      token = resolveSymbols(token, symbols);
-    else
+    if (expandToken && typeof token.match === 'function') {
+      // Resolve symbols, but ignoring
+      var match = token.match(/^([\+\-~]?)(.*)+/);
+
+      if (match[1] !== '')
+        token = match[1] + resolveSymbols(match[2], symbols);
+      else
+        token = resolveSymbols(match[2], symbols)
+    } else
       expandToken = true;
 
     // Don't expand the token after .UNDEF directive
