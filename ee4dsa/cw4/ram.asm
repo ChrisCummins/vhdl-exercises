@@ -1,1 +1,1 @@
-fib-fast.asm
+fib.asm
