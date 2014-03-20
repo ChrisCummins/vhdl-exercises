@@ -184,7 +184,7 @@ module.exports.resolveSymbols = resolveSymbols;
 
 /* Resolve numerical expressions with a set of tokens */
 var resolveExpressions = function(tokens) {
-  var t = [], token, opA = '', operator = '', opB = '';
+  var t = [], token, opA = '', operator = '';
 
   // Iterate over every token
   for (var i = 0; i < tokens.length; i++) {
@@ -219,12 +219,11 @@ var resolveExpressions = function(tokens) {
     } else if (opA !== '' && operator !== '') {
       // If we have the first operand and operator, then hunt for the last operand
       if (typeof token === 'number') {
-        opB = token;
-        t.push('' + eval(opA + operator + opB));
+        t.push('' + eval(opA + operator + token));
       } else {
         t.push('' + opA);
         t.push(operator);
-        t.push('' + opB);
+        t.push('' + token);
         opA = '';
         operator = '';
       }
