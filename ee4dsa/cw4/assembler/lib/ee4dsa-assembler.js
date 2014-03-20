@@ -13,13 +13,16 @@ module.exports = function(data, options, callback) {
   var asm2prog = function(lines) {
     var prog = {
       size: options.size || 4096,
-      idt_size: options.idtSize || 8,
+      idt_size: options.idtSize,
       cseg: {},
       dseg: {},
       memory: {},
       labels: [],
       symbols: {}
     };
+
+    if (prog.idt_size === undefined)
+      prog.idt_size = 8;
 
     // Populate useful values into macro table
     prog.symbols['ram_size'] = prog.size;
