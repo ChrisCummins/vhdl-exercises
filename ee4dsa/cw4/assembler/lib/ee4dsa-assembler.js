@@ -176,10 +176,14 @@ module.exports = function(data, options, callback) {
       var s = '.' + i.toUpperCase();    // Begin with property name
 
       if (typeof prog[i] == 'object') { // Property array value
-        var p = []
+        var p = [];
         s += '\n';
-        for (var j in prog[i])
-          p.push('        ' + j + ' = ' + prog[i][j]);
+        for (var j in prog[i]) {        // Property -> Value pair
+          if (typeof prog[i][j].join === 'function')
+            p.push('        ' + j + ' = ' + prog[i][j].join(' '));
+          else
+            p.push('        ' + j + ' = ' + prog[i][j]);
+        }
         s += p.join('\n');
       } else                            // Property value
         s += ' = ' + prog[i];
