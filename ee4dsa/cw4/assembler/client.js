@@ -47,7 +47,6 @@ var updateView = function() { // Display errors
 
     $outputRam.text(data.ram);
     $outputList.text(data.list);
-    }
   });
 };
 
