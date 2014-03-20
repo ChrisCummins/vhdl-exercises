@@ -64,21 +64,6 @@ var hex2int = function(n) {
 module.exports.hex2int = hex2int;
 
 /*
- * Recursively expand macro from table
- *
- *   word - a string
- *   symbols - an array of maps of symbol/value pairs
- */
-var resolveSymbols = function(word, symbols) {
-  for (var i in symbols)
-    if (symbols[i][word] !== undefined)
-      return resolveSymbols(symbols[i][word], symbols);
-
-  return '' + word;
-};
-module.exports.resolveSymbols = resolveSymbols;
-
-/*
  * Convert a string into an unsigned integer.
  */
 var requireUint = function(word) {
@@ -181,6 +166,21 @@ var perc = function(n, precision) {
   return n + '%';
 };
 module.exports.perc = perc;
+
+/*
+ * Recursively expand macro from table
+ *
+ *   word - a string
+ *   symbols - an array of maps of symbol/value pairs
+ */
+var resolveSymbols = function(word, symbols) {
+  for (var i in symbols)
+    if (symbols[i][word] !== undefined)
+      return resolveSymbols(symbols[i][word], symbols);
+
+  return '' + word;
+};
+module.exports.resolveSymbols = resolveSymbols;
 
 /* Resolve numerical expressions with a set of tokens */
 var resolveExpressions = function(tokens) {
