@@ -202,10 +202,12 @@ module.exports = function(data, options, callback) {
           case 'nop':  return '00000000';
           case 'halt': return '01000000';
           case 'jmp':  return '02' + u.requireAddress(t[1]);
+          case 'rjmp': return '02' + (u.requireAddress(eval(i + u.requireInt(t[1]))));
           case 'brts': return '03' + u.requireAddress(t[1]);
           case 'seto': return '04' + u.requireByte(t[1]) + u.requireByte(t[2]) + u.requireByte(t[3]);
           case 'tsti': return '05' + u.requireByte(t[1]) + u.requireByte(t[2]) + u.requireByte(t[3]);
           case 'call': return '06' + u.requireAddress(t[1]);
+          case 'rcall': return '06' + (u.requireAddress(eval(i + u.requireInt(t[1]))));
           case 'ret':  return '07000000';
           case 'reti': return '08000000';
           case 'sei':  return '09000000';

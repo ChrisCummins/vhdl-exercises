@@ -39,10 +39,12 @@ OP      ARGS                    ICC     DESC
 nop                             1       No operation
 halt                            -       Halt process
 jmp     address                 1       Jump
+rjmp    immediate               1       Jump to relative offset
 brts    address                 1       Branch if T flag set
 seto    port and xor            1       Set output port
 tsti    port and xor            1       Read input port
 call    address                 1       Call subroutine
+rcall   immediate               1       Call subroutine at relative offset
 ret                             2       Return from subroutine
 reti                            2       Return from interrupt
 sei                             1       Global enable interrupts
