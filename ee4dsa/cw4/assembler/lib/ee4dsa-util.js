@@ -195,12 +195,12 @@ var resolveExpressions = function(tokens) {
     }
 
     // Hunt for the first numerical token
-    if (opA === '' && typeof token === 'number' && i < tokens.length - 2)
+    if (opA === '' && typeof token === 'number' && i < tokens.length - 2) {
       opA = token;
-    else if (opA !== '' && operator === '') {
+    } else if (opA !== '' && operator === '') {
       // If we have the first operand, then hunt for the operator
       if (token.toString().match(/^([\+\-\*^\/|&^]|(>>)|(<<))$/))
-        operator = token
+        operator = token;
       else {
         t.push('' + opA);
         t.push(token);
