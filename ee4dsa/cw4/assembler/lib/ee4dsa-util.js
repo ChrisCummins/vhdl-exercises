@@ -182,7 +182,7 @@ var resolveSymbols = function(word, symbols) {
 };
 module.exports.resolveSymbols = resolveSymbols;
 
-/* Resolve numerical expressions with a set of tokens */
+/* Resolve expressions within a set of tokens */
 var resolveExpressions = function(tokens) {
   var t = [], token, opA = '', operator = '';
 
@@ -209,7 +209,7 @@ var resolveExpressions = function(tokens) {
       opA = token;
     else if (opA !== '' && operator === '') {
       // If we have the first operand, then hunt for the operator
-      if (token.toString().match(/^[\+\-\*^\/]$/))
+      if (token.toString().match(/^([\+\-\*^\/|&^]|(>>)|(<<))$/))
         operator = token
       else {
         t.push('' + opA);
