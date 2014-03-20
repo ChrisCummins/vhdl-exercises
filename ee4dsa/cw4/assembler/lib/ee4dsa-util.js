@@ -32,11 +32,16 @@ var int2hex = function(n, len) {
     return parseInt(s, 16);
   })(len);
 
-  if (n !== undefined && (n = new Number(n)) !== isNaN(n)) {
+  if (n !== undefined) {
+    n = new Number(n);
+
     if (n < 0) // Twos complement
       n += max + 1;
 
-    return pad(new Number(n).toString(16).toUpperCase(), len);
+    if (isNaN(n))
+      throw 'Failed to convert number!';
+
+    return pad(n.toString(16).toUpperCase(), len);
   }
 
   throw 'Failed to convert number "' + n + '"';
