@@ -11,7 +11,8 @@ end test_bench;
 
 architecture behav of test_bench is
 
-    constant clk_freq:   positive   := 2500000; -- Hz
+    constant test_duration: time    := 2 ms;
+    constant clk_freq:   positive   := 2000000; -- Hz
     constant clk_period: time       := 1000 ms / clk_freq;
     constant debounce:   natural    := 1; -- us
     constant baud_rate:  positive   := 57600; -- Baud
@@ -22,7 +23,7 @@ architecture behav of test_bench is
     constant reg_high:   positive   := 255;
     constant ram_size:   positive   := 4096;
     constant intr_size:  positive   := 8;
-    
+
     signal   end_flag:        std_logic                                         :=            '0';
     signal   clk:             std_logic                                         :=            '0';
 
@@ -97,14 +98,14 @@ architecture behav of test_bench is
     signal   test_an:         std_logic_vector(3 downto 0)                      := (others => 'X'); -- anodes   7 segment display
     signal   test_ka:         std_logic_vector(7 downto 0)                      := (others => 'X'); -- kathodes 7 segment display
     signal   test_ld:         std_logic_vector(7 downto 0)                      := (others => 'X'); -- leds
-    signal   rx:              std_logic                                         :=            '0';  -- uart rx 
+    signal   rx:              std_logic                                         :=            '0';  -- uart rx
     signal   tx:              std_logic                                         :=            'X';  -- uart tx
     signal   msf:             std_logic                                         :=            '0';  -- msf signal
     signal   dcf:             std_logic                                         :=            '0';  -- dcf signal
 
 begin
 
-    top_level_uut: entity WORK.top_level 
+    top_level_uut: entity WORK.top_level
     generic map
     (
         clk_freq        => clk_freq,
@@ -163,55 +164,50 @@ begin
         msf             => msf,
         dcf             => dcf
     );
-    
+
+    -- Set end of test
     process
     begin
-    
+      wait for test_duration;
+      end_flag <= '1';
+      wait;
+    end process;
+
+    -- Set clock
+    process
+    begin
         while end_flag = '0' loop
             clk <= '1';
             wait for clk_period / 2;
             clk <= '0';
             wait for clk_period / 2;
         end loop;
-        
         wait;
     end process;
-    
+
+    -- Set centre button input
     process
-        file     data_file: text;
-        variable data_line: line;
-        variable sw_var:  std_logic_vector(7 downto 0);
-        variable io_var:  std_logic_vector(7 downto 0);
-        variable t_var:     time;
     begin
-        file_open(data_file, "test_bench_inputs.dat", read_mode);
+      while end_flag <= '0' loop
+        btnc <= '1';
+        wait for 50 us;
+        btnc <= '0';
+        wait for 150 us;
+      end loop;
+      wait;
+    end process;
 
-        while not endfile(data_file) loop
-            readline(data_file, data_line);
-
-            read(data_line, sw_var);
-            read(data_line, io_var);
-            read(data_line, t_var);
-            
-            if (t_var > now) then
-                wait for t_var - now;
-            end if;
-            
-            sw   <= sw_var;
-            btnu <= io_var(7);
-            btnd <= io_var(6);
-            btnc <= io_var(5);
-            btnl <= io_var(4);
-            btnr <= io_var(3);
-            rx   <= io_var(2);
-            msf  <= io_var(1);
-            dcf  <= io_var(0);
-        end loop;
-        
-        file_close(data_file);
-        wait for 5 * clk_period;
-        end_flag <= '1';
-        wait;
+    process
+    begin
+      sw <= "00000000";
+      btnu <= '0';
+      btnd <= '0';
+      btnl <= '0';
+      btnr <= '0';
+      rx   <= '0';
+      msf  <= '0';
+      dcf  <= '0';
+      wait;
     end process;
 
 --  process
@@ -291,7 +287,7 @@ begin
 --          if (t_var > now) then
 --              wait for t_var - now;
 --          end if;
---          
+--
 --          comp_pc         <= unsigned(comp_pc_var);
 --          comp_sp         <= unsigned(comp_sp_var);
 --          comp_sr         <= comp_sr_var;
@@ -324,115 +320,115 @@ begin
 --          comp_alu_s_do   <= comp_alu_s_do_var;
 --          comp_alu_c_out  <= comp_alu_c_out_var;
 --      end loop;
---      
+--
 --      file_close(data_file);
 --      wait;
 --  end process;
---  
+--
 --  process
 --  begin
 --      wait for 0.5 * clk_period;
 
 --      while end_flag = '0' loop
 --          assert comp_pc             = test_pc
---          report "pc = "             & to_string(std_logic_vector(test_pc)) & 
+--          report "pc = "             & to_string(std_logic_vector(test_pc)) &
 --                 ", but should be "  & to_string(std_logic_vector(comp_pc)) severity error;
 --          assert comp_sp             = test_sp
---          report "sp = "             & to_string(std_logic_vector(test_sp)) & 
+--          report "sp = "             & to_string(std_logic_vector(test_sp)) &
 --                 ", but should be "  & to_string(std_logic_vector(comp_sp)) severity error;
 --          assert comp_sr             = test_sr
---          report "sr = "             & to_string(test_sr)                   & 
+--          report "sr = "             & to_string(test_sr)                   &
 --                 ", but should be "  & to_string(comp_sr)                   severity error;
 --          assert comp_reg_a_addr     = test_reg_a_addr
---          report "reg_a_addr = "     & to_string(test_reg_a_addr)           & 
+--          report "reg_a_addr = "     & to_string(test_reg_a_addr)           &
 --                 ", but should be "  & to_string(comp_reg_a_addr)           severity error;
 --          assert comp_reg_a_wr       = test_reg_a_wr
---          report "reg_a_wr = "       & std_logic'image(test_reg_a_wr)       & 
+--          report "reg_a_wr = "       & std_logic'image(test_reg_a_wr)       &
 --                 ", but should be "  & std_logic'image(comp_reg_a_wr)       severity error;
 --          assert comp_reg_a_di       = test_reg_a_di
---          report "reg_a_di = "       & to_string(test_reg_a_di)             & 
+--          report "reg_a_di = "       & to_string(test_reg_a_di)             &
 --                 ", but should be "  & to_string(comp_reg_a_di)             severity error;
 --          assert comp_reg_b_addr     = test_reg_b_addr
---          report "reg_b_addr = "     & to_string(test_reg_b_addr)           & 
+--          report "reg_b_addr = "     & to_string(test_reg_b_addr)           &
 --                 ", but should be "  & to_string(comp_reg_b_addr)           severity error;
 --          assert comp_reg_b_rd       = test_reg_b_rd
---          report "reg_b_rd = "       & std_logic'image(test_reg_b_rd)       & 
+--          report "reg_b_rd = "       & std_logic'image(test_reg_b_rd)       &
 --                 ", but should be "  & std_logic'image(comp_reg_b_rd)       severity error;
 --          assert comp_reg_b_do       = test_reg_b_do
---          report "reg_b_do = "       & to_string(test_reg_b_do)             & 
+--          report "reg_b_do = "       & to_string(test_reg_b_do)             &
 --                 ", but should be "  & to_string(comp_reg_b_do)             severity error;
 --          assert comp_reg_c_addr     = test_reg_c_addr
---          report "reg_c_addr = "     & to_string(test_reg_c_addr)           & 
+--          report "reg_c_addr = "     & to_string(test_reg_c_addr)           &
 --                 ", but should be "  & to_string(comp_reg_c_addr)           severity error;
 --          assert comp_reg_c_rd       = test_reg_c_rd
---          report "reg_c_rd = "       & std_logic'image(test_reg_c_rd)       & 
+--          report "reg_c_rd = "       & std_logic'image(test_reg_c_rd)       &
 --                 ", but should be "  & std_logic'image(comp_reg_c_rd)       severity error;
 --          assert comp_reg_c_do       = test_reg_c_do
---          report "reg_c_do = "       & to_string(test_reg_c_do)             & 
+--          report "reg_c_do = "       & to_string(test_reg_c_do)             &
 --                 ", but should be "  & to_string(comp_reg_c_do)             severity error;
 --          assert comp_rom_addr       = test_rom_addr
---          report "rom_addr = "       & to_string(test_rom_addr)             & 
+--          report "rom_addr = "       & to_string(test_rom_addr)             &
 --                 ", but should be "  & to_string(comp_rom_addr)             severity error;
---          assert comp_rom_en         = test_rom_en 
---          report "rom_en = "         & std_logic'image(test_rom_en)         & 
+--          assert comp_rom_en         = test_rom_en
+--          report "rom_en = "         & std_logic'image(test_rom_en)         &
 --                 ", but should be "  & std_logic'image(comp_rom_en)         severity error;
 --          assert comp_rom_data       = test_rom_data
---          report "rom_data = "       & to_string(test_rom_data)             & 
+--          report "rom_data = "       & to_string(test_rom_data)             &
 --                 ", but should be "  & to_string(comp_rom_data)             severity error;
 --          assert comp_ram_addr       = test_ram_addr
---          report "ram_addr = "       & to_string(test_ram_addr)             & 
+--          report "ram_addr = "       & to_string(test_ram_addr)             &
 --                 ", but should be "  & to_string(comp_ram_addr)             severity error;
 --          assert comp_ram_rd         = test_ram_rd
---          report "ram_rd = "         & std_logic'image(test_ram_rd)         & 
+--          report "ram_rd = "         & std_logic'image(test_ram_rd)         &
 --                 ", but should be "  & std_logic'image(comp_ram_rd)         severity error;
 --          assert comp_ram_rdata      = test_ram_rdata
---          report "ram_rdata = "      & to_string(test_ram_rdata)            & 
+--          report "ram_rdata = "      & to_string(test_ram_rdata)            &
 --                 ", but should be "  & to_string(comp_ram_rdata)            severity error;
 --          assert comp_ram_wr         = test_ram_wr
---          report "ram_wr = "         & std_logic'image(test_ram_wr)         & 
+--          report "ram_wr = "         & std_logic'image(test_ram_wr)         &
 --                 ", but should be "  & std_logic'image(comp_ram_wr)         severity error;
 --          assert comp_ram_wdata      = test_ram_wdata
---          report "ram_wdata = "      & to_string(test_ram_wdata)            & 
+--          report "ram_wdata = "      & to_string(test_ram_wdata)            &
 --                 ", but should be "  & to_string(comp_ram_wdata)            severity error;
 --          assert comp_ld             = test_ld
---          report "ld = "             & to_string(test_ld)                   & 
+--          report "ld = "             & to_string(test_ld)                   &
 --                ", but should be "   & to_string(comp_ld)                   severity error;
 --          assert comp_an             = test_an
---          report "an = "             & to_string(test_an)                   & 
+--          report "an = "             & to_string(test_an)                   &
 --                ", but should be "   & to_string(comp_an)                   severity error;
 --          assert comp_ka             = test_ka
---          report "ka = "             & to_string(test_ka)                   & 
+--          report "ka = "             & to_string(test_ka)                   &
 --                ", but should be "   & to_string(comp_ka)                   severity error;
 --          assert comp_alu_si         = test_alu_si
---          report "alu_si = "         & std_logic'image(test_alu_si)         & 
+--          report "alu_si = "         & std_logic'image(test_alu_si)         &
 --                 ", but should be "  & std_logic'image(comp_alu_si)         severity error;
 --          assert comp_alu_a_c        = test_alu_a_c
---          report "alu_a_c = "        & std_logic'image(test_alu_a_c)        & 
+--          report "alu_a_c = "        & std_logic'image(test_alu_a_c)        &
 --                 ", but should be "  & std_logic'image(comp_alu_a_c)        severity error;
 --          assert comp_alu_a_di       = test_alu_a_di
---          report "alu_a_di = "       & to_string(test_alu_a_di)             & 
+--          report "alu_a_di = "       & to_string(test_alu_a_di)             &
 --                ", but should be "   & to_string(comp_alu_a_di)             severity error;
 --          assert comp_alu_b_c        = test_alu_b_c
---          report "alu_b_c = "        & std_logic'image(test_alu_b_c)        & 
+--          report "alu_b_c = "        & std_logic'image(test_alu_b_c)        &
 --                 ", but should be "  & std_logic'image(comp_alu_b_c)        severity error;
 --          assert comp_alu_b_di       = test_alu_b_di
---          report "alu_b_di = "       & to_string(test_alu_b_di)             & 
+--          report "alu_b_di = "       & to_string(test_alu_b_di)             &
 --                ", but should be "   & to_string(comp_alu_b_di)             severity error;
 --          assert comp_alu_c_in       = test_alu_c_in
---          report "alu_c_in = "       & std_logic'image(test_alu_c_in)       & 
+--          report "alu_c_in = "       & std_logic'image(test_alu_c_in)       &
 --                 ", but should be "  & std_logic'image(comp_alu_c_in)       severity error;
 --          assert comp_alu_s_do       = test_alu_s_do
---          report "alu_s_do = "       & to_string(test_alu_s_do)             & 
+--          report "alu_s_do = "       & to_string(test_alu_s_do)             &
 --                ", but should be "   & to_string(comp_alu_s_do)             severity error;
 --          assert comp_alu_c_out      = test_alu_c_out
---          report "alu_c_out = "      & std_logic'image(test_alu_c_out)      & 
+--          report "alu_c_out = "      & std_logic'image(test_alu_c_out)      &
 --                 ", but should be "  & std_logic'image(comp_alu_c_out)      severity error;
 --          wait for clk_period;
 --      end loop;
---      
+--
 --      wait;
 --  end process;
---  
+--
 --  process
 --      file     data_file: text;
 --      variable data_line: line;
@@ -441,14 +437,14 @@ begin
 
 --      while end_flag = '0' loop
 
---          wait on end_flag, 
+--          wait on end_flag,
 --                  test_pc, test_sp, test_sr,
 --                  test_reg_a_addr, test_reg_a_wr, test_reg_a_di,
 --                  test_reg_b_addr, test_reg_b_rd, test_reg_b_do,
 --                  test_reg_c_addr, test_reg_c_rd, test_reg_c_do,
---                  test_rom_en, test_rom_addr,  test_rom_data, 
---                  test_ram_wr, test_ram_addr, test_ram_wdata, 
---                  test_ram_rd, test_ram_rdata, 
+--                  test_rom_en, test_rom_addr,  test_rom_data,
+--                  test_ram_wr, test_ram_addr, test_ram_wdata,
+--                  test_ram_rd, test_ram_rdata,
 --                  test_ld, test_an, test_ka,
 --                  test_alu_si, test_alu_a_c, test_alu_a_di,
 --                  test_alu_b_c, test_alu_b_di, test_alu_c_in,
@@ -519,9 +515,9 @@ begin
 --           write(data_line, now);
 --          writeline(data_file, data_line);
 --      end loop;
---      
+--
 --      file_close(data_file);
 --      wait;
 --  end process;
-    
+
 end behav;
