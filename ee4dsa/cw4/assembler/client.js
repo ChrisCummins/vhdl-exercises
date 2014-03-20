@@ -19,6 +19,13 @@ var addError = function(msg) {
                  "href=\"#\">&times;</a></div>");
 };
 
+// Add a new visible error
+var addMessage = function(msg) {
+  $errors.append("<div class=\"alert alert-success\">" + msg +
+                 "<a class=\"close\" data-dismiss=\"alert\" " +
+                 "href=\"#\">&times;</a></div>");
+};
+
 var updateView = function() { // Display errors
   $errors.html('');
   $outputRam.text('');
@@ -31,9 +38,15 @@ var updateView = function() { // Display errors
   }, function(err, data) {
     if (err) // Show errors
       addError(err);
-    else {
-      $outputRam.text(data.ram);
-      $outputList.text(data.list);
+    else if (data.prog.cseg_size + data.prog.dseg_size > data.prog.idt_size)
+      addMessage('Assembled ' + (data.prog.cseg_size + data.prog.dseg_size) +
+                 ' words, ' + u.perc(data.prog.util, 3) + ' util ' +
+                 '(cseg: ' + u.perc(data.prog.cseg_util / data.prog.util, 0) +
+                 ' dseg: ' + u.perc(data.prog.dseg_util / data.prog.util, 0) +
+                 ')');
+
+    $outputRam.text(data.ram);
+    $outputList.text(data.list);
     }
   });
 };
