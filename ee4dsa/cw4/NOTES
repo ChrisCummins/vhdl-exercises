@@ -9,7 +9,8 @@ FEATURES
  * 2 pass assembler
  * Inspired by AVR syntax / instruction set
  * Recursive macro lookups
- * Resursive file imports
+ * Recursive file imports
+ * Recursive numerical operations
 
 WEAKNESSES
 ==========
@@ -105,19 +106,30 @@ Examples:
 
  * Data is aligned to word size
 
-MACROS
-======
+SYMBOLS
+=======
 
-NULL            r0
-PC              r1
-SP              r2
-SREG            r3
+Built-ins:
+
 RAM_SIZE        Size of output RAM
 IDT_SIZE        Size of interrupt descriptor table
 IDT_START       Absolute address of IDT
 PROG_START      Absolute address of start of code
 
+LOGICAL OPERATIONS
+==================
 
+A + B           Addition
+A - B           Subtraction
+A & B           Bitwise AND
+A | B           Bitwise OR
+A ^ B           Bitwise XOR
+
+NUMERICAL MODIFIERS
+===================
+
+-A
+~A
 
 ISR WITH SWITCH
 ===============
