@@ -35,8 +35,10 @@ all help:
 	@echo "make clean          - delete temporary files and cleanup directory"
 	@echo ""
 
-simulation sim:
+asm:
 	./assembler/ucasm.js -s ram.asm -o ram.dat --annotate
+
+simulation sim: asm
 	@for f in $(SOURCES); do \
 	    echo "ghdl -a $$f"; \
 	    ghdl -a $$f; \
