@@ -18,14 +18,14 @@ module.exports = function(data, options, callback) {
       dseg: {},
       memory: {},
       labels: [],
-      macros: {}
+      symbols: {}
     };
 
     // Populate useful values into macro table
-    prog.macros['ram_size'] = prog.size;
-    prog.macros['idt_size'] = prog.idt_size;
-    prog.macros['idt_start'] = 0;
-    prog.macros['prog_start'] = prog.idt_size;
+    prog.symbols['ram_size'] = prog.size;
+    prog.symbols['idt_size'] = prog.idt_size;
+    prog.symbols['idt_start'] = 0;
+    prog.symbols['prog_start'] = prog.idt_size;
 
     // Keep track of where we are in the memory
     var memoryCounter = prog.idt_size;
@@ -48,7 +48,7 @@ module.exports = function(data, options, callback) {
         continue;
 
       // Tokenize each line
-      var tokens = u.tokenize(line, [prog.macros, prog.labels, prog.memory]);
+      var tokens = u.tokenize(line, [prog.symbols, prog.labels, prog.memory]);
 
       if (tokens[0].match(/^\./)) {
         // DIRECTIVE
@@ -67,10 +67,10 @@ module.exports = function(data, options, callback) {
           prog.cseg[u.requireUint(tokens[0])] = ['jmp', tokens[1]];
           break;
         case 'def':
-          prog.macros[u.requireString(tokens[0])] = u.requireString(tokens[1]);
+          prog.symbols[u.requireString(tokens[0])] = u.requireString(tokens[1]);
           break;
         case 'undef':
-          delete prog.macros[u.requireString(tokens[0])];
+          delete prog.symbols[u.requireString(tokens[0])];
           break;
         default:
           throw 'Unrecognised directive "' + directive + '"';
