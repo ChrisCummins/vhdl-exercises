@@ -280,9 +280,13 @@ module.exports = function(data, options, callback) {
     return ram.join('\n');
   };
 
+  try {
     // First pass:
     var prog = asm2prog(data.split('\n'));
 
     // Second pass:
     callback(0, { prog: prog, ram: prog2ram(prog), list: prog2list(prog) });
+  } catch (err) {
+    callback(err);
+  }
 };
