@@ -201,6 +201,7 @@ module.exports = function(data, options, callback) {
     for (var i = 0; i < ram.length; i++) {
       // Lookup memory address in program
       if (prog.cseg[i] !== undefined) {
+        try {
         ram[i] = (function(t) {
           switch (t[0]) {
           case 'nop':   return '00000000';
@@ -257,6 +258,10 @@ module.exports = function(data, options, callback) {
           default:     throw 'Unrecognised mnemonic "' + t[0] + '"';
           }
         })(prog.cseg[i]);
+        } catch (err) {
+          console.log(i, prog.cseg[i], err);
+          process.exit(1);
+        }
       } else {
         // Insert blank data
         ram[i] = u.int2hex(0, 8);
@@ -275,13 +280,9 @@ module.exports = function(data, options, callback) {
     return ram.join('\n');
   };
 
-  try {
     // First pass:
     var prog = asm2prog(data.split('\n'));
 
     // Second pass:
     callback(0, { prog: prog, ram: prog2ram(prog), list: prog2list(prog) });
-  } catch (err) {
-    callback(err);
-  }
 };

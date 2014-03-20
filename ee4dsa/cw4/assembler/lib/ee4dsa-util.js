@@ -174,7 +174,7 @@ module.exports.resolveSymbols = resolveSymbols;
 
 /* Resolve expressions within a set of tokens */
 var resolveExpressions = function(tokens) {
-  var t = [], token, opA = '', operator = '';
+  var t = [], token, opA = '', operators = [];
 
   // Iterate over every token
   for (var i = 0; i < tokens.length; i++) {
@@ -197,27 +197,20 @@ var resolveExpressions = function(tokens) {
     // Hunt for the first numerical token
     if (opA === '' && typeof token === 'number' && i < tokens.length - 2) {
       opA = token;
-    } else if (opA !== '' && operator === '') {
-      // If we have the first operand, then hunt for the operator
-      if (token.toString().match(/^([\+\-\*^\/|&^]|(>>)|(<<))$/))
-        operator = token;
-      else {
-        t.push('' + opA);
-        t.push(token);
-        opA = '';
-      }
-    } else if (opA !== '' && operator !== '') {
-      // If we have the first operand and operator, then hunt for the last operand
-      if (typeof token === 'number') {
-        t.push('' + eval(opA + operator + token));
-      } else {
-        t.push('' + opA);
-        t.push(operator);
-        t.push('' + token);
-        opA = '';
-        operator = '';
-      }
+    } else if (opA !== '' && token.toString().match(/^([\+\-\*^\/|&^]|(>>)|(<<))$/) && i < tokens.length - 1) {
+      operators.push(token);
+    } else if (opA !== '' && typeof token === 'number' && operators.length > 0) {
+      t.push('' + eval('(' + opA + ')' + ' ' + operators.join(' ') + ' (' + token + ')'));
+      console.log('Expression: ', t.concat(tokens.slice(i + 1)));
+      return resolveExpressions(t.concat(tokens.slice(i + 1)))
     } else {
+      if (opA !== '')
+        t.push(opA);
+      if (operators.length)
+        t.push(operators.join(' '));
+
+      opA = '', operators = [];
+
       t.push('' + token);
     }
   }
@@ -243,13 +236,24 @@ var tokenize = function(str, symbols) {
   // Split str into words
   str.split(/[ 	]+/).forEach(function(token) {
 
+    // Strip whitespace
+    token = token.trim();
+
     // Remove commas
     token = token.replace(/,$/, '');
 
-    // Expand macro
-    if (expandToken)
-      token = resolveSymbols(token, symbols);
-    else
+    if (expandToken && typeof token.match === 'function') {
+      var match = token.match(/^([\+\-~]?)(.*)+/);
+
+      console.log('match:', match);
+
+      if (match[1] !== '')
+        token = match[1] + resolveSymbols(match[2], symbols);
+      else
+        token = resolveSymbols(match[2], symbols)
+
+      console.log('token:', token);
+    } else
       expandToken = true;
 
     // Don't expand the token after .UNDEF directive

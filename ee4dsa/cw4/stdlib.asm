@@ -22,6 +22,9 @@
         .def SP         r2
         .def SREG       r3
 
+        .def FOO -1
+        .def BAR -FOO
+
         ;; Device IO.
         ;; =================================================
 
@@ -50,6 +53,11 @@
 
 _stdlib_init:
         jmp     _MAIN_ENTRY_POINT ; Jump to user code entry point
+        .def FOO -10
+        jmp 5 - FOO
+        ldil r0 0x00FF + 1
+        ldil r0 ~0x0
+        jmp 0x00
 
 ;;; Subroutines.
 ;;; ========================================================

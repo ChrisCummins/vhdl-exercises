@@ -59,7 +59,6 @@ var readAsmFile = function(file) {
   return u.flatten(lines).join('\n');
 };
 
-try {
   /* Generate default paths for output files */
   if (argv.output === '<source>.o')
     argv.output = argv.source.replace(/\.[a-z0-9]+$/i, '') + '.o';
@@ -86,7 +85,3 @@ try {
                 '(cseg: ' + u.perc(data.prog.cseg_util / data.prog.util, 0) +
                 ' dseg: ' + u.perc(data.prog.dseg_util / data.prog.util, 0) + ')');
   });
-} catch (err) {
-  process.stderr.write('fatal: ' + err.toString() + '\n');
-  process.exit(2);
-}
