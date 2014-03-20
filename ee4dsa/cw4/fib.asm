@@ -26,7 +26,8 @@
 
         .cseg
 
-        .def a          r32     ; Working registers
+        ;; Working registers
+        .def a          r32
         .def b          r33
         .def sum        r34
         .def 10reg      r60
@@ -39,35 +40,51 @@
         .def 100digit   r102
         .def 1000digit  r103
 
+        ;; Prepare memory and constant registers
 _main:
         cli                     ; Disable interrupts
         st      NULL, sseg_idx  ; SSEG counter = 0
-        st      NULL, sseg_an_t ; Clear SSEG tables
-        st      NULL, sseg_an_t + 1
-        st      NULL, sseg_an_t + 2
-        st      NULL, sseg_an_t + 3
 
-        ldil    10reg, 10
-        ldil    100reg, 100
-        ldil    1000reg, 1000
+        ;; Setup SSEG tables
+        ldih    r90,  0
+        ldil    r90,  0x0E
+        st      r90,  sseg_an_t
+        st      NULL, sseg_ka_t
+        ldil    r90,  0x0D
+        st      r90,  sseg_an_t + 1
+        st      NULL, sseg_ka_t + 1
+        ldil    r90,  0x0B
+        st      r90,  sseg_an_t + 2
+        st      NULL, sseg_ka_t + 2
+        ldil    r90,  0x07
+        st      r90,  sseg_an_t + 3
+        st      NULL, sseg_ka_t + 3
+
+        ;; Setup constants registers
+        ldil    10reg,    10
+        ldil    100reg,   100
+        ldil    1000reg,  1000
         ldil    10000reg, 10000
 
         sei                     ; Enable interrupts
 
+        ;; Prepare registers
 reset_fib:
         clr     a               ; a = 0
         ldih    b, 0
         ldil    b, 1            ; b = 1
 
+        ;; Fibonacci sequence iteration
 next_fib:
         add     sum, a, b       ; sum = a + b
         mov     a, b            ; a = b
         mov     b, sum          ; b = sum
 
+        ;; Reset on overflow
         gte     sum, 10000reg   ; If sum > 10,000
-        jmp     reset_fib       ; THEN reset
+        brts    reset_fib       ; THEN reset
 
-        ;; Convert to BCD
+        ;; Binary to BCD conversion
         pshr    1000reg         ; Denominator
         pshr    sum             ; Numerator
         call    div
@@ -86,12 +103,7 @@ next_fib:
         popr    100digit        ; Tens digit
         popr    1000digit       ; Single digit
 
-        ;; Write out digits to tables
-        st      1digit,    sseg_an_t
-        st      10digit,   sseg_an_t + 1
-        st      100digit,  sseg_an_t + 2
-        st      1000digit, sseg_an_t + 3
-
+        ;; Write out digits to SSEG table
         st      1digit,    sseg_ka_t
         st      10digit,   sseg_ka_t + 1
         st      100digit,  sseg_ka_t + 2
@@ -101,7 +113,8 @@ next_fib:
         call    btnc_press
         jmp     next_fib
 
-        .undef a                ; Clear macros
+        ;; Clear our symbol space
+        .undef a
         .undef b
         .undef sum
         .undef 10reg
@@ -143,7 +156,6 @@ irq1:
         lt      r10, r12        ; IF i < 4
         brts    irq1_2          ; THEN RETURN
         ldil    r10, 0          ; ELSE i = 0
-
 irq1_2:
         st      r10, sseg_idx   ; Memory writes
 
