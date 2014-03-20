@@ -19,7 +19,8 @@
     "url": "https://github.com/ChrisCummins/vhdl-exercises"
   },
   "dependencies": {
-    "optimist" : ">=0.2.6 <0.3",
-    "lazy": "~1.0.11"
+    "optimist": ">=0.2.6 <0.3",
+    "lazy": "~1.0.11",
+    "browserify": "~3.33.0"
   }
 }

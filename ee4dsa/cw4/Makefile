@@ -35,6 +35,9 @@ all help:
 	@echo "make clean          - delete temporary files and cleanup directory"
 	@echo ""
 
+js:
+	cd assembler && node_modules/browserify/bin/cmd.js client.js -o client-bundled.js
+
 asm:
 	./assembler/ucasm.js -s ram.asm -o ram.dat --annotate
 
