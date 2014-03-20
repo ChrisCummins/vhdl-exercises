@@ -259,7 +259,7 @@ module.exports = function(data, options, callback) {
         })(prog.cseg[i]);
       } else {
         // Insert blank data
-        ram[i] = u.int2hex32(0);
+        ram[i] = u.int2hex(0, 8);
       }
 
       // Annotate the listing if required

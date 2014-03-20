@@ -21,37 +21,27 @@ module.exports.pad = pad;
 /*
  * Casts a decimal integer to a hexadecimal string.
  */
-var int2hex = function(n) {
-  if (n !== undefined && !isNaN(n))
-      return new Number(n).toString(16).toUpperCase();
+var int2hex = function(n, len) {
+  len = len || 8; // Default to 32 bits
+
+  var max = (function(len) {
+    var s = '0x';
+    for (var i = 0; i < len; i++)
+      s += 'f';
+
+    return parseInt(s, 16);
+  })(len);
+
+  if (n !== undefined && (n = new Number(n)) !== isNaN(n)) {
+    if (n < 0) // Twos complement
+      n += max + 1;
+
+    return pad(new Number(n).toString(16).toUpperCase(), len);
+  }
 
   throw 'Failed to convert number "' + n + '"';
 };
 module.exports.int2hex = int2hex;
-
-/*
- * Casts a decimal integer to a 32 bit hexadecimal string (0 padded).
- */
-var int2hex32 = function(n) {
-  return n !== undefined ? pad(int2hex(n), 8) : '';
-};
-module.exports.int2hex32 = int2hex32;
-
-/*
- * Casts a decimal integer to a 24 bit hexadecimal string (0 padded).
- */
-var int2hex24 = function(n) {
-  return n !== undefined ? pad(int2hex(n), 6) : '';
-};
-module.exports.int2hex24 = int2hex24;
-
-/*
- * Casts a decimal integer to a 16 bit hexadecimal string (0 padded).
- */
-var int2hex16 = function(n) {
-  return n !== undefined ? pad(int2hex(n), 4) : '';
-};
-module.exports.int2hex16 = int2hex16;
 
 var hex2int = function(n) {
   var h = parseInt(n.replace(/^0x/, ''), 16);
@@ -106,12 +96,12 @@ var requireString = function(word) {
 module.exports.requireString = requireString;
 
 var requireAddress = function(word) {
-  return int2hex24(requireUint(word));
+  return int2hex(requireUint(word), 6);
 };
 module.exports.requireAddress = requireAddress;
 
 var require16Address = function(word) {
-  return int2hex16(requireUint(word));
+  return int2hex(requireUint(word), 4);
 };
 module.exports.require16Address = require16Address;
 
@@ -120,7 +110,7 @@ var requireByte = function(word) {
     var i = requireUint(word);
 
     if (i >= 0 && i < 256)
-      return pad(int2hex(i), 2);
+      return int2hex(i, 2);
   }
 
   throw 'Failed to parse byte "' + word + '"';
