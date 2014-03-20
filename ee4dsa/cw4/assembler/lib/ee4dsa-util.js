@@ -179,7 +179,7 @@ module.exports.resolveSymbols = resolveSymbols;
 
 /* Resolve expressions within a set of tokens */
 var resolveExpressions = function(tokens) {
-  var t = [], token, opA = '', operator = '';
+  var t = [], token, match, opA = '', operators = [];
 
   // Iterate over every token
   for (var i = 0; i < tokens.length; i++) {
@@ -202,27 +202,19 @@ var resolveExpressions = function(tokens) {
     // Hunt for the first numerical token
     if (opA === '' && typeof token === 'number' && i < tokens.length - 2) {
       opA = token;
-    } else if (opA !== '' && operator === '') {
-      // If we have the first operand, then hunt for the operator
-      if (token.toString().match(/^([\+\-\*^\/|&^]|(>>)|(<<))$/))
-        operator = token;
-      else {
-        t.push('' + opA);
-        t.push(token);
-        opA = '';
-      }
-    } else if (opA !== '' && operator !== '') {
-      // If we have the first operand and operator, then hunt for the last operand
-      if (typeof token === 'number') {
-        t.push('' + eval(opA + operator + token));
-      } else {
-        t.push('' + opA);
-        t.push(operator);
-        t.push('' + token);
-        opA = '';
-        operator = '';
-      }
+    } else if (opA !== '' && token.toString().match(/^([\+\-\*^\/|&^]|(>>)|(<<))$/) && i < tokens.length - 1) {
+      operators.push(token);
+    } else if (opA !== '' && typeof token === 'number' && operators.length > 0) {
+      t.push('' + eval('(' + opA + ')' + ' ' + operators.join(' ') + ' (' + token + ')'));
+      return resolveExpressions(t.concat(tokens.slice(i + 1)))
     } else {
+      if (opA !== '')
+        t.push(opA);
+      if (operators.length)
+        t.push(operators.join(' '));
+
+      opA = '', operators = [];
+
       t.push('' + token);
     }
   }
