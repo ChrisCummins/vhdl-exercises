@@ -47,14 +47,14 @@ ret                             2       Return from subroutine
 reti                            2       Return from interrupt
 sei                             1       Global enable interrupts
 cli                             1       Global disable interrupts
-mtr     reg address             2       Memorty to register
-rtm     reg address             2       Register to memory
-imtr    reg reg reg             3       Indexed memory to register
-rtim    reg reg reg             3       Register to indexed memory
+ld      reg address             2       Memorty to register
+st      reg address             2       Register to memory
+ldd     reg reg reg             3       Indexed memory to register
+std     reg reg reg             3       Register to indexed memory
 pshr    reg                     2       Push
 popr    reg                     2       Pop
-rtio    port reg                2       Register to IO
-iotr    reg port                1       IO to register
+stio    port reg                2       Register to IO
+ldio    reg port                1       IO to register
 ldil    reg immediate           2       Load immediate lower
 ldiu    reg immediate           2       Load immediate upper
 and     reg reg reg             3       Bitwise AND
