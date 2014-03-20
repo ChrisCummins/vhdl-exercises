@@ -69,14 +69,14 @@ module.exports.hex2int = hex2int;
  *   word - a string
  *   symbols - an array of maps of symbol/value pairs
  */
-var unMacrofy = function(word, symbols) {
+var resolveSymbols = function(word, symbols) {
   for (var i in symbols)
     if (symbols[i][word] !== undefined)
-      return unMacrofy(symbols[i][word], symbols);
+      return resolveSymbols(symbols[i][word], symbols);
 
   return '' + word;
 };
-module.exports.unMacrofy = unMacrofy;
+module.exports.resolveSymbols = resolveSymbols;
 
 /*
  * Convert a string into an unsigned integer.
@@ -259,7 +259,7 @@ var tokenize = function(str, symbols) {
 
     // Expand macro
     if (expandToken)
-      token = unMacrofy(token, symbols);
+      token = resolveSymbols(token, symbols);
     else
       expandToken = true;
 
