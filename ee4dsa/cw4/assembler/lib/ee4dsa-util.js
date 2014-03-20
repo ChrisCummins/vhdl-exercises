@@ -98,19 +98,19 @@ module.exports.requireUint = requireUint;
 /*
  * Convert a string into a signed integer.
  */
-var requireint = function(word) {
+var requireInt = function(word) {
   if (word !== undefined) {
     word = new String(word);
 
     if (word.match(/^0x[0-9a-f]+/))
       return hex2int(word);
     else if (word.match(/-?[0-9]+/))
-      return word;
+      return new Number(word);
   }
 
   throw 'Failed to parse integer "' + word + '"';
 };
-module.exports.requireint = requireint;
+module.exports.requireInt = requireInt;
 
 var requireString = function(word) {
   if (word === undefined)
