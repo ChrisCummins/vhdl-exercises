@@ -166,11 +166,26 @@ bcd2ssd:
         popr    r17             ; BCD digit 'i'
         ldih    r18, 0
         ldil    r18, _bcd2ssd_t ; r18 = bcd2ssd_t
-        ldd     r18, r18, r17   ; r19 = bcd2ss_t[i]
+        ldd     r18, r18, r17   ; r18 = bcd2ss_t[i]
         pshr    r18             ; Push result
         pshr    r16             ; Push return address
         ret
 
+        ;; Convert a binary coded decimal digit to a Seven Segment
+        ;; Display cathode mask, with the period set.
+        ;;
+        ;;   @param  BCD digit
+        ;;   @return SSD digit with period
+bcd2ssd_p:
+        popr    r16
+        popr    r17             ; BCD digit 'i'
+        ldih    r18, 0
+        ldil    r18, _bcd2ssd_t ; r18 = bcd2ssd_t
+        ldd     r18, r18, r17   ; r18 = bcd2ss_t[i]
+        and     r18, r18, SSD_P_MASK ; Add the period
+        pshr    r18             ; Push result
+        pshr    r16             ; Push return address
+        ret
 
         ;; Software arithmetic.
         ;; =================================================
