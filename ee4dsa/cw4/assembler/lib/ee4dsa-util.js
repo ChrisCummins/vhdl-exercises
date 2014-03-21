@@ -124,7 +124,7 @@ module.exports.requireByte = requireByte;
 
 var requireReg = function(word) {
   if (word !== undefined)
-    return requireByte(word.replace(/^r/, ''));
+    return requireByte(new String(word).replace(/^r/, ''));
 
   throw 'Failed to parse reg "' + word + '"';
 };
@@ -183,7 +183,7 @@ var resolveExpressions = function(tokens) {
 
   // Iterate over every token
   for (var i = 0; i < tokens.length; i++) {
-    token = tokens[i];
+    token = new String(tokens[i]);
 
     // Convert Hex digits to numbers
     if (token.match(/^0x[0-9a-f]+$/)) {
