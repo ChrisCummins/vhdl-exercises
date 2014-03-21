@@ -164,8 +164,8 @@ irq1:
         srlr    r24, r23, r4            ; r24 = r23 >> r4
         mtr     r25, foobar             ; r25 = foobar
         rtim    r25, NULL, r24          ; RAM[NULL + r24] = r25
-        rtio    0x01, r20               ; OUT[1] = r20
-        rtio    0x02, r22               ; OUT[2] = r22
+        rtio    SSEG_AN, r20            ; Anodes = r20
+        rtio    SSEG_KA, r22            ; Cathodes = r22
         imtr    r20, r16, NULL          ; r20 = RAM[r16 + NULL]
         rtm     r20, 0x000043           ; RAM[0x000043] = r20
 
