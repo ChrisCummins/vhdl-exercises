@@ -47,40 +47,17 @@
         .def BTNR       0x80
 
         ;; Hexadecimal encodings for digits oriented abcdefg
-        .def SSD_A2G_0  0x7E
-        .def SSD_A2G_1  0x30
-        .def SSD_A2G_2  0x6D
-        .def SSD_A2G_3  0x79
-        .def SSD_A2G_4  0x33
-        .def SSD_A2G_5  0x5B
-        .def SSD_A2G_6  0x5F
-        .def SSD_A2G_7  0x70
-        .def SSD_A2G_8  0x7F
-        .def SSD_A2G_9  0x7B
-        .def SSD_A2G_A  0x77
-        .def SSD_A2G_B  0x1F
-        .def SSD_A2G_C  0x4E
-        .def SSD_A2G_D  0x3D
-        .def SSD_A2G_E  0x4F
-        .def SSD_A2G_F  0x47
+        .def SSD_DIG_0  0x7E
+        .def SSD_DIG_1  0x30
+        .def SSD_DIG_2  0x6D
+        .def SSD_DIG_3  0x79
+        .def SSD_DIG_4  0x33
+        .def SSD_DIG_5  0x5B
+        .def SSD_DIG_6  0x5F
+        .def SSD_DIG_7  0x70
+        .def SSD_DIG_8  0x7F
+        .def SSD_DIG_9  0x7B
 
-        ;; Hexadecimal encodings for digits oriented gfedcba
-        .def SSD_G2A_0  0x3F
-        .def SSD_G2A_1  0x06
-        .def SSD_G2A_2  0x5B
-        .def SSD_G2A_3  0x4F
-        .def SSD_G2A_4  0x66
-        .def SSD_G2A_5  0x6D
-        .def SSD_G2A_6  0x7D
-        .def SSD_G2A_7  0x07
-        .def SSD_G2A_8  0x7F
-        .def SSD_G2A_9  0x6F
-        .def SSD_G2A_A  0x77
-        .def SSD_G2A_B  0x7C
-        .def SSD_G2A_C  0x39
-        .def SSD_G2A_D  0x5E
-        .def SSD_G2A_E  0x79
-        .def SSD_G2A_F  0x71
 
 ;;; Initialisation.
 ;;; ========================================================
@@ -149,46 +126,39 @@ _btnr_press_2:
 
         .dseg
 
-        _bcd2ssd_t:     .word 16 ; BCD to SSD lookup table
+        _bcd2ssd_t:     .word 10 ; BCD to SSD lookup table
 
         .cseg
 
 _bcd2ssd_init:
         ldih    r16, 0
-        ldil    r16, SSD_A2G_0
+        ldil    r16, SSD_DIG_0
         st      r16, _bcd2ssd_t
-        ldil    r16, SSD_A2G_1
+        ldil    r16, SSD_DIG_1
         st      r16, _bcd2ssd_t + 0x1
-        ldil    r16, SSD_A2G_2
+        ldil    r16, SSD_DIG_2
         st      r16, _bcd2ssd_t + 0x2
-        ldil    r16, SSD_A2G_3
+        ldil    r16, SSD_DIG_3
         st      r16, _bcd2ssd_t + 0x3
-        ldil    r16, SSD_A2G_4
+        ldil    r16, SSD_DIG_4
         st      r16, _bcd2ssd_t + 0x4
-        ldil    r16, SSD_A2G_5
+        ldil    r16, SSD_DIG_5
         st      r16, _bcd2ssd_t + 0x5
-        ldil    r16, SSD_A2G_6
+        ldil    r16, SSD_DIG_6
         st      r16, _bcd2ssd_t + 0x6
-        ldil    r16, SSD_A2G_7
+        ldil    r16, SSD_DIG_7
         st      r16, _bcd2ssd_t + 0x7
-        ldil    r16, SSD_A2G_8
+        ldil    r16, SSD_DIG_8
         st      r16, _bcd2ssd_t + 0x8
-        ldil    r16, SSD_A2G_9
+        ldil    r16, SSD_DIG_9
         st      r16, _bcd2ssd_t + 0x9
-        ldil    r16, SSD_A2G_A
-        st      r16, _bcd2ssd_t + 0xA
-        ldil    r16, SSD_A2G_B
-        st      r16, _bcd2ssd_t + 0xB
-        ldil    r16, SSD_A2G_C
-        st      r16, _bcd2ssd_t + 0xC
-        ldil    r16, SSD_A2G_D
-        st      r16, _bcd2ssd_t + 0xD
-        ldil    r16, SSD_A2G_E
-        st      r16, _bcd2ssd_t + 0xE
-        ldil    r16, SSD_A2G_D
-        st      r16, _bcd2ssd_t + 0xF
         ret
 
+        ;; Convert a binary coded decimal digit to a Seven Segment
+        ;; Display cathode mask.
+        ;;
+        ;;   @param  BCD digit
+        ;;   @return SSD digit
 bcd2ssd:
         popr    r16             ; Return address
         popr    r17             ; BCD digit 'i'
