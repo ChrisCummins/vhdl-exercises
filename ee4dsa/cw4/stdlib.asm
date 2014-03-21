@@ -47,16 +47,16 @@
         .def BTNR       0x80
 
         ;; Hexadecimal encodings for digits oriented abcdefg
-        .def SSD_DIG_0  0x7E
-        .def SSD_DIG_1  0x30
-        .def SSD_DIG_2  0x6D
-        .def SSD_DIG_3  0x79
-        .def SSD_DIG_4  0x33
-        .def SSD_DIG_5  0x5B
-        .def SSD_DIG_6  0x5F
-        .def SSD_DIG_7  0x70
-        .def SSD_DIG_8  0x7F
-        .def SSD_DIG_9  0x7B
+        .def SSD_DIG_0  0xC0
+        .def SSD_DIG_1  0xF9
+        .def SSD_DIG_2  0xA4
+        .def SSD_DIG_3  0xB0
+        .def SSD_DIG_4  0x99
+        .def SSD_DIG_5  0x92
+        .def SSD_DIG_6  0x82
+        .def SSD_DIG_7  0xF8
+        .def SSD_DIG_8  0x80
+        .def SSD_DIG_9  0x90
 
 
 ;;; Initialisation.
