@@ -95,8 +95,22 @@ module.exports = function(data, options, callback) {
 
           // Process instruction labels
           if (tokens[0].match(/:$/)) {
+            var label = tokens.shift().replace(/:$/, '');
+
+            // If label is a numerical address, then we have already
+            // defined the label, so perform a reverse lookup from
+            // within the labels table:
+            if (!isNaN(new Number(label)))
+              label = (function (address) {
+                for (var l in prog.labels)
+                  if (prog.labels[l] == label)
+                    return l;
+
+                throw 'Invalid label name "' + label + '"';
+              })(label);
+
             // Add reference to labels table
-            prog.labels[tokens.shift().replace(/:$/, '')] = memoryCounter;
+            prog.labels[label] = memoryCounter;
 
             // Continue processing only if there are tokens remaining
             if (tokens.length < 1)
