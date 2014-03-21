@@ -238,11 +238,11 @@ var tokenize = function(str, symbols) {
   var tokens = [];
 
   /*
-   * The expandToken flag is used to determine whether to lookup
-   * the current token in the macro table or to skip it. This is
-   * needed for the .UNDEF directive, which requires the
-   * argument token to be interpreted literally so as to be
-   * removed from the macro table.
+   * The expandToken flag is used to determine whether to lookup the
+   * current token in the macro table or to skip it. This is needed
+   * for the symbol directives (.DEF, .UNDEF, etc), which requires the
+   * argument token to be interpreted literally so as to be removed
+   * from the macro table.
    */
   var expandToken = true;
 
@@ -263,8 +263,8 @@ var tokenize = function(str, symbols) {
     } else
       expandToken = true;
 
-    // Don't expand the token after .UNDEF directive
-    if (token === '.undef')
+    // Don't expand the token after symbol directives
+    if (token.match(/\.(def)|(defp)|(undef)/))
       expandToken = false;
 
     if (token !== '')
