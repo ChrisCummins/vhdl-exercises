@@ -46,7 +46,7 @@
         .def BTNL       0x40
         .def BTNR       0x80
 
-        ;; Hexadecimal encodings for digits oriented abcdefg
+        ;; Hexadecimal encodings for digits.
         .def SSD_DIG_0  0xC0
         .def SSD_DIG_1  0xF9
         .def SSD_DIG_2  0xA4
@@ -57,6 +57,8 @@
         .def SSD_DIG_7  0xF8
         .def SSD_DIG_8  0x80
         .def SSD_DIG_9  0x90
+        ;; AND mask to add the period to SSD.
+        .def SSD_P_MASK 0x7F
 
 
 ;;; Initialisation.
