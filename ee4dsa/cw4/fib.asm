@@ -29,6 +29,7 @@
         .def a          r32
         .def b          r33
         .def sum        r34
+        .def last       r35
         .def 10reg      r60
         .def 100reg     r61
         .def 1000reg    r62
@@ -38,6 +39,7 @@
         .def 10digit    r102
         .def 100digit   r101
         .def 1000digit  r100
+        .def 10000digit  r99
 
         .def 1ssd       r107
         .def 10ssd      r106
@@ -77,6 +79,7 @@ reset_fib:
         clr     a               ; a = 0
         ldih    b, 0
         ldil    b, 1            ; b = 1
+        clr     last
 
         ;; Fibonacci sequence iteration
 next_fib:
@@ -84,13 +87,19 @@ next_fib:
         mov     a, b            ; a = b
         mov     b, sum          ; b = sum
 
-        ;; Reset on overflow
-        gte     sum, 10000reg   ; If sum > 10,000
-        brts    reset_fib       ; THEN reset
+        lt      sum, last       ; IF sum < last
+        brts    reset_fib       ; THEN RESET (overflow)
+        mov     last, sum       ; last = current
 
         ;; Binary to BCD conversion
-        pshr    1000reg         ; Denominator
+        pshr    10000reg        ; Denominator
         pshr    sum             ; Numerator
+        call    div
+        popr    10000digit      ; Buffer digit
+        popr    r35
+
+        pshr    1000reg         ; Denominator
+        pshr    r35             ; Numerator
         call    div
         popr    1000digit       ; Thousand digit
         popr    r35
@@ -115,8 +124,15 @@ next_fib:
         pshr    10digit         ; BCD 2 SSD
         call    bcd2ssd
         popr    10ssd
-        pshr    1digit          ; BCD 2 SSD
+
+        pshr    1digit
+        lt      sum, 10000reg   ; IF sum < 10000
+        brts    next_fib_2      ; THEN bcd2ssd
+        call    bcd2ssd_p       ; ELSE bcd2ssd with period
+        jmp     next_fib_3
+next_fib_2:
         call    bcd2ssd
+next_fib_3:
         popr    1ssd
 
         ;; Write out digits to SSD table
