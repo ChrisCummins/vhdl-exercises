@@ -253,13 +253,10 @@ var tokenize = function(str, symbols) {
     token = token.replace(/,$/, '');
 
     if (expandToken && typeof token.match === 'function') {
-      // Resolve symbols, but ignoring
-      var match = token.match(/^([\+\-~]?)(.*)+/);
+      // Resolve symbols, ignoring valid prefixes and suffixes
+      var match = token.match(/^([\+\-~]?)(.+)([:]?)/);
 
-      if (match[1] !== '')
-        token = match[1] + resolveSymbols(match[2], symbols);
-      else
-        token = resolveSymbols(match[2], symbols)
+      token = match[1] + resolveSymbols(match[2], symbols) + match[3];
     } else
       expandToken = true;
 
