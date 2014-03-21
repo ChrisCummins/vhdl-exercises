@@ -72,6 +72,10 @@ module.exports = function(data, options, callback) {
         case 'def':
           prog.symbols[u.requireString(tokens[0])] = u.requireString(tokens[1]);
           break;
+        case 'defp':
+          if (prog.symbols[u.requireString(tokens[0])] === undefined)
+            prog.symbols[u.requireString(tokens[0])] = u.requireString(tokens[1]);
+          break;
         case 'undef':
           delete prog.symbols[u.requireString(tokens[0])];
           break;
