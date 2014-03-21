@@ -12,8 +12,8 @@
         ;; Definitions.
         ;; =================================================
 
-        ;; The start of user program label
-        .def _MAIN_ENTRY_POINT _main
+        ;; The start of user program label:
+        .defp _MAIN_ENTRY_POINT _main
 
         ;; Registers.
         ;; =================================================
