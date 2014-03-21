@@ -145,8 +145,9 @@ next_fib:
         ;; SSG Driver.
         ;; =================================================
 
-        .isr 0 isr1
-isr1:
+        .isr ISR_SSD ssd_update
+
+ssd_update:
         ;; Preserver registers
         pshr    r10
         pshr    r11
@@ -167,9 +168,9 @@ isr1:
         ldil    r11, 4          ; r11 = 4
         inc     r10             ; i++
         lt      r10, r11        ; IF i < 4
-        brts    isr1_2          ; THEN RETURN
+        brts    ssd_update_2    ; THEN RETURN
         ldil    r10, 0          ; ELSE i = 0
-isr1_2:
+ssd_update_2:
         st      r10, ssd_idx    ; Memory writes
 
         ;; Restore register file
