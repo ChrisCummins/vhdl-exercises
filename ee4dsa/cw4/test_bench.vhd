@@ -11,7 +11,7 @@ end test_bench;
 
 architecture behav of test_bench is
 
-    constant test_duration: time    := 2 ms;
+    constant test_duration: time    := 2250 us;
     constant clk_freq:   positive   := 2000000; -- Hz
     constant clk_period: time       := 1000 ms / clk_freq;
     constant debounce:   natural    := 1; -- us
@@ -189,10 +189,10 @@ begin
     process
     begin
       while end_flag <= '0' loop
-        btnc <= '1';
-        wait for 50 us;
         btnc <= '0';
         wait for 150 us;
+        btnc <= '1';
+        wait for 50 us;
       end loop;
       wait;
     end process;

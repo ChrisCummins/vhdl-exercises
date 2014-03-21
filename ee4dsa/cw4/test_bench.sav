@@ -1,24 +1,24 @@
 [*]
 [*] GTKWave Analyzer v3.3.37 (w)1999-2012 BSI
-[*] Tue Mar 18 14:16:16 2014
+[*] Fri Mar 21 11:24:53 2014
 [*]
 [dumpfile] "/home/chris/src/vhdl-exercises/ee4dsa/cw4/test_bench.ghw"
-[dumpfile_mtime] "Tue Mar 18 14:14:16 2014"
-[dumpfile_size] 882966
+[dumpfile_mtime] "Fri Mar 21 11:21:48 2014"
+[dumpfile_size] 1361054
 [savefile] "/home/chris/src/vhdl-exercises/ee4dsa/cw4/test_bench.sav"
 [timestart] 0
 [size] 1366 715
 [pos] -1 -1
-*-38.284893 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-39.284893 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.test_bench.
 [treeopen] top.test_bench.top_level_uut.
 [treeopen] top.test_bench.top_level_uut.ram_unit.data.
 [treeopen] top.test_bench.top_level_uut.register_unit.
 [treeopen] top.test_bench.top_level_uut.register_unit.data.
-[sst_width] 48
-[signals_width] 206
-[sst_expanded] 0
+[sst_width] 210
+[signals_width] 219
+[sst_expanded] 1
 [sst_vpaned_height] 282
 @28
 [color] 3
@@ -110,7 +110,7 @@ top.test_bench.test_ld[1]
 top.test_bench.test_ld[0]
 @1401200
 -group_end
-@24
+@22
 [color] 4
 #{top.test_bench.test_an[3:0]} top.test_bench.test_an[3] top.test_bench.test_an[2] top.test_bench.test_an[1] top.test_bench.test_an[0]
 [color] 4
@@ -176,7 +176,7 @@ top.test_bench.test_rom_data[0]
 @200
 -
 -RAM
-@25
+@24
 [color] 4
 #{top.test_bench.test_ram_addr[11:0]} top.test_bench.test_ram_addr[11] top.test_bench.test_ram_addr[10] top.test_bench.test_ram_addr[9] top.test_bench.test_ram_addr[8] top.test_bench.test_ram_addr[7] top.test_bench.test_ram_addr[6] top.test_bench.test_ram_addr[5] top.test_bench.test_ram_addr[4] top.test_bench.test_ram_addr[3] top.test_bench.test_ram_addr[2] top.test_bench.test_ram_addr[1] top.test_bench.test_ram_addr[0]
 @28
@@ -193,7 +193,8 @@ top.test_bench.test_ram_wr
 #{top.test_bench.test_ram_wdata[31:0]} top.test_bench.test_ram_wdata[31] top.test_bench.test_ram_wdata[30] top.test_bench.test_ram_wdata[29] top.test_bench.test_ram_wdata[28] top.test_bench.test_ram_wdata[27] top.test_bench.test_ram_wdata[26] top.test_bench.test_ram_wdata[25] top.test_bench.test_ram_wdata[24] top.test_bench.test_ram_wdata[23] top.test_bench.test_ram_wdata[22] top.test_bench.test_ram_wdata[21] top.test_bench.test_ram_wdata[20] top.test_bench.test_ram_wdata[19] top.test_bench.test_ram_wdata[18] top.test_bench.test_ram_wdata[17] top.test_bench.test_ram_wdata[16] top.test_bench.test_ram_wdata[15] top.test_bench.test_ram_wdata[14] top.test_bench.test_ram_wdata[13] top.test_bench.test_ram_wdata[12] top.test_bench.test_ram_wdata[11] top.test_bench.test_ram_wdata[10] top.test_bench.test_ram_wdata[9] top.test_bench.test_ram_wdata[8] top.test_bench.test_ram_wdata[7] top.test_bench.test_ram_wdata[6] top.test_bench.test_ram_wdata[5] top.test_bench.test_ram_wdata[4] top.test_bench.test_ram_wdata[3] top.test_bench.test_ram_wdata[2] top.test_bench.test_ram_wdata[1] top.test_bench.test_ram_wdata[0]
 @200
 -
--Register File
+@201
+-Register Filer - BCD digits
 @24
 [color] 3
 #{top.test_bench.top_level_uut.register_unit.data[100][31:0]} top.test_bench.top_level_uut.register_unit.data[100][31] top.test_bench.top_level_uut.register_unit.data[100][30] top.test_bench.top_level_uut.register_unit.data[100][29] top.test_bench.top_level_uut.register_unit.data[100][28] top.test_bench.top_level_uut.register_unit.data[100][27] top.test_bench.top_level_uut.register_unit.data[100][26] top.test_bench.top_level_uut.register_unit.data[100][25] top.test_bench.top_level_uut.register_unit.data[100][24] top.test_bench.top_level_uut.register_unit.data[100][23] top.test_bench.top_level_uut.register_unit.data[100][22] top.test_bench.top_level_uut.register_unit.data[100][21] top.test_bench.top_level_uut.register_unit.data[100][20] top.test_bench.top_level_uut.register_unit.data[100][19] top.test_bench.top_level_uut.register_unit.data[100][18] top.test_bench.top_level_uut.register_unit.data[100][17] top.test_bench.top_level_uut.register_unit.data[100][16] top.test_bench.top_level_uut.register_unit.data[100][15] top.test_bench.top_level_uut.register_unit.data[100][14] top.test_bench.top_level_uut.register_unit.data[100][13] top.test_bench.top_level_uut.register_unit.data[100][12] top.test_bench.top_level_uut.register_unit.data[100][11] top.test_bench.top_level_uut.register_unit.data[100][10] top.test_bench.top_level_uut.register_unit.data[100][9] top.test_bench.top_level_uut.register_unit.data[100][8] top.test_bench.top_level_uut.register_unit.data[100][7] top.test_bench.top_level_uut.register_unit.data[100][6] top.test_bench.top_level_uut.register_unit.data[100][5] top.test_bench.top_level_uut.register_unit.data[100][4] top.test_bench.top_level_uut.register_unit.data[100][3] top.test_bench.top_level_uut.register_unit.data[100][2] top.test_bench.top_level_uut.register_unit.data[100][1] top.test_bench.top_level_uut.register_unit.data[100][0]
@@ -239,6 +240,17 @@ top.test_bench.top_level_uut.register_unit.data[103][1]
 top.test_bench.top_level_uut.register_unit.data[103][0]
 @1401200
 -group_end
+@200
+-Register File - SSD digits
+@22
+[color] 3
+#{top.test_bench.top_level_uut.register_unit.data[104][31:0]} top.test_bench.top_level_uut.register_unit.data[104][31] top.test_bench.top_level_uut.register_unit.data[104][30] top.test_bench.top_level_uut.register_unit.data[104][29] top.test_bench.top_level_uut.register_unit.data[104][28] top.test_bench.top_level_uut.register_unit.data[104][27] top.test_bench.top_level_uut.register_unit.data[104][26] top.test_bench.top_level_uut.register_unit.data[104][25] top.test_bench.top_level_uut.register_unit.data[104][24] top.test_bench.top_level_uut.register_unit.data[104][23] top.test_bench.top_level_uut.register_unit.data[104][22] top.test_bench.top_level_uut.register_unit.data[104][21] top.test_bench.top_level_uut.register_unit.data[104][20] top.test_bench.top_level_uut.register_unit.data[104][19] top.test_bench.top_level_uut.register_unit.data[104][18] top.test_bench.top_level_uut.register_unit.data[104][17] top.test_bench.top_level_uut.register_unit.data[104][16] top.test_bench.top_level_uut.register_unit.data[104][15] top.test_bench.top_level_uut.register_unit.data[104][14] top.test_bench.top_level_uut.register_unit.data[104][13] top.test_bench.top_level_uut.register_unit.data[104][12] top.test_bench.top_level_uut.register_unit.data[104][11] top.test_bench.top_level_uut.register_unit.data[104][10] top.test_bench.top_level_uut.register_unit.data[104][9] top.test_bench.top_level_uut.register_unit.data[104][8] top.test_bench.top_level_uut.register_unit.data[104][7] top.test_bench.top_level_uut.register_unit.data[104][6] top.test_bench.top_level_uut.register_unit.data[104][5] top.test_bench.top_level_uut.register_unit.data[104][4] top.test_bench.top_level_uut.register_unit.data[104][3] top.test_bench.top_level_uut.register_unit.data[104][2] top.test_bench.top_level_uut.register_unit.data[104][1] top.test_bench.top_level_uut.register_unit.data[104][0]
+[color] 3
+#{top.test_bench.top_level_uut.register_unit.data[105][31:0]} top.test_bench.top_level_uut.register_unit.data[105][31] top.test_bench.top_level_uut.register_unit.data[105][30] top.test_bench.top_level_uut.register_unit.data[105][29] top.test_bench.top_level_uut.register_unit.data[105][28] top.test_bench.top_level_uut.register_unit.data[105][27] top.test_bench.top_level_uut.register_unit.data[105][26] top.test_bench.top_level_uut.register_unit.data[105][25] top.test_bench.top_level_uut.register_unit.data[105][24] top.test_bench.top_level_uut.register_unit.data[105][23] top.test_bench.top_level_uut.register_unit.data[105][22] top.test_bench.top_level_uut.register_unit.data[105][21] top.test_bench.top_level_uut.register_unit.data[105][20] top.test_bench.top_level_uut.register_unit.data[105][19] top.test_bench.top_level_uut.register_unit.data[105][18] top.test_bench.top_level_uut.register_unit.data[105][17] top.test_bench.top_level_uut.register_unit.data[105][16] top.test_bench.top_level_uut.register_unit.data[105][15] top.test_bench.top_level_uut.register_unit.data[105][14] top.test_bench.top_level_uut.register_unit.data[105][13] top.test_bench.top_level_uut.register_unit.data[105][12] top.test_bench.top_level_uut.register_unit.data[105][11] top.test_bench.top_level_uut.register_unit.data[105][10] top.test_bench.top_level_uut.register_unit.data[105][9] top.test_bench.top_level_uut.register_unit.data[105][8] top.test_bench.top_level_uut.register_unit.data[105][7] top.test_bench.top_level_uut.register_unit.data[105][6] top.test_bench.top_level_uut.register_unit.data[105][5] top.test_bench.top_level_uut.register_unit.data[105][4] top.test_bench.top_level_uut.register_unit.data[105][3] top.test_bench.top_level_uut.register_unit.data[105][2] top.test_bench.top_level_uut.register_unit.data[105][1] top.test_bench.top_level_uut.register_unit.data[105][0]
+[color] 3
+#{top.test_bench.top_level_uut.register_unit.data[106][31:0]} top.test_bench.top_level_uut.register_unit.data[106][31] top.test_bench.top_level_uut.register_unit.data[106][30] top.test_bench.top_level_uut.register_unit.data[106][29] top.test_bench.top_level_uut.register_unit.data[106][28] top.test_bench.top_level_uut.register_unit.data[106][27] top.test_bench.top_level_uut.register_unit.data[106][26] top.test_bench.top_level_uut.register_unit.data[106][25] top.test_bench.top_level_uut.register_unit.data[106][24] top.test_bench.top_level_uut.register_unit.data[106][23] top.test_bench.top_level_uut.register_unit.data[106][22] top.test_bench.top_level_uut.register_unit.data[106][21] top.test_bench.top_level_uut.register_unit.data[106][20] top.test_bench.top_level_uut.register_unit.data[106][19] top.test_bench.top_level_uut.register_unit.data[106][18] top.test_bench.top_level_uut.register_unit.data[106][17] top.test_bench.top_level_uut.register_unit.data[106][16] top.test_bench.top_level_uut.register_unit.data[106][15] top.test_bench.top_level_uut.register_unit.data[106][14] top.test_bench.top_level_uut.register_unit.data[106][13] top.test_bench.top_level_uut.register_unit.data[106][12] top.test_bench.top_level_uut.register_unit.data[106][11] top.test_bench.top_level_uut.register_unit.data[106][10] top.test_bench.top_level_uut.register_unit.data[106][9] top.test_bench.top_level_uut.register_unit.data[106][8] top.test_bench.top_level_uut.register_unit.data[106][7] top.test_bench.top_level_uut.register_unit.data[106][6] top.test_bench.top_level_uut.register_unit.data[106][5] top.test_bench.top_level_uut.register_unit.data[106][4] top.test_bench.top_level_uut.register_unit.data[106][3] top.test_bench.top_level_uut.register_unit.data[106][2] top.test_bench.top_level_uut.register_unit.data[106][1] top.test_bench.top_level_uut.register_unit.data[106][0]
+[color] 3
+#{top.test_bench.top_level_uut.register_unit.data[107][31:0]} top.test_bench.top_level_uut.register_unit.data[107][31] top.test_bench.top_level_uut.register_unit.data[107][30] top.test_bench.top_level_uut.register_unit.data[107][29] top.test_bench.top_level_uut.register_unit.data[107][28] top.test_bench.top_level_uut.register_unit.data[107][27] top.test_bench.top_level_uut.register_unit.data[107][26] top.test_bench.top_level_uut.register_unit.data[107][25] top.test_bench.top_level_uut.register_unit.data[107][24] top.test_bench.top_level_uut.register_unit.data[107][23] top.test_bench.top_level_uut.register_unit.data[107][22] top.test_bench.top_level_uut.register_unit.data[107][21] top.test_bench.top_level_uut.register_unit.data[107][20] top.test_bench.top_level_uut.register_unit.data[107][19] top.test_bench.top_level_uut.register_unit.data[107][18] top.test_bench.top_level_uut.register_unit.data[107][17] top.test_bench.top_level_uut.register_unit.data[107][16] top.test_bench.top_level_uut.register_unit.data[107][15] top.test_bench.top_level_uut.register_unit.data[107][14] top.test_bench.top_level_uut.register_unit.data[107][13] top.test_bench.top_level_uut.register_unit.data[107][12] top.test_bench.top_level_uut.register_unit.data[107][11] top.test_bench.top_level_uut.register_unit.data[107][10] top.test_bench.top_level_uut.register_unit.data[107][9] top.test_bench.top_level_uut.register_unit.data[107][8] top.test_bench.top_level_uut.register_unit.data[107][7] top.test_bench.top_level_uut.register_unit.data[107][6] top.test_bench.top_level_uut.register_unit.data[107][5] top.test_bench.top_level_uut.register_unit.data[107][4] top.test_bench.top_level_uut.register_unit.data[107][3] top.test_bench.top_level_uut.register_unit.data[107][2] top.test_bench.top_level_uut.register_unit.data[107][1] top.test_bench.top_level_uut.register_unit.data[107][0]
 @200
 -
 -A register
