@@ -51,16 +51,16 @@ _main:
 
         ;; Setup SSD tables
         ldih    r90,  0
-        ldil    r90,  0x0E
+        ldil    r90,  0x07
         st      r90,  ssd_an_t
         st      NULL, ssd_ka_t
-        ldil    r90,  0x0D
+        ldil    r90,  0x0B
         st      r90,  ssd_an_t + 1
         st      NULL, ssd_ka_t + 1
-        ldil    r90,  0x0B
+        ldil    r90,  0x0D
         st      r90,  ssd_an_t + 2
         st      NULL, ssd_ka_t + 2
-        ldil    r90,  0x07
+        ldil    r90,  0x0E
         st      r90,  ssd_an_t + 3
         st      NULL, ssd_ka_t + 3
 
