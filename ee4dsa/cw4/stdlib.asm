@@ -238,3 +238,4 @@ _div_3:
 ;;; Fall-through in case the including library doesn't implement it's
 ;;; own entry point:
 _MAIN_ENTRY_POINT:
+        nop
