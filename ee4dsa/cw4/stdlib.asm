@@ -22,10 +22,10 @@
         .def SP         r2
         .def SREG       r3
 
-        ;; Interrupt handlers.
+        ;; Interrupt lines.
         ;; =================================================
-        .def ISR_LED    0
-        .def ISR_SSD    1
+        .def ISR_TIMER  0       ; Timer
+        .def ISR_SSD    1       ; Seven Segment Display
 
         ;; Device IO.
         ;; =================================================
