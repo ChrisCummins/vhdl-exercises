@@ -41,7 +41,7 @@ js:
 asm:
 	./assembler/ucasm.js -s ram.asm -o ram.dat --annotate
 
-simulation sim: asm
+simulation sim:
 	@for f in $(SOURCES); do \
 	    echo "ghdl -a $$f"; \
 	    ghdl -a $$f; \
