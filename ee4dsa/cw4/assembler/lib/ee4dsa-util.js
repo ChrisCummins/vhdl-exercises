@@ -206,10 +206,13 @@ var resolveExpressions = function(tokens) {
     }
 
     // Hunt for the first numerical token
-    if (opA === '' && typeof token === 'number' && i < tokens.length - 2) {
+    if (operators.length < 1 && typeof token === 'number' && i < tokens.length - 2) {
+      if (opA !== '') // Flush out a previous operand
+        t.push('' + opA);
+
       opA = token;
     } else if (opA !== '' && token.toString().match(/^([\+\-\*^\/|&^]|(>>)|(<<))$/) && i < tokens.length - 1) {
-      operators.push(token);
+      operators.push('' + token);
     } else if (opA !== '' && typeof token === 'number' && operators.length > 0) {
       t.push('' + eval('(' + opA + ')' + ' ' + operators.join(' ') + ' (' + token + ')'));
       return resolveExpressions(t.concat(tokens.slice(i + 1)))
