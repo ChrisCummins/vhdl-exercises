@@ -55,6 +55,10 @@ module.exports = function(data, options, callback) {
       .replace(/(^|\s)brne\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
                '$1neq $2 $3\n' +
                'brts $4')
+    // Branch if less than / greater than (equal)
+      .replace(/(^|\s)br(lt|lte|gt|gte)\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
+               '$1$2 $3 $4\n' +
+               'brts $5')
     // Branch if not equal immediate
       .replace(/(^|\s)brnei\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
                '$1ldi __r $3\n' +
