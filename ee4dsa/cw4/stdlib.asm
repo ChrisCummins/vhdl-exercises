@@ -57,26 +57,24 @@
         .def SSD_AN     0x01
         .def SSD_KA     0x02
 
-        ;; Button masks
-        .def BTNU       0x00
-        .def BTND       0x10
-        .def BTNC       0x20
-        .def BTNL       0x40
-        .def BTNR       0x80
+        ;; Button mask bit positions
+        .def BTND       4
+        .def BTNC       5
+        .def BTNL       6
+        .def BTNR       7
 
-        ;; Hexadecimal encodings for digits.
-        .def SSD_CHAR_0 0xC0
-        .def SSD_CHAR_1 0xF9
-        .def SSD_CHAR_2 0xA4
-        .def SSD_CHAR_3 0xB0
-        .def SSD_CHAR_4 0x99
-        .def SSD_CHAR_5 0x92
-        .def SSD_CHAR_6 0x82
-        .def SSD_CHAR_7 0xF8
-        .def SSD_CHAR_8 0x80
-        .def SSD_CHAR_9 0x90
-        ;; AND mask to add the period to SSD.
-        .def SSD_P_MASK 0x7F
+        ;; Bit masks for seven segment display characters
+        .def SSD_CHAR_0 0b11000000
+        .def SSD_CHAR_1 0b11111001
+        .def SSD_CHAR_2 0b10100100
+        .def SSD_CHAR_3 0b10110000
+        .def SSD_CHAR_4 0b10011001
+        .def SSD_CHAR_5 0b10010010
+        .def SSD_CHAR_6 0b10000010
+        .def SSD_CHAR_7 0b11111000
+        .def SSD_CHAR_8 0b10000000
+        .def SSD_CHAR_9 0b10010000
+        .def SSD_PERIOD 0b01111111
 
 
 ;;; Initialisation.
@@ -125,9 +123,9 @@ _stdlib_init:
         ;;
         ;;   @return void
 btnu_press:
-        tsti    BUTTONS, BTNU, BTNU
+        tsti    BUTTONS, 0, 0
         rbrts   -1
-        tsti    BUTTONS, BTNU, 0x00
+        tsti    BUTTONS, 0, 0
         rbrts   -1
         ret
 
@@ -135,9 +133,9 @@ btnu_press:
         ;;
         ;;   @return void
 btnd_press:
-        tsti    BUTTONS, BTND, BTND
+        tsti    BUTTONS, 1 << BTND, 1 << BTND
         rbrts   -1
-        tsti    BUTTONS, BTND, 0x00
+        tsti    BUTTONS, 1 << BTND, 0 << BTND
         rbrts   -1
         ret
 
@@ -145,9 +143,9 @@ btnd_press:
         ;;
         ;;   @return void
 btnc_press:
-        tsti    BUTTONS, BTNC, BTNC
+        tsti    BUTTONS, 1 << BTNC, 1 << BTNC
         rbrts   -1
-        tsti    BUTTONS, BTNC, 0x00
+        tsti    BUTTONS, 1 << BTNC, 0 << BTNC
         rbrts   -1
         ret
 
@@ -155,9 +153,9 @@ btnc_press:
         ;;
         ;;   @return void
 btnl_press:
-        tsti    BUTTONS, BTNL, BTNL
+        tsti    BUTTONS, 1 << BTNL, 1 << BTNL
         rbrts   -1
-        tsti    BUTTONS, BTNL, 0x00
+        tsti    BUTTONS, 1 << BTNL, 0 << BTNL
         rbrts   -1
         ret
 
@@ -165,9 +163,9 @@ btnl_press:
         ;;
         ;;   @return void
 btnr_press:
-        tsti    BUTTONS, BTNR, BTNR
+        tsti    BUTTONS, 1 << BTNR, 1 << BTNR
         rbrts   -1
-        tsti    BUTTONS, BTNR, 0x00
+        tsti    BUTTONS, 1 << BTNR, 0 << BTNR
         rbrts   -1
         ret
 
@@ -189,26 +187,25 @@ btnr_press:
         ;;   @inline
         ;;   @reg $r
 _bcd2ssd_init:
-        ldih    $r, 0
-        ldil    $r, SSD_CHAR_0
+        ldi     $r, SSD_CHAR_0
         st      $r, _bcd2ssd_t
-        ldil    $r, SSD_CHAR_1
+        ldi     $r, SSD_CHAR_1
         st      $r, _bcd2ssd_t + 0x1
-        ldil    $r, SSD_CHAR_2
+        ldi     $r, SSD_CHAR_2
         st      $r, _bcd2ssd_t + 0x2
-        ldil    $r, SSD_CHAR_3
+        ldi     $r, SSD_CHAR_3
         st      $r, _bcd2ssd_t + 0x3
-        ldil    $r, SSD_CHAR_4
+        ldi     $r, SSD_CHAR_4
         st      $r, _bcd2ssd_t + 0x4
-        ldil    $r, SSD_CHAR_5
+        ldi     $r, SSD_CHAR_5
         st      $r, _bcd2ssd_t + 0x5
-        ldil    $r, SSD_CHAR_6
+        ldi     $r, SSD_CHAR_6
         st      $r, _bcd2ssd_t + 0x6
-        ldil    $r, SSD_CHAR_7
+        ldi     $r, SSD_CHAR_7
         st      $r, _bcd2ssd_t + 0x7
-        ldil    $r, SSD_CHAR_8
+        ldi     $r, SSD_CHAR_8
         st      $r, _bcd2ssd_t + 0x8
-        ldil    $r, SSD_CHAR_9
+        ldi     $r, SSD_CHAR_9
         st      $r, _bcd2ssd_t + 0x9
         ret
 
@@ -217,14 +214,12 @@ _bcd2ssd_init:
         ;;
         ;;   @param  BCD digit
         ;;   @return SSD digit
-        ;;   @reg    $r-$r2
+        ;;   @reg    $r-$r1
 bcd2ssd:
         popr    $r              ; Return address
         popr    $r1             ; BCD digit 'i'
-        ldih    $r2, 0
-        ldil    $r2, _bcd2ssd_t ; $r2 = bcd2ssd_t
-        ldd     $r2, $r2, $r1   ; $r2 = bcd2ss_t[i]
-        pshr    $r2             ; Push result
+        lddi    $r1, $r1, _bcd2ssd_t ; $r2 = bcd2ss_t[i]
+        pshr    $r1             ; Push result
         pshr    $r              ; Push return address
         ret
 
@@ -233,15 +228,13 @@ bcd2ssd:
         ;;
         ;;   @param  BCD digit
         ;;   @return SSD digit with period
-        ;;   @reg    $r-$r2
+        ;;   @reg    $r-$r1
 bcd2ssd_p:
         popr    $r              ; Return address
         popr    $r1             ; BCD digit 'i'
-        ldih    $r2, 0
-        ldil    $r2, _bcd2ssd_t ; $r2 = bcd2ssd_t
-        ldd     $r2, $r2, $r1   ; $r2 = bcd2ss_t[i]
-        and     $r2, $r2, SSD_P_MASK ; Add the period
-        pshr    $r2             ; Push result
+        lddi    $r1, $r1, _bcd2ssd_t ; $r2 = bcd2ss_t[i]
+        and     $r1, $r1, SSD_PERIOD ; Add the period
+        pshr    $r1             ; Push result
         pshr    $r              ; Push return address
         ret
 
