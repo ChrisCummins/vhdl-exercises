@@ -313,23 +313,6 @@ mult:
         pshr    $r              ; Push return address
         ret
 
-        ;; Multiply two signed numbers.
-        ;;
-        ;; @param  operand A
-        ;; @param  operand B
-        ;; @return result
-mults:
-        popr    $r              ; Return address
-        popr    $r1             ; a
-        popr    $r2             ; b
-        lts     $r2, 0          ; IF b < 0
-        subs    $r1, 0, $r1     ; a = 0 - a
-        subs    $r2, 0, $r2     ; b = 0 - b
-        pshr    $r1             ; Push a
-        pshr    $r2             ; Push b
-        call    mult            ; Unsigned multiplication
-        ret
-
         ;; Unsigned integer division.
         ;;
         ;;   @param  numerator

@@ -32,34 +32,33 @@
         .def last       r35
         .def ssd_ka_r   r26
 
-        ;; Prepare memory and constant registers
+
 _main:
         cli                     ; Disable interrupts
-        st      NULL, ssd_idx   ; SSD counter = 0
 
+        ;; Prepare memory and constant registers
         ldi     ssd_ka_r, ssd_ka_t
 
         ;; Setup SSD tables
-        ldi     r90,  0x07
-        st      r90,  ssd_an_t
+        st      NULL, ssd_idx   ; SSD counter = 0
+
         st      NULL, ssd_ka_t
-        ldil    r90,  0x0B
-        st      r90,  ssd_an_t + 1
         st      NULL, ssd_ka_t + 1
-        ldil    r90,  0x0D
-        st      r90,  ssd_an_t + 2
         st      NULL, ssd_ka_t + 2
-        ldil    r90,  0x0E
-        st      r90,  ssd_an_t + 3
         st      NULL, ssd_ka_t + 3
+
+        sti     0x07, ssd_an_t
+        sti     0x0B, ssd_an_t + 1
+        sti     0x0D, ssd_an_t + 2
+        sti     0x0E, ssd_an_t + 3
 
         sei                     ; Enable interrupts
 
-        ;; Prepare registers
 reset_fib:
+        ;; Prepare registers
         ldi     a, 0            ; a = 0
         ldi     b, 1            ; b = 1
-        clr     last
+        ldi     last, 0
 
         ;; Fibonacci sequence iteration
 next_fib:
@@ -83,6 +82,7 @@ next_fib:
         .undef a
         .undef b
         .undef sum
+        .undef last
         .undef ssd_ka_r
 
         ;; SSG Driver.
