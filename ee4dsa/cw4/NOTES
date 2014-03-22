@@ -62,7 +62,9 @@ cli                             1       Global disable interrupts
 ld      reg address             2       Memorty to register
 st      reg address             2       Register to memory
 ldd     reg reg reg             3       Indexed memory to register
+lddi    reg reg immediate       7*      Indirect memory to register
 std     reg reg reg             3       Register to indexed memory
+stdi    reg immediate reg       7*      Register to indirect memory
 pshr    reg                     2       Push
 pshi    immediate               6*      Push immediate
 popr    reg                     2       Pop

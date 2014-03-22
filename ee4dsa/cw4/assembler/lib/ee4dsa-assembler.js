@@ -16,25 +16,33 @@ module.exports = function(data, options, callback) {
   var preProcess = function(text) {
     var processed = text
     // (Relative) Branch if equal
-      .replace(/(r?)breq\s+([^\s]+)\s+([^\s,]+)\s+([^\s,]+)/,
+      .replace(/(r?)breq\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
               'equ $2 $3\n' +
               '$1brts $4')
     // (Relative) Branch if equal immediate
-      .replace(/(r?)breqi\s+([^\s]+)\s+([^\s,]+)\s+([^\s,]+)/,
+      .replace(/(r?)breqi\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
                'ldi __r $3\n' +
                'equ $2 __r\n' +
                '$1brts $4')
     // (Relative) Branch if not equal
-      .replace(/(r?)brne\s+([^\s]+)\s+([^\s,]+)\s+([^\s,]+)/,
+      .replace(/(r?)brne\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
                'neq $2 $3\n' +
                '$1brts $4')
     // (Relative) Branch if not equal immediate
-      .replace(/(r?)brnei\s+([^\s]+)\s+([^\s,]+)\s+([^\s,]+)/,
+      .replace(/(r?)brnei\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
                'ldi __r $3\n' +
                'neq $2 __r\n' +
                '$1brts $4')
+    // Load indirect to register
+      .replace(/stdi\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
+               'ldi __r $2\n' +
+               'std $1 __r $3')
+    // Store indirect to register
+      .replace(/lddi\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
+               'ldi __r $3\n' +
+               'ldd $1 $2 __r')
     // Push immediate
-      .replace(/pshi\s+([^\s,]+)/,
+      .replace(/pshi\s+([^\s]+)/,
                'ldi __r $1\n' +
                'pshr __r')
     // Load immediate
@@ -42,19 +50,19 @@ module.exports = function(data, options, callback) {
                'ldih $1 $2 >> 16\n' +
                'ldil $1 $2')
     // Equals immediate
-      .replace(/eqi\s+([^\s,]+)\s+([^\s,]+)/,
+      .replace(/eqi\s+([^\s]+)\s+([^\s]+)/,
                'ldi __r $2\n' +
                'equ $1 __r')
     // Not equals immediate
-      .replace(/neqi\s+([^\s,]+)\s+([^\s,]+)/,
+      .replace(/neqi\s+([^\s]+)\s+([^\s]+)/,
                'ldi __r $2\n' +
                'neq $1 __r')
     // Less than / Great than (or equal) (signed) immediate
-      .replace(/(lt|gt)(e?)(s?)i\s+([^\s,]+)\s+([^\s,]+)/,
+      .replace(/(lt|gt)(e?)(s?)i\s+([^\s]+)\s+([^\s]+)/,
                'ldi __r $5\n' +
                '$1$2$3 $4 __r')
     // Add / Subtract (signed) immediate
-      .replace(/(add|sub)(s?)i\s+([^\s,]+)\s+([^\s,]+)\s+([^\s,]+)/,
+      .replace(/(add|sub)(s?)i\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
                'ldi __r $5\n' +
                '$1$2 $3 $4 __r')
 
