@@ -48,6 +48,10 @@ rbreq   reg reg immediate       4*      Relateive branch if equal
 breqi   reg immediate address   8*      Branch if equal immediate
 brne    reg reg address         4*      Branch if not equal
 brnei   reg immediate address   8*      Branch if not equal immediate
+brlt    reg reg address         4*      Branch if less than
+brlte   reg reg address         4*      Branch if less than or equal
+brgt    reg reg address         4*      Branch if greater than
+brgte   reg reg address         4*      Branch if greater than or equal
 seto    port and xor            1       Set output port
 tsti    port and xor            1       Read input port
 call    address                 1       Call subroutine
