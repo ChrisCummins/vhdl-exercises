@@ -88,33 +88,23 @@ next_fib:
         ;; SSG Driver.
         ;; =================================================
 
+        .def KA_AN_OFFSET ssd_ka_t - ssd_an_t
+
         .isr ISR_SSD ssd_update
 
 ssd_update:
-        ;; Preserver registers
-        pshr    r10
-        pshr    r11
-
-        ;; Prepare registers
-        ld      r10, ssd_idx    ; r10 = i
-        ldi     r11, ssd_an_t   ; r11 = an_t
-        ldd     r11, r11, r10   ; r11 = an_t[i]
-        stio    SSD_AN, r11
-
-        ldil    r11, ssd_ka_t   ; r11 = ka_t
-        ldd     r11, r11, r10   ; r11 = ka_t[i]
-        stio    SSD_KA, r11
-
-        ;; Increment index counter
-        ldil    r11, 4          ; r11 = 4
-        inc     r10             ; i++
-        lt      r10, r11        ; IF i < 4
-        brts    ssd_update_2    ; THEN RETURN
-        ldil    r10, 0          ; ELSE i = 0
-ssd_update_2:
-        st      r10, ssd_idx    ; Memory writes
-
-        ;; Restore register file
-        popr    r11
-        popr    r10
+        pshr    r10                     ; Preserve working register
+        ld      r10, ssd_idx            ; r10 = i
+        lddi    r10, r10, ssd_an_t      ; r11 = an_t[i]
+        stio    SSD_AN, r10             ; Write out anode
+        lddi    r10, r10, KA_AN_OFFSET  ; r11 = ka_t[i]
+        stio    SSD_KA, r10             ; Write out cathode
+        inc     r10                     ; i++
+        lti     r10, 4                  ; IF i < 4
+        rbrts   2                       ; THEN RETURN
+        ldil    r10, 0                  ; ELSE i = 0
+        st      r10, ssd_idx            ; Store i
+        popr    r10                     ; Restore working register
         reti
+
+        .undef KA_AN_OFFSET
