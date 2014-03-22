@@ -24,7 +24,7 @@ module.exports = function(data, options, callback) {
     if (prog.idt_size === undefined)
       prog.idt_size = 8;
 
-    // Populate useful values into macro table
+    // Populate useful values into symbols table
     prog.symbols['ram_size'] = prog.size;
     prog.symbols['idt_size'] = prog.idt_size;
     prog.symbols['idt_start'] = 0;
