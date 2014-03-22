@@ -42,6 +42,15 @@ halt                            -       Halt process
 jmp     address                 1       Jump
 rjmp    immediate               1       Jump to relative offset
 brts    address                 1       Branch if T flag set
+rbrts   immediate               1       Relative branch if T flag set
+breq    reg reg address         4*      Branch if equal
+rbreq   reg reg immediate       4*      Relateive branch if equal
+breqi   reg immediate address   8*      Branch if equal immediate
+rbreqi  reg immediate immediate 8*      Relative branch if equal immediate
+brne    reg reg address         4*      Branch if not equal
+rbrne   reg reg immediate       4*      Relative branch if not equal
+brnei   reg immediate address   8*      Branch if not equal immediate
+rbrnei  reg immediate immediate 8*      Relative branch if not equal immediate
 seto    port and xor            1       Set output port
 tsti    port and xor            1       Read input port
 call    address                 1       Call subroutine
@@ -55,9 +64,11 @@ st      reg address             2       Register to memory
 ldd     reg reg reg             3       Indexed memory to register
 std     reg reg reg             3       Register to indexed memory
 pshr    reg                     2       Push
+pshi    immediate               6*      Push immediate
 popr    reg                     2       Pop
 stio    port reg                2       Register to IO
 ldio    reg port                1       IO to register
+ldi     reg immediate           4*      Load imeediate
 ldil    reg immediate           2       Load immediate lower
 ldiu    reg immediate           2       Load immediate upper
 and     reg reg reg             3       Bitwise AND
@@ -66,27 +77,42 @@ xor     reg reg reg             3       Bitwise XOR
 lsr     reg reg immediate       3       Logical shift right
 lsl     reg reg immediate       3       Logical shift left
 equ     reg reg                 3       Equals
+eqi     reg immediate           7*      Equals immediate
 neq     reg reg                 3       Not equals
+neqi    reg immediate           7*      Not equals immediate
 lt      reg reg                 3       Less than
+lti     reg immediate           7*      Less than immediate
 lts     reg reg                 3       Less than Signed
+ltsi    reg immediate           7*      Less than Signed immmeidate
 lte     reg reg                 3       Less than or equal
-ltes    reg reg                 3       Less than or Equal Signed
+ltei    reg immediate           7*      Less than or equal immediate
+ltes    reg reg                 3       Less than or equal Signed
+ltesi   reg immediate           7*      Less than or equal Signed immediate
 gt      reg reg                 3       Greater than
+gti     reg immediate           7*      Greater than immediate
 gts     reg reg                 3       Greater Than Signed
+gtsi    reg immediate           7*      Greater Than Signed immediate
 gte     reg reg                 3       Greater than or equal
-gtes    reg reg                 3       Greather Than or Equal Signed
+gtei    reg immediate           7*      Greater than or equal immediate
+gtes    reg reg                 3       Greater Than or Equal Signed
+gtesi   reg immediate           7*      Greater Than or Equal Signed immediate
 eqz     reg                     3       Equal zero
 nez     reg                     3       Not equal zero
-cpy     reg reg                 3       Copy source to dest
+mov     reg reg                 3       Copy source to dest
 clr     reg                     3       Clear bits in register
+neg     reg                     3       Two’s Complement
 inc     reg                     3       Increment
 incs    reg                     3       Increment Signed
 dec     reg                     3       Decrement
 decs    reg                     3       Decrement Signed
 add     reg reg reg             3       Add
+addi    reg reg immediate       7*      Add immediate
 adds    reg reg reg             3       Add Signed
+addsi   reg reg immediate       7*      Add Signed immediate
 sub     reg reg reg             3       Subtract
+subi    reg reg immediate       7*      Subtract immediate
 subs    reg reg reg             3       Subtract Signed
+subsi   reg reg immediate       7*      Subtract Signed immediate
 
 DATA SEGMENT
 ============
@@ -115,6 +141,7 @@ RAM_SIZE        Size of output RAM
 IDT_SIZE        Size of interrupt descriptor table
 IDT_START       Absolute address of IDT
 PROG_START      Absolute address of start of code
+__R             Internal register
 
 Built-in dynamic:
 
@@ -131,51 +158,5 @@ A - B           Subtraction
 A & B           Bitwise AND
 A | B           Bitwise OR
 A ^ B           Bitwise XOR
-
-NUMERICAL MODIFIERS
-===================
-
--A
-~A
-
-ISR WITH SWITCH
-===============
-
-
-        .isr 0 irq0
-irq0:
-        equ     r10, 0reg
-        brts    irq0_0
-        equ     r10, 1reg
-        brts    irq0_1
-        equ     r10, 2reg
-        brts    irq0_2
-        equ     r10, 3reg
-        brts    irq0_3
-irq0_0:
-        mtr     r11, sseg_an_t
-        mtr     r12, sseg_ka_t
-        rtio    SSEG_AN, r11
-        rtio    SSEG_KA, r12
-        jmp     irq0_ret
-irq0_1:
-        mtr     r11, sseg_an_t + 1
-        mtr     r12, sseg_ka_t + 1
-        rtio    SSEG_AN, r11
-        rtio    SSEG_KA, r12
-        jmp     irq0_ret
-irq0_2:
-        mtr     r11, sseg_an_t + 2
-        mtr     r12, sseg_ka_t + 2
-        rtio    SSEG_AN, r11
-        rtio    SSEG_KA, r12
-        jmp     irq0_ret
-irq0_3:
-        mtr     r11, sseg_an_t + 3
-        mtr     r12, sseg_ka_t + 3
-        rtio    SSEG_AN, r11
-        rtio    SSEG_KA, r12
-        ldil    r10, 0          ; Reset loop counter
-        jmp     irq0_ret
-irq0_ret:
-        reti
+-A              Negative A
+~A              One's complement

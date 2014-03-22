@@ -10,6 +10,60 @@ module.exports = function(data, options, callback) {
 
   var u = require('./ee4dsa-util');
 
+  /*
+   * Pre-process the text by recursively expanding macro instructions.
+   */
+  var preProcess = function(text) {
+    var processed = text
+    // (Relative) Branch if equal
+      .replace(/(r?)breq\s+([\w]+)\s+([\w,]+)\s+([\w,]+)/,
+              'equ $2 $3\n' +
+              '$1brts $4')
+    // (Relative) Branch if equal immediate
+      .replace(/(r?)breqi\s+([\w]+)\s+([\w,]+)\s+([\w,]+)/,
+               'ldi __r $3\n' +
+               'equ $2 __r\n' +
+               '$1brts $4')
+    // (Relative) Branch if not equal
+      .replace(/(r?)brne\s+([\w]+)\s+([\w,]+)\s+([\w,]+)/,
+               'neq $2 $3\n' +
+               '$1brts $4')
+    // (Relative) Branch if not equal immediate
+      .replace(/(r?)brnei\s+([\w]+)\s+([\w,]+)\s+([\w,]+)/,
+               'ldi __r $3\n' +
+               'neq $2 __r\n' +
+               '$1brts $4')
+    // Push immediate
+      .replace(/pshi\s+([\w,]+)/,
+               'ldi __r $1\n' +
+               'pshr __r')
+    // Load immediate
+      .replace(/ldi\s+([\w,]+)\s+([\w,]+)/,
+               'ldih $1 $2 >> 16\n' +
+               'ldil $1 $2')
+    // Equals immediate
+      .replace(/eqi\s+([\w,]+)\s+([\w,]+)/,
+               'ldi __r $2\n' +
+               'equ $1 __r')
+    // Not equals immediate
+      .replace(/neqi\s+([\w,]+)\s+([\w,]+)/,
+               'ldi __r $2\n' +
+               'neq $1 __r')
+    // Less than / Great than (or equal) (signed) immediate
+      .replace(/(lt|gt)(e?)(s?)i\s+([\w,]+)\s+([\w,]+)/,
+               'ldi __r $5\n' +
+               '$1$2$3 $4 __r')
+    // Add / Subtract (signed) immediate
+      .replace(/(add|sub)(s?)i\s+([\w,]+)\s+([\w,]+)\s+([\w,]+)/,
+               'ldi __r $5\n' +
+               '$1$2 $3 $4 __r')
+
+    if (processed !== text)
+      return preProcess(processed);
+    else
+      return text;
+  };
+
   var asm2prog = function(lines) {
     if (options.idtSize === undefined)
       options.idtSize = 8;
@@ -32,6 +86,7 @@ module.exports = function(data, options, callback) {
     prog.symbols['idt_size'] = prog.idt_size;
     prog.symbols['idt_start'] = 0;
     prog.symbols['prog_start'] = prog.idt_size;
+    prog.symbols['__r'] = 'r4';
     prog.symbols['active_address'] = function(prog) {
       return prog.memoryCounter;
     };
@@ -277,12 +332,13 @@ module.exports = function(data, options, callback) {
             case 'nez':   return '1A07' + u.requireReg(t[1]) + '00';
             case 'mov':   return '20' + u.requireReg(t[1]) + u.requireReg(t[2]) + '00';
             case 'clr':   return '20' + u.requireReg(t[1]) + '0000';
+            case 'neg':   return '22' + u.requireReg(t[1]) + u.requireReg(t[1]) + '00'
             case 'inc':   return '21' + u.requireReg(t[1]) + u.requireReg(t[1]) + '00';
             case 'incs':  return '29' + u.requireReg(t[1]) + u.requireReg(t[1]) + '00';
             case 'dec':   return '22' + u.requireReg(t[1]) + u.requireReg(t[1]) + u.requireReg(t[1]);
             case 'decs':  return '2A' + u.requireReg(t[1]) + u.requireReg(t[1]) + u.requireReg(t[1]);
             case 'add':   return '20' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
-            case 'ads':   return '28' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
+            case 'adds':   return '28' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
             case 'sub':   return '23' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
             case 'subs':  return '2B' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
 
@@ -312,8 +368,11 @@ module.exports = function(data, options, callback) {
   };
 
   try {
+    // Pre-process:
+    var source = preProcess(data);
+
     // First pass:
-    var prog = asm2prog(data.split('\n'));
+    var prog = asm2prog(source.split('\n'));
 
     // Second pass:
     callback(0, { prog: prog, ram: prog2ram(prog), list: prog2list(prog) });
