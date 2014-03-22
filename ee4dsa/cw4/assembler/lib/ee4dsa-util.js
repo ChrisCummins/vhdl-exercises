@@ -200,6 +200,11 @@ var resolveExpressions = function(tokens) {
 
       if (!isNaN(n))
         token = n;
+    } else if (token.match(/^0b[01]+$/)) {
+      var n = parseInt(token.replace(/^0b/, ''), 2);
+
+      if (!isNaN(n))
+        token = n;
     } else if (token.match(/^[-+]?[0-9]+$/)) {
       // Convert numbers to numbers
       var n = parseInt(token);
