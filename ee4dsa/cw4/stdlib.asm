@@ -75,6 +75,7 @@
         .def SSD_CHAR_8 0b10000000
         .def SSD_CHAR_9 0b10010000
         .def SSD_PERIOD 0b01111111
+        .def SSD_OFF    0b11111111
 
 
 ;;; Initialisation.
