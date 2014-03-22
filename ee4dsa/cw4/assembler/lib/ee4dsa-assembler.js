@@ -32,10 +32,10 @@ module.exports = function(data, options, callback) {
     prog.symbols['idt_size'] = prog.idt_size;
     prog.symbols['idt_start'] = 0;
     prog.symbols['prog_start'] = prog.idt_size;
-    prog.symbols['current_address'] = function(prog) {
+    prog.symbols['active_address'] = function(prog) {
       return prog.memoryCounter;
     };
-    prog.symbols['current_segment'] = function(prog) {
+    prog.symbols['active_segment'] = function(prog) {
       return prog.currentSegment;
     };
     prog.symbols['cseg_size'] = function(prog) {

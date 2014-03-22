@@ -109,12 +109,19 @@ Examples:
 SYMBOLS
 =======
 
-Built-ins:
+Built-in static:
 
 RAM_SIZE        Size of output RAM
 IDT_SIZE        Size of interrupt descriptor table
 IDT_START       Absolute address of IDT
 PROG_START      Absolute address of start of code
+
+Built-in dynamic:
+
+ACTIVE_ADDRESS  The currently active RAM address
+ACTIVE_SEGMENT  The current segment type
+CSEG_SIZE       The current size of the code segment
+DSEG_SIZE       The current size of the data segment
 
 LOGICAL OPERATIONS
 ==================
