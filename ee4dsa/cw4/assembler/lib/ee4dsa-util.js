@@ -10,11 +10,9 @@ var pad = function(n, width, z, prefix) {
   z = z || '0';
   n = n + '';
   // Pop out any html tags when calculating length
-  var length = n.replace(/<\/?[a-zA-Z ="]+>/g, '').length;
-
-  return length >= width ? n : prefix ?
-    n + new Array(width - length + 1).join(z) :
-    new Array(width - length + 1).join(z) + n;
+  return n.length >= width ? n : prefix ?
+    n + new Array(width - n.length + 1).join(z) :
+    new Array(width - n.length + 1).join(z) + n;
 };
 module.exports.pad = pad;
 
