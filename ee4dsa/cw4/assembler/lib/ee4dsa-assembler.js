@@ -38,6 +38,12 @@ module.exports = function(data, options, callback) {
     prog.symbols['current_segment'] = function(prog) {
       return prog.currentSegment;
     };
+    prog.symbols['cseg_size'] = function(prog) {
+      return u.len(prog.cseg);
+    };
+    prog.symbols['dseg_size'] = function(prog) {
+      return u.len(prog.dseg);
+    };
 
     // Populate empty interrupt descriptor table
     for (var i = 0; i < prog.idt_size; i++)
