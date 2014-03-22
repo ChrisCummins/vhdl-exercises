@@ -41,7 +41,11 @@ var int2hex = function(n, len) {
     if (isNaN(n))
       throw 'Failed to convert number!';
 
-    return pad(n.toString(16).toUpperCase(), len);
+    // Pad and truncate string as required
+    var string = pad(n.toString(16).toUpperCase(), len);
+    var start = string.length > len ? string.length - len : 0;
+
+    return string.substring(start);
   }
 
   throw 'Failed to convert number "' + n + '"';
