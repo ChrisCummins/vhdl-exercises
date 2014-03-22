@@ -167,11 +167,18 @@ module.exports.perc = perc;
  *
  *   word - a string
  *   symbols - an array of maps of symbol/value pairs
+ *   ctx - the current context
  */
-var resolveSymbols = function(word, symbols) {
+var resolveSymbols = function(word, symbols, ctx) {
   for (var i in symbols)
-    if (symbols[i][word] !== undefined)
-      return resolveSymbols(symbols[i][word], symbols);
+    if (symbols[i][word] !== undefined) {
+      // Either call dynamic symbol function or lookup static symbol
+      var value = typeof symbols[i][word] === 'function' ?
+        symbols[i][word](ctx) : symbols[i][word];
+
+      // Recurse
+      return resolveSymbols(value, symbols, ctx);
+    }
 
   return '' + word;
 };
@@ -232,9 +239,16 @@ var resolveExpressions = function(tokens) {
 };
 module.exports.resolveExpressions = resolveExpressions;
 
-/* Tokenize a row */
-var tokenize = function(str, symbols) {
+/*
+ * Tokenize a string
+ *
+ *   str - string to tokenize
+ *   symbols - an array of maps of symbol/value pairs
+ *   ctx - the tokenization context
+ */
+var tokenize = function(str, symbols, ctx) {
   symbols = symbols || [[]];
+  ctx = ctx || {};
   var tokens = [];
 
   /*
@@ -256,7 +270,7 @@ var tokenize = function(str, symbols) {
       // Resolve symbols, ignoring valid prefixes and suffixes
       var match = token.match(/^([\+\-~]?)([^:]+)([:]?)/);
 
-      token = match[1] + resolveSymbols(match[2], symbols) + match[3];
+      token = match[1] + resolveSymbols(match[2], symbols, ctx) + match[3];
     } else
       expandToken = true;
 

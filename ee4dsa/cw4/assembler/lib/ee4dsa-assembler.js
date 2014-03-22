@@ -24,17 +24,23 @@ module.exports = function(data, options, callback) {
     if (prog.idt_size === undefined)
       prog.idt_size = 8;
 
+    // Our assembler context
+    var ctx = {
+      memoryCounter: prog.itd_size,
+      currentSegment: 'cseg'
+    };
+
     // Populate useful values into symbols table
     prog.symbols['ram_size'] = prog.size;
     prog.symbols['idt_size'] = prog.idt_size;
     prog.symbols['idt_start'] = 0;
     prog.symbols['prog_start'] = prog.idt_size;
-
-    // Keep track of where we are in the memory
-    var memoryCounter = prog.idt_size;
-
-    // Keep track of whether we're dealing with code or data
-    var currentSegment = 'cseg';
+    prog.symbols['current_address'] = function(ctx) {
+      return ctx.memoryCounter;
+    };
+    prog.symbols['current_segment'] = function(ctx) {
+      return ctx.currentSegment;
+    };
 
     // Populate empty interrupt descriptor table
     for (var i = 0; i < prog.idt_size; i++)
@@ -51,7 +57,8 @@ module.exports = function(data, options, callback) {
         continue;
 
       // Tokenize each line
-      var tokens = u.tokenize(line, [prog.symbols, prog.labels, prog.memory]);
+      var tokens = u.tokenize(line, [prog.symbols, prog.labels, prog.memory],
+                              ctx);
 
       if (tokens[0].match(/^\./)) {
         // DIRECTIVE
@@ -61,10 +68,10 @@ module.exports = function(data, options, callback) {
         switch (directive) {
         case 'dseg':
         case 'cseg':
-          currentSegment = directive;
+          ctx.currentSegment = directive;
           break;
         case 'org':
-          memoryCounter = u.requireUint(tokens[0]);
+          ctx.memoryCounter = u.requireUint(tokens[0]);
           break;
         case 'isr':
           prog.cseg[u.requireUint(tokens[0])] = ['jmp', tokens[1]];
@@ -90,7 +97,7 @@ module.exports = function(data, options, callback) {
 
       } else {
 
-        if (currentSegment === 'cseg') {
+        if (ctx.currentSegment === 'cseg') {
           // INSTRUCTION
 
           // Process instruction labels
@@ -110,7 +117,7 @@ module.exports = function(data, options, callback) {
               })(label);
 
             // Add reference to labels table
-            prog.labels[label] = memoryCounter;
+            prog.labels[label] = ctx.memoryCounter;
 
             // Continue processing only if there are tokens remaining
             if (tokens.length < 1)
@@ -118,9 +125,9 @@ module.exports = function(data, options, callback) {
           }
 
           // Add instruction to instructions map
-          prog.cseg[memoryCounter] = tokens;
-          memoryCounter++;
-        } else if (currentSegment === 'dseg') {
+          prog.cseg[ctx.memoryCounter] = tokens;
+          ctx.memoryCounter++;
+        } else if (ctx.currentSegment === 'dseg') {
           // DATA
 
           // Process memory labels
@@ -138,7 +145,7 @@ module.exports = function(data, options, callback) {
             })(tokens[1]);
             var length = u.requireUint(tokens[2]);
             var label = tokens.shift().replace(/:$/, '');
-            var dstart = memoryCounter, dend = dstart + Math.ceil(size * length);
+            var dstart = ctx.memoryCounter, dend = dstart + Math.ceil(size * length);
 
             // Add reference in memory table and populate dseg
             prog.memory[label] = dstart;
@@ -150,7 +157,7 @@ module.exports = function(data, options, callback) {
             }
 
             // Update memory counter
-            memoryCounter = dend;
+            ctx.memoryCounter = dend;
 
             // Continue processing only if there are tokens remaining
             if (tokens.length < 1)
