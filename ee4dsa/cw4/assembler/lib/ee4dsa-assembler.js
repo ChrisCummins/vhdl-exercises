@@ -289,6 +289,10 @@ module.exports = function(data, options, callback) {
     prog.dseg_util = prog.dseg_size / prog.size;
     prog.util = prog.cseg_util + prog.dseg_util;
 
+    // Remove run-time information
+    delete prog.memoryCounter;
+    delete prog.currentSegment;
+
     return prog;
   };
 
@@ -306,7 +310,9 @@ module.exports = function(data, options, callback) {
         var p = [];
         s += '\n';
         for (var j in prog[i]) {        // Property -> Value pair
-          if (typeof prog[i][j].join === 'function')
+          if (typeof prog[i][j] === 'function')
+            p.push('        ' + j + ' = [dynamic]');
+          else if (typeof prog[i][j].join === 'function')
             p.push('        ' + j + ' = ' + prog[i][j].join(' '));
           else
             p.push('        ' + j + ' = ' + prog[i][j]);
