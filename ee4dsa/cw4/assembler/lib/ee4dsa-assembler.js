@@ -11,6 +11,9 @@ module.exports = function(data, options, callback) {
   var u = require('./ee4dsa-util');
 
   var asm2prog = function(lines) {
+    if (options.idtSize === undefined)
+      options.idtSize = 8;
+
     var prog = {
       size: options.size || 4096,
       idt_size: options.idtSize,
@@ -18,28 +21,22 @@ module.exports = function(data, options, callback) {
       dseg: {},
       memory: {},
       labels: [],
-      symbols: {}
-    };
-
-    if (prog.idt_size === undefined)
-      prog.idt_size = 8;
-
-    // Our assembler context
-    var ctx = {
-      memoryCounter: prog.itd_size,
+      symbols: {},
+      // Assembler context:
+      memoryCounter: options.idtSize,
       currentSegment: 'cseg'
     };
 
-    // Populate useful values into symbols table
+    // Add built-in symbols:
     prog.symbols['ram_size'] = prog.size;
     prog.symbols['idt_size'] = prog.idt_size;
     prog.symbols['idt_start'] = 0;
     prog.symbols['prog_start'] = prog.idt_size;
-    prog.symbols['current_address'] = function(ctx) {
-      return ctx.memoryCounter;
+    prog.symbols['current_address'] = function(prog) {
+      return prog.memoryCounter;
     };
-    prog.symbols['current_segment'] = function(ctx) {
-      return ctx.currentSegment;
+    prog.symbols['current_segment'] = function(prog) {
+      return prog.currentSegment;
     };
 
     // Populate empty interrupt descriptor table
@@ -57,8 +54,7 @@ module.exports = function(data, options, callback) {
         continue;
 
       // Tokenize each line
-      var tokens = u.tokenize(line, [prog.symbols, prog.labels, prog.memory],
-                              ctx);
+      var tokens = u.tokenize(line, [prog.symbols, prog.labels, prog.memory], prog);
 
       if (tokens[0].match(/^\./)) {
         // DIRECTIVE
@@ -68,10 +64,10 @@ module.exports = function(data, options, callback) {
         switch (directive) {
         case 'dseg':
         case 'cseg':
-          ctx.currentSegment = directive;
+          prog.currentSegment = directive;
           break;
         case 'org':
-          ctx.memoryCounter = u.requireUint(tokens[0]);
+          prog.memoryCounter = u.requireUint(tokens[0]);
           break;
         case 'isr':
           prog.cseg[u.requireUint(tokens[0])] = ['jmp', tokens[1]];
@@ -97,7 +93,7 @@ module.exports = function(data, options, callback) {
 
       } else {
 
-        if (ctx.currentSegment === 'cseg') {
+        if (prog.currentSegment === 'cseg') {
           // INSTRUCTION
 
           // Process instruction labels
@@ -117,7 +113,7 @@ module.exports = function(data, options, callback) {
               })(label);
 
             // Add reference to labels table
-            prog.labels[label] = ctx.memoryCounter;
+            prog.labels[label] = prog.memoryCounter;
 
             // Continue processing only if there are tokens remaining
             if (tokens.length < 1)
@@ -125,9 +121,9 @@ module.exports = function(data, options, callback) {
           }
 
           // Add instruction to instructions map
-          prog.cseg[ctx.memoryCounter] = tokens;
-          ctx.memoryCounter++;
-        } else if (ctx.currentSegment === 'dseg') {
+          prog.cseg[prog.memoryCounter] = tokens;
+          prog.memoryCounter++;
+        } else if (prog.currentSegment === 'dseg') {
           // DATA
 
           // Process memory labels
@@ -145,7 +141,7 @@ module.exports = function(data, options, callback) {
             })(tokens[1]);
             var length = u.requireUint(tokens[2]);
             var label = tokens.shift().replace(/:$/, '');
-            var dstart = ctx.memoryCounter, dend = dstart + Math.ceil(size * length);
+            var dstart = prog.memoryCounter, dend = dstart + Math.ceil(size * length);
 
             // Add reference in memory table and populate dseg
             prog.memory[label] = dstart;
@@ -157,7 +153,7 @@ module.exports = function(data, options, callback) {
             }
 
             // Update memory counter
-            ctx.memoryCounter = dend;
+            prog.memoryCounter = dend;
 
             // Continue processing only if there are tokens remaining
             if (tokens.length < 1)
