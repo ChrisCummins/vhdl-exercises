@@ -46,11 +46,8 @@ rbrts   immediate               1       Relative branch if T flag set
 breq    reg reg address         4*      Branch if equal
 rbreq   reg reg immediate       4*      Relateive branch if equal
 breqi   reg immediate address   8*      Branch if equal immediate
-rbreqi  reg immediate immediate 8*      Relative branch if equal immediate
 brne    reg reg address         4*      Branch if not equal
-rbrne   reg reg immediate       4*      Relative branch if not equal
 brnei   reg immediate address   8*      Branch if not equal immediate
-rbrnei  reg immediate immediate 8*      Relative branch if not equal immediate
 seto    port and xor            1       Set output port
 tsti    port and xor            1       Read input port
 call    address                 1       Call subroutine
@@ -61,6 +58,8 @@ sei                             1       Global enable interrupts
 cli                             1       Global disable interrupts
 ld      reg address             2       Memorty to register
 st      reg address             2       Register to memory
+str     reg reg                 3*      Store register indirect memory
+sti     immediate address       6*      Immedate to memory
 ldd     reg reg reg             3       Indexed memory to register
 lddi    reg reg immediate       7*      Indirect memory to register
 std     reg reg reg             3       Register to indexed memory

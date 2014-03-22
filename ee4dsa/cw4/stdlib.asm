@@ -185,28 +185,17 @@ btnr_press:
         ;; encodings for digits 0-9.
         ;;
         ;;   @inline
-        ;;   @reg $r
 _bcd2ssd_init:
-        ldi     $r, SSD_CHAR_0
-        st      $r, _bcd2ssd_t
-        ldi     $r, SSD_CHAR_1
-        st      $r, _bcd2ssd_t + 0x1
-        ldi     $r, SSD_CHAR_2
-        st      $r, _bcd2ssd_t + 0x2
-        ldi     $r, SSD_CHAR_3
-        st      $r, _bcd2ssd_t + 0x3
-        ldi     $r, SSD_CHAR_4
-        st      $r, _bcd2ssd_t + 0x4
-        ldi     $r, SSD_CHAR_5
-        st      $r, _bcd2ssd_t + 0x5
-        ldi     $r, SSD_CHAR_6
-        st      $r, _bcd2ssd_t + 0x6
-        ldi     $r, SSD_CHAR_7
-        st      $r, _bcd2ssd_t + 0x7
-        ldi     $r, SSD_CHAR_8
-        st      $r, _bcd2ssd_t + 0x8
-        ldi     $r, SSD_CHAR_9
-        st      $r, _bcd2ssd_t + 0x9
+        sti     SSD_CHAR_0, _bcd2ssd_t
+        sti     SSD_CHAR_1, _bcd2ssd_t + 0x1
+        sti     SSD_CHAR_2, _bcd2ssd_t + 0x2
+        sti     SSD_CHAR_3, _bcd2ssd_t + 0x3
+        sti     SSD_CHAR_4, _bcd2ssd_t + 0x4
+        sti     SSD_CHAR_5, _bcd2ssd_t + 0x5
+        sti     SSD_CHAR_6, _bcd2ssd_t + 0x6
+        sti     SSD_CHAR_7, _bcd2ssd_t + 0x7
+        sti     SSD_CHAR_8, _bcd2ssd_t + 0x8
+        sti     SSD_CHAR_9, _bcd2ssd_t + 0x9
         ret
 
         ;; Convert a binary coded decimal digit to a Seven Segment
@@ -254,17 +243,14 @@ bin2ssd_tm:
         popr    $r5             ; Unsigned integer
         popr    $r6             ; cathode_t address
         pshr    $r4             ; Push return address
-        ldih    $r4, 0
 
-        ldil    $r4, 10000      ; 10,000 digit
-        pshr    $r4
+        pshi    10000           ; 10,000 digit
         pshr    $r5
         call    div
         popr    $r7             ; BCD 10,000 digit
         popr    $r5             ; Remainder
 
-        ldil    $r4, 1000       ; 1,000 digit
-        pshr    $r4
+        pshi    1000            ; 1,000 digit
         pshr    $r5
         call    div
         popr    $r4             ; BCD 1000 digit
@@ -272,11 +258,10 @@ bin2ssd_tm:
         pshr    $r4
         call    bcd2ssd
         popr    $r4             ; SSD 1000 digit
-        std     $r6, NULL, $r4  ; STORE SSD 1000 digit
+        str     $r6, $r4        ; STORE SSD 1000 digit
         inc     $r6             ; Bump table address
 
-        ldil    $r4, 100        ; 100 digit
-        pshr    $r4
+        pshi    100             ; 100 digit
         pshr    $r5
         call    div
         popr    $r4             ; BCD 100 digit
@@ -284,11 +269,10 @@ bin2ssd_tm:
         pshr    $r4
         call    bcd2ssd
         popr    $r4             ; SSD 100 digit
-        std     $r6, NULL, $r4  ; STORE SSD 100 digit
+        str     $r6, $r4        ; STORE SSD 100 digit
         inc     $r6             ; Bump table address
 
-        ldil    $r4, 10         ; 10 digit
-        pshr    $r4
+        pshi    10              ; 10 digit
         pshr    $r5
         call    div
         popr    $r4             ; BCD 10 digit
@@ -301,9 +285,9 @@ bin2ssd_tm:
         pshr    $r4
         call    bcd2ssd
         popr    $r4             ; SSD 10 digit
-        std     $r6, NULL, $r4  ; STORE SSD 10 digit
+        str     $r6, $r4        ; STORE SSD 10 digit
         inc     $r6
-        std     $r6, NULL, $r5  ; STORE SSD 1 digit
+        str     $r6, $r5        ; STORE SSD 1 digit
         ret
 
 ;;; Software arithmetic.
@@ -314,6 +298,7 @@ bin2ssd_tm:
         ;;   @param  operand A
         ;;   @param  operand B
         ;;   @return result
+        ;;   @reg    $r-$r3
 mult:
         popr    $r              ; Return address
         popr    $r1             ; a

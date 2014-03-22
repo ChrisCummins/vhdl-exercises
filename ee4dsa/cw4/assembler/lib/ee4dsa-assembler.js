@@ -11,60 +11,94 @@ module.exports = function(data, options, callback) {
   var u = require('./ee4dsa-util');
 
   /*
+   * Compose an input data file into an assembly source, stripping
+   * comments and whitespace.
+   */
+  var data2source = function(data) {
+    var lines = data.split(/\n/), outLines = [];
+
+    for (var i = 0; i < lines.length; i++) {
+      var words = lines[i].split(/\s+/), outWords = [];
+
+      for (var j = 0; j < words.length; j++) {
+        var word = words[j];
+
+        if (word.match(/^;/))
+          break;
+
+        if (word !== '')
+          outWords.push(word);
+      }
+
+      if (outWords.length)
+        outLines.push(outWords.join(' '));
+    }
+
+    return outLines.join('\n');
+  };
+
+  /*
    * Pre-process the text by recursively expanding macro instructions.
    */
   var preProcess = function(text) {
     var processed = text
-    // (Relative) Branch if equal
-      .replace(/(r?)breq\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-              'equ $2 $3\n' +
-              '$1brts $4')
-    // (Relative) Branch if equal immediate
-      .replace(/(r?)breqi\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-               'ldi __r $3\n' +
+    // Branch if equal
+      .replace(/(^|\s)breq\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
+               '$1equ $2 $3\n' +
+               'brts $4')
+    // Branch if equal immediate
+      .replace(/(^|\s)breqi\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
+               '$1ldi __r $3\n' +
                'equ $2 __r\n' +
-               '$1brts $4')
-    // (Relative) Branch if not equal
-      .replace(/(r?)brne\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-               'neq $2 $3\n' +
-               '$1brts $4')
-    // (Relative) Branch if not equal immediate
-      .replace(/(r?)brnei\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-               'ldi __r $3\n' +
+               'brts $4')
+    // Branch if not equal
+      .replace(/(^|\s)brne\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
+               '$1neq $2 $3\n' +
+               'brts $4')
+    // Branch if not equal immediate
+      .replace(/(^|\s)brnei\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
+               '$1ldi __r $3\n' +
                'neq $2 __r\n' +
-               '$1brts $4')
+               'brts $4')
+    // Store immediate
+      .replace(/(^|\s)sti\s+([^\s]+)\s+([^\s]+)/,
+               '$1ldi __r $2\n' +
+               'st __r $3')
+    // Store indirect immediate
+      .replace(/(^|\s)stdi\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
+               '$1ldi __r $3\n' +
+               'std $2 __r $4')
+    // Store indirect
+      .replace(/(^|\s)str\s+([^\s]+)\s+([^\s]+)/,
+               '$1std $2 0 $3')
     // Load indirect to register
-      .replace(/stdi\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-               'ldi __r $2\n' +
-               'std $1 __r $3')
-    // Store indirect to register
-      .replace(/lddi\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-               'ldi __r $3\n' +
-               'ldd $1 $2 __r')
+      .replace(/(^|\s)lddi\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
+               '$1ldi __r $4\n' +
+               'ldd $2 $3 __r')
     // Push immediate
-      .replace(/pshi\s+([^\s]+)/,
-               'ldi __r $1\n' +
+      .replace(/(^|\s)pshi\s+([^\s]+)/,
+               '$1ldi __r $2\n' +
                'pshr __r')
     // Load immediate
-      .replace(/ldi\s+([^\s]+)\s+([^\s]+)/,
-               'ldih $1 $2 >> 16\n' +
-               'ldil $1 $2')
+      .replace(/(^|\s)ldi\s+([^\s]+)\s+([^\s]+)/,
+               '$1ldih $2 $3 >> 16\n' +
+               'ldil $2 $3')
     // Equals immediate
-      .replace(/eqi\s+([^\s]+)\s+([^\s]+)/,
-               'ldi __r $2\n' +
-               'equ $1 __r')
+      .replace(/(^|\s)eqi\s+([^\s]+)\s+([^\s]+)/,
+               '$1ldi __r $3\n' +
+               'equ $2 __r')
     // Not equals immediate
-      .replace(/neqi\s+([^\s]+)\s+([^\s]+)/,
-               'ldi __r $2\n' +
-               'neq $1 __r')
+      .replace(/(^|\s)neqi\s+([^\s]+)\s+([^\s]+)/,
+               '$1ldi __r $3\n' +
+               'neq $2 __r')
     // Less than / Great than (or equal) (signed) immediate
-      .replace(/(lt|gt)(e?)(s?)i\s+([^\s]+)\s+([^\s]+)/,
-               'ldi __r $5\n' +
-               '$1$2$3 $4 __r')
+      .replace(/(^|\s)(lt|gt)(e?)(s?)i\s+([^\s]+)\s+([^\s]+)/,
+               '$1ldi __r $6\n' +
+               '$2$3$4 $5 __r')
     // Add / Subtract (signed) immediate
-      .replace(/(add|sub)(s?)i\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-               'ldi __r $5\n' +
-               '$1$2 $3 $4 __r')
+      .replace(/(^|\s)(add|sub)(s?)i\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
+               '$1ldi __r $6\n' +
+               '$2$3 $4 $5 __r')
 
     if (processed !== text)
       return preProcess(processed);
@@ -377,7 +411,7 @@ module.exports = function(data, options, callback) {
 
   try {
     // Pre-process:
-    var source = preProcess(data);
+    var source = preProcess(data2source(data));
 
     // First pass:
     var prog = asm2prog(source.split('\n'));
