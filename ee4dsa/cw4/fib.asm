@@ -43,10 +43,10 @@
 _main:
         cli                             ; Disable interrupts
         ldi     ssd_ka_r, ssd_ka_t      ; Set a pointer to the cathode table
-        st      SSD_OFF, ssd_ka_t       ; Zero the cathode table
-        st      SSD_OFF, ssd_ka_t + 1
-        st      SSD_OFF, ssd_ka_t + 2
-        st      SSD_OFF, ssd_ka_t + 3
+        sti     SSD_OFF, ssd_ka_t       ; Zero the cathode table
+        sti     SSD_OFF, ssd_ka_t + 1
+        sti     SSD_OFF, ssd_ka_t + 2
+        sti     SSD_OFF, ssd_ka_t + 3
         sti     0x07,    ssd_an_t       ; Anode table with fixed order
         sti     0x0B,    ssd_an_t + 1
         sti     0x0D,    ssd_an_t + 2
