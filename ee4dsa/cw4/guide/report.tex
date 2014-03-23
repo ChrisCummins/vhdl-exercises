@@ -18,7 +18,10 @@
 
 The UCASM assembler is a Turing complete assembly language and macro
 processor for the 32 bit uC architecture developed for coursework 3 of
-Dr. Eberhard's Digital Systems Architecture module.
+Dr. Eberhard's Digital Systems Architecture module. The assembly
+syntax and constructs are influenced heavily by the AVR Assembler
+\footnote{See the AVR Assembler User Guide:
+  \url{http://www.atmel.com/Images/doc1022.pdf}.}.
 
 \section{Usage}
 
@@ -125,53 +128,6 @@ To perform the same assembly using the web client,
   \hline
 \end{tabular}
 
-\section{Assembler Stages}
-
-The assembler performs multiple passes of the input source files,
-generating an internal representation of the described program, which
-is then written out into different forms. Overall, there are four
-distinct high level stages to the assembly process:
-
-\begin{enumerate}
-\item \textbf{Pre-process} - Iteratively expand multi-instruction macros.
-\item \textbf{First pass} - Perform tokenization of every line and
-  interpret instructions, creating internal lookup tables for memory
-  addresses, labels, and symbols.
-\item \textbf{Second pass} - resolve memory and label names using
-  populated lookup tables from first pass, creating an intermediate
-  representation of the program.
-\item \textbf{Assembly} - Convert intermediate representation of the
-  program into machine instructions, and generate a list file.
-\end{enumerate}
-
-\subsection{Pre-process}
-
-\subsection{First pass}
-
-The assembler parses input sources files line by line, sequentially
-tokenizing each one before proceeding to the next. The tokenization
-process involves eight distinct steps, illustrated here by using an
-example input line, containing a Load Immediate instruction:
-
-\begin{verbatim}
-    LDIL SP, 0xFF00 >> 16     ; Load 255 into register 90.
-\end{verbatim}
-
-\begin{enumerate}
-\item Strip whitespace and comment: \texttt{LDIL SP, 0xFF00 >> 16}
-\item Convert line text to lowercase: \texttt{ldil SP, 0xff00 >> 16}
-\item Split line text into individual words.
-\item Strip trailing commas from words: \texttt{ldil SP 0xff00 >> 16}
-\item Recursively resolve symbols for each word: \texttt{ldil r2 0xff00 >> 16}
-\item Internally convert numbers into signed decimal integers: \texttt{ldil 2 65280 >> 16}
-\item Resolve numerical modifiers (e.g. bitwise complement).
-\item Recursively resolve numerical and bitwise expressions: \texttt{ldil 2 255}
-\end{enumerate}
-
-\subsection{Second pass}
-
-\subsection{Assembly}
-
 \chapter{Assembly Syntax}
 
 The assembler implements a line oriented parser which splits the input
@@ -222,9 +178,14 @@ will refer to the contents of the line following it.
  .ORG & \textit{k} & Set program origin to address \textit{k} \\
  .ISR & \textit{n, k} & Set ISR handler \textit{n} to address \textit{k} \\
  .EXIT & & Stop assembling \\
- .INCLUDE & \textit{f} & Read source from file \textit{f} \\
+ .INCLUDE & \textit{f} & Read source from file \textit{f} (standalone assembler only) \\
+ .BYTE & \textit{n} & Reserve \textit{n} bytes of program memory \\
+ .WORD & \textit{n} & Reserve \textit{n} words of program memory \\
  \hline
 \end{longtable}}
+
+Directives control the internal state of the assembler, and do not
+result in executable machine code being generated.
 
 \section{Instruction Set}
 
@@ -331,7 +292,18 @@ SUBSI & $R_d, R_a, K$ & Subtract Immediate, Signed & $R_d \leftarrow R_a - K$ & 
  \hline
 \end{longtable}}
 
+Instructions which have an asterisk (*) mark in the \#Clocks column
+indicate macro instructions, which are non-native software
+instructions which expand to two or more hardware instructions.
+
 \section{Symbols}
+
+The following symbols are defined at initialisation time by the
+assembler. Symbols marked as Dynamic in the type column have a value
+which is determined for each time it is used, as opposed to the other
+symbols which have a static value associated with them which does not
+change. It is possible although not recommended to override any of
+these symbols using the \texttt{.DEF} directive.
 
 {\scriptsize
 \begin{longtable}{ | l | l | l | }
@@ -354,7 +326,7 @@ SUBSI & $R_d, R_a, K$ & Subtract Immediate, Signed & $R_d \leftarrow R_a - K$ & 
  IDT\_SIZE & Integer & The size of the interrupt service routine table, in words \\
  IDT\_START & Integer (default: 0) & The start address of the interrupt service routine table \\
  PROG\_START & Integer (default: IDT\_SIZE) & The start address of the executable program code \\
- \_\_R & Register (default: r255) & The register used by the assembler to implement macro instructions \\
+ \_\_R & Register (default: r4) & The register used by the assembler to implement macro instructions \\
  ACTIVE\_ADDRESS & Integer, Dynamic & The currently active RAM address \\
  ACTIVE\_SEGMENT & Integer, Dynamic & The currently active segment type \\
  CSEG\_SIZE & Integer, Dynamic & The current total size of the code segments \\
@@ -362,7 +334,204 @@ SUBSI & $R_d, R_a, K$ & Subtract Immediate, Signed & $R_d \leftarrow R_a - K$ & 
  \hline
 \end{longtable}}
 
+One possible legitimate purpose for overriding the built in symbols
+would be to declare a different register to use for macro
+instructions:
+
+\begin{verbatim}
+        ldi r16, 0xDEADBEEF             ; Macro instruction using default __r
+        .DEF __r r255                   ; Override default __r address
+        ldi r17, 0xDEADBEEF             ; Macro instruction using r255 as
+\end{verbatim}
+
+Symbols are resolved recursively during tokenization, and so can be
+combined to provide complex evaluations:
+
+\begin{verbatim}
+        .def TABLE_ADDR     0xff
+        .def NO_OF_ELEMENTS 10
+        .def ELEMENT_SIZE   4
+        .def TABLE_SIZE     ELEMENT_SIZE * NO_OF_ELEMETNS
+
+        sti TABLE_ADDR,                1 ; foobar[0] = 1
+        sti TABLE_ADDR + ELEMENT_SIZE, 2 ; foobar[1] = 2
+
+        .dseg
+        .org TABLE_ADDR
+foobar: .word TABLE_SIZE
+\end{verbatim}
+
+\chapter{Assembler Components}
+
+The assembler performs multiple passes of the input source files,
+generating an internal representation of the described program, which
+is then written out into different forms. Overall, there are four
+distinct high level stages to the assembly process:
+
+\begin{enumerate}
+\item \textbf{Pre-process} - Recursively expand multi-instruction macros.
+\item \textbf{First pass} - Perform tokenization of every line and
+  interpret instructions, creating internal lookup tables for memory
+  addresses, labels, and symbols.
+\item \textbf{Second pass} - resolve memory and label names using
+  populated lookup tables from first pass, creating an intermediate
+  representation of the program.
+\item \textbf{Assembly} - Convert intermediate representation of the
+  program into machine instructions, and generate a list file.
+\end{enumerate}
+
+\section{Pre-processor}
+
+The native $\mu C$ design implements a load/store architecture with 43
+unique instructions. Of which, only 2 operations accept immediate
+operands, with the rest requiring register operands. While this in no
+way limits the computational power of the processor, it can make
+programming the processor quite tedious, as any instruction involving
+immediate data must first be loaded into registers in prior
+instructions before use. In order to produce a more assembly programs,
+a number of instructions which operate on immediate values have been
+implemented as macros which are internally substituted for a load
+instruction to a temporary register (defined in the symbol
+\texttt{\_\_r}), followed by a native instruction which operates on
+this register. For example, the instruction:
+
+\begin{verbatim}
+        stri r5, 0xDEADBEEF             ; Store constant at address r5.
+\end{verbatim}
+
+is expanded at the pre-processing stage to equate to:
+
+\begin{verbatim}
+        ldih __r, 0xDEAD                ; Store 16 high bits to temp register.
+        ldil __r, 0xBEEF                ; Store 16 low bits to temp register.
+        str r5, __r                     ; Store __r at address r5.
+\end{verbatim}
+
+This allows for a more flexible instruction set, with the
+pre-processing stage recursively expanding any macros in the input
+source code by using a lookup table to expand macro instructions into
+native instructions. The downside to this is that the temporary
+register \texttt{\_\_r} used to implement these instructions should
+not be used by the user as this could lead to undefined behaviour.
+
+\section{First pass unit}
+
+Once the pre-processor has expanded all macros, the assembler parses
+the pre-processed text line by line, sequentially tokenizing each one
+before proceeding to the next. The tokenization process involves eight
+distinct steps, illustrated here by using an example input line,
+containing a Load Immediate instruction:
+
+\begin{verbatim}
+        ldil SP, 0xFF00 >> 16           ; Load 255 into register 90.
+\end{verbatim}
+
+\begin{enumerate}
+\item Strip whitespace and comment: \texttt{LDIL SP, 0xFF00 >> 16}
+\item Convert line text to lowercase: \texttt{ldil SP, 0xff00 >> 16}
+\item Split line text into individual words.
+\item Strip trailing commas from words: \texttt{ldil SP 0xff00 >> 16}
+\item Recursively resolve symbols for each word: \texttt{ldil r2 0xff00 >> 16}
+\item Internally convert numbers into signed decimal integers: \texttt{ldil 2 65280 >> 16}
+\item Resolve numerical modifiers (e.g. bitwise complement).
+\item Recursively resolve numerical and bitwise expressions: \texttt{ldil 2 255}
+\end{enumerate}
+
+Once the line has been tokenized, the individual tokens are iterated
+over and decoded into an instruction or directive command as
+required. The assembler maintains an internal state machine tracking
+the current RAM address, current segment type, and a set of tables
+which are used to perform lookups for symbolic references, memory
+addresses and label addresses.
+
+\section{Second pass unit}
+
+After the first pass, the lookup tables are fully populated, and the
+tokens of the program are iterated over once more, this time replacing
+any occurrences of labels or variable names with the addresses found
+within the lookup tables. For example, consider the following example
+code:
+
+\begin{verbatim}
+_main:
+        jmp _start              ; Jump ahead
+        .dseg
+foo:    .byte 3                 ; Allocate 3 bytes with label 'foo'
+bar:    .word 5                 ; Allocate 5 words with label 'bar'
+        .cseg
+        .org 0xF                ; Set an exact address for the following code
+_start:
+        halt                    ; Stop the processor
+\end{verbatim}
+
+After assembly, the list file contains a report which shows, amongst
+other things, the contents of the internal memory and label tables:
+
+\begin{verbatim}
+.MEMORY
+        foo = 1
+        bar = 2
+.LABELS
+        _main = 0
+        _start = 15
+\end{verbatim}
+
+Meaning that the two memory variables \texttt{foo} and \texttt{bar}
+have been allocated addresses 1 and 2 respectively, and the two labels
+have the addresses 0 and 15. It is important to note that the code and
+data segments are not allocated contiguously, and that code sections
+and data segments will be allocated ascending memory addresses
+determined by their order within the source file.
+
+\section{Machine Code Generator}
+
+Once the internal representation of the program has been completed and
+all memory addresses and symbols have been resolved, the output file
+is generated, which translates the processed instructions into machine
+code, using internal reference tables to encode the opcode and
+operands. The example assembly code above generates the following
+output file when assembled with the \texttt{--annotated} flag set:
+
+\begin{verbatim}
+0200000F -- 0 jmp 15
+00000000 -- 1 DATA: foo
+00000000 -- 2 DATA: bar[0]
+00000000 -- 3 DATA: bar[1]
+00000000 -- 4 DATA: bar[2]
+00000000 -- 5 DATA: bar[3]
+00000000 -- 6 DATA: bar[4]
+...
+01000000 -- 15 halt
+\end{verbatim}
+
+It is at this late stage in the assembly process that type checking of
+operands are performed, with detection of malformed instructions
+occurring and throwing fatal errors where found. The combination of
+this late type checking and the early decimal conversion that occurs
+within the tokenization phase makes for a very expressive assembly
+syntax, at the expense of strict static typing. Some examples of this
+include:
+
+\begin{verbatim}
+_main:
+        rjmp  _start - CURRENT_ADDRESS  ; Relative address arithmentic
+
+_start:
+        ldil PC, CURRENT_ADDRESS + 1    ; Load next instruction into PC
+        jmp 3 + _start                  ; Address arithmetic
+        ldi 15 * 2, 60 / 2              ; Load 30 into r30
+        ldi r10, foobar                 ; Load the address of 'foobar'
+        ld r11, foobar                  ; Load the value at 'foobar'
+
+        .dseg
+foobar: .word 10 * 3                    ; Allocate 30 words to 'foobar'
+\end{verbatim}
+
 \chapter{Programming with UCASM}
+
+\section{Working with Memory}
+
+\section{Interrupt Handlers}
 
 \section{stdlib.asm}
 
@@ -447,8 +616,6 @@ SUBSI & $R_d, R_a, K$ & Subtract Immediate, Signed & $R_d \leftarrow R_a - K$ & 
  \hline
 \end{longtable}}
 
-\appendix
-
-\printbibliography
+\section{Example Algorithms}
 
 \end{document}
