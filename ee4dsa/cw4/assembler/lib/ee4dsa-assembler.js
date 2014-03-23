@@ -287,6 +287,9 @@ module.exports = function(data, options, callback) {
         else if (prog.labels[token] !== undefined) // Label
           instruction[j] = prog.labels[token];
       }
+
+      // Resolve expressions on label addresses:
+      prog.cseg[i] = u.resolveExpressions(instruction);
     }
 
     // Write metadata
