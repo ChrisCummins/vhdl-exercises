@@ -1,0 +1,447 @@
+\documentclass[12pt,twoside]{report}
+
+\input{preamble}
+
+\begin{document}
+
+\pagenumbering{roman}
+
+\input{cover}
+
+\tableofcontents
+
+\newpage
+
+\pagenumbering{arabic}
+
+\chapter{Introduction}
+
+The UCASM assembler is a Turing complete assembly language and macro
+processor for the 32 bit uC architecture developed for coursework 3 of
+Dr. Eberhard's Digital Systems Architecture module.
+
+\section{Usage}
+
+The core of the application is a multi-pass assembler written in
+JavaScript, implemented as a module in the file
+\texttt{lib/ee4dsa-assembler.js} which exposes a single function which
+accepts three arguments: a string of data to assemble, a map of
+options as key-value pairs, and a callback function for when the
+assembly is completed.
+
+There are two front-end clients which use this assembler function: a
+standalone script written in Node, and an interactive web application
+hosted at \url{http://chriscummins.cc/uc/assembler}. The standalone
+assembler can be installed into the system path with the command
+\texttt{npm install -g}, and accepts the following run time options:
+
+\begin{verbatim}
+Usage: ucasm -s <path> [options]
+
+Options:
+  --source, -s    Input source file                                   [required]
+  --output, -o    Output RAM file path                   [default: "<source>.o"]
+  --list, -l      Output listing file path               [default: "<source>.l"]
+  --ram-size, -r  Set the size of the output RAM                 [default: 4096]
+  --idt-size, -i  Set the size of the IDT                           [default: 8]
+  --annotate, -a  Annotate the generated RAM file
+\end{verbatim}
+
+For example, to assemble the file \texttt{ram.asm} into an annotated
+RAM file of 16k words, the client would be invoked as such:
+
+\begin{verbatim}
+$ ucasm --source ram.asm --ram-size 16384 --annotate
+ram.asm: 240 words, 1.465% util (cseg: 92% dseg: 8%
+\end{verbatim}
+
+The file \texttt{ram.dat} now contains the generated annotated RAM
+file:
+
+\begin{verbatim}
+$ head ram.o
+08000000 -- 0 reti
+020000DB -- 1 jmp 219
+08000000 -- 2 reti
+08000000 -- 3 reti
+08000000 -- 4 reti
+08000000 -- 5 reti
+08000000 -- 6 reti
+08000000 -- 7 reti
+0600002D -- 8 call 45
+020000B5 -- 9 jmp 181
+\end{verbatim}
+
+A list file is generated at \texttt{ram.l}, which contains a
+diagnostic breakdown of the assembled program:
+
+\begin{verbatim}
+$ head ram.l
+.SIZE = 16384
+
+.IDT_SIZE = 8
+
+.CSEG
+        0 = reti
+        1 = jmp 219
+        2 = reti
+        3 = reti
+        4 = reti
+\end{verbatim}
+
+To perform the same assembly using the web client,
+
+%% TODO:
+
+\section{Nomenclature}
+
+\subsection{Status Register (SREG)}
+
+\begin{tabular}{ | r | l | }
+  \hline
+  \textbf{SREG}: & Status Register \\
+  \textbf{I}: & Interrupts enabled flag \\
+  \textbf{T}: & Test flag \\
+  \textbf{C}: & Carry flag \\
+  \hline
+\end{tabular}
+
+\subsection{Registers and Operands}
+
+\begin{tabular}{ | r | l | }
+  \hline
+  \textbf{PC}: & Program Counter Register \\
+  \textbf{STACK}: & Stack \\
+  \textbf{SP}: & Stack Pointer Register \\
+  \textbf{NULL}: & Null (zero) Register \\
+  \textbf{$R_d$}: & Destination register in the Register File \\
+  \textbf{$R_a$}: & Source register A in the Register File \\
+  \textbf{$R_b$}: & Source register B in the Register File \\
+  \textbf{$K$}: & Constant data \\
+  \textbf{$k$}: & Constant address \\
+  \textbf{$A$}: & I/O port address \\
+  \textbf{$a$}: & I/O port AND mask \\
+  \textbf{$x$}: & I/O port XOR mask \\
+  \hline
+\end{tabular}
+
+\section{Assembler Stages}
+
+The assembler performs multiple passes of the input source files,
+generating an internal representation of the described program, which
+is then written out into different forms. Overall, there are four
+distinct high level stages to the assembly process:
+
+\begin{enumerate}
+\item \textbf{Pre-process} - Iteratively expand multi-instruction macros.
+\item \textbf{First pass} - Perform tokenization of every line and
+  interpret instructions, creating internal lookup tables for memory
+  addresses, labels, and symbols.
+\item \textbf{Second pass} - resolve memory and label names using
+  populated lookup tables from first pass, creating an intermediate
+  representation of the program.
+\item \textbf{Assembly} - Convert intermediate representation of the
+  program into machine instructions, and generate a list file.
+\end{enumerate}
+
+\subsection{Pre-process}
+
+\subsection{First pass}
+
+The assembler parses input sources files line by line, sequentially
+tokenizing each one before proceeding to the next. The tokenization
+process involves eight distinct steps, illustrated here by using an
+example input line, containing a Load Immediate instruction:
+
+\begin{verbatim}
+    LDIL SP, 0xFF00 >> 16     ; Load 255 into register 90.
+\end{verbatim}
+
+\begin{enumerate}
+\item Strip whitespace and comment: \texttt{LDIL SP, 0xFF00 >> 16}
+\item Convert line text to lowercase: \texttt{ldil SP, 0xff00 >> 16}
+\item Split line text into individual words.
+\item Strip trailing commas from words: \texttt{ldil SP 0xff00 >> 16}
+\item Recursively resolve symbols for each word: \texttt{ldil r2 0xff00 >> 16}
+\item Internally convert numbers into signed decimal integers: \texttt{ldil 2 65280 >> 16}
+\item Resolve numerical modifiers (e.g. bitwise complement).
+\item Recursively resolve numerical and bitwise expressions: \texttt{ldil 2 255}
+\end{enumerate}
+
+\subsection{Second pass}
+
+\subsection{Assembly}
+
+\chapter{Assembly Syntax}
+
+The assembler implements a line oriented parser which splits the input
+source files first into separate lines and then into individual
+tokens. A line may take one of the following five forms:
+
+\begin{enumerate}
+\item \texttt{label:}
+\item \texttt{[label:] directive [operands] [Comment]}
+\item \texttt{[label:] instruction [operands] [Comment]}
+\item \texttt{Comment}
+\item \texttt{Empty Line}
+\end{enumerate}
+
+Where a comment has the form:
+
+\begin{verbatim}
+; [Text]
+\end{verbatim}
+
+In the case where a line consists solely of a label, then the label
+will refer to the contents of the line following it.
+
+\section{Directives}
+
+{\scriptsize
+\begin{longtable}{ | l | l | l | }
+  \hline
+  \textbf{Mnemonic} & \textbf{Operands} & \textbf{Description} \\
+  \hline
+\endfirsthead
+  \hline
+  \textbf{Mnemonic} & \textbf{Operands} & \textbf{Description} \\
+  \hline
+
+\endhead
+  \hline
+  \multicolumn{3}{r}{\emph{Continued on next page\ldots}}
+\endfoot
+
+\endlastfoot
+ \hline
+ .DEF & \textit{N, V} & Define a symbolic name \textit{N} which resolves to value \textit{V} \\
+ .DEFP & \textit{N, V} & Define a symbolic name \textit{N} which resolves to value \textit{V} only if name \textit{N} has no existing definition \\
+ .UNDEF & \textit{N} & Remove symbol \textit{N} and its corresponding value from the symbol table \\
+ .CSEG & & Code Segment \\
+ .DSEG & & Data Segment \\
+ .ORG & \textit{k} & Set program origin to address \textit{k} \\
+ .ISR & \textit{n, k} & Set ISR handler \textit{n} to address \textit{k} \\
+ .EXIT & & Stop assembling \\
+ .INCLUDE & \textit{f} & Read source from file \textit{f} \\
+ \hline
+\end{longtable}}
+
+\section{Instruction Set}
+
+{\scriptsize
+\begin{longtable}{ | l | l | l | c | l | l | }
+  \hline
+  \textbf{Mnemonic} & \textbf{Operands} & \textbf{Description} & \textbf{Operation} & \textbf{Flags} & \textbf{\#Clocks} \\
+  \hline
+\endfirsthead
+  \hline
+  \textbf{Mnemonic} & \textbf{Operands} & \textbf{Description} & \textbf{Operation} & \textbf{Flags} & \textbf{\#Clocks} \\
+  \hline
+
+\endhead
+  \hline
+  \multicolumn{6}{r}{\emph{Continued on next page\ldots}}
+\endfoot
+
+\endlastfoot
+NOP & & No operation & & None & 1 \\
+HALT & & Halt CPU & $PC \leftarrow PC$ & None & - \\
+JMP & $k$ & Jump & $PC \leftarrow k$ & None & 1 \\
+RJMP & $k$ & Relative Jump & $PC \leftarrow PC + k$  & None & 1 \\
+BRTS & $k$ & Branch if T flag set & if (T = 1) then $PC \leftarrow k$  & None & 1 \\
+RBRTS & $k$ & Relative Br. if T flag set & if (T = 1) then $PC \leftarrow PC + k$  & None & 1 \\
+BREQ & $R_a, R_b, k$ & Br. if equal & if ($R_a = R_b$) then $PC \leftarrow k$ & T & 4* \\
+BREQI & $R_a, K, k$ & Br. if equal immediate & if ($R_a = K$) then $PC \leftarrow k$ & T & 8* \\
+BRNE & $R_a, R_b, k$ & Br. if not equal & if ($R_a \neq R_b$) then $PC \leftarrow k$ & T & 4* \\
+BRNEI & $R_a, K, k$ & Br. if not equal immediate & if ($R_a \neq K$) then $PC \leftarrow k$ & T & 8* \\
+BRLT & $R_a, R_b, k$ & Br. if less than & if ($R_a < R_b$) then $PC \leftarrow k$ & T & 4* \\
+BRLTE & $R_a, R_b, k$ & Br. if less than or equal & if ($R_a \le R_b$) then $PC \leftarrow k$ & T & 4* \\
+BRGT & $R_a, R_b, k$ & Br. if greater than & if ($R_a > R_b$) then $PC \leftarrow k$ & T & 4* \\
+BRGTE & $R_a, R_b, k$ & Br. if greater than or equal & if ($R_a \ge R_b$) then $PC \leftarrow k$ & T & 4* \\
+SETO & $A, a, x$ & Set output port & $A \leftarrow A . a \xor x$  & None & 1 \\
+TSTI & $A, a, x$ & Read input port & $T \leftarrow A . a \xor x$  & T & 1 \\
+CALL & $k$ & Call subroutine & $PC \leftarrow k$ & None & 1 \\
+RCALL & $k$ & Relative call subroutine & $PC \leftarrow PC + k$ & None & 1 \\
+RET & & Return from subroutine & $PC \leftarrow STACK$ & None & 2 \\
+RETI & & Return from interrupt & $PC \leftarrow STACK$ & I & 2 \\
+SEI & & Global enable interrupts & $I \leftarrow 1$ & I & 1 \\
+CLI & & Global disable interrupts & $I \leftarrow 0$ & I & 1 \\
+LD & $R_d, k$ & Load & $R_d \leftarrow RAM[k]$ & None & 2 \\
+LDI & $R_d, K$ & Load immediate & $R_d \leftarrow K$ & NONE & 4* \\
+LDIH & $R_d, K$ & Load immediate high & $R_d(31:16) \leftarrow K$ & NONE & 2 \\
+LDIL & $R_d, K$ & Load immediate low & $R_d(15:0) \leftarrow K$ & NONE & 2 \\
+LDD & $R_d, R_a, R_b$ & Load indirect & $R_d \leftarrow RAM[R_a + R_b]$ & None & 3 \\
+LDDI & $R_d, R_a, k$ & Load indirect with offset & $R_d \leftarrow RAM[R_a + k]$ & None & 7* \\
+LDIO & $R_d, A$ & IO to Register & $R_d \leftarrow A$ & None & 1 \\
+ST & $R_a, k$ & Set RAM & $RAM[k] \leftarrow R_a$ & None & 2 \\
+STR & $R_d, R_a$ & Set RAM indirect & $RAM[R_d] \leftarrow R_a$ & None & 3* \\
+STI & $R_a, K$ & Set RAM immediate & $RAM[R_a] \leftarrow K$ & None & 6* \\
+STIO & $A, R_a$ & Register to IO & $A \leftarrow R_a$ & None & 2 \\
+PSHR & $R_a$ & Push register on stack & $STACK \leftarrow R_a$ & None & 2 \\
+PSHI & $K$ & Push immediate on stack & $STACK \leftarrow K$ & None & 6* \\
+POPR & $R_d$ & Pop register from stack & $R_d \leftarrow STACK$ & None & 2 \\
+AND & $R_d, R_a, R_b$ & Logical AND & $R_d \leftarrow R_a . R_b $ & None & 3 \\
+OR & $R_d, R_a, R_b$ & Logical OR & $R_d \leftarrow R_a + R_b $ & None & 3 \\
+XOR & $R_d, R_a, R_b$ & Logical XOR & $R_d \leftarrow R_a \xor R_b $ & None & 3 \\
+LSR & $R_d, R_a, K$ & Logical Shift Right & $R_d(n) \leftarrow R_d(n + K) $ & None & 3 \\
+LSL & $R_d, R_a, K$ & Logical Shift Left & $R_d(n) \leftarrow R_d(n - K) $ & None & 3 \\
+EQU & $R_a, R_b$ & Equal & if ($R_a = R_b$) then $T \leftarrow 1$ & T & 3 \\
+EQI & $R_a, K$ & Equal Immediate & if ($R_a = K$) then $T \leftarrow 1$ & T & 7* \\
+NEQ & $R_a, R_b$ & Not Equal & if ($R_a \neq R_b$) then $T \leftarrow 1$ & T & 3 \\
+NEQI & $R_a, K$ & Not Equal Immediate & if ($R_a \neq K$) then $T \leftarrow 1$ & T & 7* \\
+LT & $R_a, R_b$ & Less Than & if ($R_a < R_b$) then $T \leftarrow 1$ & T & 3 \\
+LTI & $R_a, K$ & L.T. Immediate & if ($R_a < K$) then $T \leftarrow 1$ & T & 7* \\
+LTS & $R_a, R_b$ & L.T., Signed & if ($R_a < R_b$) then $T \leftarrow 1$ & T & 3 \\
+LTSI & $R_a, K$ & L.T. Immediate, Signed & if ($R_a < K$) then $T \leftarrow 1$ & T & 7* \\
+LTE & $R_a, R_b$ & L.T. or Equal & if ($R_a \le R_b$) then $T \leftarrow 1$ & T & 3 \\
+LTEI & $R_a, K$ & L.T. or Equal Immediate & if ($R_a le K$) then $T \leftarrow 1$ & T & 7* \\
+LTES & $R_a, R_b$ & L.T. or Equal, Signed & if ($R_a \le R_b$) then $T \leftarrow 1$ & T & 3 \\
+LTESI & $R_a, K$ & L.T. or Equal Immediate, Signed & if ($R_a \le K$) then $T \leftarrow 1$ & T & 7* \\
+GT & $R_a, R_b$ & Greater Than & if ($R_a > R_b$) then $T \leftarrow 1$ & T & 3 \\
+GTI & $R_a, K$ & G.T. Immediate & if ($R_a > K$) then $T \leftarrow 1$ & T & 7* \\
+GTS & $R_a, R_b$ & G.T., Signed & if ($R_a > R_b$) then $T \leftarrow 1$ & T & 3 \\
+GTSI & $R_a, K$ & G.T. Immediate, Signed & if ($R_a > K$) then $T \leftarrow 1$ & T & 7* \\
+GTE & $R_a, R_b$ & G.T. or Equal & if ($R_a \ge R_b$) then $T \leftarrow 1$ & T & 3 \\
+GTEI & $R_a, K$ & G.T. or Equal Immediate & if ($R_a \ge K$) then $T \leftarrow 1$ & T & 7* \\
+GTES & $R_a, R_b$ & G.T. or Equal, Signed & if ($R_a \ge R_b$) then $T \leftarrow 1$ & T & 3 \\
+GTESI & $R_a, K$ & G.T. or Equal Immediate, Signed & if ($R_a \ge K$) then $T \leftarrow 1$ & T & 7* \\
+EQZ & $R_a$ & Equal Zero & if ($R_a = 0$) then $T \leftarrow 1$ & T & 3 \\
+NEZ & $R_a$ & Not Equal Zero & if ($R_a \neq 0$) then $T \leftarrow 1$ & T & 3 \\
+MOV & $R_d, R_a$ & Copy Register contents & $R_d \leftarrow R_a$ & None & 3 \\
+CLR & $R_d$ & Clear Register & $R_d \leftarrow 0$ & None & 3 \\
+NEG & $R_d$ & Two's Complement & $R_d \leftarrow 0 - R_d$ & None & 3 \\
+INC & $R_d$ & Increment & $R_d \leftarrow R_d + 1$ & None & 3 \\
+INCS & $R_d$ & Increment, Signed & $R_d \leftarrow R_d + 1$ & None & 3 \\
+DEC & $R_d$ & Decrement & $R_d \leftarrow R_d - 1$ & None & 3 \\
+ADD & $R_d, R_a, R_b$ & Add & $R_d \leftarrow R_a + R_b$ & C & 3 \\
+ADDI & $R_d, R_a, K$ & Add Immediate & $R_d \leftarrow R_a + K$ & C & 7* \\
+ADDS & $R_d, R_a, R_b$ & Add, Signed & $R_d \leftarrow R_a + R_b$ & C & 3 \\
+ADDSI & $R_d, R_a, K$ & Add Immediate, Signed & $R_d \leftarrow R_a + K$ & C & 7* \\
+SUB & $R_d, R_a, R_b$ & Subtract & $R_d \leftarrow R_a - R_b$ & C & 3 \\
+SUBI & $R_d, R_a, K$ & Subtract Immediate & $R_d \leftarrow R_a - K$ & C & 7* \\
+SUBS & $R_d, R_a, R_b$ & Subtract, Signed & $R_d \leftarrow R_a - R_b$ & C & 3 \\
+SUBSI & $R_d, R_a, K$ & Subtract Immediate, Signed & $R_d \leftarrow R_a - K$ & C & 7* \\
+ \hline
+\end{longtable}}
+
+\section{Symbols}
+
+{\scriptsize
+\begin{longtable}{ | l | l | l | }
+  \hline
+  \textbf{Symbol} & \textbf{Type} & \textbf{Description} \\
+  \hline
+\endfirsthead
+  \hline
+  \textbf{Symbol} & \textbf{Type} & \textbf{Description} \\
+  \hline
+
+\endhead
+  \hline
+  \multicolumn{3}{r}{\emph{Continued on next page\ldots}}
+\endfoot
+
+\endlastfoot
+ \hline
+ RAM\_SIZE & Integer & The size of the assembled RAM file, in words \\
+ IDT\_SIZE & Integer & The size of the interrupt service routine table, in words \\
+ IDT\_START & Integer (default: 0) & The start address of the interrupt service routine table \\
+ PROG\_START & Integer (default: IDT\_SIZE) & The start address of the executable program code \\
+ \_\_R & Register (default: r255) & The register used by the assembler to implement macro instructions \\
+ ACTIVE\_ADDRESS & Integer, Dynamic & The currently active RAM address \\
+ ACTIVE\_SEGMENT & Integer, Dynamic & The currently active segment type \\
+ CSEG\_SIZE & Integer, Dynamic & The current total size of the code segments \\
+ DSEG\_SIZE & Integer, Dynamic & The current total size of the data segments \\
+ \hline
+\end{longtable}}
+
+\chapter{Programming with UCASM}
+
+\section{stdlib.asm}
+
+\subsection{Symbols}
+
+{\scriptsize
+\begin{longtable}{ | l | l | l | }
+  \hline
+  \textbf{Symbol} & \textbf{Type} & \textbf{Description} \\
+  \hline
+\endfirsthead
+  \hline
+  \textbf{Symbol} & \textbf{Type} & \textbf{Description} \\
+  \hline
+
+\endhead
+  \hline
+  \multicolumn{3}{r}{\emph{Continued on next page\ldots}}
+\endfoot
+
+\endlastfoot
+ \hline
+ \_STDLIB\_USER\_ENTRY\_POINT & Label* & User code entry point \\
+ \_STDLIB\_REG\_BASE & Integer* & Base address for internal register usage \\
+ \$r to \$rf & Integer* & 16 Register File addresses for internal use \\
+ STDLIB\_REG\_MIN & Integer & Lower Register File address for internal use \\
+ STDLIB\_REG\_MAX & Integer & Upper Register File address for internal use \\
+ NULL & Register & Null Register \\
+ PC & Register & Program Counter Register \\
+ SP & Register & Stack Pointer Register \\
+ SREG & Register & Status Register \\
+ ISR\_TIMER & ISR & Timer interrupt number \\
+ ISR\_SSD & ISR & Seven Segment Display interrupt number \\
+ SREG\_I & Integer & SREG Interrupts enabled flag index \\
+ SREG\_T & Integer & SREG Test flag index \\
+ SREG\_C & Integer & SREG Carry flag index \\
+ SWITCHES & Port & Switches input port address \\
+ BUTTONS & Port & Buttons input port address \\
+ LEDS & Port & LEDs output port address \\
+ SSD\_AN & Port & Seven Segment Display Anodes output port address \\
+ SSD\_KA & Port & Seven Segment Display Cathodes output port address \\
+ BTND & Integer & Down button bit mask position \\
+ BTNC & Integer & Centre button bit mask position \\
+ BTNL & Integer & Left button bit mask position \\
+ BTNR & Integer & Right button bit mask position \\
+ SSD\_CHAR\_0 to SSD\_CHAR\_9 & Byte & Seven Segment Display cathode masks for digits 0 to 9 \\
+ SSD\_PEROD & Byte & Seven Segment Display cathode mask for period \\
+ SSD\_OFF & Byte & Seven Segment Display cathode mask with all segments disabled \\
+ \hline
+\end{longtable}}
+
+\subsection{Subroutines}
+
+{\scriptsize
+\begin{longtable}{ | l | l | l | l | }
+  \hline
+  \textbf{Label} & \textbf{Parameters} & \textbf{Return} & \textbf{Description} \\
+  \hline
+\endfirsthead
+  \hline
+  \textbf{Label} & \textbf{Parameters} & \textbf{Return} & \textbf{Description} \\
+  \hline
+
+\endhead
+  \hline
+  \multicolumn{4}{r}{\emph{Continued on next page\ldots}}
+\endfoot
+
+\endlastfoot
+ \hline
+ btnu\_press & & & Wait for the user to press and release up button \\
+ btnd\_press & & & Wait for the user to press and release down button \\
+ btnc\_press & & & Wait for the user to press and release center button \\
+ btnl\_press & & & Wait for the user to press and release left button \\
+ btnr\_press & & & Wait for the user to press and release right button \\
+ bcd2ssd & \textit{B} & \textit{S} & Converts BCD digit \textit{B} into SSD digit \textit{S} \\
+ bcd2ssd\_p & \textit{B} & \textit{S.} & Converts BCD digit \textit{B} into SSD digit \textit{S.} with period segment lit \\
+ bcd2ssd\_tm & \textit{k, U} & & Convert unsigned integer \textit{U} into 4-digit SSD cathode mask table at address \textit{k} \\
+ mult & \textit{A, B} & \textit{R} & Multiply integers \textit{A} and \textit{B} and return product \textit{R} \\
+ div & \textit{A, B} & \textit{R, r} & Divide numerator \textit{A} by denominator \textit{B} and return result \textit{R} and remainder \textit{r} \\
+
+ \hline
+\end{longtable}}
+
+\appendix
+
+\printbibliography
+
+\end{document}
