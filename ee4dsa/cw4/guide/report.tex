@@ -270,19 +270,26 @@ LD & $R_d, k$ & Load & $R_d \leftarrow RAM[k]$ & None & 2 \\
 LDI & $R_d, K$ & Load immediate & $R_d \leftarrow K$ & NONE & 4* \\
 LDIH & $R_d, K$ & Load immediate high & $R_d(31:16) \leftarrow K$ & NONE & 2 \\
 LDIL & $R_d, K$ & Load immediate low & $R_d(15:0) \leftarrow K$ & NONE & 2 \\
-LDD & $R_d, R_a, R_b$ & Load indirect & $R_d \leftarrow RAM[R_a + R_b]$ & None & 3 \\
-LDDI & $R_d, R_a, k$ & Load indirect with offset & $R_d \leftarrow RAM[R_a + k]$ & None & 7* \\
+LDR & $R_d, R_a$ & Load indirect & $R_d \leftarrow RAM[R_a]$ & NONE & 3 \\
+LDD & $R_d, R_a, R_b$ & Load indirect offset & $R_d \leftarrow RAM[R_a + R_b]$ & None & 3 \\
+LDDI & $R_d, R_a, k$ & Load indirect offset immediate & $R_d \leftarrow RAM[R_a + k]$ & NONE & 7* \\
 LDIO & $R_d, A$ & IO to Register & $R_d \leftarrow A$ & None & 1 \\
-ST & $R_a, k$ & Set RAM & $RAM[k] \leftarrow R_a$ & None & 2 \\
-STR & $R_d, R_a$ & Set RAM indirect & $RAM[R_d] \leftarrow R_a$ & None & 3* \\
-STI & $R_a, K$ & Set RAM immediate & $RAM[R_a] \leftarrow K$ & None & 6* \\
+ST & $k, R_a$ & Write & $RAM[k] \leftarrow R_a$ & None & 2 \\
+STI & $k, K$ & Write immediate & $RAM[k] \leftarrow K$ & None & 6* \\
+STR & $R_d, R_a$ & Write indirect & $RAM[R_d] \leftarrow R_a$ & None & 3 \\
+STRI & $R_d, K$ & Write indirect immediate & $RAM[R_d] \leftarrow K$ & None & 7* \\
+STD & $R_d, R_b, R_a$ & Write indirect offset & $RAM[R_d + R_b] \leftarrow R_a$ & None & 3 \\
+STDI & $R_d, k, R_a$ & Write indirect offset immediate & $RAM[R_d + k] \leftarrow R_a$ & None & 7* \\
 STIO & $A, R_a$ & Register to IO & $A \leftarrow R_a$ & None & 2 \\
 PSHR & $R_a$ & Push register on stack & $STACK \leftarrow R_a$ & None & 2 \\
 PSHI & $K$ & Push immediate on stack & $STACK \leftarrow K$ & None & 6* \\
 POPR & $R_d$ & Pop register from stack & $R_d \leftarrow STACK$ & None & 2 \\
 AND & $R_d, R_a, R_b$ & Logical AND & $R_d \leftarrow R_a . R_b $ & None & 3 \\
+ANDI & $R_d, R_a, K$ & Logical AND immediate & $R_d \leftarrow R_a . K$ & None & 7* \\
 OR & $R_d, R_a, R_b$ & Logical OR & $R_d \leftarrow R_a + R_b $ & None & 3 \\
+ORI & $R_d, R_a, K$ & Logical OR immediate & $R_d \leftarrow R_a + K $ & None & 7* \\
 XOR & $R_d, R_a, R_b$ & Logical XOR & $R_d \leftarrow R_a \xor R_b $ & None & 3 \\
+XORI & $R_d, R_a, K$ & Logical XOR immediate & $R_d \leftarrow R_a \xor K $ & None & 7* \\
 LSR & $R_d, R_a, K$ & Logical Shift Right & $R_d(n) \leftarrow R_d(n + K) $ & None & 3 \\
 LSL & $R_d, R_a, K$ & Logical Shift Left & $R_d(n) \leftarrow R_d(n - K) $ & None & 3 \\
 EQU & $R_a, R_b$ & Equal & if ($R_a = R_b$) then $T \leftarrow 1$ & T & 3 \\

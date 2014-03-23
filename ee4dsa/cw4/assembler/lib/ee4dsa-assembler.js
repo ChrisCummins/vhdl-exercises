@@ -43,66 +43,67 @@ module.exports = function(data, options, callback) {
   var preProcess = function(text) {
     var processed = text
     // Branch if equal
-      .replace(/(^|\s)breq\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-               '$1equ $2 $3\n' +
+      .replace(/(^|\s)breq\s+([^,]+),\s+([^,]+),\s+([^\s]+)/,
+               '$1equ $2, $3\n' +
                'brts $4')
     // Branch if equal immediate
-      .replace(/(^|\s)breqi\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-               '$1ldi __r $3\n' +
-               'equ $2 __r\n' +
+      .replace(/(^|\s)breqi\s+([^,]+),\s+([^,]+),\s+([^\s]+)/,
+               '$1ldi __r, $3\n' +
+               'equ $2, __r\n' +
                'brts $4')
     // Branch if not equal
-      .replace(/(^|\s)brne\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-               '$1neq $2 $3\n' +
+      .replace(/(^|\s)brne\s+([^,]+),\s+([^,]+),\s+([^\s]+)/,
+               '$1neq $2, $3\n' +
                'brts $4')
     // Branch if less than / greater than (equal)
-      .replace(/(^|\s)br(lt|lte|gt|gte)\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-               '$1$2 $3 $4\n' +
+      .replace(/(^|\s)br(lt|lte|gt|gte)\s+([^,]+),\s+([^,]+),\s+([^\s]+)/,
+               '$1$2 $3, $4\n' +
                'brts $5')
     // Branch if not equal immediate
-      .replace(/(^|\s)brnei\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-               '$1ldi __r $3\n' +
-               'neq $2 __r\n' +
+      .replace(/(^|\s)brnei\s+([^,]+),\s+([^,]+),\s+([^\s]+)/,
+               '$1ldi __r, $3\n' +
+               'neq $2, __r\n' +
                'brts $4')
-    // Store immediate
-      .replace(/(^|\s)sti\s+([^\s]+)\s+([^\s]+)/,
-               '$1ldi __r $2\n' +
-               'st __r $3')
-    // Store indirect immediate
-      .replace(/(^|\s)stdi\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-               '$1ldi __r $3\n' +
-               'std $2 __r $4')
-    // Store indirect
-      .replace(/(^|\s)str\s+([^\s]+)\s+([^\s]+)/,
-               '$1std $2 0 $3')
-    // Load indirect to register
-      .replace(/(^|\s)lddi\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-               '$1ldi __r $4\n' +
-               'ldd $2 $3 __r')
+    // Store (indirect) immediate
+      .replace(/(^|\s)st(r?)i\s+([^,]+),\s+([^\s]+)/,
+               '$1ldi __r, $4\n' +
+               'st$2 $3, __r')
+    // Store indirect offset immediate
+      .replace(/(^|\s)stdi\s+([^,]+),\s+([^,]+),\s+([^\s]+)/,
+               '$1ldi __r, $3\n' +
+               'std $2, __r, $4')
     // Push immediate
       .replace(/(^|\s)pshi\s+([^\s]+)/,
-               '$1ldi __r $2\n' +
+               '$1ldi __r, $2\n' +
                'pshr __r')
     // Load immediate
-      .replace(/(^|\s)ldi\s+([^\s]+)\s+([^\s]+)/,
-               '$1ldih $2 $3 >> 16\n' +
-               'ldil $2 $3')
+      .replace(/(^|\s)ldi\s+([^,]+),\s+([^\s]+)/,
+               '$1ldih $2, $3 >> 16\n' +
+               'ldil $2, $3')
+    // Load indirect to register
+      .replace(/(^|\s)lddi\s+([^,]+),\s+([^,]+),\s+([^\s]+)/,
+               '$1ldi __r, $4\n' +
+               'ldd $2, $3, __r')
     // Equals immediate
-      .replace(/(^|\s)eqi\s+([^\s]+)\s+([^\s]+)/,
-               '$1ldi __r $3\n' +
-               'equ $2 __r')
+      .replace(/(^|\s)eqi\s+([^,]+),\s+([^\s]+)/,
+               '$1ldi __r, $3\n' +
+               'equ $2, __r')
     // Not equals immediate
-      .replace(/(^|\s)neqi\s+([^\s]+)\s+([^\s]+)/,
-               '$1ldi __r $3\n' +
-               'neq $2 __r')
+      .replace(/(^|\s)neqi\s+([^,]+),\s+([^\s]+)/,
+               '$1ldi __r, $3\n' +
+               'neq $2, __r')
     // Less than / Great than (or equal) (signed) immediate
-      .replace(/(^|\s)(lt|gt)(e?)(s?)i\s+([^\s]+)\s+([^\s]+)/,
-               '$1ldi __r $6\n' +
-               '$2$3$4 $5 __r')
+      .replace(/(^|\s)(lt|gt)(e?)(s?)i\s+([^,]+),\s+([^\s]+)/,
+               '$1ldi __r, $6\n' +
+               '$2$3$4 $5, __r')
     // Add / Subtract (signed) immediate
-      .replace(/(^|\s)(add|sub)(s?)i\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)/,
-               '$1ldi __r $6\n' +
-               '$2$3 $4 $5 __r')
+      .replace(/(^|\s)(add|sub)(s?)i\s+([^,]+),\s+([^,]+),\s+([^\s]+)/,
+               '$1ldi __r, $6\n' +
+               '$2$3 $4, $5, __r')
+    // AND / OR / XOR immediate
+      .replace(/(^|\s)(and|or|xor)i\s+([^,]+),\s+([^\s]+),\s+([^\s]+)/,
+               '$1ldi __r, $5\n' +
+               '$2 $3, $4, __r')
 
     if (processed !== text)
       return preProcess(processed);
@@ -362,15 +363,17 @@ module.exports = function(data, options, callback) {
             case 'sei':   return '09000000';
             case 'cli':   return '0A000000';
             case 'ld':    return '0B' + u.requireReg(t[1]) + u.require16Address(t[2]);
-            case 'st':    return '0C' + u.requireReg(t[1]) + u.require16Address(t[2]);
-            case 'ldd':   return '0D' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
-            case 'std':   return '0E' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
-            case 'pshr':  return '0F' + u.requireReg(t[1]) + '0000';
-            case 'popr':  return '10' + u.requireReg(t[1]) + '0000';
-            case 'stio':  return '11' + u.requireByte(t[1]) + u.requireReg(t[2]) + '00';
-            case 'ldio':  return '12' + u.requireReg(t[1]) + u.requireByte(t[2]) + '00';
             case 'ldil':  return '13' + u.requireReg(t[1]) + u.require16Address(t[2]);
             case 'ldih':  return '14' + u.requireReg(t[1]) + u.require16Address(t[2]);
+            case 'ldr':   return '0D' + u.requireReg(t[1]) + '00' + u.requireReg(t[2]);
+            case 'ldd':   return '0D' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
+            case 'ldio':  return '12' + u.requireReg(t[1]) + u.requireByte(t[2]) + '00';
+            case 'st':    return '0C' + u.requireReg(t[2]) + u.require16Address(t[1]); // Note the reverse order!
+            case 'str':   return '0E' + u.requireReg(t[1]) + '00' + u.requireReg(t[2]);
+            case 'std':   return '0E' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
+            case 'stio':  return '11' + u.requireByte(t[1]) + u.requireReg(t[2]) + '00';
+            case 'pshr':  return '0F' + u.requireReg(t[1]) + '0000';
+            case 'popr':  return '10' + u.requireReg(t[1]) + '0000';
             case 'and':   return '15' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
             case 'or':    return '16' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
             case 'xor':   return '17' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
