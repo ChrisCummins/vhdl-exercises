@@ -40,7 +40,7 @@
 
         ;; Status flag bits.
         ;; =================================================
-        .def SREG_I     0       ; Interrupt
+        .def SREG_I     0       ; Interrupts enabled flag
         .def SREG_T     1       ; Test flag
         .def SREG_C     2       ; Carry flag
 
