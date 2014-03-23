@@ -1,0 +1,32 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{float}
+\restylefloat{figure}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{gensymb}
+\usepackage[title]{appendix}
+\usepackage[dotinlabels]{titletoc}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage{mathtools}
+\usepackage[margin=0.5in]{geometry}
+\renewcommand{\thefootnote}{\arabic{footnote}}
+
+\newcommand*\wrapletters[1]{\wr@pletters#1\@nil}
+\def\wr@pletters#1#2\@nil{#1\allowbreak\if&#2&\else\wr@pletters#2\@nil\fi}
+
+\usepackage{enumitem}
+\setenumerate{itemsep=0pt}
+
+% Add support for multi-page tables.
+\usepackage{longtable}
+
+\pagenumbering{arabic}
+
+\title{EE4DSA Coursework 4}
+\author{Chris Cummins}
+
+\begin{document}
+\maketitle
+
+\end{document}
