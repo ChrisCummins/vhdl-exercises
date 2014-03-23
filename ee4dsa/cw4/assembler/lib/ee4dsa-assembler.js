@@ -110,6 +110,9 @@ module.exports = function(data, options, callback) {
       return text;
   };
 
+  /*
+   * Convert lines of assembly into internal code representation.
+   */
   var asm2prog = function(lines) {
     if (options.idtSize === undefined)
       options.idtSize = 8;
