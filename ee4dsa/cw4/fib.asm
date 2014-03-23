@@ -42,15 +42,15 @@
         ;; be accessing uninitialised memory:
 _main:
         cli                             ; Disable interrupts
-        ldi     ssd_ka_r, ssd_ka_t      ; Set a pointer to the cathode table
-        sti     SSD_OFF, ssd_ka_t       ; Zero the cathode table
-        sti     SSD_OFF, ssd_ka_t + 1
-        sti     SSD_OFF, ssd_ka_t + 2
-        sti     SSD_OFF, ssd_ka_t + 3
-        sti     0x07,    ssd_an_t       ; Anode table with fixed order
-        sti     0x0B,    ssd_an_t + 1
-        sti     0x0D,    ssd_an_t + 2
-        sti     0x0E,    ssd_an_t + 3
+        ldi     ssd_ka_r,     ssd_ka_t  ; Set a pointer to the cathode table
+        sti     ssd_ka_t,     SSD_OFF   ; Zero the cathode table
+        sti     ssd_ka_t + 1, SSD_OFF
+        sti     ssd_ka_t + 2, SSD_OFF
+        sti     ssd_ka_t + 3, SSD_OFF
+        sti     ssd_an_t,     0x07      ; Anode table with fixed order
+        sti     ssd_an_t + 1, 0x0B
+        sti     ssd_an_t + 2, 0x0D
+        sti     ssd_an_t + 3, 0x0E
         sei                             ; We're all set, so enable interrupts
 reset_fib:
         ldi     a, 0                    ; a = 0
@@ -110,7 +110,7 @@ ssd_update:
         lti     r10, 4                  ; IF i < 4
         rbrts   2                       ; THEN RETURN
         ldil    r10, 0                  ; ELSE i = 0
-        st      r10, ssd_idx            ; Store i
+        st      ssd_idx, r10            ; Store i
         popr    r11                     ; Restore working registers
         popr    r10
         reti

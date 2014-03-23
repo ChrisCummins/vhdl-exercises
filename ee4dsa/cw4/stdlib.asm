@@ -187,16 +187,16 @@ btnr_press:
         ;;
         ;;   @inline
 _bcd2ssd_init:
-        sti     SSD_CHAR_0, _bcd2ssd_t
-        sti     SSD_CHAR_1, _bcd2ssd_t + 0x1
-        sti     SSD_CHAR_2, _bcd2ssd_t + 0x2
-        sti     SSD_CHAR_3, _bcd2ssd_t + 0x3
-        sti     SSD_CHAR_4, _bcd2ssd_t + 0x4
-        sti     SSD_CHAR_5, _bcd2ssd_t + 0x5
-        sti     SSD_CHAR_6, _bcd2ssd_t + 0x6
-        sti     SSD_CHAR_7, _bcd2ssd_t + 0x7
-        sti     SSD_CHAR_8, _bcd2ssd_t + 0x8
-        sti     SSD_CHAR_9, _bcd2ssd_t + 0x9
+        sti     _bcd2ssd_t,       SSD_CHAR_0
+        sti     _bcd2ssd_t + 0x1, SSD_CHAR_1
+        sti     _bcd2ssd_t + 0x2, SSD_CHAR_2
+        sti     _bcd2ssd_t + 0x3, SSD_CHAR_3
+        sti     _bcd2ssd_t + 0x4, SSD_CHAR_4
+        sti     _bcd2ssd_t + 0x5, SSD_CHAR_5
+        sti     _bcd2ssd_t + 0x6, SSD_CHAR_6
+        sti     _bcd2ssd_t + 0x7, SSD_CHAR_7
+        sti     _bcd2ssd_t + 0x8, SSD_CHAR_8
+        sti     _bcd2ssd_t + 0x9, SSD_CHAR_9
         ret
 
         ;; Convert a binary coded decimal digit to a Seven Segment
@@ -208,7 +208,7 @@ _bcd2ssd_init:
 bcd2ssd:
         popr    $r              ; Return address
         popr    $r1             ; BCD digit 'i'
-        lddi    $r1, $r1, _bcd2ssd_t ; $r2 = bcd2ss_t[i]
+        lddi    $r1, $r1, _bcd2ssd_t ; $r1 = bcd2ss_t[i]
         pshr    $r1             ; Push result
         pshr    $r              ; Push return address
         ret
@@ -223,7 +223,7 @@ bcd2ssd_p:
         popr    $r              ; Return address
         popr    $r1             ; BCD digit 'i'
         lddi    $r1, $r1, _bcd2ssd_t ; $r2 = bcd2ss_t[i]
-        and     $r1, $r1, SSD_PERIOD ; Add the period
+        andi    $r1, $r1, SSD_PERIOD ; Add the period
         pshr    $r1             ; Push result
         pshr    $r              ; Push return address
         ret
