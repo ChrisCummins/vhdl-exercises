@@ -10,9 +10,6 @@
 
         .include "stdlib.asm"
 
-;;; Main routine:
-;;; ========================================================
-
         ;; Data Segment:
         ;; =================================================
 
@@ -30,13 +27,13 @@
 
         ;; Let's start by defining some symbolic names for
         ;; our working registers:
-        .def a          r32
-        .def b          r33
-        .def sum        r34
-        .def last       r35
-        .def ssd_ka_r   r36
-        .def ledd       r37
-        .def ledm       r38
+        .def a          r32             ; Fibonacci 'a' operand
+        .def b          r33             ; Fibonacci 'b' operand
+        .def sum        r34             ; Fibonacci result
+        .def last       r35             ; Last result in Fibonacci sequence
+        .def ssd_ka_r   r36             ; Pointer to SSD cathode table
+        .def ledd       r37             ; LED digit
+        .def ledm       r38             ; LED port mask
 
         ;; The main code entry point. Begin by initialising
         ;; register and memory values as required. We do this
@@ -71,7 +68,7 @@ next_fib:                               ; The actual Fibonacci calculation:
         pshr    sum
         call    bin2ssd_tm
 
-        ;; Update LED indicators
+        ;; Update LED indicator
         ldil    ledm, 1                 ; LEDs = 1 << ledd
         lsl     ledm, ledm, ledd
         stio    LEDS, ledm
