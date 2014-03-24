@@ -233,6 +233,15 @@ module.exports = function(data, options, callback) {
       .replace(/(^|\s)(and|or|xor)i\s+([^,]+),\s+([^\s]+),\s+([^\s]+)/,
                '$1ldi __r, $5\n' +
                '$2 $3, $4, __r')
+    // Logical shift left / right
+      .replace(/(^|\s)ls([lr])\s+([^,]+),\s+([^\s]+),\s+([^\s]+)/,
+               '$1mov $3, $4\n' +
+               'mov __r, $5\n' +
+               'eqz __r\n' +
+               'rbrts 4\n' +
+               'ls$2i $3, $3, 1\n' +
+               'dec __r\n' +
+               'rjmp -4');
 
     if (processed !== text)
       return preProcess(processed);
@@ -528,8 +537,8 @@ module.exports = function(data, options, callback) {
             case 'and':   return '15' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
             case 'or':    return '16' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
             case 'xor':   return '17' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
-            case 'lsr':   return '18' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireByte(t[3]);
-            case 'lsl':   return '19' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireByte(t[3]);
+            case 'lsri':  return '18' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireByte(t[3]);
+            case 'lsli':  return '19' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireByte(t[3]);
             case 'equ':   return '1A00' + u.requireReg(t[1]) + u.requireReg(t[2]);
             case 'neq':   return '1A01' + u.requireReg(t[1]) + u.requireReg(t[2]);
             case 'lt':    return '1A02' + u.requireReg(t[1]) + u.requireReg(t[2]);

@@ -253,8 +253,10 @@ OR & $R_d, R_a, R_b$ & Logical OR & $R_d \leftarrow R_a + R_b $ & None & 3 \\
 ORI & $R_d, R_a, K$ & Logical OR immediate & $R_d \leftarrow R_a + K $ & None & 7* \\
 XOR & $R_d, R_a, R_b$ & Logical XOR & $R_d \leftarrow R_a \xor R_b $ & None & 3 \\
 XORI & $R_d, R_a, K$ & Logical XOR immediate & $R_d \leftarrow R_a \xor K $ & None & 7* \\
-LSR & $R_d, R_a, K$ & Logical Shift Right & $R_d(n) \leftarrow R_d(n + K) $ & None & 3 \\
-LSL & $R_d, R_a, K$ & Logical Shift Left & $R_d(n) \leftarrow R_d(n - K) $ & None & 3 \\
+LSR & $R_d, R_a, R_b$ & Logical Shift Right & $R_d(n) \leftarrow R_d(n + R_b) $ & None & $R_b$* \\
+LSRI & $R_d, R_a, K$ & Logical Shift Right Immediate & $R_d(n) \leftarrow R_d(n + K) $ & None &  \\
+LSL & $R_d, R_a, R_b$ & Logical Shift Left & $R_d(n) \leftarrow R_d(n - R_b) $ & None & $R_b$* \\
+LSLI & $R_d, R_a, K$ & Logical Shift Left Immediate & $R_d(n) \leftarrow R_d(n - K) $ & None & 3 \\
 EQU & $R_a, R_b$ & Equal & if ($R_a = R_b$) then $T \leftarrow 1$ & T & 3 \\
 EQI & $R_a, K$ & Equal Immediate & if ($R_a = K$) then $T \leftarrow 1$ & T & 7* \\
 NEQ & $R_a, R_b$ & Not Equal & if ($R_a \neq R_b$) then $T \leftarrow 1$ & T & 3 \\
