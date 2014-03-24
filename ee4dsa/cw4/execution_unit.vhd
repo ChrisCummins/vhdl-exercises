@@ -190,7 +190,7 @@ architecture syn of execution_unit is
   alias op_alu_complement_c:     std_logic is rom_data_byte0(1);
   alias op_alu_carry_in:         std_logic is rom_data_byte0(0);
   alias op_signed_comparison:    std_logic is rom_data_byte0(0);
-  alias op_load_upper:           std_logic is rom_data_byte0(3);
+  alias op_load_upper:           std_logic is rom_data_byte0(2);
   alias op_shift_left:           std_logic is rom_data_byte0(0);
 
   -- ALU registers
@@ -583,9 +583,9 @@ begin
               next_icc         <= current_icc + 1              after gate_delay;
             when others =>
               if op_load_upper = '1' then -- Pad bits out to fill word
-                ldi := rom_data_byte2 & rom_data_byte3 & byte_null & byte_null;
+                ldi := rom_data_byte2 & rom_data_byte3 & next_reg_b_do(15 downto 0);
               else
-                ldi := byte_null & byte_null & rom_data_byte2 & rom_data_byte3;
+                ldi := next_reg_b_do(31 downto 16) & rom_data_byte2 & rom_data_byte3;
               end if;
 
               next_bitwise     <= ldi                          after gate_delay;
