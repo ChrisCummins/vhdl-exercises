@@ -298,7 +298,7 @@ module.exports = function(data, options, callback) {
       /*
        * Interpret tokens.
        */
-      if (tokens[0].match(/^\./)) {
+      if (tokens[0].match(/^\.(?!byte|word)/)) {
         // DIRECTIVE
 
         var directive = tokens.shift().replace(/^\./, '');
@@ -368,42 +368,62 @@ module.exports = function(data, options, callback) {
         } else if (prog.currentSegment === 'dseg') {
           // DATA
 
-          // Process memory labels
-          if (tokens[0].match(/:$/) && tokens.length === 3) {
-            var label = tokens[0].replace(/:$/, '');
-            var size = (function(type) {
-              switch (type) {
-              case '.byte':
-                return 0.25;
-              case '.word':
-                return 1;
-              default:
-                throw 'Unrecognised data type "' + type + '"';
-              }
-            })(tokens[1]);
-            var length = u.requireUint(tokens[2]);
+          // Process instruction labels
+          if (tokens[0].match(/:$/)) {
             var label = tokens.shift().replace(/:$/, '');
-            var dstart = prog.memoryCounter, dend = dstart + Math.ceil(size * length);
 
-            // Add reference in memory table and populate dseg
-            prog.memory[label] = dstart;
-            for (var i = dstart; i < dend; i++) {
-              prog.dseg[i] = label;
+            // If label is a numerical address, then we have already
+            // defined the label, so perform a reverse lookup from
+            // within the labels table:
+            if (!isNaN(new Number(label)))
+              label = (function (address) {
+                for (var l in prog.memory)
+                  if (prog.memory[l] == label)
+                    return l;
 
-              if (dend - dstart > 1)
-                prog.dseg[i] += '[' + (i - dstart) + ']';
-            }
+                throw 'Invalid variable name "' + label + '"';
+              })(label);
 
-            // Update memory counter
-            prog.memoryCounter = dend;
+            // Add reference to memory table
+            prog.memory[label] = prog.memoryCounter;
 
             // Continue processing only if there are tokens remaining
             if (tokens.length < 1)
               continue;
-          } else
-            throw 'Failed to parse data segment token "' + tokens[0] + '"';
+          }
 
-        }
+          // Process memory labels
+          var size = (function(type) {
+            switch (type) {
+            case '.byte':
+              return 0.25;
+            case '.word':
+              return 1;
+            default:
+              throw 'Unrecognised data type "' + type + '"';
+            }
+          })(tokens[0]);
+
+          var length = u.requireUint(tokens[1]);
+          var dstart = new Number(prog.memoryCounter), dend = dstart + Math.ceil(size * length);
+
+          // Populate dseg
+          for (var i = dstart; i < dend; i++) {
+            prog.dseg[i] = label;
+
+            if (dend - dstart > 1)
+              prog.dseg[i] += '[' + (i - dstart) + ']';
+          }
+
+          // Update memory counter
+          prog.memoryCounter = dend;
+
+          // Continue processing only if there are tokens remaining
+          if (tokens.length < 1)
+            continue;
+        } else
+          throw 'Failed to parse data segment token "' + label + '"';
+
       }
     }
 
