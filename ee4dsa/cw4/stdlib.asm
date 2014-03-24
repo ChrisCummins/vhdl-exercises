@@ -79,6 +79,17 @@
         .def SSD_OFF    0b11111111      ; All segments off
 
 
+        ;; Constants.
+        ;; =================================================
+
+        .def BYTE_MAX   255             ; 0xFF
+        .def UINT_MAX   4294967295      ; 0xFFFFFFFF
+        .def INT_MAX    2147483647      ; 0x7FFFFFFF
+
+        .def BYTE_MAX_DIGITS 3          ; Decimal digit count
+        .def UINT_MAX_DIGITS 10         ; Decimal digit count
+        .def INT_MAX_DIGITS  10         ; Decimal digit count
+
 ;;; Initialisation.
 ;;; ========================================================
 
