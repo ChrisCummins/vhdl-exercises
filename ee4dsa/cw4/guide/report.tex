@@ -153,6 +153,11 @@ will refer to the contents of the line following it.
 
 \section{Directives}
 
+Directives control the internal state of the assembler, and do not
+result in executable machine code being generated. Instead, they can
+be used to set static addresses for program code, reserve memory for
+variables and defined symbolic values.
+
 {\scriptsize
 \begin{longtable}{ | l | l | l | }
   \hline
@@ -183,9 +188,6 @@ will refer to the contents of the line following it.
  .WORD & \textit{n} & Reserve \textit{n} words of program memory \\
  \hline
 \end{longtable}}
-
-Directives control the internal state of the assembler, and do not
-result in executable machine code being generated.
 
 \section{Instruction Set}
 
@@ -531,7 +533,78 @@ foobar: .word 10 * 3                    ; Allocate 30 words to 'foobar'
 
 \section{Working with Memory}
 
+Memory may be reserved and assigned to a symbolic label by using the
+data segment directive. Memory is allocated at the moment of
+declaration, so the data segment does not form a contiguous block, but
+is intermingled with the code segment. For example, the source code:
+
+\begin{verbatim}
+        .dseg
+        .org 0xf
+foo:    .byte 1
+        .cseg
+        ld r10, bar + 2
+        rjmp 4
+        .dseg
+bar:    .word 3
+        .cseg
+        halt
+\end{verbatim}
+
+Will generate the following output machine code:
+
+\begin{verbatim}
+00000000 -- 15 DATA: foo
+0B0A0014 -- 16 ld r10 20
+02000015 -- 17 rjmp 4
+00000000 -- 18 DATA: bar[0]
+00000000 -- 19 DATA: bar[1]
+00000000 -- 20 DATA: bar[2]
+01000000 -- 21 halt
+\end{verbatim}
+
+Note that reserved memory is not initialised.
+
 \section{Interrupt Handlers}
+
+Interrupt handlers are assigned using the \texttt{ISR} directive. At
+assembly time, an empty interrupt service handler table is generated,
+and any registered ISR are added. For example, the source code:
+
+\begin{verbatim}
+        .isr 0 isr0             ; Register the ISR 0 handler using label
+        .isr 1 0xf0             ; Register the ISR 1 handler using address
+                                ; Note that ISR 2 and above are not declared
+        .cseg
+        halt
+
+isr0:                           ; ISR 0
+        pshr r16
+        ldio r16, 0
+        stio 0, r16
+        popr r16
+
+        .org 0xf0               ; ISR 1
+        seto 0, 0, 0
+        reti
+\end{verbatim}
+
+Generates the following machine code when assembled with IDT size of 3
+words set:
+
+\begin{verbatim}
+02000004 -- 0 jmp 4
+020000F0 -- 1 jmp 240
+08000000 -- 2 reti
+01000000 -- 3 halt
+0F100000 -- 4 pshr r16
+12100000 -- 5 ldio r16 0
+11001000 -- 6 stio 0 r16
+10100000 -- 7 popr r16
+...
+04000000 -- 240 seto 0 0 0
+08000000 -- 241 reti
+\end{verbatim}
 
 \section{stdlib.asm}
 
@@ -612,10 +685,9 @@ foobar: .word 10 * 3                    ; Allocate 30 words to 'foobar'
  bcd2ssd\_tm & \textit{k, U} & & Convert unsigned integer \textit{U} into 4-digit SSD cathode mask table at address \textit{k} \\
  mult & \textit{A, B} & \textit{R} & Multiply integers \textit{A} and \textit{B} and return product \textit{R} \\
  div & \textit{A, B} & \textit{R, r} & Divide numerator \textit{A} by denominator \textit{B} and return result \textit{R} and remainder \textit{r} \\
-
+ sortu & \textit{n, k} & & In-place unsigned integer array sort of array size \textit{n} at address \textit{k} \\
+ sorts & \textit{n, k} & & In-place signed integer array sort of array size \textit{n} at address \textit{k} \\
  \hline
 \end{longtable}}
-
-\section{Example Algorithms}
 
 \end{document}
