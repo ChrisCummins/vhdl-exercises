@@ -14,9 +14,10 @@
         ;; The start of user program label:
         .defp _STDLIB_USER_ENTRY_POINT _main
 
-        ;; Internally, this library used a number of registers to
-        ;; perform initial setup, execute subroutines, etc.
-
+        ;; Internally, this library uses a number of registers to
+        ;; perform initial setup, execute subroutines, etc. These
+        ;; registers are given sequentially decreasing addresses,
+        ;; starting at this base:
         .defp _STDLIB_REG_BASE 255
 
 
@@ -26,56 +27,56 @@
 
         ;; Registers.
         ;; =================================================
-        .def NULL       r0
-        .def PC         r1
-        .def SP         r2
-        .def SREG       r3
+        .def NULL       r0              ; Null (zero) register
+        .def PC         r1              ; Program counter
+        .def SP         r2              ; Stack Pointer
+        .def SREG       r3              ; Status register
 
 
         ;; Interrupt lines.
         ;; =================================================
-        .def ISR_TIMER  0       ; Timer
-        .def ISR_SSD    1       ; Seven Segment Display
+        .def ISR_TIMER  0               ; Timer
+        .def ISR_SSD    1               ; Seven Segment Display
 
 
         ;; Status flag bits.
         ;; =================================================
-        .def SREG_I     0       ; Interrupts enabled flag
-        .def SREG_T     1       ; Test flag
-        .def SREG_C     2       ; Carry flag
+        .def SREG_I     0               ; Interrupts enabled flag
+        .def SREG_T     1               ; Test flag
+        .def SREG_C     2               ; Carry flag
 
 
         ;; Device IO.
         ;; =================================================
 
         ;; Input ports
-        .def SWITCHES   0x00
-        .def BUTTONS    0x01
+        .def SWITCHES   0x00            ; Input switches port
+        .def BUTTONS    0x01            ; Input buttons port
 
         ;; Output ports
-        .def LEDS       0x00
-        .def SSD_AN     0x01
-        .def SSD_KA     0x02
+        .def LEDS       0x00            ; Output LEDs port
+        .def SSD_AN     0x01            ; Output SSD anodes port
+        .def SSD_KA     0x02            ; Output SSD cathodes port
 
         ;; Button mask bit positions
-        .def BTND       4
-        .def BTNC       5
-        .def BTNL       6
-        .def BTNR       7
+        .def BTND       4               ; Down button
+        .def BTNC       5               ; Centre button
+        .def BTNL       6               ; Left button
+        .def BTNR       7               ; Right button
 
         ;; Bit masks for seven segment display characters
-        .def SSD_CHAR_0 0b11000000
-        .def SSD_CHAR_1 0b11111001
-        .def SSD_CHAR_2 0b10100100
-        .def SSD_CHAR_3 0b10110000
-        .def SSD_CHAR_4 0b10011001
-        .def SSD_CHAR_5 0b10010010
-        .def SSD_CHAR_6 0b10000010
-        .def SSD_CHAR_7 0b11111000
-        .def SSD_CHAR_8 0b10000000
-        .def SSD_CHAR_9 0b10010000
-        .def SSD_PERIOD 0b01111111
-        .def SSD_OFF    0b11111111
+        .def SSD_CHAR_0 0b11000000      ; Decimal digit 0
+        .def SSD_CHAR_1 0b11111001      ; Decimal digit 1
+        .def SSD_CHAR_2 0b10100100      ; Decimal digit 2
+        .def SSD_CHAR_3 0b10110000      ; Decimal digit 3
+        .def SSD_CHAR_4 0b10011001      ; Decimal digit 4
+        .def SSD_CHAR_5 0b10010010      ; Decimal digit 5
+        .def SSD_CHAR_6 0b10000010      ; Decimal digit 6
+        .def SSD_CHAR_7 0b11111000      ; Decimal digit 7
+        .def SSD_CHAR_8 0b10000000      ; Decimal digit 8
+        .def SSD_CHAR_9 0b10010000      ; Decimal digit 9
+        .def SSD_PERIOD 0b01111111      ; Period '.'
+        .def SSD_OFF    0b11111111      ; All segments off
 
 
 ;;; Initialisation.
@@ -101,8 +102,8 @@
 
         ;; We define a couple of useful symbols to expose the start and
         ;; end ranges of our internal register file to userland.
-        .def STDLIB_REG_MIN $rf
-        .def STDLIB_REG_MAX $r
+        .def STDLIB_REG_MIN $rf         ; Used register file address
+        .def STDLIB_REG_MAX $r          ; Highest register file address
 
         .cseg
         .org PROG_START
@@ -111,9 +112,10 @@
         ;; the user specified code entry point.
         ;;
         ;;   @inline
+        ;;   @noreturn
         ;;   @requires _STDLIB_USER_ENTRY_POINT
 _stdlib_init:
-        call    _bcd2ssd_init     ; Setup bcd2ssd conversion tables
+        call    _bcd2ssd_init            ; Setup bcd2ssd conversion table
         jmp     _STDLIB_USER_ENTRY_POINT ; Jump to user code entry point
 
 
@@ -176,7 +178,7 @@ btnr_press:
 
         .dseg
 
-        ;; BCD to SSD lookup table
+        ;; BCD to SSD lookup table:
         _bcd2ssd_t:     .word 10
 
         .cseg
@@ -186,6 +188,7 @@ btnr_press:
         ;; encodings for digits 0-9.
         ;;
         ;;   @inline
+        ;;   @return void
 _bcd2ssd_init:
         sti     _bcd2ssd_t,       SSD_CHAR_0
         sti     _bcd2ssd_t + 0x1, SSD_CHAR_1
@@ -206,11 +209,11 @@ _bcd2ssd_init:
         ;;   @return SSD digit
         ;;   @reg    $r-$r1
 bcd2ssd:
-        popr    $r              ; Return address
-        popr    $r1             ; BCD digit 'i'
-        lddi    $r1, $r1, _bcd2ssd_t ; $r1 = bcd2ss_t[i]
-        pshr    $r1             ; Push result
-        pshr    $r              ; Push return address
+        popr    $r                      ; $r = Return address
+        popr    $r1                     ; $r1 = BCD digit 'i'
+        lddi    $r1, $r1, _bcd2ssd_t    ; $r1 = bcd2ss_t[i]
+        pshr    $r1                     ; Push result
+        pshr    $r                      ; Push return address
         ret
 
         ;; Convert a binary coded decimal digit to a Seven Segment
@@ -220,12 +223,12 @@ bcd2ssd:
         ;;   @return SSD digit with period
         ;;   @reg    $r-$r1
 bcd2ssd_p:
-        popr    $r              ; Return address
-        popr    $r1             ; BCD digit 'i'
-        lddi    $r1, $r1, _bcd2ssd_t ; $r2 = bcd2ss_t[i]
-        andi    $r1, $r1, SSD_PERIOD ; Add the period
-        pshr    $r1             ; Push result
-        pshr    $r              ; Push return address
+        popr    $r                      ; $r = Return address
+        popr    $r1                     ; $r1 = BCD digit 'i'
+        lddi    $r1, $r1, _bcd2ssd_t    ; $r1 = bcd2ss_t[i]
+        andi    $r1, $r1, SSD_PERIOD    ; Add the period
+        pshr    $r1                     ; Push result
+        pshr    $r                      ; Push return address
         ret
 
         ;; Converts a binary integer into a set of four cathode masks
@@ -240,55 +243,55 @@ bcd2ssd_p:
         ;;   @return void
         ;;   @reg    $r4-$r7
 bin2ssd_tm:
-        popr    $r4             ; Return address
-        popr    $r5             ; Unsigned integer
-        popr    $r6             ; cathode_t address
-        pshr    $r4             ; Push return address
+        popr    $r4                     ; $r4 = Return address
+        popr    $r5                     ; $r5 = Unsigned integer
+        popr    $r6                     ; $r6 = cathode_t address
+        pshr    $r4                     ; Push return address
 
-        pshi    10000           ; 10,000 digit
+        pshi    10000                   ; 10,000 digit
         pshr    $r5
-        call    div
-        popr    $r7             ; BCD 10,000 digit
-        popr    $r5             ; Remainder
+        call    divu
+        popr    $r7                     ; $r7 = BCD 10,000 digit
+        popr    $r5                     ; $r5 = Remainder
 
-        pshi    1000            ; 1,000 digit
+        pshi    1000                    ; 1,000 digit
         pshr    $r5
-        call    div
-        popr    $r4             ; BCD 1000 digit
-        popr    $r5             ; Remainder
+        call    divu
+        popr    $r4                     ; $r4 = BCD 1000 digit
+        popr    $r5                     ; $r5 = Remainder
         pshr    $r4
         call    bcd2ssd
-        popr    $r4             ; SSD 1000 digit
-        str     $r6, $r4        ; STORE SSD 1000 digit
-        inc     $r6             ; Bump table address
+        popr    $r4                     ; $r4 = SSD 1000 digit
+        str     $r6, $r4                ; STORE SSD 1000 digit
+        inc     $r6                     ; $r6++ Bump table address
 
-        pshi    100             ; 100 digit
+        pshi    100                     ; 100 digit
         pshr    $r5
-        call    div
-        popr    $r4             ; BCD 100 digit
-        popr    $r5             ; Remainder
+        call    divu
+        popr    $r4                     ; $r4 = BCD 100 digit
+        popr    $r5                     ; $r5 = Remainder
         pshr    $r4
         call    bcd2ssd
-        popr    $r4             ; SSD 100 digit
-        str     $r6, $r4        ; STORE SSD 100 digit
-        inc     $r6             ; Bump table address
+        popr    $r4                     ; $r4 = SSD 100 digit
+        str     $r6, $r4                ; STORE SSD 100 digit
+        inc     $r6                     ; $r6++ Bump table address
 
-        pshi    10              ; 10 digit
+        pshi    10                      ; 10 digit
         pshr    $r5
-        call    div
-        popr    $r4             ; BCD 10 digit
-        nez     $r7             ; Check whether we've overflown 10,000
+        call    divu
+        popr    $r4                     ; $r4 = BCD 10 digit
+        nez     $r7                     ; Check whether we've overflown 10,000
         rbrts   3
-        call    bcd2ssd         ; (note we leave the remainder on the stack)
+        call    bcd2ssd                 ; Note we left the remainder on the stack
         rjmp    2
         call    bcd2ssd_p
-        popr    $r5             ; SSD 1 digit
+        popr    $r5                     ; $r5 = SSD 1 digit
         pshr    $r4
         call    bcd2ssd
-        popr    $r4             ; SSD 10 digit
-        str     $r6, $r4        ; STORE SSD 10 digit
-        inc     $r6
-        str     $r6, $r5        ; STORE SSD 1 digit
+        popr    $r4                     ; $r4 = SSD 10 digit
+        str     $r6, $r4                ; STORE SSD 10 digit
+        inc     $r6                     ; $r6++ Bump table address
+        str     $r6, $r5                ; STORE SSD 1 digit
         ret
 
 ;;; Software arithmetic.
@@ -300,18 +303,18 @@ bin2ssd_tm:
         ;;   @param  operand B
         ;;   @return result
         ;;   @reg    $r-$r3
-mult:
-        popr    $r              ; Return address
-        popr    $r1             ; a
-        popr    $r2             ; b
-        clr     $r3             ; y = 0
-        dec     $r2             ; i = b - 1
-        add     $r3, $r3, $r1   ; y += a
-        dec     $r2             ; i--
-        nez     $r2             ; Repeat while i > 0
+multu:
+        popr    $r                      ; $r = Return address
+        popr    $r1                     ; $r1 = a
+        popr    $r2                     ; $r2 = b
+        clr     $r3                     ; $r3 = y = 0
+        dec     $r2                     ; $r2 = i = b - 1
+        add     $r3, $r3, $r1           ; y += a
+        dec     $r2                     ; i--
+        nez     $r2                     ; Repeat while i > 0
         rbrts   -3
-        pshr    $r3             ; Push result
-        pshr    $r              ; Push return address
+        pshr    $r3                     ; Push result
+        pshr    $r                      ; Push return address
         ret
 
         ;; Unsigned integer division.
@@ -321,19 +324,19 @@ mult:
         ;;   @return remainder
         ;;   @return result
         ;;   @reg    $r-$r3
-div:
-        popr    $r              ; Return address
-        popr    $r1             ; a
-        popr    $r2             ; b
-        clr     $r3             ; i = 0
-        lt      $r1, $r2        ; IF a < b
-        rbrts   4               ; RETURN
-        sub     $r1, $r1, $r2   ; ELSE a -= b
-        inc     $r3             ; i++
+divu:
+        popr    $r                      ; $r = Return address
+        popr    $r1                     ; $r1 = a
+        popr    $r2                     ; $r2 = b
+        clr     $r3                     ; $r3 = i = 0
+        lt      $r1, $r2                ; IF a < b
+        rbrts   4                       ; RETURN
+        sub     $r1, $r1, $r2           ; ELSE a -= b
+        inc     $r3                     ; i++
         rjmp    -4
-        pshr    $r1             ; Push remainder
-        pshr    $r3             ; Push result
-        pshr    $r              ; Push return address
+        pshr    $r1                     ; Push remainder
+        pshr    $r3                     ; Push result
+        pshr    $r                      ; Push return address
         ret
 
 
