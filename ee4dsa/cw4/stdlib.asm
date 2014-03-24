@@ -404,6 +404,69 @@ _sorts_3:
         jmp     _sorts_2                ; Repeat
 
 
+        ;; In-place recursive Quicksort for unsigned integer arrays.
+        ;;
+        ;;   Best-case performance:  O(n log n)
+        ;;   Worst-case performance: O(n^2)
+        ;;   Memory complexity:      O(1)
+        ;;
+        ;;   @param  No of items in array
+        ;;   @param  Start address of array
+        ;;   @reg    $r-$r7
+qsortu:
+        popr    $r                      ; $r = No of items in the array
+        popr    $r1                     ; $r1 = Start address of array
+        add     $r2, $r1, $r            ; $r2 = End address of array
+        clr     $r3                     ; $r3 = lowIndex = 0
+        mov     $r4, $r2                ; $r4 = highIndex = last address
+        call    _qsortu
+        ret
+_qsortu:                                ; Recursive Main loop:
+        lt      $r3, $r4                ; If lowIndex >= highIndex, return
+        rbrts   2
+        ret
+        pshr    $r3                     ; Store lowIndex,  now $r3 is 'i'
+        pshr    $r4                     ; Store highIndex, now $r4 is 'j'
+        inc     $r4                     ; j = highIndex + 1
+        ldd     $r5, $r1, $r3           ; $r5 = Pivot = d[lowIndex]
+_qsortu_2:
+        inc     $r3                     ; i++
+        brgte   $r3, $r4, _qsortu_3     ; IF i >= j, exit loop
+        ldd     $r6, $r1, $r3           ; IF d[i] >= Pivot, exit loop
+        brgte   $r6, $r5, _qsortu_3
+        jmp     _qsortu_2               ; Go back to the top of this loop
+_qsortu_3:
+        dec     $r4                     ; j--
+        ldd     $r6, $r1, $r4           ; IF d[j] <= Pivot, exit loop
+        brlte   $r6, $r5, _qsortu_4
+        jmp     _qsortu_3               ; Repeat this loop
+_qsortu_4:
+        brgte   $r3, $r4, _qsortu_6     ; IF i >= j, end main loop
+        ldd     $r6, $r1, $r3           ; ELSE swawp d[i] and d[j]
+        ldd     $r7, $r1, $r4
+        std     $r6, $r1, $r4
+        std     $r7, $r1, $r3
+        jmp     _qsortu_2
+_qsortu_6:
+        popr    $r5                     ; $r5 = highIndex
+        popr    $r2                     ; $r2 = lowIndex
+        breq    $r2, $r4, _qsortu_7     ; IF lowIndex = j, don't swap
+        ldd     $r6, $r1, $r2           ; Else, swap d[lowIndex] and d[j]
+        ldd     $r7, $r1, $r4
+        std     $r6, $r1, $r4
+        std     $r7, $r1, $r2
+_qsortu_7:                              ; End quick sort:
+        mov     $r3, $r2                ; $r3 = lowIndex
+        pshr    $r5                     ; Save the high Index
+        pshr    $r4                     ; Save j
+        dec     $r4                     ; j--
+        call    _qsortu                 ; Recurse: array, lowIndex, j - 1
+        popr    $r3                     ; $r3 = j
+        inc     $r3                     ; j++
+        popr    $r4                     ; $r4 = highIndex
+        call    _qsortu                 ; Recurse: array, j+1, highIndex
+
+
 ;;; Tidy up.
 ;;; ========================================================
 
