@@ -1,6 +1,7 @@
 *.ghw
 *.l
 *.o
+*.m
 /ram.dat
 /_xmsgs
 /design.bit

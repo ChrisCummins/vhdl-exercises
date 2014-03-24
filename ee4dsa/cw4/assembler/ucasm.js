@@ -23,6 +23,11 @@ var argv = require('optimist')
       default: '<source>.l',
       desc: 'Output listing file path'
     })
+    .option('machine', {
+      alias: 'm',
+      default: '<source>.m',
+      desc: 'Output machine file path'
+    })
     .option('ram-size', {
       alias: 'r',
       default: 4096,
@@ -64,6 +69,8 @@ try {
     argv.output = argv.source.replace(/\.[a-z0-9]+$/i, '') + '.o';
   if (argv.list === '<source>.l')
     argv.list = argv.source.replace(/\.[a-z0-9]+$/i, '') + '.l';
+  if (argv.machine === '<source>.m')
+    argv.machine = argv.source.replace(/\.[a-z0-9]+$/i, '') + '.m';
 
   /* Assemble input file(s) */
   assemble(readAsmFile(argv.source), {
@@ -77,6 +84,7 @@ try {
     /* Write output files */
     fs.writeFile(argv.output, data.ram);
     fs.writeFile(argv.list, data.list);
+    fs.writeFile(argv.machine, data.source);
 
     /* Print summary */
     console.log(path.basename(argv.source) +
