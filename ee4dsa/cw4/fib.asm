@@ -34,7 +34,9 @@
         .def b          r33
         .def sum        r34
         .def last       r35
-        .def ssd_ka_r   r26
+        .def ssd_ka_r   r36
+        .def ledd       r37
+        .def ledm       r38
 
         ;; The main code entry point. Begin by initialising
         ;; register and memory values as required. We do this
@@ -52,6 +54,7 @@ _main:
         sti     ssd_an_t + 2, 0x0D
         sti     ssd_an_t + 3, 0x0E
         sei                             ; We're all set, so enable interrupts
+
 reset_fib:
         ldi     a, 0                    ; a = 0
         ldi     b, 1                    ; b = 1
@@ -62,11 +65,24 @@ next_fib:                               ; The actual Fibonacci calculation:
         mov     b, sum                  ; b = sum
         brlt    sum, last, reset_fib    ; Reset if we have integer overflow
         mov     last, sum               ; last = current
+
+        ;; Update Seven Segment Display:
         pshr    ssd_ka_r                ; Update the SSD cathode table
         pshr    sum
         call    bin2ssd_tm
-        call    btnc_press              ; Wait for user button press
-        jmp     next_fib                ; Rinse and repeat
+
+        ;; Update LED indicators
+        ldil    ledm, 1                 ; LEDs = 1 << ledd
+        lsl     ledm, ledm, ledd
+        stio    LEDS, ledm
+        inc     ledd                    ; ledd++
+        lti     ledd, 8                 ; IF ledd > 8, ledd = 0
+        rbrts   2
+        ldil    ledd, 0
+
+        ;; Wait for Button press
+        call    btnc_press
+        jmp     next_fib
 
         ;; Clear up our symbol space:
         .undef a
@@ -74,6 +90,8 @@ next_fib:                               ; The actual Fibonacci calculation:
         .undef sum
         .undef last
         .undef ssd_ka_r
+        .undef ledd
+        .undef ledm
 
 ;;; Seven Segment Display driver:
 ;;; ========================================================
