@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-var lazy = require('lazy');
 var fs  = require('fs');
 var path = require('path');
 var u = require('./lib/ee4dsa-util');
