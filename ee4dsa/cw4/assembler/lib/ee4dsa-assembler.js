@@ -556,8 +556,8 @@ module.exports = function(data, options, callback) {
             case 'neg':   return '22' + u.requireReg(t[1]) + u.requireReg(t[1]) + '00'
             case 'inc':   return '21' + u.requireReg(t[1]) + u.requireReg(t[1]) + '00';
             case 'incs':  return '29' + u.requireReg(t[1]) + u.requireReg(t[1]) + '00';
-            case 'dec':   return '22' + u.requireReg(t[1]) + u.requireReg(t[1]) + u.requireReg(t[1]);
-            case 'decs':  return '2A' + u.requireReg(t[1]) + u.requireReg(t[1]) + u.requireReg(t[1]);
+            case 'dec':   return '22' + u.requireReg(t[1]) + u.requireReg(t[1]) + '00';
+            case 'decs':  return '2A' + u.requireReg(t[1]) + u.requireReg(t[1]) + '00';
             case 'add':   return '20' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
             case 'adds':   return '28' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
             case 'sub':   return '23' + u.requireReg(t[1]) + u.requireReg(t[2]) + u.requireReg(t[3]);
