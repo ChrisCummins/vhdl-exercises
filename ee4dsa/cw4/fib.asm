@@ -32,8 +32,8 @@
         .def sum        r34             ; Fibonacci result
         .def last       r35             ; Last result in Fibonacci sequence
         .def ssd_ka_r   r36             ; Pointer to SSD cathode table
-        .def ledd       r37             ; LED digit
-        .def ledm       r38             ; LED port mask
+        .def led_m      r38             ; LED port mask
+        .def byte+1     r37             ; Byte overflow constant
 
         ;; The main code entry point. Begin by initialising
         ;; register and memory values as required. We do this
@@ -42,6 +42,7 @@
 _main:
         cli                             ; Disable interrupts
         ldi     ssd_ka_r,     ssd_ka_t  ; Set a pointer to the cathode table
+        ldi     byte+1,       0xFF + 1  ; Set the byte overflow
         sti     ssd_ka_t,     SSD_OFF   ; Zero the cathode table
         sti     ssd_ka_t + 1, SSD_OFF
         sti     ssd_ka_t + 2, SSD_OFF
@@ -56,6 +57,7 @@ reset_fib:
         ldi     a, 0                    ; a = 0
         ldi     b, 1                    ; b = 1
         ldi     last, 0
+        ldi     led_m, 1
 next_fib:                               ; The actual Fibonacci calculation:
         add     sum, a, b               ; sum = a + b
         mov     a, b                    ; a = b
@@ -69,13 +71,11 @@ next_fib:                               ; The actual Fibonacci calculation:
         call    bin2ssd_tm
 
         ;; Update LED indicator
-        ldil    ledm, 1                 ; LEDs = 1 << ledd
-        lsl     ledm, ledm, ledd
-        stio    LEDS, ledm
-        inc     ledd                    ; ledd++
-        lti     ledd, 8                 ; IF ledd > 8, ledd = 0
+        stio    LEDS, led_m
+        lsli    led_m, led_m, 1         ; led_m << 1
+        lt      led_m, byte+1           ; If we've overflown the port mask, reset
         rbrts   2
-        ldil    ledd, 0
+        ldil    led_m, 1
 
         ;; Wait for Button press
         call    btnc_press
@@ -87,8 +87,8 @@ next_fib:                               ; The actual Fibonacci calculation:
         .undef sum
         .undef last
         .undef ssd_ka_r
-        .undef ledd
-        .undef ledm
+        .undef byte+1
+        .undef led_m
 
 ;;; Seven Segment Display driver:
 ;;; ========================================================
