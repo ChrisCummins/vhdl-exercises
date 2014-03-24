@@ -12,7 +12,7 @@ end test_bench;
 architecture behav of test_bench is
 
     constant test_duration: time    := 2250 us;
-    constant clk_freq:   positive   := 2000000; -- Hz
+    constant clk_freq:   positive   := 3500000; -- Hz
     constant clk_period: time       := 1000 ms / clk_freq;
     constant debounce:   natural    := 1; -- us
     constant baud_rate:  positive   := 57600; -- Baud
