@@ -336,6 +336,71 @@ div:
         pshr    $r              ; Push return address
         ret
 
+
+;;; Sorting algorithms.
+;;; ========================================================
+
+        ;; In-place Gnome sort for unsigned integer arrays.
+        ;;
+        ;;   Best-case performance:  O(n)
+        ;;   Worst-case performance: O(n^2)
+        ;;   Memory complexity:      O(1)
+        ;;
+        ;;   @param  No of items in array
+        ;;   @param  Start address of array
+        ;;   @reg    $r-$r5
+sortu:
+        popr    $r                      ; $r = No of items in the array
+        popr    $r1                     ; $r1 = Start address of array
+        add     $r2, $r1, $r            ; $r2 = End address of array
+        mov     $r3, $r1                ; $r3 = Iterator
+_sortu_2:
+        gt      $r3, $r2                ; Finish if we've reached the end
+        ret
+        breq    $r3, $r1, _sortu_3      ; Skip first iteration
+        lddi    $r4, $r3, -1            ; $r4 = d[i - 1]
+        ldr     $r5, $r3                ; $r5 = d[i]
+        brgte   $r5, $r4, _sortu_3      ; If d[i] > d[i - 1]
+        stdi    $r3, -1, $r5            ; Swap array elements
+        str     $r3, $r4
+        dec     $r3                     ; Decrement address
+        jmp     _sortu_2
+_sortu_3:
+        inc     $r3                     ; Increment address
+        jmp     _sortu_2                ; Repeat
+
+
+        ;; In-place Gnome sort for signed integer arrays.
+        ;;
+        ;;   Best-case performance:  O(n)
+        ;;   Worst-case performance: O(n^2)
+        ;;   Memory complexity:      O(1)
+        ;;
+        ;;   @param  No of items in array
+        ;;   @param  Start address of array
+        ;;   @reg    $r-$r5
+sorts:
+        popr    $r                      ; $r = No of items in the array
+        popr    $r1                     ; $r1 = Start address of array
+        add     $r2, $r1, $r            ; $r2 = End address of array
+        mov     $r3, $r1                ; $r3 = Iterator
+_sorts_2:
+        gts     $r3, $r2                ; Finish if we've reached the end
+        ret
+        breq    $r3, $r1, _sorts_3      ; Skip first iteration
+        lddi    $r4, $r3, -1            ; $r4 = d[i - 1]
+        ldr     $r5, $r3                ; $r5 = d[i]
+        gtes    $r5, $r4                ; If d[i] > d[i - 1]
+        brts    _sorts_3
+        stdi    $r3, -1, $r5            ; Swap array elements
+        str     $r3, $r4
+        dec     $r3                     ; Decrement address
+        jmp     _sorts_2
+_sorts_3:
+        inc     $r3                     ; Increment address
+        jmp     _sorts_2                ; Repeat
+
+
 ;;; Tidy up.
 ;;; ========================================================
 
