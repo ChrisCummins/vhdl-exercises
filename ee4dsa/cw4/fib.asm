@@ -10,17 +10,20 @@
 
         .include "stdlib.asm"
 
+        ;; Our Fibonacci sequence starting inputs:
+        .def FIB_A_INIT 4181
+        .def FIB_B_INIT 6765
+
         ;; Data Segment:
         ;; =================================================
 
         .dseg
 
-bcd_t:    .word UINT_MAX_DIGITS         ; BCD table
-ssd_ka_t: .word UINT_MAX_DIGITS         ; Cathode mask table
-ssd_an_t: .word 4                       ; Anode mask table
-p10_t:    .word 10                      ; Powers of 10 table
-
-msd:      .word 1                       ; Most significant digit
+bcd_t:          .word UINT_MAX_DIGITS   ; BCD table
+ssd_ka_t:       .word UINT_MAX_DIGITS   ; Cathode mask table
+ssd_an_t:       .word 4                 ; Anode mask table
+p10_t:          .word 10                ; Powers of 10 table
+msd:            .word 1                 ; Most significant digit
 
         ;; Program code:
         ;; =================================================
@@ -37,7 +40,7 @@ msd:      .word 1                       ; Most significant digit
         .def bcd_r      r37
         .def divisor    r40
         .def bcd        r41
-        .def last_bcd   r42
+        .def bcd2ssd_r  r42
         .def i          r43
 
         ;; The main code entry point. Begin by initialising
@@ -48,21 +51,22 @@ _main:
         cli                             ; Disable interrupts
         ldi     bcd_r, bcd_t            ; Set a pointer to the BCD table
         ldi     ssd_ka_r, ssd_ka_t      ; Set a pointer to the cathode table
+        ldi     bcd2ssd_r, bcd2ssd_t    ; Set a pointer to the BCD -> SSD table
 
-        ;; Zero our Anode table
+        ;; Initialise the SSD Anode table
         sti     ssd_an_t,     0x07
         sti     ssd_an_t + 1, 0x0B
         sti     ssd_an_t + 2, 0x0D
         sti     ssd_an_t + 3, 0x0E
 
-        ;; Zero our Cathode table
+        ;; Initialise the SSD Cathode table
         ldi     i, ssd_ka_t + UINT_MAX_DIGITS - 1
         stri    i, SSD_OFF
         dec     i
         gte     i, ssd_ka_r
         rbrts   -3
 
-        ;; Set the power of 10 table
+        ;; Initialise the power of 10 table
         sti     p10_t,              1   ; 10 & 0
         sti     p10_t + 1,         10   ; 10 ^ 1
         sti     p10_t + 2,        100   ; 10 ^ 2
@@ -77,50 +81,38 @@ _main:
         sei                             ; We're all set, so enable interrupts
 
 fib_init:
-        ldi     a, 4181                 ; a = TODO: Set back to 0
-        ldi     b, 6765                 ; b = TODO: Set back to 1
+        ldi     a, FIB_A_INIT
+        ldi     b, FIB_B_INIT
 
 fib_iter:                               ; The actual Fibonacci calculation:
         add     sum, a, b               ; sum = a + b
         mov     a, b                    ; a = b
         mov     b, sum                  ; b = sum
-
-        ;; Update Seven Segment Display:
-        ldil    msd_r, 0               ; Reset msd_r
-        ldi     i, UINT_MAX_DIGITS - 1 ; i = MAX - 1
+        ldil    msd_r, 0                ; Reset msd_r
+        ldi     i, UINT_MAX_DIGITS - 1  ; i = MAX - 1
 
 bcd_loop:
-        lddi    divisor, i, p10_t
+        lddi    divisor, i, p10_t       ; divisor = p10[i]
         pshr    divisor                 ; sum /= divisor
         pshr    sum
         call    divu
         popr    bcd
         popr    sum
-
-        ;; Set msd_r = i + 1 IF bcd > 0 && msd_r = 0
-        eqz     bcd
+        eqz     bcd                     ; IF bcd > 0 AND msd = 0, then msd = i+1:
         brts    store_bcd
         nez     msd_r
         brts    store_bcd
         mov     msd_r, i                ; msd_r = i
         inc     msd_r                   ; msd_r = i + 1
-
-store_bcd:                              ; Store BCD digit and store SSD
-        ldd     last_bcd, bcd_r, i      ; last_bcd = bcd[i]
-        equ     bcd, last_bcd           ; IF bcd != bcd[i], then store it
-        brts    next_bcd_loop
+store_bcd:                              ; Store BCD digit and store SSD:
         std     bcd_r, i, bcd           ; bcd[i] = bcd
-        pshr    bcd                     ; Convert bcd to ssd
-        call    bcd2ssd
-        popr    bcd
+        ldd     bcd, bcd, bcd2ssd_r
         std     ssd_ka_r, i, bcd        ; ssd[i] = ssd
-
 next_bcd_loop:
         eqz     i                       ; If i = 0, exit loop
         brts    _wait_for_next
         dec     i                       ; i--
         jmp     bcd_loop
-
 _wait_for_next:                         ; Wait for button press
         gti     msd_r, 4                ; msd_r = max(msd_r, 4)
         rbrts   2
@@ -139,7 +131,7 @@ _wait_for_next:                         ; Wait for button press
         .undef bcd_r
         .undef divisor
         .undef bcd
-        .undef last_bcd
+        .undef bcd2ssd_r
         .undef i
 
 ;;; Seven Segment Display scroller:
@@ -150,7 +142,7 @@ _wait_for_next:                         ; Wait for button press
 
         .dseg
 
-msd_v:    .word 1                       ; Most significant visible digit
+msd_v:          .word 1                 ; Most significant visible digit
 
         ;; Program code:
         ;; =================================================
@@ -160,11 +152,6 @@ msd_v:    .word 1                       ; Most significant visible digit
         ;; Register our interrupt handler:
         .isr ISR_TIMER timer_update
 
-        ;; When executed, this routine reads the anode and cathode
-        ;; mask of one of the four seven segment display digits
-        ;; from memory, and writes out the value to the
-        ;; corresponding output port. It then increments and stores
-        ;; a counter to determine the next digit to be displayed.
 timer_update:
         pshr    r16                     ; Preserve working registers
         pshr    r17
@@ -203,7 +190,7 @@ _timer_update3:
 
         .dseg
 
-        ssd_idx:        .word 1         ; Current digit index
+ssd_idx:        .word 1                 ; Current digit index
 
         ;; Program code:
         ;; =================================================

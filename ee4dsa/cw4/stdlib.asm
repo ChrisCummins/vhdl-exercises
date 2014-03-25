@@ -190,27 +190,27 @@ btnr_press:
         .dseg
 
         ;; BCD to SSD lookup table:
-        _bcd2ssd_t:     .word 10
+bcd2ssd_t:      .word 10
 
         .cseg
 
-        ;; Initialises _bcd2ssd_t table with SSD characters, where
+        ;; Initialises bcd2ssd_t table with SSD characters, where
         ;; the indexes 0-9 in the table correspond to the SSD
         ;; encodings for digits 0-9.
         ;;
         ;;   @inline
         ;;   @return void
 _bcd2ssd_init:
-        sti     _bcd2ssd_t,       SSD_CHAR_0
-        sti     _bcd2ssd_t + 0x1, SSD_CHAR_1
-        sti     _bcd2ssd_t + 0x2, SSD_CHAR_2
-        sti     _bcd2ssd_t + 0x3, SSD_CHAR_3
-        sti     _bcd2ssd_t + 0x4, SSD_CHAR_4
-        sti     _bcd2ssd_t + 0x5, SSD_CHAR_5
-        sti     _bcd2ssd_t + 0x6, SSD_CHAR_6
-        sti     _bcd2ssd_t + 0x7, SSD_CHAR_7
-        sti     _bcd2ssd_t + 0x8, SSD_CHAR_8
-        sti     _bcd2ssd_t + 0x9, SSD_CHAR_9
+        sti     bcd2ssd_t,       SSD_CHAR_0
+        sti     bcd2ssd_t + 0x1, SSD_CHAR_1
+        sti     bcd2ssd_t + 0x2, SSD_CHAR_2
+        sti     bcd2ssd_t + 0x3, SSD_CHAR_3
+        sti     bcd2ssd_t + 0x4, SSD_CHAR_4
+        sti     bcd2ssd_t + 0x5, SSD_CHAR_5
+        sti     bcd2ssd_t + 0x6, SSD_CHAR_6
+        sti     bcd2ssd_t + 0x7, SSD_CHAR_7
+        sti     bcd2ssd_t + 0x8, SSD_CHAR_8
+        sti     bcd2ssd_t + 0x9, SSD_CHAR_9
         ret
 
         ;; Convert a binary coded decimal digit to a Seven Segment
@@ -222,7 +222,7 @@ _bcd2ssd_init:
 bcd2ssd:
         popr    $r                      ; $r = Return address
         popr    $r1                     ; $r1 = BCD digit 'i'
-        lddi    $r1, $r1, _bcd2ssd_t    ; $r1 = bcd2ss_t[i]
+        lddi    $r1, $r1, bcd2ssd_t     ; $r1 = bcd2ss_t[i]
         pshr    $r1                     ; Push result
         pshr    $r                      ; Push return address
         ret
@@ -236,7 +236,7 @@ bcd2ssd:
 bcd2ssd_p:
         popr    $r                      ; $r = Return address
         popr    $r1                     ; $r1 = BCD digit 'i'
-        lddi    $r1, $r1, _bcd2ssd_t    ; $r1 = bcd2ss_t[i]
+        lddi    $r1, $r1, bcd2ssd_t     ; $r1 = bcd2ss_t[i]
         andi    $r1, $r1, SSD_PERIOD    ; Add the period
         pshr    $r1                     ; Push result
         pshr    $r                      ; Push return address
