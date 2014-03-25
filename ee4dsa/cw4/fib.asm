@@ -18,11 +18,9 @@
 bcd_t:    .word UINT_MAX_DIGITS         ; BCD table
 ssd_ka_t: .word UINT_MAX_DIGITS         ; Cathode mask table
 ssd_an_t: .word 4                       ; Anode mask table
-p10_t:    .word 9                       ; Powers of 10 table
+p10_t:    .word 10                      ; Powers of 10 table
 
 msd:      .word 1                       ; Most significant digit
-msd_v:    .word 1                       ; Most significant visible dibit
-
 
         ;; Program code:
         ;; =================================================
@@ -127,6 +125,7 @@ _wait_for_next:                         ; Wait for button press
         gti     msd_r, 4                ; msd_r = max(msd_r, 4)
         rbrts   2
         ldil    msd_r, 4
+        st      msd, msd_r              ; Store msd
         call    btnc_press
         jmp     fib_iter
 
@@ -142,6 +141,59 @@ _wait_for_next:                         ; Wait for button press
         .undef bcd
         .undef last_bcd
         .undef i
+
+;;; Seven Segment Display scroller:
+;;; ========================================================
+
+        ;; Data Segment:
+        ;; =================================================
+
+        .dseg
+
+msd_v:    .word 1                       ; Most significant visible digit
+
+        ;; Program code:
+        ;; =================================================
+
+        .cseg
+
+        ;; Register our interrupt handler:
+        .isr ISR_TIMER timer_update
+
+        ;; When executed, this routine reads the anode and cathode
+        ;; mask of one of the four seven segment display digits
+        ;; from memory, and writes out the value to the
+        ;; corresponding output port. It then increments and stores
+        ;; a counter to determine the next digit to be displayed.
+timer_update:
+        pshr    r16                     ; Preserve working registers
+        pshr    r17
+        pshr    r18
+        ld      r16, msd                ; r16 = msd
+        ld      r17, msd_v              ; r17 = msd_v
+        ldi     r18, 4                  ; r18 = 4
+        gt      r16, r18                ; IF r16 <= 4, then r17 = 4
+        brts    _timer_update
+        mov     r17, r18
+        jmp     _timer_update3
+_timer_update:                          ; Scroll right:
+        lte     r17, r18                ; IF r17 >= 4, then r17--
+        brts    _timer_update2
+        dec     r17
+        jmp     _timer_update3
+_timer_update2:
+        mov     r17, r16                ; ELSE r17 = r16
+_timer_update3:
+        st      msd_v, r17              ; Store msd_v
+        sub     r17, r17, r18           ; msv -= 4
+        ldil    r16, 1
+        lsl     r16, r16, r17           ; r16 = 1 << (msd_v - 4)
+        stio    LEDS, r16               ; LEDS = r16
+        popr    r18                     ; Restore working registers
+        popr    r17
+        popr    r16
+        reti
+
 
 ;;; Seven Segment Display driver:
 ;;; ========================================================
@@ -169,16 +221,21 @@ _wait_for_next:                         ; Wait for button press
 ssd_update:
         pshr    r10                     ; Preserve working registers
         pshr    r11
+        pshr    r12
         ld      r10, ssd_idx            ; r10 = i
         lddi    r11, r10, ssd_an_t      ; r11 = an_t[i]
+        ld      r12, msd_v              ; r12 = msd_v
+        subi    r12, r12, 4             ; r12 -= 4
+        add     r12, r12, r10           ; r12 += i
         stio    SSD_AN, r11             ; Write out anode
-        lddi    r11, r10, ssd_ka_t      ; r11 = ka_t[i]
+        lddi    r11, r12, ssd_ka_t      ; r11 = ka_t[msd_v + i - 4]
         stio    SSD_KA, r11             ; Write out cathode
         inc     r10                     ; i++
         lti     r10, 4                  ; IF i < 4
         rbrts   2                       ; THEN RETURN
         ldil    r10, 0                  ; ELSE i = 0
         st      ssd_idx, r10            ; Store i
-        popr    r11                     ; Restore working registers
+        popr    r12                     ; Restore working registers
+        popr    r11
         popr    r10
         reti
