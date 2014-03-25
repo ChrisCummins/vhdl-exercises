@@ -17,12 +17,38 @@
 \chapter{Introduction}
 
 The UCASM assembler is a Turing complete assembly language and macro
-processor for the 32 bit uC architecture developed for coursework 3 of
-Dr. Eberhard's Digital Systems Architecture module. The assembly
+processor for the 32 bit $\mu C$ architecture developed for coursework
+3 of Dr. Eberhard's Digital Systems Architecture module. The assembly
 syntax and constructs are influenced heavily by the AVR Assembler
 \footnote{See the AVR Assembler User Guide:
   \url{http://www.atmel.com/Images/doc1022.pdf}.}.
 
+\section{Features}
+
+\begin{itemize}
+\item A multi-pass assembler for 32-bit $\mu C$ architectures.
+\item Inspired by AVR syntax / instruction set.
+\item Recursive macro expansion.
+\item Support for multi-file assembly programs.
+\item Support for assembly-time recursive evaluation of numerical and
+  bitwise operations.
+\item Case insensitive parsing of input files.
+\item Implicit management of interrupt handlers and automatically
+  generated interrupt descriptor tables.
+\end{itemize}
+
+\subsection{Caveats}
+
+\begin{itemize}
+\item Single global namespace for symbols and labels.
+\item Non-contiguous allocation of data and code segments.
+\item Numerical expressions and modifiers are resolved on a first come
+  first server basis, with no operator precedence.
+\item Weak error checking and type safety.
+\item Line-orientated parser doesn't support multi-line instructions.
+\end{itemize}
+
+\newpage
 \section{Usage}
 
 The core of the application is a multi-pass assembler written in
@@ -82,9 +108,7 @@ diagnostic breakdown of the assembled program:
 \begin{verbatim}
 $ head ram.l
 .SIZE = 16384
-
 .IDT_SIZE = 8
-
 .CSEG
         0 = reti
         1 = jmp 219
@@ -190,6 +214,7 @@ variables and defined symbolic values.
  \hline
 \end{longtable}}
 
+\newpage
 \section{Instruction Set}
 
 {\scriptsize
@@ -299,16 +324,14 @@ SUBSI & $R_d, R_a, K$ & Subtract Immediate, Signed & $R_d \leftarrow R_a - K$ & 
 
 Instructions which have an asterisk (*) mark in the \#Clocks column
 indicate macro instructions, which are non-native software
-instructions which expand to two or more hardware instructions.
+instructions which expand to two or more hardware instructions. The
+two Logical Shift operations LSL and LSR operate in linear time
+dependent on the size of $R_d$.
 
 \section{Symbols}
 
 The following symbols are defined at initialisation time by the
-assembler. Symbols marked as Dynamic in the type column have a value
-which is determined for each time it is used, as opposed to the other
-symbols which have a static value associated with them which does not
-change. It is possible although not recommended to override any of
-these symbols using the \texttt{.DEF} directive.
+assembler.
 
 {\scriptsize
 \begin{longtable}{ | l | l | l | }
@@ -339,14 +362,18 @@ these symbols using the \texttt{.DEF} directive.
  \hline
 \end{longtable}}
 
-One possible legitimate purpose for overriding the built in symbols
-would be to declare a different register to use for macro
-instructions:
+Symbols marked as Dynamic in the type column have a value which is
+determined for each time it is used, as opposed to the other symbols
+which have a static value associated with them which does not
+change. It is possible although not recommended to override any of
+these symbols using the \texttt{.DEF} directive. One possible
+legitimate purpose for overriding the built in symbols would be to
+declare a different register to use for macro instructions:
 
 \begin{verbatim}
         ldi r16, 0xDEADBEEF             ; Macro instruction using default __r
         .DEF __r r255                   ; Override default __r address
-        ldi r17, 0xDEADBEEF             ; Macro instruction using r255 as
+        ldi r17, 0xDEADBEEF             ; Macro instruction using r255
 \end{verbatim}
 
 Symbols are resolved recursively during tokenization, and so can be
@@ -575,19 +602,20 @@ assembly time, an empty interrupt service handler table is generated,
 and any registered ISR are added. For example, the source code:
 
 \begin{verbatim}
-        .isr 0 isr0             ; Register the ISR 0 handler using label
-        .isr 1 0xf0             ; Register the ISR 1 handler using address
+        .isr    0 isr0          ; Register the ISR 0 handler using label
+        .isr    1 0xf0          ; Register the ISR 1 handler using address
                                 ; Note that ISR 2 and above are not declared
         .cseg
         halt
 
-isr0:                           ; ISR 0
-        pshr r16
-        ldio r16, 0
-        stio 0, r16
-        popr r16
+isr0:                           ; ISR0
+        pshr    r16
+        ldio    r16, 0
+        stio    0, r16
+        popr    r16
+        reti
 
-        .org 0xf0               ; ISR 1
+        .org 0xf0
         seto 0, 0, 0
         reti
 \end{verbatim}
@@ -604,12 +632,19 @@ words set:
 12100000 -- 5 ldio r16 0
 11001000 -- 6 stio 0 r16
 10100000 -- 7 popr r16
+08000000 -- 8 reti
 ...
 04000000 -- 240 seto 0 0 0
 08000000 -- 241 reti
 \end{verbatim}
 
+\newpage
 \section{stdlib.asm}
+
+A standard library is included which defines a number of useful
+symbols and routines, with the intention that it should make assembly
+programming with UCASM more convenient and succinct, removing much of
+the boiler plate associated with assembly programming.
 
 \subsection{Symbols}
 
@@ -635,20 +670,20 @@ words set:
  \$r to \$rf & Integer* & 16 Register File addresses for internal use \\
  STDLIB\_REG\_MIN & Integer & Lower Register File address for internal use \\
  STDLIB\_REG\_MAX & Integer & Upper Register File address for internal use \\
- NULL & Register & Null Register \\
- PC & Register & Program Counter Register \\
- SP & Register & Stack Pointer Register \\
- SREG & Register & Status Register \\
+ NULL & Register Address & Null Register \\
+ PC & Register Address & Program Counter Register \\
+ SP & Register Address & Stack Pointer Register \\
+ SREG & Register Address & Status Register \\
  ISR\_TIMER & ISR & Timer interrupt number \\
  ISR\_SSD & ISR & Seven Segment Display interrupt number \\
  SREG\_I & Integer & SREG Interrupts enabled flag index \\
  SREG\_T & Integer & SREG Test flag index \\
  SREG\_C & Integer & SREG Carry flag index \\
- SWITCHES & Port & Switches input port address \\
- BUTTONS & Port & Buttons input port address \\
- LEDS & Port & LEDs output port address \\
- SSD\_AN & Port & Seven Segment Display Anodes output port address \\
- SSD\_KA & Port & Seven Segment Display Cathodes output port address \\
+ SWITCHES & Port Address & Switches input port address \\
+ BUTTONS & Port Address & Buttons input port address \\
+ LEDS & Port Address & LEDs output port address \\
+ SSD\_AN & Port Address & Seven Segment Display Anodes output port address \\
+ SSD\_KA & Port Address & Seven Segment Display Cathodes output port address \\
  BTND & Integer & Down button bit mask position \\
  BTNC & Integer & Centre button bit mask position \\
  BTNL & Integer & Left button bit mask position \\
@@ -658,6 +693,11 @@ words set:
  SSD\_OFF & Byte & Seven Segment Display cathode mask with all segments disabled \\
  \hline
 \end{longtable}}
+
+Symbols marked with an asterisk (*) in the Type column are defined
+politely using the \texttt{.DEFP} directive, so will not override any
+existing definition. This means that it is possible for the user to
+provide their own definitions.
 
 \subsection{Subroutines}
 
@@ -690,7 +730,12 @@ words set:
  div & \textit{A, B} & \textit{R, r} & Divide numerator \textit{A} by denominator \textit{B} and return result \textit{R} and remainder \textit{r} \\
  sortu & \textit{n, k} & & In-place unsigned integer array sort of array size \textit{n} at address \textit{k} \\
  sorts & \textit{n, k} & & In-place signed integer array sort of array size \textit{n} at address \textit{k} \\
+ qsortu & \textit{n, k} & & In-place unsigned integer array Quicksort of array size \textit{n} at address \textit{k} \\
  \hline
 \end{longtable}}
+
+The included subroutines are optimised for a small register footprint
+rather than execution time, and use a subset of the register file
+\texttt{\$r} to \texttt{\$rf} as working registers.
 
 \end{document}

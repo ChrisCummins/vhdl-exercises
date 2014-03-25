@@ -1,21 +1,3 @@
-FEATURES
-========
-
- * 2 pass assembler
- * Inspired by AVR syntax / instruction set
- * Recursive macro lookups
- * Recursive file imports
- * Recursive numerical operations
-
-WEAKNESSES
-==========
-
- * Entirely case insensitive
- * No address management of DSEG
- * Single global namespace for all lookups
- * Line orientated
- * Uninformative error messages
-
 DATA SEGMENT
 ============
 
