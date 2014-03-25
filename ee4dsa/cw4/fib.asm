@@ -14,6 +14,9 @@
         .def FIB_A_INIT 4181
         .def FIB_B_INIT 6765
 
+        ;; The Fibonacci number at which we reset:
+        .def FIB_RESET  2971215073
+
         ;; Data Segment:
         ;; =================================================
 
@@ -38,10 +41,14 @@ msd:            .word 1                 ; Most significant digit
         .def msd_r      r35
         .def ssd_ka_r   r36
         .def bcd_r      r37
+        .def p10_r      r38
+        .def const4     r39
         .def divisor    r40
         .def bcd        r41
         .def bcd2ssd_r  r42
         .def i          r43
+        .def i_start    r44
+        .def a_max      r25
 
         ;; The main code entry point. Begin by initialising
         ;; register and memory values as required. We do this
@@ -49,9 +56,13 @@ msd:            .word 1                 ; Most significant digit
         ;; be accessing uninitialised memory:
 _main:
         cli                             ; Disable interrupts
-        ldi     bcd_r, bcd_t            ; Set a pointer to the BCD table
-        ldi     ssd_ka_r, ssd_ka_t      ; Set a pointer to the cathode table
+        ldi     const4, 4               ; Constant immediate '4'
+        ldi     i_start,   UINT_MAX_DIGITS - 1
+        ldi     a_max,     FIB_RESET    ; Our reset value
+        ldi     bcd_r,     bcd_t        ; Set a pointer to the BCD table
+        ldi     ssd_ka_r,  ssd_ka_t     ; Set a pointer to the cathode table
         ldi     bcd2ssd_r, bcd2ssd_t    ; Set a pointer to the BCD -> SSD table
+        ldi     p10_r,     p10_t        ; Set a pointer to the Powers of 10 table
 
         ;; Initialise the SSD Anode table
         sti     ssd_an_t,     0x07
@@ -59,15 +70,8 @@ _main:
         sti     ssd_an_t + 2, 0x0D
         sti     ssd_an_t + 3, 0x0E
 
-        ;; Initialise the SSD Cathode table
-        ldi     i, ssd_ka_t + UINT_MAX_DIGITS - 1
-        stri    i, SSD_OFF
-        dec     i
-        gte     i, ssd_ka_r
-        rbrts   -3
-
         ;; Initialise the power of 10 table
-        sti     p10_t,              1   ; 10 & 0
+        sti     p10_t,              1   ; 10 ^ 0
         sti     p10_t + 1,         10   ; 10 ^ 1
         sti     p10_t + 2,        100   ; 10 ^ 2
         sti     p10_t + 3,       1000   ; 10 ^ 3
@@ -84,15 +88,24 @@ fib_init:
         ldi     a, FIB_A_INIT
         ldi     b, FIB_B_INIT
 
-fib_iter:                               ; The actual Fibonacci calculation:
+        ;; Zero the SSD Cathode table
+        ldi     i, ssd_ka_t + UINT_MAX_DIGITS - 1
+        stri    i, SSD_OFF
+        dec     i
+        gte     i, ssd_ka_r
+        rbrts   -3
+
+fib_iter:
+        equ     a, a_max                ; IF a == MAX, then reset
+        brts    fib_init
         add     sum, a, b               ; sum = a + b
         mov     a, b                    ; a = b
         mov     b, sum                  ; b = sum
         ldil    msd_r, 0                ; Reset msd_r
-        ldi     i, UINT_MAX_DIGITS - 1  ; i = MAX - 1
+        mov     i, i_start              ; i = MAX - 1
 
 bcd_loop:
-        lddi    divisor, i, p10_t       ; divisor = p10[i]
+        ldd     divisor, p10_r, i       ; divisor = p10[i]
         pshr    divisor                 ; sum /= divisor
         pshr    sum
         call    divu
@@ -106,17 +119,17 @@ bcd_loop:
         inc     msd_r                   ; msd_r = i + 1
 store_bcd:                              ; Store BCD digit and store SSD:
         std     bcd_r, i, bcd           ; bcd[i] = bcd
-        ldd     bcd, bcd, bcd2ssd_r
-        std     ssd_ka_r, i, bcd        ; ssd[i] = ssd
+        ldd     bcd, bcd2ssd_r, bcd
+        std     ssd_ka_r, i, bcd        ; ssd[i] = bcd2ssd[i]
 next_bcd_loop:
         eqz     i                       ; If i = 0, exit loop
         brts    _wait_for_next
         dec     i                       ; i--
         jmp     bcd_loop
 _wait_for_next:                         ; Wait for button press
-        gti     msd_r, 4                ; msd_r = max(msd_r, 4)
+        gt      msd_r, const4           ; msd_r = max(msd_r, 4)
         rbrts   2
-        ldil    msd_r, 4
+        mov     msd_r, const4
         st      msd, msd_r              ; Store msd
         call    btnc_press
         jmp     fib_iter
@@ -129,6 +142,8 @@ _wait_for_next:                         ; Wait for button press
         .undef msd_r
         .undef ssd_ka_r
         .undef bcd_r
+        .undef p10_r
+        .undef const4
         .undef divisor
         .undef bcd
         .undef bcd2ssd_r
