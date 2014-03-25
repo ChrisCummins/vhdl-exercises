@@ -350,6 +350,33 @@ divu:
         pshr    $r                      ; Push return address
         ret
 
+        ;; Unsigned power.
+        ;;
+        ;;   @param  number
+        ;;   @param  power
+        ;;   @return result
+        ;;   @reg    $r4-$r6
+powu:
+        popr    $r4                     ; $r4 = Return address
+        popr    $r6                     ; $r6 = Number
+        mov     $r7, $r6                ; $r7 = Number (copy)
+        popr    $r5                     ; $r5 = Power
+        nez     $r5                     ; If power = 0, number = 1
+        brts    _powu
+        ldi     $r6, 1
+        jmp     _powu2
+_powu:  dec     $r5                     ; $r5--
+        eqz     $r5                     ; If i < 1, then return
+        jmp     _powu3
+_powu2: pshr    $r6                     ; Return
+        pshr    $r4
+        ret
+_powu3: pshr    $r6                     ; $r6 *= $r6
+        pshr    $r7
+        call    multu
+        popr    $r6                     ; $r6 = Number
+        jmp     _powu
+
 
 ;;; Sorting algorithms.
 ;;; ========================================================
