@@ -19,7 +19,7 @@
 
         ;; The rate counter for the scrolling display.
         ;; Larger numbers means slower scrolling:
-        .def SCROLL_RATE 0
+        .def SCROLL_RATE 1
 
         ;; Data Segment:
         ;; =================================================
@@ -208,7 +208,7 @@ fib_iter2:                              ; Wait for button press
 timer_update:
         pshr    r16                     ; Preserve working register
         ld      r16, msd_vc             ; r16 = msd_vc
-        gti     r16, SCROLL_RATE        ; IF msd_vc >= SCROLL_RATE
+        gtei    r16, SCROLL_RATE        ; IF msd_vc >= SCROLL_RATE
         brts    timer_update2
         inc     r16
         st      msd_vc, r16             ; THEN store counter and return
