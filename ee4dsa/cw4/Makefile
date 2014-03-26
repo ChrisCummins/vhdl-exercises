@@ -25,6 +25,7 @@ all help:
 	@echo "make synthesis      - synthesize design"
 	@echo "make implementation - implement design"
 	@echo "make bitfile        - generate bitfile"
+	@echo "make uber           - all of the above, and upload"
 	@echo ""
 	@echo "Upload:"
 	@echo ""
@@ -53,6 +54,8 @@ simulation sim:
 
 viewer view:
 	gtkwave test_bench.ghw test_bench.sav &
+
+uber: syn impl bit up
 
 synthesis syn:
 	@echo "Synthesis running..."
