@@ -121,7 +121,7 @@ fib_init:
         ;; Set starting series stimuli:
         ldi     a, FIB_A_INIT
         ldi     b, FIB_B_INIT
-        ldi     n, 0
+        ldi     n, 2
 
         ;; Turn off all SSD digits:
         ldi     i, ssd_ka_t + UINT_MAX_DIGITS - 1
