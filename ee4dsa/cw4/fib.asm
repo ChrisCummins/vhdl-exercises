@@ -51,6 +51,7 @@ msd:            .word 1                 ; Most significant digit
 msd_v:          .word 1                 ; Most significant visible digit
 msd_vc:         .word 1                 ; Most significant visible digit counter
 ssd_idx:        .word 1                 ; Current digit index
+led_o:          .word 1                 ; LED start indicator
 p10_t:          .word 10                ; Powers of 10 table
         ;; Now that we have our fixed address data set, we can continue the
         ;; assembly from the lowest free address:
@@ -131,7 +132,8 @@ fib_init:
         rbrts   -3
 
         ;; Set start indicator
-        seto    LEDS, 0xFF, 1 << 7
+        seto    LEDS, 0xFF, 0x80
+        sti     led_o, 0x80
 
 ;;; Fibonacci iterator:
 fib_iter:
@@ -172,7 +174,8 @@ fib_iter2:                              ; Wait for button press
         mov     msd_r, const4
         st      msd, msd_r              ; Store msd
         call    btnc_press
-        seto    LEDS, 0x7F, 0           ; Turn off start indicator
+        seto    LEDS, 0x7F, 0x00        ; Turn off start indicator
+        sti     led_o, 0
         inc     n                       ; Bump our counter
         lte     n, n_max                ; IF n <= n_max, then repeat
         brts    fib_iter
@@ -233,7 +236,7 @@ timer_update5:
         sub     r17, r17, r18           ; msd_v -= 4
         ldil    r16, 1
         lsl     r16, r16, r17           ; r16 = 1 << (msd_v - 4)
-        ldio    r17, LEDS               ; r17 = LEDS
+        ld      r17, led_o              ; r17 = LEDS
         andi    r17, r17, 0x80          ; Isolate just the start indicator
         or      r16, r16, r17           ; OR start indicator with MSD indicator
         stio    LEDS, r16
