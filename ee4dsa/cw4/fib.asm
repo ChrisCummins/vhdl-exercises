@@ -19,7 +19,7 @@
 
         ;; The rate counter for the scrolling display.
         ;; Larger numbers means slower scrolling:
-        .def SCROLL_RATE 1
+        .def SCROLL_RATE 0
 
         ;; Data Segment:
         ;; =================================================
