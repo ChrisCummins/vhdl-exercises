@@ -611,7 +611,7 @@ begin
             when 0 =>
               next_reg_b_addr  <= rom_data_byte2               after gate_delay;
               next_reg_b_rd    <= '1'                          after gate_delay;
-              next_reg_b_addr  <= rom_data_byte3               after gate_delay;
+              next_reg_c_addr  <= rom_data_byte3               after gate_delay;
               next_reg_c_rd    <= '1'                          after gate_delay;
               next_pc_src      <= current                      after gate_delay;
               next_icc         <= current_icc + 1              after gate_delay;
