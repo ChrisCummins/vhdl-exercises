@@ -29,4 +29,115 @@
 \begin{document}
 \maketitle
 
+\section{Computing the Fibonacci sequence}
+
+A number in the Fibonacci sequence can be calculated using nearest
+integer rounding:
+
+$$F(n) = \left[\frac{\phi^n}{\sqrt{5}}\right] $$
+
+Where $n$ is the index of the number in the series. We can use this to
+approximate the number of bits required to store the Fibonacci number
+$F(n)$ in binary encoding by rearranging for $\log(F(n))$:
+
+$$\log(F(n)) \approx n \times \log(\phi) - \log(\sqrt{5})$$
+
+Where $\log(\phi) \approx 0.694$ and $\log(\sqrt{5}) \approx
+0.35$. For large $n$ values, the significance of $\log(\sqrt{5})$
+tends towards $0$, allowing us to approximate roughly:
+
+$$\log(F(n)) \approx \lceil 0.694n \rceil$$
+
+For the 32-bit $\mu C$ architecture, the largest Fibonacci sequence
+number we can store as an unsigned integer is:
+
+$$n = \lceil \frac{32}{0.694} \rceil = 47$$
+
+This means that we in order to avoid integer overflow, our iterative
+Fibonacci algorithm has the following upper and lower bounds:
+
+$$F(n) = F(n - 1) + F(n - 2), 0 \le n \le 47$$
+
+\section{Implementation}
+
+In order to write the Fibonacci program for the $\mu C$ architecture,
+the rather unimaginatively named UCASM assembler was written. The
+assembler performs the translation from human readable program code
+into machine code, with the UCASM Reference (see
+\texttt{extra/ucasm-ref.pdf}) containing further details and usage
+instructions.
+
+The file \texttt{ram.asm} contains my implementation of the Fibonacci
+sequence program. The program generates the next number in the
+Fibonacci sequence every time the user presses the centre button, and
+the output number is displayed on the four digit seven segment
+display. If the number exceeds 4 decimal digits in length, then the
+seven segment display will scroll through the digits from left to
+right. The LEDs act as an indicator to show which digits are currently
+being displayed.
+
+\subsection{Implementation details}
+
+The software was written with good style and correctness as primary
+goals, not performance. Specific decisions that were made at the
+expense of performance include:
+
+\begin{itemize}
+\item Each interrupt handler preserves the state of the register file,
+  which is not necessary since there are easily enough registers to
+  dedicate specifically to each ISR. Removing the stack activity from
+  each ISR would reduce the execution time significantly, since each
+  register push/pop pair adds an extra 6 clock cycles to the execution
+  time.
+\item Data which is shared between both ISRs and the main program
+  logic are written to RAM. This is not required since the register
+  file is easily large enough to dedicate registers to. Placing all
+  data in registers would allow for immediate access without the need
+  for load / store activity.
+\item The lack of instruction caching means that unrolling loops and
+  inlining subroutines will always result in performance gains, at the
+  expense of longer code.
+\item Interrupt handlers and subroutines are written to operate on as
+  small of a register footprint as possible, due to the slow push/pop
+  operations.
+\end{itemize}
+
+Beyond this, the main performance caveat is the binary to binary coded
+decimal conversion, which is performed by repeatedly dividing the
+Fibonacci number $n$ by decreasing powers of ten for every BCD digit:
+
+\begin{verbatim}
+def n2bcd(bcd):
+        i = 9
+        while i > 0:
+                d      = i ^ 10
+                bcd[i] = n % d
+                n     /= d
+                i     -= 1
+        bcd[0] =\ n
+\end{verbatim}
+
+The limited hardware for integer arithmetic means that the division
+functionality has to be implemented using iterative subtraction:
+
+\begin{verbatim}
+def div(n, divisor):
+        i = 0
+
+        while n > divisor:
+                n -= divisor
+
+        ret i
+\end{verbatim}
+
+This means that the time complexity of the BCD conversion $O(n^2)$,
+where $n$ is the number of output BCD digits - 1. While this clearly
+does not scale well for very large input numbers, this is acceptable
+for our purposes, where the small and constant $n$ of 9 means that
+even the worst case input requires only 81 subtractions.
+
+\section{Software testing}
+
+\section{Hardware testing}
+
 \end{document}
