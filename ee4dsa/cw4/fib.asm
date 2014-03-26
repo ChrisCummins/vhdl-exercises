@@ -129,6 +129,10 @@ fib_init:
         dec     i
         gte     i, ssd_ka_r
         rbrts   -3
+
+        ;; Set start indicator
+        seto    LEDS, 0xFF, 1 << 7
+
 ;;; Fibonacci iterator:
 fib_iter:
         add     sum, a, b               ; sum = a + b
@@ -168,6 +172,7 @@ fib_iter2:                              ; Wait for button press
         mov     msd_r, const4
         st      msd, msd_r              ; Store msd
         call    btnc_press
+        seto    LEDS, 0x7F, 0           ; Turn off start indicator
         inc     n                       ; Bump our counter
         lte     n, n_max                ; IF n <= n_max, then repeat
         brts    fib_iter
@@ -228,6 +233,10 @@ timer_update5:
         sub     r17, r17, r18           ; msd_v -= 4
         ldil    r16, 1
         lsl     r16, r16, r17           ; r16 = 1 << (msd_v - 4)
+        ldio    r17, LEDS               ; r17 = LEDS
+        andi    r17, r17, 0x80          ; Isolate just the start indicator
+        or      r16, r16, r17           ; OR start indicator with MSD indicator
+        stio    LEDS, r16
         popr    r18                     ; Restore working registers
         popr    r17
 timer_update6:
