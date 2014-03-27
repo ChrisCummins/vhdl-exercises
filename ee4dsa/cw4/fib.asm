@@ -80,9 +80,6 @@ p10_t:          .word 10                ; Powers of 10 table
         .def bcd_r      r45             ; Pointer to bcd table
         .def p10_r      r46             ; Pointer to p10 table
 
-        ;; Mask used to isolate the indicator light (8th LED):
-        .def LEDI 1 << 7
-
         ;; The main code entry point. Begin by initialising
         ;; register and memory values as required. We do this
         ;; with interrupts disabled since we don't want to
@@ -136,8 +133,8 @@ fib_init:
         rbrts   -3
 
         ;; Set starting LED indicator:
-        seto    LEDS, 0xFF, LEDI
-        sti     led_o, LEDI
+        seto    LEDS, 0xFF, LED_8
+        sti     led_o, LED_8
 
 ;;; Fibonacci iterator:
 fib_iter:                               ; DO
@@ -181,10 +178,10 @@ fib_iter_end:                           ;
         inc     n                       ;
         neq     n, n_max                ;   IF n = n_max
         rbrts   4                       ;   THEN:
-        seto    LEDS, 0xFF, LEDI        ;     Turn on start indicator
-        sti     led_o, LEDI             ;
+        seto    LEDS, 0xFF, LED_8       ;     Turn on start indicator
+        sti     led_o, LED_8            ;
         rjmp    3                       ;   ELSE:
-        seto    LEDS, ~LEDI, 0          ;     Turn off start indicator
+        seto    LEDS, ~LED_8, 0         ;     Turn off start indicator
         sti     led_o, 0                ;
                                         ;   END IF
         lte     n, n_max                ; WHILE n <= n_max
@@ -253,7 +250,7 @@ timer_update_led:                       ;   END IF
         ldil    r16, 1                  ;
         lsl     r16, r16, r17           ;
         ld      r17, led_o              ;   r17 = LEDS
-        andi    r17, r17, LEDI          ;   Isolate just the start indicator
+        andi    r17, r17, LED_8         ;   Isolate just the start indicator
         or      r16, r16, r17           ;   r16 = start indicator | MSD indicator
         stio    LEDS, r16               ;   LEDS = MSD indicator | start indicator
         popr    r18                     ;   Restore working registers
