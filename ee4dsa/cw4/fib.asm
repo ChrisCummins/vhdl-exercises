@@ -80,6 +80,9 @@ p10_t:          .word 10                ; Powers of 10 table
         .def bcd_r      r45             ; Pointer to bcd table
         .def p10_r      r46             ; Pointer to p10 table
 
+        ;; Mask used to isolate the indicator light (8th LED):
+        .def LEDI 1 << 7
+
         ;; The main code entry point. Begin by initialising
         ;; register and memory values as required. We do this
         ;; with interrupts disabled since we don't want to
@@ -88,23 +91,23 @@ _main:
         cli                             ; Disable interrupts
 
         ;; Load register constant values:
-        ldi     const4, 4
-        ldi     i_start,   UINT_MAX_DIGITS - 1
         ldi     n_max,     FIB_UBOUND
-        ldi     bcd_r,     bcd_t
-        ldi     ssd_ka_r,  ssd_ka_t
+        ldi     i_start,   UINT_MAX_DIGITS - 1
+        ldi     const4,    4
         ldi     bcd2ssd_r, bcd2ssd_t
+        ldi     ssd_ka_r,  ssd_ka_t
+        ldi     bcd_r,     bcd_t
         ldi     p10_r,     p10_t
 
-        ;; Initialise the SSD Anode table
+        ;; Initialise the SSD Anode table:
         sti     ssd_an_t,     0x07
         sti     ssd_an_t + 1, 0x0B
         sti     ssd_an_t + 2, 0x0D
         sti     ssd_an_t + 3, 0x0E
-        ;; Overflow the scroll counter
+        ;; Overflow the scroll counter:
         sti     msd_vc, ~0x00
 
-        ;; Initialise the power of 10 table
+        ;; Initialise the powers of 10 table:
         sti     p10_t,              1   ; 10 ^ 0
         sti     p10_t + 1,         10   ; 10 ^ 1
         sti     p10_t + 2,        100   ; 10 ^ 2
@@ -116,13 +119,14 @@ _main:
         sti     p10_t + 8,  100000000   ; 10 ^ 8
         sti     p10_t + 9, 1000000000   ; 10 ^ 9
 
-        sei                             ; We're all set, so enable interrupts
+        sei                             ; We're all set, enable interrupts
 
 fib_init:
         ;; Set starting series stimuli:
         ldi     a, FIB_A_INIT
         ldi     b, FIB_B_INIT
-        ldi     n, 2
+        ldi     n, 2                    ; We've already supplied the first two
+                                        ; values, so start the counter at 2.
 
         ;; Turn off all SSD digits:
         ldi     i, ssd_ka_t + UINT_MAX_DIGITS - 1
@@ -131,55 +135,61 @@ fib_init:
         gte     i, ssd_ka_r
         rbrts   -3
 
-        ;; Set start indicator
-        seto    LEDS, 0xFF, 0x80
-        sti     led_o, 0x80
+        ;; Set starting LED indicator:
+        seto    LEDS, 0xFF, LEDI
+        sti     led_o, LEDI
 
 ;;; Fibonacci iterator:
-fib_iter:
-        add     sum, a, b               ; sum = a + b
-        mov     a, b                    ; a = b
-        mov     b, sum                  ; b = sum
-        ldil    msd_r, 0                ; Reset msd_r
-        mov     i, i_start              ; i = MAX - 1
-;;; BCD decoding / SSD encoding loop:
-bcd_loop:
-        ldd     divisor, p10_r, i       ; divisor = p10[i]
-        pshr    divisor                 ; sum /= divisor
-        pshr    sum
-        call    divu
-        popr    bcd
-        popr    sum
-        eqz     bcd                     ; IF bcd > 0 AND msd = 0, then msd = i+1:
-        brts    bcd_loop2
-        nez     msd_r
-        brts    bcd_loop2
-        mov     msd_r, i                ; msd_r = i
-        inc     msd_r                   ; msd_r = i + 1
-bcd_loop2:                              ; Store BCD digit and store SSD:
-        std     bcd_r, i, bcd           ; bcd[i] = bcd
-        eqz     msd_r                   ; IF msd = 0, then DON'T store SSD
-        brts    bcd_loop_end
-        ldd     bcd, bcd2ssd_r, bcd
-        std     ssd_ka_r, i, bcd        ; ssd[i] = bcd2ssd[i]
-bcd_loop_end:
-        eqz     i                       ; If i = 0, exit loop
-        brts    fib_iter2
-        dec     i                       ; i--
-        jmp     bcd_loop
-;;; End of BCD loop:
-fib_iter2:                              ; Wait for button press
-        gt      msd_r, const4           ; msd_r = max(msd_r, 4)
-        rbrts   2
-        mov     msd_r, const4
-        st      msd, msd_r              ; Store msd
-        call    btnc_press
-        seto    LEDS, 0x7F, 0x00        ; Turn off start indicator
-        sti     led_o, 0
-        inc     n                       ; Bump our counter
-        lte     n, n_max                ; IF n <= n_max, then repeat
-        brts    fib_iter
-        jmp     fib_init                ; ELSE reset
+fib_iter:                               ; DO
+        add     sum, a, b               ;   sum = a + b
+        mov     a, b                    ;   a = b
+        mov     b, sum                  ;   b = sum
+        ldil    msd_r, 0                ;   Reset msd_r
+        mov     i, i_start              ;   i = MAX - 1
+bcd_loop:                               ;   DO
+        ldd     divisor, p10_r, i       ;     divisor = p10[i]
+        pshr    divisor                 ;
+        pshr    sum                     ;
+        call    divu                    ;
+        popr    bcd                     ;     bcd = sum / divisor
+        popr    sum                     ;     sum = sum % divisor
+        eqz     bcd                     ;     IF bcd > 0
+        brts    bcd_loop2               ;     THEN:
+        nez     msd_r                   ;       IF msd = 0
+        brts    bcd_loop2               ;       THEN:
+        mov     msd_r, i                ;         msd = i
+        inc     msd_r                   ;         msd = i + 1
+                                        ;       END IF
+bcd_loop2:                              ;     END IF
+        std     bcd_r, i, bcd           ;     bcd[i] = bcd
+        eqz     msd_r                   ;     IF msd > 0
+        brts    bcd_loop_end            ;     THEN:
+        ldd     bcd, bcd2ssd_r, bcd     ;
+        std     ssd_ka_r, i, bcd        ;       ssd[i] = bcd2ssd[i]
+bcd_loop_end:                           ;     END IF
+        eqz     i                       ;
+        brts    fib_iter_end            ;
+        dec     i                       ;
+        jmp     bcd_loop                ;   WHILE i > 0
+fib_iter_end:                           ;
+        gt      msd_r, const4           ;   IF msd < 4
+        rbrts   2                       ;   THEN:
+        mov     msd_r, const4           ;     msd = 4
+                                        ;   END IF
+        st      msd, msd_r              ;   Store msd
+        call    btnc_press              ;   Wait for next button press
+        inc     n                       ;
+        neq     n, n_max                ;   IF n = n_max
+        rbrts   4                       ;   THEN:
+        seto    LEDS, 0xFF, LEDI        ;     Turn on start indicator
+        sti     led_o, LEDI             ;
+        rjmp    3                       ;   ELSE:
+        seto    LEDS, ~LEDI, 0          ;     Turn off start indicator
+        sti     led_o, 0                ;
+                                        ;   END IF
+        lte     n, n_max                ; WHILE n <= n_max
+        brts    fib_iter                ;
+        jmp     fib_init                ; Restart
 
         ;; Clear up our symbol space:
         .undef a
@@ -203,46 +213,52 @@ fib_iter2:                              ; Wait for button press
 ;;; ========================================================
 
         ;; Register our interrupt handler:
-        .isr ISR_TIMER timer_update
+        .isr ISR_TIMER timer_isr
 
-timer_update:
+        ;; This interrupt handler is responsible for updating the
+        ;; currently visible digits on the seven segment display. If
+        ;; there are more than 4 digits to display, the digits are
+        ;; scrolled through from left to right, at a rate determined
+        ;; by SCROLL_RATE.
+timer_isr:
         pshr    r16                     ; Preserve working register
         ld      r16, msd_vc             ; r16 = msd_vc
-        gtei    r16, SCROLL_RATE        ; IF msd_vc >= SCROLL_RATE
-        brts    timer_update2
-        inc     r16
-        st      msd_vc, r16             ; THEN store counter and return
-        jmp     timer_update6
-timer_update2:
-        pshr    r17                     ; Preserve working registers
-        pshr    r18
-        st      msd_vc, NULL            ; ELSE reset counter
-        ld      r16, msd                ; r16 = msd
-        ld      r17, msd_v              ; r17 = msd_v
-        ldi     r18, 4                  ; r18 = 4
-        gt      r16, r18                ; IF msd <= 4, then msd_v = 4
-        brts    timer_update3
-        mov     r17, r18
-        jmp     timer_update5
-timer_update3:                          ; Scroll right:
-        lte     r17, r18                ; IF msd_v >= 4, then msd_v--
-        brts    timer_update4
-        dec     r17
-        jmp     timer_update5
-timer_update4:
-        mov     r17, r16                ; ELSE msd_v = msd
-timer_update5:
-        st      msd_v, r17              ; Store msd_v
-        sub     r17, r17, r18           ; msd_v -= 4
-        ldil    r16, 1
-        lsl     r16, r16, r17           ; r16 = 1 << (msd_v - 4)
-        ld      r17, led_o              ; r17 = LEDS
-        andi    r17, r17, 0x80          ; Isolate just the start indicator
-        or      r16, r16, r17           ; OR start indicator with MSD indicator
-        stio    LEDS, r16
-        popr    r18                     ; Restore working registers
-        popr    r17
-timer_update6:
+        gtei    r16, SCROLL_RATE        ; IF msd_vc < SCROLL_RATE
+        brts    timer_update            ; THEN:
+        inc     r16                     ;   msd_vc++
+        st      msd_vc, r16             ;   Store counter
+        jmp     timer_isr_ret           ;   Return
+timer_update:                           ; ELSE:
+        pshr    r17                     ;   Preserve working registers
+        pshr    r18                     ;
+        st      msd_vc, NULL            ;   msd_vc = 0
+        ld      r16, msd                ;   r16 = msd
+        ld      r17, msd_v              ;   r17 = msd_v
+        ldi     r18, 4                  ;   r18 = 4
+        gt      r16, r18                ;   IF msd <= 4
+        brts    timer_update_next       ;   THEN:
+        mov     r17, r18                ;     msd_v = 4
+        jmp     timer_update_led        ;
+timer_update_next:                      ;   ELSE:
+        lte     r17, r1 8               ;     IF msd_v > 4
+        brts    timer_update_min        ;     THEN:
+        dec     r17                     ;       msd_v--
+        jmp     timer_update_led        ;
+timer_update_min:                       ;     ELSE:
+        mov     r17, r16                ;       msd_v = msd
+                                        ;     END IF
+timer_update_led:                       ;   END IF
+        st      msd_v, r17              ;   Store msd_v
+        sub     r17, r17, r18           ;   r16 = 1 << (msd_v - 4)
+        ldil    r16, 1                  ;
+        lsl     r16, r16, r17           ;
+        ld      r17, led_o              ;   r17 = LEDS
+        andi    r17, r17, LEDI          ;   Isolate just the start indicator
+        or      r16, r16, r17           ;   r16 = start indicator | MSD indicator
+        stio    LEDS, r16               ;   LEDS = MSD indicator | start indicator
+        popr    r18                     ;   Restore working registers
+        popr    r17                     ;
+timer_isr_ret:                          ; END IF
         popr    r16                     ; Restore working register
         reti
 
@@ -260,8 +276,8 @@ timer_update6:
         ;; a counter to determine the next digit to be displayed.
 ssd_update:
         pshr    r10                     ; Preserve working registers
-        pshr    r11
-        pshr    r12
+        pshr    r11                     ;
+        pshr    r12                     ;
         ld      r10, ssd_idx            ; r10 = i
         lddi    r11, r10, ssd_an_t      ; r11 = an_t[i]
         ld      r12, msd_v              ; r12 = msd_v
@@ -271,11 +287,12 @@ ssd_update:
         lddi    r11, r12, ssd_ka_t      ; r11 = ka_t[msd_v + i - 4]
         stio    SSD_KA, r11             ; Write out cathode
         inc     r10                     ; i++
-        lti     r10, 4                  ; IF i < 4
-        rbrts   2                       ; THEN RETURN
-        ldil    r10, 0                  ; ELSE i = 0
+        lti     r10, 4                  ; IF i >= 4
+        brts    ssd_update_ret          ; THEN:
+        ldil    r10, 0                  ;   i = 0
+ssd_update_ret:                         ; END IF
         st      ssd_idx, r10            ; Store i
         popr    r12                     ; Restore working registers
-        popr    r11
-        popr    r10
+        popr    r11                     ;
+        popr    r10                     ;
         reti
