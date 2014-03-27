@@ -174,6 +174,9 @@ fib_iter_end:                           ;
         mov     msd_r, const4           ;     msd = 4
                                         ;   END IF
         st      msd, msd_r              ;   Store msd
+        inc     msd_r                   ;   Show the MSD on SSD
+        st      msd_v, msd_r            ;   "
+        call    update_visible_digits   ;   "
         call    btnc_press              ;   Wait for next button press
         inc     n                       ;
         neq     n, n_max                ;   IF n = n_max
@@ -228,36 +231,40 @@ timer_isr:
 timer_update:                           ; ELSE:
         pshr    r17                     ;   Preserve working registers
         pshr    r18                     ;
-        st      msd_vc, NULL            ;   msd_vc = 0
-        ld      r16, msd                ;   r16 = msd
-        ld      r17, msd_v              ;   r17 = msd_v
-        ldi     r18, 4                  ;   r18 = 4
-        gt      r16, r18                ;   IF msd <= 4
-        brts    timer_update_next       ;   THEN:
-        mov     r17, r18                ;     msd_v = 4
-        jmp     timer_update_led        ;
-timer_update_next:                      ;   ELSE:
-        lte     r17, r18                ;     IF msd_v > 4
-        brts    timer_update_min        ;     THEN:
-        dec     r17                     ;       msd_v--
-        jmp     timer_update_led        ;
-timer_update_min:                       ;     ELSE:
-        mov     r17, r16                ;       msd_v = msd
-                                        ;     END IF
-timer_update_led:                       ;   END IF
-        st      msd_v, r17              ;   Store msd_v
-        sub     r17, r17, r18           ;   r16 = 1 << (msd_v - 4)
-        ldil    r16, 1                  ;
-        lsl     r16, r16, r17           ;
-        ld      r17, led_o              ;   r17 = LEDS
-        andi    r17, r17, LED_8         ;   Isolate just the start indicator
-        or      r16, r16, r17           ;   r16 = start indicator | MSD indicator
-        stio    LEDS, r16               ;   LEDS = MSD indicator | start indicator
+        call    update_visible_digits   ;   update_visible_digits()
         popr    r18                     ;   Restore working registers
         popr    r17                     ;
 timer_isr_ret:                          ; END IF
         popr    r16                     ; Restore working register
         reti
+
+update_visible_digits:
+        st      msd_vc, NULL            ; msd_vc = 0
+        ld      r16, msd                ; r16 = msd
+        ld      r17, msd_v              ; r17 = msd_v
+        ldi     r18, 4                  ; r18 = 4
+        gt      r16, r18                ; IF msd <= 4
+        brts    timer_update_next       ; THEN:
+        mov     r17, r18                ;   msd_v = 4
+        jmp     timer_update_led        ;
+timer_update_next:                      ; ELSE:
+        lte     r17, r18                ;   IF msd_v > 4
+        brts    timer_update_min        ;   THEN:
+        dec     r17                     ;     msd_v--
+        jmp     timer_update_led        ;
+timer_update_min:                       ;   ELSE:
+        mov     r17, r16                ;     msd_v = msd
+                                        ;   END IF
+timer_update_led:                       ; END IF
+        st      msd_v, r17              ; Store msd_v
+        sub     r17, r17, r18           ; r16 = 1 << (msd_v - 4)
+        ldil    r16, 1                  ;
+        lsl     r16, r16, r17           ;
+        ld      r17, led_o              ; r17 = LEDS
+        andi    r17, r17, LED_8         ; Isolate just the start indicator
+        or      r16, r16, r17           ; r16 = start indicator | MSD indicator
+        stio    LEDS, r16               ; LEDS = MSD indicator | start indicator
+        ret
 
 
 ;;; Seven Segment Display driver:
