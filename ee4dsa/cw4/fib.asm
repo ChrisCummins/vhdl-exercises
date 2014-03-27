@@ -240,7 +240,7 @@ timer_update:                           ; ELSE:
         mov     r17, r18                ;     msd_v = 4
         jmp     timer_update_led        ;
 timer_update_next:                      ;   ELSE:
-        lte     r17, r1 8               ;     IF msd_v > 4
+        lte     r17, r17, r18           ;     IF msd_v > 4
         brts    timer_update_min        ;     THEN:
         dec     r17                     ;       msd_v--
         jmp     timer_update_led        ;
