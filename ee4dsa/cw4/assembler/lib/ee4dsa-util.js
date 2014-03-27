@@ -116,7 +116,8 @@ var requireByte = function(word) {
   if (word !== undefined) {
     var i = requireUint(word);
 
-    if (i >= 0 && i < 256)
+    // Check that number is within bounds of signed or unsigned byte
+    if (i >= -129 && i < 256)
       return int2hex(i, 2);
   }
 
