@@ -227,7 +227,7 @@ timer_isr:
         brts    timer_update            ; THEN:
         inc     r16                     ;   msd_vc++
         st      msd_vc, r16             ;   Store counter
-        jmp     timer_isr_ret           ;   Return
+        jmp     timer_isr_ret           ;
 timer_update:                           ; ELSE:
         pshr    r17                     ;   Preserve working registers
         pshr    r18                     ;
