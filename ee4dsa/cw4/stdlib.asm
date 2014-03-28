@@ -79,14 +79,14 @@
         .def SSD_OFF    0b11111111      ; All segments off
 
         ;; Bit masks for LEDs
-        .def LED_1 1 << 0
-        .def LED_2 1 << 1
-        .def LED_3 1 << 2
-        .def LED_4 1 << 3
-        .def LED_5 1 << 4
-        .def LED_6 1 << 5
-        .def LED_7 1 << 6
-        .def LED_8 1 << 7
+        .def LED_1      1 << 0
+        .def LED_2      1 << 1
+        .def LED_3      1 << 2
+        .def LED_4      1 << 3
+        .def LED_5      1 << 4
+        .def LED_6      1 << 5
+        .def LED_7      1 << 6
+        .def LED_8      1 << 7
 
 
         ;; Constants.
@@ -123,7 +123,7 @@
 
         ;; We define a couple of useful symbols to expose the start and
         ;; end ranges of our internal register file to userland.
-        .def STDLIB_REG_MIN $rf         ; Used register file address
+        .def STDLIB_REG_MIN $rf         ; Lowest register file address
         .def STDLIB_REG_MAX $r          ; Highest register file address
 
         .cseg
