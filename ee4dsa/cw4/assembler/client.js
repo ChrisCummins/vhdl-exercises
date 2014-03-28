@@ -45,8 +45,10 @@ var updateView = function() { // Display errors
                  ' dseg: ' + u.perc(data.prog.dseg_util / data.prog.util, 0) +
                  ')');
 
-    $outputRam.text(data.ram);
-    $outputList.text(data.list);
+    if (data) {
+      $outputRam.text(data.ram || '');
+      $outputList.text(data.list || '');
+    }
   });
 };
 
