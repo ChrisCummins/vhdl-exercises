@@ -19,7 +19,7 @@
 The UCASM assembler is a Turing complete assembly language and macro
 processor for the 32 bit $\mu C$ architecture developed for coursework
 3 of Dr. Eberhard's Digital Systems Architecture module. The assembly
-syntax and constructs are influenced heavily by the AVR Assembler
+syntax and constructs are heavily influenced by the AVR Assembler
 \footnote{See the AVR Assembler User Guide:
   \url{http://www.atmel.com/Images/doc1022.pdf}.}.
 
@@ -53,7 +53,7 @@ syntax and constructs are influenced heavily by the AVR Assembler
 
 The core of the application is a multi-pass assembler written in
 JavaScript, implemented as a module in the file
-\texttt{lib/ee4dsa-assembler.js} which exposes a single function which
+\texttt{lib/ee4dsa-assembler.js} which exposes a single function that
 accepts three arguments: a string of data to assemble, a map of
 options as key-value pairs, and a callback function for when the
 assembly is completed.
@@ -61,8 +61,9 @@ assembly is completed.
 There are two front-end clients which use this assembler function: a
 standalone script written in Node, and an interactive web application
 hosted at \url{http://chriscummins.cc/uc/assembler}. The standalone
-assembler can be installed into the system path with the command
-\texttt{npm install -g}, and accepts the following run time options:
+assembler offers the benefit of support for multi-file programs using
+the \texttt{.include} directive, and accepts the following run time
+options:
 
 \begin{verbatim}
 Usage: ucasm -s <path> [options]
@@ -102,24 +103,10 @@ $ head ram.o
 020000B5 -- 9 jmp 181
 \end{verbatim}
 
-A list file is generated at \texttt{ram.l}, which contains a
-diagnostic breakdown of the assembled program:
-
-\begin{verbatim}
-$ head ram.l
-.SIZE = 16384
-.IDT_SIZE = 8
-.CSEG
-        0 = reti
-        1 = jmp 219
-        2 = reti
-        3 = reti
-        4 = reti
-\end{verbatim}
-
-To perform the same assembly using the web client,
-
-%% TODO:
+Additionally, a list file is generated at \texttt{ram.l} which
+contains a diagnostic breakdown of the assembled program, and the
+machine file \texttt{ram.m} shows the preprocessed source code after
+the assembler's first pass.
 
 \section{Nomenclature}
 
@@ -363,16 +350,16 @@ assembler.
 \end{longtable}}
 
 Symbols marked as Dynamic in the type column have a value which is
-determined for each time it is used, as opposed to the other symbols
-which have a static value associated with them which does not
-change. It is possible although not recommended to override any of
-these symbols using the \texttt{.DEF} directive. One possible
-legitimate purpose for overriding the built in symbols would be to
-declare a different register to use for macro instructions:
+determined at the time it is used, as opposed to the other symbols
+which have a static value determined at the time they are defined. It
+is possible although not recommended to override any of these symbols
+using the \texttt{.DEF} directive. One possible legitimate purpose for
+overriding the built in symbols would be to declare a different
+register to use for macro instructions:
 
 \begin{verbatim}
         ldi r16, 0xDEADBEEF             ; Macro instruction using default __r
-        .DEF __r r255                   ; Override default __r address
+        .def __r r255                   ; Override default __r address
         ldi r17, 0xDEADBEEF             ; Macro instruction using r255
 \end{verbatim}
 
@@ -381,35 +368,32 @@ combined to provide complex evaluations:
 
 \begin{verbatim}
         .def TABLE_ADDR     0xff
-        .def NO_OF_ELEMENTS 10
         .def ELEMENT_SIZE   4
-        .def TABLE_SIZE     ELEMENT_SIZE * NO_OF_ELEMETNS
+        .def NO_OF_ELEMENTS 10
+        .def TABLE_SIZE     NO_OF_ELEMENTS * ELEMENT_SIZE
 
         sti TABLE_ADDR,                1 ; foobar[0] = 1
         sti TABLE_ADDR + ELEMENT_SIZE, 2 ; foobar[1] = 2
-
-        .dseg
-        .org TABLE_ADDR
-foobar: .word TABLE_SIZE
 \end{verbatim}
 
 \chapter{Assembler Components}
 
 The assembler performs multiple passes of the input source files,
 generating an internal representation of the described program, which
-is then written out into different forms. Overall, there are four
-distinct high level stages to the assembly process:
+is then written out into different forms. There are four distinct high
+level stages to the assembly process:
 
 \begin{enumerate}
-\item \textbf{Pre-process} - Recursively expand multi-instruction macros.
+\item \textbf{Pre-process} - Recursively expand multi-instruction
+  macros and generate machine file.
 \item \textbf{First pass} - Perform tokenization of every line and
   interpret instructions, creating internal lookup tables for memory
   addresses, labels, and symbols.
 \item \textbf{Second pass} - resolve memory and label names using
-  populated lookup tables from first pass, creating an intermediate
-  representation of the program.
+  populated lookup tables from first pass, creating the program list
+  file.
 \item \textbf{Assembly} - Convert intermediate representation of the
-  program into machine instructions, and generate a list file.
+  program into machine instructions, and generate a RAM file.
 \end{enumerate}
 
 \section{Pre-processor}
@@ -439,12 +423,13 @@ is expanded at the pre-processing stage to equate to:
         str r5, __r                     ; Store __r at address r5.
 \end{verbatim}
 
-This allows for a more flexible instruction set, with the
-pre-processing stage recursively expanding any macros in the input
-source code by using a lookup table to expand macro instructions into
-native instructions. The downside to this is that the temporary
-register \texttt{\_\_r} used to implement these instructions should
-not be used by the user as this could lead to undefined behaviour.
+This allows for a more flexible instruction set containing 86
+instructions, with the pre-processing stage recursively expanding any
+macros in the input source code by using a lookup table to expand
+macro instructions into native instructions. The downside to this is
+that the temporary register \texttt{\_\_r} used to implement these
+instructions should not be used by the user as this could lead to
+undefined behaviour.
 
 \section{First pass unit}
 
@@ -460,9 +445,9 @@ containing a Load Immediate instruction:
 
 \begin{enumerate}
 \item Strip whitespace and comment: \texttt{LDIL SP, 0xFF00 >> 16}
-\item Convert line text to lowercase: \texttt{ldil SP, 0xff00 >> 16}
+\item Convert line text to lowercase: \texttt{ldil sp, 0xff00 >> 16}
 \item Split line text into individual words.
-\item Strip trailing commas from words: \texttt{ldil SP 0xff00 >> 16}
+\item Strip trailing commas from words: \texttt{ldil sp 0xff00 >> 16}
 \item Recursively resolve symbols for each word: \texttt{ldil r2 0xff00 >> 16}
 \item Internally convert numbers into signed decimal integers: \texttt{ldil 2 65280 >> 16}
 \item Resolve numerical modifiers (e.g. bitwise complement).
@@ -643,8 +628,8 @@ words set:
 
 A standard library is included which defines a number of useful
 symbols and routines, with the intention that it should make assembly
-programming with UCASM more convenient and succinct, removing much of
-the boiler plate associated with assembly programming.
+programming with UCASM more convenient and succinct, helping to
+minimise the boiler plate associated with assembly programming.
 
 \subsection{Symbols}
 
@@ -691,6 +676,7 @@ the boiler plate associated with assembly programming.
  SSD\_CHAR\_0 to SSD\_CHAR\_9 & Byte & Seven Segment Display cathode masks for digits 0 to 9 \\
  SSD\_PEROD & Byte & Seven Segment Display cathode mask for period \\
  SSD\_OFF & Byte & Seven Segment Display cathode mask with all segments disabled \\
+ LED\_1 to LED\_8 & Byte & Individual LED bit masks \\
  \hline
 \end{longtable}}
 
@@ -726,11 +712,11 @@ provide their own definitions.
  bcd2ssd & \textit{B} & \textit{S} & Converts BCD digit \textit{B} into SSD digit \textit{S} \\
  bcd2ssd\_p & \textit{B} & \textit{S.} & Converts BCD digit \textit{B} into SSD digit \textit{S.} with period segment lit \\
  bcd2ssd\_tm & \textit{k, U} & & Convert unsigned integer \textit{U} into 4-digit SSD cathode mask table at address \textit{k} \\
- mult & \textit{A, B} & \textit{R} & Multiply integers \textit{A} and \textit{B} and return product \textit{R} \\
- div & \textit{A, B} & \textit{R, r} & Divide numerator \textit{A} by denominator \textit{B} and return result \textit{R} and remainder \textit{r} \\
- sortu & \textit{n, k} & & In-place unsigned integer array sort of array size \textit{n} at address \textit{k} \\
- sorts & \textit{n, k} & & In-place signed integer array sort of array size \textit{n} at address \textit{k} \\
- qsortu & \textit{n, k} & & In-place unsigned integer array Quicksort of array size \textit{n} at address \textit{k} \\
+ multu & \textit{A, B} & \textit{R} & Multiply integers \textit{A} and \textit{B} and return product \textit{R} \\
+ divu & \textit{A, B} & \textit{R, r} & Divide numerator \textit{A} by denominator \textit{B} and return result \textit{R} and remainder \textit{r} \\
+ powu & \textit{A, B} & \textit{R} & Raise number \textit{A} to the power \textit{B} and return \textit{R} \\
+ sortu, sorts & \textit{n, k} & & In-place signed and unsigned integer array sort of array size \textit{n} at address \textit{k} \\
+ qsortu, qsorts & \textit{n, k} & & In-place signed and unsigned integer array Quicksort of array size \textit{n} at address \textit{k} \\
  \hline
 \end{longtable}}
 
