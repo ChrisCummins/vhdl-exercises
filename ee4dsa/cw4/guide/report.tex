@@ -78,6 +78,7 @@ Options:
   --annotate, -a  Annotate the generated RAM file
 \end{verbatim}
 
+\noindent
 For example, to assemble the file \texttt{ram.asm} into an annotated
 RAM file of 16k words, the client would be invoked as such:
 
@@ -86,6 +87,7 @@ $ ucasm --source ram.asm --ram-size 16384 --annotate
 ram.asm: 240 words, 1.465% util (cseg: 92% dseg: 8%
 \end{verbatim}
 
+\noindent
 The file \texttt{ram.dat} now contains the generated annotated RAM
 file:
 
@@ -103,6 +105,7 @@ $ head ram.o
 020000B5 -- 9 jmp 181
 \end{verbatim}
 
+\noindent
 Additionally, a list file is generated at \texttt{ram.l} which
 contains a diagnostic breakdown of the assembled program, and the
 machine file \texttt{ram.m} shows the preprocessed source code after
@@ -154,12 +157,14 @@ tokens. A line may take one of the following five forms:
 \item \texttt{Empty Line}
 \end{enumerate}
 
+\noindent
 Where a comment has the form:
 
 \begin{verbatim}
 ; [Text]
 \end{verbatim}
 
+\noindent
 In the case where a line consists solely of a label, then the label
 will refer to the contents of the line following it.
 
@@ -349,6 +354,7 @@ assembler.
  \hline
 \end{longtable}}
 
+\noindent
 Symbols marked as Dynamic in the type column have a value which is
 determined at the time it is used, as opposed to the other symbols
 which have a static value determined at the time they are defined. It
@@ -363,6 +369,7 @@ register to use for macro instructions:
         ldi r17, 0xDEADBEEF             ; Macro instruction using r255
 \end{verbatim}
 
+\noindent
 Symbols are resolved recursively during tokenization, and so can be
 combined to provide complex evaluations:
 
@@ -415,6 +422,7 @@ this register. For example, the instruction:
         stri r5, 0xDEADBEEF             ; Store constant at address r5.
 \end{verbatim}
 
+\noindent
 is expanded at the pre-processing stage to equate to:
 
 \begin{verbatim}
@@ -423,6 +431,7 @@ is expanded at the pre-processing stage to equate to:
         str r5, __r                     ; Store __r at address r5.
 \end{verbatim}
 
+\noindent
 This allows for a more flexible instruction set containing 86
 instructions, with the pre-processing stage recursively expanding any
 macros in the input source code by using a lookup table to expand
@@ -454,6 +463,7 @@ containing a Load Immediate instruction:
 \item Recursively resolve numerical and bitwise expressions: \texttt{ldil 2 255}
 \end{enumerate}
 
+\noindent
 Once the line has been tokenized, the individual tokens are iterated
 over and decoded into an instruction or directive command as
 required. The assembler maintains an internal state machine tracking
@@ -481,6 +491,7 @@ _start:
         halt                    ; Stop the processor
 \end{verbatim}
 
+\noindent
 After assembly, the list file contains a report which shows, amongst
 other things, the contents of the internal memory and label tables:
 
@@ -493,6 +504,7 @@ other things, the contents of the internal memory and label tables:
         _start = 15
 \end{verbatim}
 
+\noindent
 Meaning that the two memory variables \texttt{foo} and \texttt{bar}
 have been allocated addresses 1 and 2 respectively, and the two labels
 have the addresses 0 and 15. It is important to note that the code and
@@ -521,6 +533,7 @@ output file when assembled with the \texttt{--annotated} flag set:
 01000000 -- 15 halt
 \end{verbatim}
 
+\noindent
 It is at this late stage in the assembly process that type checking of
 operands are performed, with detection of malformed instructions
 occurring and throwing fatal errors where found. The combination of
@@ -566,6 +579,7 @@ bar:    .word 3
         halt
 \end{verbatim}
 
+\noindent
 Will generate the following output machine code:
 
 \begin{verbatim}
@@ -578,13 +592,15 @@ Will generate the following output machine code:
 01000000 -- 21 halt
 \end{verbatim}
 
+\noindent
 Note that reserved memory is not initialised.
 
+\newpage
 \section{Interrupt Handlers}
 
 Interrupt handlers are assigned using the \texttt{ISR} directive. At
 assembly time, an empty interrupt service handler table is generated,
-and any registered ISR are added. For example, the source code:
+and any registered ISRs are added. For example, the source code:
 
 \begin{verbatim}
         .isr    0 isr0          ; Register the ISR 0 handler using label
@@ -605,6 +621,7 @@ isr0:                           ; ISR0
         reti
 \end{verbatim}
 
+\noindent
 Generates the following machine code when assembled with IDT size of 3
 words set:
 
