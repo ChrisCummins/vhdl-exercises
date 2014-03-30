@@ -71,12 +71,14 @@ integer rounding:
 
 $$F(n) = \left[\frac{\phi^n}{\sqrt{5}}\right] $$
 
+\noindent
 Where $n$ is the index of the number in the series. We can use this to
 approximate the number of bits required to store the Fibonacci number
 $F(n)$ in binary encoding by rearranging for $\log(F(n))$:
 
 $$\log(F(n)) \approx n \times \log(\phi) - \log(\sqrt{5})$$
 
+\noindent
 Where $\log(\phi) \approx 0.694$ and $\log(\sqrt{5}) \approx
 0.35$. For large $n$ values, the significance of $\log(\sqrt{5})$
 tends towards $0$, allowing us to calculate the number of bits
@@ -84,17 +86,20 @@ required as:
 
 $$\log(F(n)) = \lceil 0.694n \rceil$$
 
+\noindent
 For the $\mu C$ architecture we can substitute $\log(F(N))$ with the
 32-bit word size and solve for $n$ to determine the largest index in
 the Fibonacci sequence that we can store in a single word:
 
 $$n = \lceil \frac{32}{0.694} \rceil = 47$$
 
+\noindent
 This means that in order to avoid integer overflow, our iterative
 Fibonacci algorithm must enforce a strict upper bound:
 
-$$F(n) = F(n - 1) + F(n - 2), 0 \le n \le 47$$
+$$F(n) = F(n - 1) + F(n - 2), 2 \le n \le 47$$
 
+\noindent
 When $n = 47$, the sequence resets.
 
 \subsection{Optimisation details}
@@ -119,12 +124,14 @@ clock cycles include:
   temporal locality in memory accesses, so instructions are ordered to
   make the best chronological sense, not to reduce data hazards. The
   lack of instruction caching also means that there is never any
-  benefit to using fixed length loops instead of unrolling them.
+  performance benefit to using fixed length loops instead of unrolling
+  them.
 \item Interrupt handlers and subroutines are written to operate on as
   small of a register footprint as possible, due to the slow push/pop
   operations.
 \end{itemize}
 
+\noindent
 Beyond this, the main performance caveat is the binary to binary coded
 decimal conversion, which is performed by repeatedly dividing the
 binary number $n$ by decreasing powers of ten for every BCD digit, as
@@ -141,21 +148,21 @@ def bin2bcd(n):
         bcd[0] = n
 \end{verbatim}
 
+\noindent
 The limited support for hardware integer arithmetic means that the
 division has to be performed in software using iterative subtraction:
 
 \begin{verbatim}
 def div(n, divisor):
         i = 0
-
         while n > divisor:
                 n -= divisor
                 i += 1
-
         ret i
 \end{verbatim}
 
-This means that the BCD conversion operates in $O(n^2)$ time
+\noindent
+This means that the BCD conversion is an $O(n^2)$ operation in time
 complexity, where $n$ is the number of output BCD digits - 1. While
 this clearly does not scale well for very large input numbers, this is
 acceptable for our purposes, where the small and constant value of $n
@@ -163,10 +170,12 @@ acceptable for our purposes, where the small and constant value of $n
 
 \section{Software testing}
 
-A test bench was written (see \texttt{extra/test\_bench.vhd}) which
-runs a complete simulation of all program bevahiour \footnote{I
-  wouldn't recommend running the testbench as it takes well over 10
-  minutes to complete even on a 4.5GHz monster!}, demonstrating:
+A comprehensive test bench was written (see
+\texttt{extra/test\_bench.vhd}) which offers 100\% branch coverage of
+all program code \footnote{I wouldn't recommend running the testbench
+  as it takes well over 10 minutes to complete even on a 4.5GHz
+  monster!}. The waveform viewer was configured to show the values of
+all working registers and memory, demonstrating:
 
 \begin{figure}[H]
   \centering
@@ -209,6 +218,7 @@ runs a complete simulation of all program bevahiour \footnote{I
     ports.}
 \end{figure}
 
+\noindent
 The testbench is invoked from a modified Makefile which first
 assembles the RAM file. Unlike previous testbenches, the signals are
 not tested against expected outputs, but instead simple visual
@@ -228,5 +238,52 @@ make asm sim  725.57s user 2.70s system 99% cpu 12:15.17 total
 \end{verbatim}
 
 \section{Hardware testing}
+
+Hardware testing played a significant roll in being able to validate
+the correct program behaviour. A set of tests was written to provide
+complete and consistently repeatable tests:
+
+\begin{enumerate}
+\item Start indicator.
+  \begin{enumerate}
+  \item Start indicator is LIT on initial RESET.
+  \item Start indicator is NOT LIT after first iteration.
+  \end{enumerate}
+\item Fibonacci series low numbers.
+  \begin{enumerate}
+  \item SSD shows 1 on initial RESET.
+  \item SSD shows 2 on centre button press.
+  \item SSD shows 3 on centre button press.
+  \item SSD shows 5 on centre button press.
+  \item SSD shows 8 on centre button press.
+  \item SSD shows 13 on centre button press
+  \end{enumerate}
+\item Input behaviour.
+  \begin{enumerate}
+  \item Test that all switches do nothing.
+  \item Test that ONLY centre button results in an action.
+  \end{enumerate}
+\item Seven Segment Display scrolling.
+  \begin{enumerate}
+  \item Test that the SSD displays the number 10,946 correctly by scrolling.
+  \item Test that the LED indicators show the most significant visible digit.
+  \end{enumerate}
+\item Seven Segment Display scroll reset.
+  \begin{enumerate}
+  \item Test that when the SSD is scrolling through a number, pressing
+    the centre button causes the most significant digit to be
+    displayed.
+  \end{enumerate}
+\item Series reset.
+  \begin{enumerate}
+  \item Test that 47th number in the sequence is 2,971,215,073.
+  \item Test that the SSD shows 1 and the start LED indicator is set
+    on centre button press.
+  \end{enumerate}
+\end{enumerate}
+
+\noindent
+A video of one iteration of testing is available at
+\url{http://youtu.be/EYwBCrMGuZE}.
 
 \end{document}
